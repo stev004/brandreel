@@ -32,6 +32,7 @@ const neutralBrand: StackProps["brand"] = {
 const neutralScript: StackProps["script"] = {
   id: "neutral-preview",
   brand: "neutral",
+  coreMechanic: "A quiet line gives the viewer room to breathe.",
   beats: [{ kind: "moment", line: "a quiet moment", durationMs: 1400 }],
   close: { line: "take your time.", showWordmark: true },
   caption: "",
@@ -47,12 +48,15 @@ export const Root = () => (
     width={WIDTH}
     height={HEIGHT}
     fps={FPS}
-    durationInFrames={msToFrames(neutralScript.beats[0].durationMs) + msToFrames(closeDurationMs(neutralBrand))}
+    durationInFrames={
+      msToFrames(neutralScript.beats[0].durationMs) +
+      msToFrames(closeDurationMs(neutralBrand, neutralScript.close))
+    }
     calculateMetadata={({ props }) => ({
       durationInFrames: Math.max(
         1,
         props.script.beats.reduce((total, beat) => total + msToFrames(beat.durationMs), 0) +
-          msToFrames(closeDurationMs(props.brand)),
+          msToFrames(closeDurationMs(props.brand, props.script.close)),
       ),
       fps: FPS,
       width: WIDTH,

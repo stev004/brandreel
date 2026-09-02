@@ -18,6 +18,20 @@ describe("M1 JSON contracts", () => {
     expect(script.beats[1].kind).toBe("moment");
   });
 
+  it("parses the howclose brand and fusion script", () => {
+    const brand = BrandKit.parse(readJson("../../brands/howclose/brand.json"));
+    const script = Script.parse(readJson("../../workspace/howclose-fusion/script.json"));
+    expect(brand.wordmark.logoSvg).toContain('viewBox="0 0 32 32"');
+    expect(script.coreMechanic).toBe("The honest short line against the long dashed road to Q30.");
+    expect(script.beats.map((beat) => beat.kind)).toEqual(["question", "figure", "verdict"]);
+  });
+
+  it("rejects a script without a core mechanic", () => {
+    const script = readJson("../../workspace/demo/script.json") as Record<string, unknown>;
+    const { coreMechanic: _coreMechanic, ...withoutCoreMechanic } = script;
+    expect(() => Script.parse(withoutCoreMechanic)).toThrow();
+  });
+
   it("rejects a bad hex and a missing font", () => {
     expect(() => BrandKit.parse(readJson("./fixtures/broken-brand.json"))).toThrow();
   });

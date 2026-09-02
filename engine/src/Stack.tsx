@@ -4,6 +4,9 @@ import { Close } from "./components/Close";
 import { msToFrames } from "./config";
 import { closeDurationMs } from "./layout";
 import { Moment } from "./templates/Moment";
+import { Figure } from "./templates/Figure";
+import { Question } from "./templates/Question";
+import { Verdict } from "./templates/Verdict";
 import type { BrandKit, Script } from "./schema";
 
 export type StackProps = {
@@ -16,21 +19,31 @@ export const Stack = ({ brand, script }: StackProps) => {
 
   const moments = script.beats.map((beat, index) => {
     const durationInFrames = msToFrames(beat.durationMs);
+    const template =
+      beat.kind === "moment" ? (
+        <Moment brand={brand} beat={beat} />
+      ) : beat.kind === "question" ? (
+        <Question brand={brand} beat={beat} />
+      ) : beat.kind === "figure" ? (
+        <Figure brand={brand} beat={beat} />
+      ) : (
+        <Verdict brand={brand} beat={beat} />
+      );
     const sequence = (
       <Sequence
         key={`${beat.kind}-${index}`}
         from={fromFrame}
         durationInFrames={durationInFrames}
-        name={`moment-${index}`}
+        name={`${beat.kind}-${index}`}
       >
-        <Moment brand={brand} beat={beat} />
+        {template}
       </Sequence>
     );
     fromFrame += durationInFrames;
     return sequence;
   });
 
-  const closeFrames = msToFrames(closeDurationMs(brand));
+  const closeFrames = msToFrames(closeDurationMs(brand, script.close));
   const close = (
     <Sequence from={fromFrame} durationInFrames={closeFrames} name="close">
       <Close brand={brand} close={script.close} />

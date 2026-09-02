@@ -1,0 +1,10 @@
+{
+  "ok": true,
+  "violations": [],
+  "stream": {
+    "width": 1080,
+    "height": 1920,
+    "avgFrameRate": "60/1",
+    "duration": 18
+  }
+}
