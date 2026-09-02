@@ -12,7 +12,9 @@ Not coupled to any product. First three brand kits: Regulate, howclose.to, Matso
 4. **Deterministic easing, no springs.** House curve per brand kit (default `cubic-bezier(0.2, 0.7, 0.2, 1)`). Spring wobble reads "chucked together" - proven in the Regulate motion iterations.
 5. **Quality is lints, not vibes.** Render-time and post-render assertions fail the build (section: Lints).
 6. **Human gate stays human.** The pipeline emits a review sheet; a person marks KEEP/TWEAK/KILL. Publishing is never automatic in v1.
-7. **Free-first asset mix:** Remotion motion graphics (brand-locked, always available) + stock APIs (Pexels/Pixabay, free) + Google AI Studio Veo free tier for hero image-to-video shots. Local model gen (MLX LTX/Wan) and paid APIs (fal.ai, ElevenLabs) are optional plug-ins behind the same asset interface - never required.
+7. **Mockup-first (added 2026-09-02, Steven's ruling after the M1 demo):** every new video concept starts life as a self-contained HTML animatic in `animatics/` - authored by the taste seat (Fable), viewable in a browser, with a scene table and exact px/ms values in its header comment. The animatic is gated (KEEP/TWEAK/KILL) before any Remotion work, and then ported 1:1: the animatic is the quality bar, and a port that looks worse than its animatic goes back. This is the flow that produced Regulate's only KEEP-grade motion work; blind template iteration is the named anti-pattern.
+8. **Modules activate per script, not per pipeline.** A script declares what it needs (`modules: { vo?, music?, assets? }` in script.json); absent means skipped. A pure motion-graphics video touches no TTS, no stock, no generation. Voice and asset stages get built when the first script actually needs them, not before.
+9. **Free-first asset mix:** Remotion motion graphics (brand-locked, always available) + stock APIs (Pexels/Pixabay, free) + Google AI Studio Veo free tier for hero image-to-video shots. Local model gen (MLX LTX/Wan) and paid APIs (fal.ai, ElevenLabs) are optional plug-ins behind the same asset interface - never required.
 
 ## Architecture
 

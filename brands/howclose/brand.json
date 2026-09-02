@@ -1,0 +1,38 @@
+{
+  "name": "howclose",
+  "palette": {
+    "bg": "#FBF9F4",
+    "fg": "#1F2937",
+    "muted": "#5F6B7A",
+    "accent": "#0F3D91",
+    "extras": {
+      "paper2": "#F4F6F9",
+      "rule": "#D6DCE5",
+      "energy": "#E58F1F",
+      "done": "#0C7A43",
+      "setback": "#B3402F",
+      "materials": "#E05C7E",
+      "biology": "#7C6EE6",
+      "intelligence": "#D8A13A",
+      "planetary": "#3A9FD8"
+    }
+  },
+  "fonts": {
+    "display": { "family": "Source Serif 4", "italic": false },
+    "body": { "family": "Inter" },
+    "mono": { "family": "IBM Plex Mono" }
+  },
+  "wordmark": {
+    "text": "howclose.to",
+    "dotColor": "#5F6B7A"
+  },
+  "motion": {
+    "bezier": [0.2, 0.7, 0.2, 1],
+    "entranceMs": 520,
+    "holdMsDefault": 1400
+  },
+  "voice": {
+    "tone": ["warm", "precise", "quietly confident", "never breathless"],
+    "notes": "From the brand book (source of truth, Sep 2026): lead with the question, answer with a sourced figure, end with the file link. Laws: never a fake percentage; green worn only by independently verified results; dashed or hollow = not yet real; setbacks in red at full size, never minimized; one field color protagonist per surface; stamp everything AS OF; paper and ink, no dashboard chrome, no gauges, no glow."
+  }
+}
