@@ -1,0 +1,36 @@
+{
+  "name": "regulate",
+  "palette": {
+    "bg": "#0a1812",
+    "fg": "#F2F0E9",
+    "muted": "#8F9E8B",
+    "accent": "#4FD1C5",
+    "extras": {
+      "sage": "#A9C99E",
+      "cardBg": "#1a1f1c",
+      "hairline": "#16241d",
+      "stateAnxious": "#D4A574",
+      "stateFrozen": "#7E9AA6",
+      "stateAngry": "#C06C4D",
+      "stateBalanced": "#7FA77F"
+    }
+  },
+  "fonts": {
+    "display": { "family": "Playfair Display", "italic": true },
+    "body": { "family": "Inter" },
+    "mono": { "family": "IBM Plex Mono" }
+  },
+  "wordmark": {
+    "text": "regulate.",
+    "dotColor": "#F2F0E9"
+  },
+  "motion": {
+    "bezier": [0.2, 0.7, 0.2, 1],
+    "entranceMs": 520,
+    "holdMsDefault": 1400
+  },
+  "voice": {
+    "tone": ["calm", "direct", "unhurried", "no hype"],
+    "notes": "Curation deepens in M4; do not extrapolate."
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "id": "late-night-wind-down",
+  "brand": "regulate",
+  "beats": [
+    {
+      "kind": "moment",
+      "eyebrow": "11:47 PM",
+      "line": "your body is still\nat the meeting",
+      "thoughts": [
+        "did I miss something",
+        "one more email",
+        "tomorrow can wait"
+      ],
+      "durationMs": 4500
+    },
+    {
+      "kind": "moment",
+      "eyebrow": "screen face down",
+      "line": "the room gets\nquiet again",
+      "thoughts": [
+        "what if they need me",
+        "I should check once more",
+        "maybe I can solve it now"
+      ],
+      "bg": "#1a1f1c",
+      "durationMs": 5000
+    },
+    {
+      "kind": "moment",
+      "eyebrow": "one small thing",
+      "line": "let the night\nbe enough",
+      "thoughts": [
+        "feel the pillow",
+        "let your shoulders drop",
+        "leave the light off"
+      ],
+      "durationMs": 4500
+    }
+  ],
+  "close": {
+    "line": "you can pick this up\ntomorrow.",
+    "showWordmark": true
+  },
+  "caption": "a softer landing\nfor tonight.",
+  "hashtags": ["#regulate", "#winddown", "#nervoussystem"]
+}

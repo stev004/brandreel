@@ -1,0 +1,21 @@
+{
+  "name": "broken",
+  "palette": {
+    "bg": "#12345",
+    "fg": "#F2F0E9",
+    "muted": "#8F9E8B",
+    "accent": "#4FD1C5",
+    "extras": {}
+  },
+  "fonts": {
+    "display": { "family": "Playfair Display" },
+    "mono": { "family": "IBM Plex Mono" }
+  },
+  "wordmark": { "text": "broken.", "dotColor": "#F2F0E9" },
+  "motion": {
+    "bezier": [0.2, 0.7, 0.2, 1],
+    "entranceMs": 520,
+    "holdMsDefault": 1400
+  },
+  "voice": { "tone": ["quiet"] }
+}
