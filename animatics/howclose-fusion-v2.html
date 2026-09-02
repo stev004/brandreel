@@ -1,0 +1,330 @@
+<meta charset="utf-8">
+<title>The Climb to Q30</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400;1,8..60,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<!--
+  brandreel animatic v2 - howclose.to - "Can we bottle a star?" full arc, 30s
+  PORTING CONTRACT: HTML animatic == 1:1 Remotion composition. 1080x1920 stage,
+  ms from t=0, total 30000ms, ease cubic-bezier(0.2,0.7,0.2,1), entrance 520ms.
+
+  CORE MECHANIC (one sentence): One honest zoom-out - sixty years of climbing
+  becomes a sliver at the bottom of the axis power stations actually need.
+
+  SCENE TABLE (ms)
+  S0 HOOK      0-1200     timestamp 150 · ember flash 400 · hard cut
+  S1 QUESTION  1200-5200  kicker 1400 · lines 1700/2000 · dek 3400
+  S2 STAKES    5200-9000  fuel line 5400 · exhaust line 6200 · Q footnote 7200
+  S3 CLIMB     9000-21500 label+axis+grid 9200 · history draws 9600-15000
+                          red segment 12000-12800 · red stamp 12300
+                          ember flash at ignition 14000 · green stamp 14400
+                          ZOOM-OUT 16000-17000 (scaleY 0.1 about Q0; Y labels
+                          crossfade 0/1/2/3 -> 0/10/20/30) · scale stamp 16300
+                          dashed projection 18000-19400 · SPARC label 18600
+                          commercial ring+label 19600
+  S4 VERDICT   21500-25500 line1 21800 · line2 23000
+  S5 CLOSE     25500-30000 sprig 25800 · tagline 26100 · url 26500 · support 27200
+
+  CHART GEOMETRY (px): plot x140-920, Q0 baseline y1400. Phase 1 scale 300px/Q
+  (Q3=y500). X: 1990=x160 .. 2030=x920 (19px/yr). History polyline points:
+  (160,1396)(250,1392)(283,1390)(293,1199)JET (305,1385)(400,1378)(578,1365)
+  (749,1362)(768,950)ignition (790,935)(806,680)=Q2.4. Red overlay segment
+  (578,1365)-(749,1362) = NIF decade. Zoom: translate(0,1260) scale(1,0.1)
+  => Q30=y500, Q10=y1100, Q2.4=y1328. Dashed projection (post-zoom coords):
+  (806,1328)-(863,1100)SPARC-(920,510). Ring at (920,505). Gridlines at
+  y500/800/1100/1400. Strokes non-scaling.
+
+  VO SCRIPT (production, Kokoro, Plain register - not in this silent animatic):
+  S1 "Can we bottle a star?"
+  S2 "The fuel is seawater. The exhaust is helium. The catch is Q - you have
+      to get more energy out than you put in."
+  S3 "For sixty years the line barely rose. A decade of misses. Then, December
+      2022 - ignition. More out than in. Repeated. Now zoom out: a power
+      station needs thirty."
+  S4 "A tiny star has flashed. A dependable power station hasn't."
+  S5 "howclose.to. Never a fake percentage."
+
+  LAWS: linear axis both phases, rescale stated on-screen (SAME DATA · AXIS
+  0-30) · green only on the verified result · dashed/hollow = not yet real ·
+  setback red, full size, in the ledger and on the line · ember appears twice
+  as the same protagonist event (hook + ignition point) · paper and ink.
+-->
+<style>
+  :root{
+    --paper:#FBF9F4; --ink:#1F2937; --muted:#5F6B7A; --rule:#D6DCE5;
+    --indigo:#0F3D91; --ember:#E58F1F; --leaf:#0C7A43; --setback:#B3402F;
+    --frame:#12161F;
+    --serif:"Source Serif 4", Georgia, serif;
+    --mono:"IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+    --ease:cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  *{box-sizing:border-box;margin:0}
+  body{background:var(--frame);color:#c7cedb;font-family:var(--mono);min-height:100vh;
+       display:flex;flex-direction:column;align-items:center;gap:18px;padding:28px 16px 56px}
+  h1{font-family:var(--serif);color:#fbf9f4;font-weight:600;font-size:20px}
+  .sub{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#7d8698}
+  .stagebox{width:min(92vw,420px)}
+  .stagewrap{width:100%;aspect-ratio:9/16;position:relative;border-radius:22px;overflow:hidden;
+             box-shadow:0 24px 70px rgba(0,0,0,.5)}
+  .stage{width:1080px;height:1920px;position:absolute;top:0;left:0;transform-origin:top left;
+         background:var(--paper);color:var(--ink);overflow:hidden}
+  button{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+         background:transparent;color:#fbf9f4;border:1px solid #3a4353;border-radius:99px;
+         padding:8px 22px;cursor:pointer}
+  button:hover,button:focus-visible{border-color:#fbf9f4;outline:none}
+  .legend{width:min(92vw,420px);font-size:10.5px;line-height:1.9;color:#7d8698;letter-spacing:.05em}
+  .legend b{color:#c7cedb;font-weight:500}
+
+  .el{position:absolute;opacity:0}
+  .scene{position:absolute;inset:0;opacity:0}
+  .run .el{animation-timing-function:var(--ease);animation-fill-mode:both}
+  .run .scene{animation-timing-function:var(--ease);animation-fill-mode:forwards}
+  @keyframes rise{from{opacity:0;transform:translateY(34px)}to{opacity:1;transform:none}}
+  @keyframes fadein{from{opacity:0}to{opacity:1}}
+  @keyframes fadeout{from{opacity:1}to{opacity:0}}
+  @keyframes holdscene{0%,99%{opacity:1}100%{opacity:0}}
+
+  /* S0 HOOK 0-1200 */
+  .run .s0{animation:holdscene 1.2s 0s forwards step-end;opacity:1}
+  .hookstamp{left:60px;top:470px;font-size:32px;letter-spacing:.28em;color:var(--muted)}
+  .run .hookstamp{animation:fadein .4s .15s both}
+  .hookflash{position:absolute;left:510px;top:880px;width:60px;height:60px;border-radius:50%;background:var(--ember);opacity:0}
+  .run .hookflash{animation:hookflash .8s .4s both;animation-timing-function:var(--ease)}
+  @keyframes hookflash{0%{opacity:0;transform:scale(.3);box-shadow:0 0 0 0 rgba(229,143,31,.55)}
+                       40%{opacity:1;transform:scale(1.6);box-shadow:0 0 0 90px rgba(229,143,31,0)}
+                       100%{opacity:1;transform:scale(1);box-shadow:0 0 0 0 rgba(229,143,31,0)}}
+
+  /* S1 QUESTION 1200-5200 */
+  .run .s1{animation:holdscene 4s 1.2s forwards step-end}
+  .kicker{left:60px;top:470px;font-size:30px;letter-spacing:.32em;color:var(--muted)}
+  .q1{position:absolute;left:60px;top:560px;font-family:var(--serif);font-weight:700;font-size:128px;
+      line-height:1.04;letter-spacing:-.02em;color:var(--ink);width:860px}
+  .q1 .el{position:static;display:block}
+  .dek{left:60px;top:986px;font-family:var(--serif);font-style:italic;font-size:44px;color:var(--indigo)}
+  .run .kicker{animation:rise .52s 1.4s both}
+  .run .ql1{animation:rise .52s 1.7s both}
+  .run .ql2{animation:rise .52s 2s both}
+  .run .dek{animation:rise .52s 3.4s both}
+
+  /* S2 STAKES 5200-9000 */
+  .run .s2{animation:holdscene 3.8s 5.2s forwards step-end}
+  .st1{left:60px;top:640px;font-family:var(--serif);font-weight:600;font-size:88px;line-height:1.12;
+       letter-spacing:-.015em;color:var(--ink);width:900px}
+  .st2{left:60px;top:790px;font-family:var(--serif);font-weight:600;font-size:88px;line-height:1.12;
+       letter-spacing:-.015em;color:var(--ink);width:900px}
+  .stq{left:60px;top:1010px;font-size:32px;letter-spacing:.14em;color:var(--indigo)}
+  .run .st1{animation:rise .52s 5.4s both}
+  .run .st2{animation:rise .52s 6.2s both}
+  .run .stq{animation:rise .52s 7.2s both}
+
+  /* S3 CLIMB 9000-21500 */
+  .run .s3{animation:holdscene 12.5s 9s forwards step-end}
+  .figlabel{left:60px;top:360px;font-size:30px;letter-spacing:.24em;color:var(--indigo)}
+  .run .figlabel{animation:fadein .52s 9.2s both}
+  .chart{position:absolute;left:0;top:0;width:1080px;height:1920px}
+  .run .chart .grid{animation:fadein .52s 9.2s both;opacity:0}
+  /* history line: pathLength 100, draws 9600-15000 */
+  .hist{stroke:var(--indigo);stroke-width:8;fill:none;stroke-linecap:round;stroke-linejoin:round;
+        stroke-dasharray:100;stroke-dashoffset:100}
+  .run .hist{animation:draw 5.4s 9.6s both;animation-timing-function:var(--ease)}
+  @keyframes draw{from{stroke-dashoffset:100}to{stroke-dashoffset:0}}
+  .redseg{stroke:var(--setback);stroke-width:10;fill:none;stroke-linecap:round;
+          stroke-dasharray:100;stroke-dashoffset:100}
+  .run .redseg{animation:draw .8s 12s both;animation-timing-function:var(--ease)}
+  /* the zoom-out: same data, axis 0-30 */
+  .histG{transform-box:view-box;transform-origin:0 0}
+  .run .histG{animation:zoomout 1s 16s both;animation-timing-function:var(--ease)}
+  @keyframes zoomout{from{transform:translate(0,0) scale(1,1)}to{transform:translate(0,1260px) scale(1,0.1)}}
+  /* Y tick labels crossfade */
+  .ytick{left:64px;width:70px;text-align:right;font-size:24px;color:var(--muted);font-family:var(--mono)}
+  .run .yt1{animation:ytick1 12.5s 0s both step-end}
+  @keyframes ytick1{0%{opacity:0}74%{opacity:0}76%{opacity:1}128%{opacity:1}}
+  .run .p1{animation:fadein .52s 9.2s both}
+  .run .p1x{animation:p1x 7.32s 9.2s both;animation-timing-function:var(--ease)}
+  @keyframes p1x{0%{opacity:0}7%{opacity:1}93%{opacity:1}100%{opacity:0}}
+  .run .p2x{animation:fadein .52s 16.5s both}
+  /* markers ride the zoom via their own keyframes (16000-17000) */
+  .jetdot{position:absolute;left:281px;top:1187px;width:24px;height:24px;border-radius:50%;background:var(--indigo)}
+  .run .jetdot{animation:fadein .3s 11s both, jetride 1s 16s both;animation-timing-function:var(--ease)}
+  @keyframes jetride{from{top:1187px}to{top:1368px}}
+  .jetlbl{left:330px;top:1180px;font-size:26px;letter-spacing:.08em;color:var(--muted)}
+  .run .jetlbl{animation:jetlbl 5.2s 11s both step-end}
+  @keyframes jetlbl{0%{opacity:0}8%{opacity:1}90%{opacity:1}100%{opacity:0}}
+  .igniteflash{position:absolute;left:753px;top:935px;width:30px;height:30px;border-radius:50%;background:var(--ember)}
+  .run .igniteflash{animation:ignite 1s 14s both, igniteride 1s 16s both;animation-timing-function:var(--ease)}
+  @keyframes ignite{0%{opacity:0;transform:scale(.4);box-shadow:0 0 0 0 rgba(229,143,31,.55)}
+                    40%{opacity:1;transform:scale(1.5);box-shadow:0 0 0 60px rgba(229,143,31,0)}
+                    100%{opacity:1;transform:scale(1);box-shadow:0 0 0 0 rgba(229,143,31,0)}}
+  @keyframes igniteride{from{top:935px}to{top:1340px}}
+  .dot24{position:absolute;left:794px;top:668px;width:24px;height:24px;border-radius:50%;background:var(--indigo)}
+  .run .dot24{animation:fadein .3s 15s both, dotride 1s 16s both;animation-timing-function:var(--ease)}
+  @keyframes dotride{from{top:668px}to{top:1316px}}
+  /* ledger (top-left): the permanent record, full size */
+  .ledgergreen{left:60px;top:540px;font-size:28px;letter-spacing:.06em;color:var(--leaf)}
+  .run .ledgergreen{animation:rise .52s 14.4s both}
+  .ledgerred{left:60px;top:610px;font-size:28px;letter-spacing:.06em;color:var(--setback)}
+  .run .ledgerred{animation:rise .52s 12.3s both}
+  .ledgerscale{left:60px;top:680px;font-size:28px;letter-spacing:.06em;color:var(--muted)}
+  .run .ledgerscale{animation:rise .52s 16.3s both}
+  /* projection (post-zoom world) */
+  .proj{stroke:var(--indigo);stroke-width:6;fill:none;opacity:.55;stroke-dasharray:3 4;stroke-linecap:round}
+  .projreveal{stroke-dasharray:100;stroke-dashoffset:100}
+  .run .projwrap{animation:fadein .1s 18s both}
+  .run .projline{animation:draw 1.4s 18s both;animation-timing-function:var(--ease)}
+  .sparcdot{position:absolute;left:849px;top:1086px;width:28px;height:28px;border-radius:50%;
+            border:6px solid var(--indigo);background:var(--paper)}
+  .run .sparcdot{animation:fadein .4s 18.9s both}
+  .sparclbl{left:430px;top:1062px;font-size:26px;letter-spacing:.08em;color:var(--indigo)}
+  .run .sparclbl{animation:rise .4s 18.6s both}
+  .goalring{position:absolute;left:897px;top:482px;width:46px;height:46px;border-radius:50%;
+            border:6px solid var(--indigo);background:var(--paper)}
+  .run .goalring{animation:fadein .4s 19.6s both}
+  .goallbl{left:560px;top:462px;font-size:26px;letter-spacing:.08em;color:var(--indigo)}
+  .run .goallbl{animation:rise .4s 19.6s both}
+  .xtick{top:1470px;font-size:24px;color:var(--muted)}
+  .run .xtick{animation:fadein .52s 9.2s both}
+
+  /* S4 VERDICT 21500-25500 */
+  .run .s4{animation:holdscene 4s 21.5s forwards step-end}
+  .v1{left:60px;top:700px;font-family:var(--serif);font-style:italic;font-size:76px;line-height:1.15;color:var(--ink);width:860px}
+  .v2{left:60px;top:830px;font-family:var(--serif);font-style:italic;font-size:76px;line-height:1.15;color:var(--ink);width:860px}
+  .run .v1{animation:rise .52s 21.8s both}
+  .run .v2{animation:rise .52s 23s both}
+
+  /* S5 CLOSE 25500-30000 */
+  .run .s5{animation:fadein .4s 25.5s both}
+  .sprig{left:60px;top:620px}
+  .tag{left:60px;top:830px;font-family:var(--serif);font-weight:700;font-size:96px;letter-spacing:-.02em;color:var(--ink)}
+  .url{left:60px;top:986px;font-size:34px;letter-spacing:.08em;color:var(--indigo)}
+  .support{left:60px;top:1070px;font-size:28px;letter-spacing:.14em;color:var(--muted)}
+  .run .sprig{animation:rise .52s 25.8s both}
+  .run .tag{animation:rise .52s 26.1s both}
+  .run .url{animation:rise .52s 26.5s both}
+  .run .support{animation:rise .52s 27.2s both}
+
+  @media (prefers-reduced-motion: reduce){
+    .run *{animation-duration:.01s !important;animation-delay:0s !important}
+    .run .s0,.run .s1,.run .s2,.run .s3,.run .s4{opacity:0 !important}
+    .run .s5,.run .s5 .el{opacity:1 !important}
+  }
+</style>
+
+<h1>The climb to Q30</h1>
+<div class="sub">howclose.to · brandreel animatic v2 · 1080x1920 · 30s · the production reference</div>
+
+<div class="stagebox">
+  <div class="stagewrap" id="wrap">
+    <div class="stage run" id="stage">
+
+      <div class="scene s0">
+        <div class="el hookstamp">DEC 5, 2022 · 1:03 AM</div>
+        <div class="hookflash"></div>
+      </div>
+
+      <div class="scene s1">
+        <div class="el kicker">NUCLEAR FUSION · AS OF SEP 2026</div>
+        <div class="q1"><span class="el ql1">Can we</span><span class="el ql2">bottle a star?</span></div>
+        <div class="el dek">or, precisely: how close are we?</div>
+      </div>
+
+      <div class="scene s2">
+        <div class="el st1">The fuel is seawater.</div>
+        <div class="el st2">The exhaust is helium.</div>
+        <div class="el stq">THE CATCH: Q = ENERGY OUT / ENERGY IN</div>
+      </div>
+
+      <div class="scene s3">
+        <div class="el figlabel">FUSION ENERGY GAIN · Q · 1990-2030</div>
+
+        <svg class="chart" viewBox="0 0 1080 1920" fill="none">
+          <g class="grid" opacity="0">
+            <line x1="140" y1="500"  x2="920" y2="500"  stroke="#D6DCE5" stroke-width="2"/>
+            <line x1="140" y1="800"  x2="920" y2="800"  stroke="#D6DCE5" stroke-width="2"/>
+            <line x1="140" y1="1100" x2="920" y2="1100" stroke="#D6DCE5" stroke-width="2"/>
+            <line x1="140" y1="1400" x2="920" y2="1400" stroke="#5F6B7A" stroke-width="2"/>
+          </g>
+          <g class="histG">
+            <polyline class="hist" pathLength="100" vector-effect="non-scaling-stroke"
+              points="160,1396 250,1392 283,1390 293,1199 305,1385 400,1378 578,1365 749,1362 768,950 790,935 806,680"/>
+            <polyline class="redseg" pathLength="100" vector-effect="non-scaling-stroke"
+              points="578,1365 749,1362"/>
+          </g>
+          <g class="projwrap" opacity="0">
+            <polyline class="proj projline" pathLength="100" vector-effect="non-scaling-stroke"
+              points="806,1328 863,1100 920,510"/>
+          </g>
+        </svg>
+
+        <!-- Y ticks: phase 1 then phase 2 (crossfade during the zoom) -->
+        <div class="el ytick p1x" style="top:1386px">0</div>
+        <div class="el ytick p1x" style="top:1086px">1</div>
+        <div class="el ytick p1x" style="top:786px">2</div>
+        <div class="el ytick p1x" style="top:486px">3</div>
+        <div class="el ytick p2x" style="top:1386px">0</div>
+        <div class="el ytick p2x" style="top:1086px">10</div>
+        <div class="el ytick p2x" style="top:786px">20</div>
+        <div class="el ytick p2x" style="top:486px">30</div>
+
+        <div class="el xtick" style="left:150px">1990</div>
+        <div class="el xtick" style="left:530px">2010</div>
+        <div class="el xtick" style="left:880px">2030</div>
+
+        <div class="jetdot"></div>
+        <div class="el jetlbl">JET · Q 0.67 · 1997</div>
+        <div class="igniteflash"></div>
+        <div class="dot24"></div>
+
+        <div class="el ledgerred">&#9662; SETBACK · 2012-2021 · A DECADE BELOW BREAKEVEN</div>
+        <div class="el ledgergreen">&#10003; IGNITION · DEC 2022 · REPEATED, NOW Q 2.4</div>
+        <div class="el ledgerscale">SAME DATA · AXIS NOW 0-30</div>
+
+        <div class="el sparclbl">SPARC TARGET · Q &gt; 10 · 2027</div>
+        <div class="sparcdot"></div>
+        <div class="el goallbl">COMMERCIAL · Q ~ 30</div>
+        <div class="goalring"></div>
+      </div>
+
+      <div class="scene s4">
+        <div class="el v1">A tiny star has flashed.</div>
+        <div class="el v2">A dependable power station hasn't.</div>
+      </div>
+
+      <div class="scene s5">
+        <div class="el sprig">
+          <svg width="150" height="150" viewBox="0 0 32 32" fill="none" aria-label="The Sprig">
+            <line x1="7.5" y1="25.5" x2="14.5" y2="17.5" stroke="#0F3D91" stroke-width="2.6" stroke-linecap="round"/>
+            <line x1="16.5" y1="15" x2="23" y2="7.5" stroke="#0F3D91" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="0.1 3.4"/>
+            <line x1="17.5" y1="17.5" x2="24.5" y2="19.5" stroke="#0F3D91" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="0.1 3.4"/>
+            <circle cx="7" cy="26" r="3.6" fill="#0F3D91"/>
+            <circle cx="15.5" cy="16.5" r="3.6" fill="#0F3D91"/>
+            <circle cx="25" cy="5.5" r="3.1" fill="#FBF9F4" stroke="#0F3D91" stroke-width="2.1"/>
+            <circle cx="27" cy="20" r="3.1" fill="#FBF9F4" stroke="#0F3D91" stroke-width="2.1"/>
+          </svg>
+        </div>
+        <div class="el tag">How close are we?</div>
+        <div class="el url">howclose.to/problems/nuclear-fusion</div>
+        <div class="el support">NEVER A FAKE PERCENTAGE</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<button id="replay" type="button">Replay &#183; 30s</button>
+
+<div class="legend">
+  <b>Core mechanic:</b> one honest zoom-out - sixty years of climbing becomes a sliver
+  at the bottom of the axis power stations actually need.<br>
+  <b>Porting contract:</b> 1:1 into Remotion; if the port looks worse, it goes back.<br>
+  <b>Production adds:</b> Kokoro VO (script in the file header) + calm music, ducked, -14 LUFS.
+</div>
+
+<script>
+  const wrap = document.getElementById("wrap");
+  const stage = document.getElementById("stage");
+  const fit = () => { stage.style.transform = "scale(" + (wrap.clientWidth / 1080) + ")"; };
+  addEventListener("resize", fit); fit();
+  document.getElementById("replay").addEventListener("click", () => {
+    stage.classList.remove("run");
+    void stage.offsetWidth;
+    stage.classList.add("run");
+  });
+</script>
