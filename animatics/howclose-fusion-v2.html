@@ -2,50 +2,66 @@
 <title>The Climb to Q30</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400;1,8..60,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <!--
-  brandreel animatic v2 - howclose.to - "Can we bottle a star?" full arc, 30s
-  PORTING CONTRACT: HTML animatic == 1:1 Remotion composition. 1080x1920 stage,
-  ms from t=0, total 30000ms, ease cubic-bezier(0.2,0.7,0.2,1), entrance 520ms.
+  brandreel animatic v2 rev2 - howclose.to - "Can we bottle a star?" 29s
+  PORTING CONTRACT: 1:1 into Remotion. 1080x1920, ms from t=0, total 29000ms,
+  ease cubic-bezier(0.2,0.7,0.2,1) unless a beat states otherwise. If the port
+  looks worse than this file, it goes back.
 
-  CORE MECHANIC (one sentence): One honest zoom-out - sixty years of climbing
-  becomes a sliver at the bottom of the axis power stations actually need.
+  CORE MECHANIC: One honest zoom-out - sixty years of climbing becomes a
+  sliver at the bottom of the axis power stations actually need.
+
+  MOTION SEMANTICS (rev2 audit - every element re-derived from what it says):
+  - The line is a RECORD of best-ever Q: it only ratchets upward. Never a
+    spike-and-fall.
+  - The struggle is long -> the flat decades draw SLOWLY and LINEARLY
+    (patience, no ease drama). The event is instant -> the ignition step
+    draws in ~300ms with the flash. Repeats climb briskly after.
+  - The Q definition persists across the cut: the stakes footnote becomes
+    the chart label. One thought.
+  - The 1:03 AM timestamp appears AT the ignition step, where it means
+    something. No cold-open decoration.
+  - Red = attempts that failed to move the record: tick marks under the flat
+    line, 2012-2021, plus the red segment. Full size in the ledger.
+  - Ledger rows appear in chronological order, top to bottom.
+  - The zoom is the thesis: land it, hold still 0.8s, stamp SAME DATA, then
+    draw the dashed road.
 
   SCENE TABLE (ms)
-  S0 HOOK      0-1200     timestamp 150 · ember flash 400 · hard cut
-  S1 QUESTION  1200-5200  kicker 1400 · lines 1700/2000 · dek 3400
-  S2 STAKES    5200-9000  fuel line 5400 · exhaust line 6200 · Q footnote 7200
-  S3 CLIMB     9000-21500 label+axis+grid 9200 · history draws 9600-15000
-                          red segment 12000-12800 · red stamp 12300
-                          ember flash at ignition 14000 · green stamp 14400
-                          ZOOM-OUT 16000-17000 (scaleY 0.1 about Q0; Y labels
-                          crossfade 0/1/2/3 -> 0/10/20/30) · scale stamp 16300
-                          dashed projection 18000-19400 · SPARC label 18600
-                          commercial ring+label 19600
-  S4 VERDICT   21500-25500 line1 21800 · line2 23000
-  S5 CLOSE     25500-30000 sprig 25800 · tagline 26100 · url 26500 · support 27200
+  S1 QUESTION 0-4000     kicker 200 · lines 500/800 · dek 2200
+  S2 STAKES   4000-8200  fuel 4200 · exhaust 5000 · Q definition 6200
+  S3 CLIMB    8200-21000 label(Q def)+axes 8400
+                         flat-era draw LINEAR 8800-13600 (JET step lands ~10.7,
+                           label 10.9) · red ticks 12.4-13.3 · red ledger 12.5
+                         ignition step + flash 13600-13900 · timestamp 13900
+                           rise to 2.4 13900-14600 · endpoint dot 14600
+                         green ledger 15000
+                         ZOOM 15800-16800 · scale ledger 17000
+                         dashed 17600-19000 · SPARC 18400 · ring 19400
+  S4 VERDICT  21000-25000 line1 21300 · line2 22500
+  S5 CLOSE    25000-29000 sprig 25300 · tagline 25600 · url 26000 · support 26700
 
-  CHART GEOMETRY (px): plot x140-920, Q0 baseline y1400. Phase 1 scale 300px/Q
-  (Q3=y500). X: 1990=x160 .. 2030=x920 (19px/yr). History polyline points:
-  (160,1396)(250,1392)(283,1390)(293,1199)JET (305,1385)(400,1378)(578,1365)
-  (749,1362)(768,950)ignition (790,935)(806,680)=Q2.4. Red overlay segment
-  (578,1365)-(749,1362) = NIF decade. Zoom: translate(0,1260) scale(1,0.1)
-  => Q30=y500, Q10=y1100, Q2.4=y1328. Dashed projection (post-zoom coords):
-  (806,1328)-(863,1100)SPARC-(920,510). Ring at (920,505). Gridlines at
-  y500/800/1100/1400. Strokes non-scaling.
+  CHART GEOMETRY: plot x140-920, Q0=y1400. Phase1 300px/Q (Q3=y500).
+  X: 1990=x160..2030=x920 (19px/yr). RATCHET, four segments - plateaus crawl
+  linear, steps snap: histA1 (160,1400)-(283,1400) 8800-10400 · histJ step
+  (283,1400)-(293,1199) 10400-10650 · histA2 (293,1199)-(749,1199)
+  10650-13600 · histB (749,1199)(768,950)(806,680) 13600-14600. Red overlay (578,1199)-(749,1199) + 8 red
+  attempt ticks below the line x585-742. Zoom: translate(0,1260) scale(1,0.1);
+  Q30=y500 Q10=y1100 Q2.4=y1328. Dashed (806,1328)(863,1100)(920,510).
+  Markers ride the zoom on their own keyframes; strokes non-scaling.
 
-  VO SCRIPT (production, Kokoro, Plain register - not in this silent animatic):
+  VO SCRIPT (production, Kokoro af_heart, Plain register):
   S1 "Can we bottle a star?"
   S2 "The fuel is seawater. The exhaust is helium. The catch is Q - you have
       to get more energy out than you put in."
-  S3 "For sixty years the line barely rose. A decade of misses. Then, December
-      2022 - ignition. More out than in. Repeated. Now zoom out: a power
-      station needs thirty."
+  S3 "For sixty years the record barely moved. A decade of misses. Then,
+      December 2022 - ignition. More out than in. Repeated."
+      (zoom) "Now zoom out. A power station needs thirty."
   S4 "A tiny star has flashed. A dependable power station hasn't."
-  S5 "howclose.to. Never a fake percentage."
+  S5 "howclose dot to. Never a fake percentage."
 
-  LAWS: linear axis both phases, rescale stated on-screen (SAME DATA · AXIS
-  0-30) · green only on the verified result · dashed/hollow = not yet real ·
-  setback red, full size, in the ledger and on the line · ember appears twice
-  as the same protagonist event (hook + ignition point) · paper and ink.
+  LAWS: linear axis both phases, rescale stated on-screen · green only on the
+  verified result · dashed/hollow = not yet real · setback red, full size ·
+  ember appears once, at ignition · paper and ink, no chrome.
 -->
 <style>
   :root{
@@ -79,145 +95,139 @@
   .run .scene{animation-timing-function:var(--ease);animation-fill-mode:forwards}
   @keyframes rise{from{opacity:0;transform:translateY(34px)}to{opacity:1;transform:none}}
   @keyframes fadein{from{opacity:0}to{opacity:1}}
-  @keyframes fadeout{from{opacity:1}to{opacity:0}}
   @keyframes holdscene{0%,99%{opacity:1}100%{opacity:0}}
 
-  /* S0 HOOK 0-1200 */
-  .run .s0{animation:holdscene 1.2s 0s forwards step-end;opacity:1}
-  .hookstamp{left:60px;top:470px;font-size:32px;letter-spacing:.28em;color:var(--muted)}
-  .run .hookstamp{animation:fadein .4s .15s both}
-  .hookflash{position:absolute;left:510px;top:880px;width:60px;height:60px;border-radius:50%;background:var(--ember);opacity:0}
-  .run .hookflash{animation:hookflash .8s .4s both;animation-timing-function:var(--ease)}
-  @keyframes hookflash{0%{opacity:0;transform:scale(.3);box-shadow:0 0 0 0 rgba(229,143,31,.55)}
-                       40%{opacity:1;transform:scale(1.6);box-shadow:0 0 0 90px rgba(229,143,31,0)}
-                       100%{opacity:1;transform:scale(1);box-shadow:0 0 0 0 rgba(229,143,31,0)}}
-
-  /* S1 QUESTION 1200-5200 */
-  .run .s1{animation:holdscene 4s 1.2s forwards step-end}
+  /* S1 QUESTION 0-4000 */
+  .run .s1{animation:holdscene 4s 0s forwards step-end;opacity:1}
   .kicker{left:60px;top:470px;font-size:30px;letter-spacing:.32em;color:var(--muted)}
   .q1{position:absolute;left:60px;top:560px;font-family:var(--serif);font-weight:700;font-size:128px;
       line-height:1.04;letter-spacing:-.02em;color:var(--ink);width:860px}
   .q1 .el{position:static;display:block}
   .dek{left:60px;top:986px;font-family:var(--serif);font-style:italic;font-size:44px;color:var(--indigo)}
-  .run .kicker{animation:rise .52s 1.4s both}
-  .run .ql1{animation:rise .52s 1.7s both}
-  .run .ql2{animation:rise .52s 2s both}
-  .run .dek{animation:rise .52s 3.4s both}
+  .run .kicker{animation:rise .52s .2s both}
+  .run .ql1{animation:rise .52s .5s both}
+  .run .ql2{animation:rise .52s .8s both}
+  .run .dek{animation:rise .52s 2.2s both}
 
-  /* S2 STAKES 5200-9000 */
-  .run .s2{animation:holdscene 3.8s 5.2s forwards step-end}
+  /* S2 STAKES 4000-8200 */
+  .run .s2{animation:holdscene 4.2s 4s forwards step-end}
   .st1{left:60px;top:640px;font-family:var(--serif);font-weight:600;font-size:88px;line-height:1.12;
        letter-spacing:-.015em;color:var(--ink);width:900px}
   .st2{left:60px;top:790px;font-family:var(--serif);font-weight:600;font-size:88px;line-height:1.12;
        letter-spacing:-.015em;color:var(--ink);width:900px}
   .stq{left:60px;top:1010px;font-size:32px;letter-spacing:.14em;color:var(--indigo)}
-  .run .st1{animation:rise .52s 5.4s both}
-  .run .st2{animation:rise .52s 6.2s both}
-  .run .stq{animation:rise .52s 7.2s both}
+  .run .st1{animation:rise .52s 4.2s both}
+  .run .st2{animation:rise .52s 5s both}
+  .run .stq{animation:rise .52s 6.2s both}
 
-  /* S3 CLIMB 9000-21500 */
-  .run .s3{animation:holdscene 12.5s 9s forwards step-end}
-  .figlabel{left:60px;top:360px;font-size:30px;letter-spacing:.24em;color:var(--indigo)}
-  .run .figlabel{animation:fadein .52s 9.2s both}
+  /* S3 CLIMB 8200-21000 */
+  .run .s3{animation:holdscene 12.8s 8.2s forwards step-end}
+  /* the Q definition persists: same copy, now as the chart label */
+  .figlabel{left:60px;top:360px;font-size:30px;letter-spacing:.14em;color:var(--indigo)}
+  .run .figlabel{animation:fadein .52s 8.4s both}
   .chart{position:absolute;left:0;top:0;width:1080px;height:1920px}
-  .run .chart .grid{animation:fadein .52s 9.2s both;opacity:0}
-  /* history line: pathLength 100, draws 9600-15000 */
-  .hist{stroke:var(--indigo);stroke-width:8;fill:none;stroke-linecap:round;stroke-linejoin:round;
-        stroke-dasharray:100;stroke-dashoffset:100}
-  .run .hist{animation:draw 5.4s 9.6s both;animation-timing-function:var(--ease)}
+  .run .chart .grid{animation:fadein .52s 8.4s both;opacity:0}
+  /* plateaus: SLOW LINEAR draw - the struggle. steps: FAST - the events. */
+  .histA1,.histA2,.histJ{stroke:var(--indigo);stroke-width:8;fill:none;stroke-linecap:round;
+         stroke-linejoin:round;stroke-dasharray:100;stroke-dashoffset:100}
+  .run .histA1{animation:draw 1.6s 8.8s both linear}
+  .run .histJ{animation:draw .25s 10.4s both;animation-timing-function:var(--ease)}
+  .run .histA2{animation:draw 2.95s 10.65s both linear}
+  /* ignition + repeats: FAST draw - the event */
+  .histB{stroke:var(--indigo);stroke-width:8;fill:none;stroke-linecap:round;stroke-linejoin:round;
+         stroke-dasharray:100;stroke-dashoffset:100}
+  .run .histB{animation:draw 1s 13.6s both;animation-timing-function:var(--ease)}
   @keyframes draw{from{stroke-dashoffset:100}to{stroke-dashoffset:0}}
   .redseg{stroke:var(--setback);stroke-width:10;fill:none;stroke-linecap:round;
           stroke-dasharray:100;stroke-dashoffset:100}
-  .run .redseg{animation:draw .8s 12s both;animation-timing-function:var(--ease)}
-  /* the zoom-out: same data, axis 0-30 */
+  .run .redseg{animation:draw .9s 12.4s both linear}
+  .redtick{stroke:var(--setback);stroke-width:6;stroke-linecap:round}
+  .run .rt1{animation:fadein .2s 12.4s both} .run .rt2{animation:fadein .2s 12.5s both}
+  .run .rt3{animation:fadein .2s 12.6s both} .run .rt4{animation:fadein .2s 12.7s both}
+  .run .rt5{animation:fadein .2s 12.8s both} .run .rt6{animation:fadein .2s 12.9s both}
+  .run .rt7{animation:fadein .2s 13s both}   .run .rt8{animation:fadein .2s 13.1s both}
+  .redtick{opacity:0}
   .histG{transform-box:view-box;transform-origin:0 0}
-  .run .histG{animation:zoomout 1s 16s both;animation-timing-function:var(--ease)}
+  .run .histG{animation:zoomout 1s 15.8s both;animation-timing-function:var(--ease)}
   @keyframes zoomout{from{transform:translate(0,0) scale(1,1)}to{transform:translate(0,1260px) scale(1,0.1)}}
-  /* Y tick labels crossfade */
   .ytick{left:64px;width:70px;text-align:right;font-size:24px;color:var(--muted);font-family:var(--mono)}
-  .run .yt1{animation:ytick1 12.5s 0s both step-end}
-  @keyframes ytick1{0%{opacity:0}74%{opacity:0}76%{opacity:1}128%{opacity:1}}
-  .run .p1{animation:fadein .52s 9.2s both}
-  .run .p1x{animation:p1x 7.32s 9.2s both;animation-timing-function:var(--ease)}
-  @keyframes p1x{0%{opacity:0}7%{opacity:1}93%{opacity:1}100%{opacity:0}}
-  .run .p2x{animation:fadein .52s 16.5s both}
-  /* markers ride the zoom via their own keyframes (16000-17000) */
+  .run .p1x{animation:p1x 8.9s 8.4s both step-end}
+  @keyframes p1x{0%{opacity:0}6%{opacity:1}83%{opacity:1}94%{opacity:0}100%{opacity:0}}
+  .run .p2x{animation:fadein .52s 16.3s both}
+  .xtick{top:1470px;font-size:24px;color:var(--muted)}
+  .run .xtick{animation:fadein .52s 8.4s both}
+  /* markers */
   .jetdot{position:absolute;left:281px;top:1187px;width:24px;height:24px;border-radius:50%;background:var(--indigo)}
-  .run .jetdot{animation:fadein .3s 11s both, jetride 1s 16s both;animation-timing-function:var(--ease)}
+  .run .jetdot{animation:fadein .3s 10.5s both, jetride 1s 15.8s both;animation-timing-function:var(--ease)}
   @keyframes jetride{from{top:1187px}to{top:1368px}}
-  .jetlbl{left:330px;top:1180px;font-size:26px;letter-spacing:.08em;color:var(--muted)}
-  .run .jetlbl{animation:jetlbl 5.2s 11s both step-end}
-  @keyframes jetlbl{0%{opacity:0}8%{opacity:1}90%{opacity:1}100%{opacity:0}}
+  .jetlbl{left:330px;top:1128px;font-size:26px;letter-spacing:.08em;color:var(--muted)}
+  .run .jetlbl{animation:lblwindow 5.1s 10.7s both step-end}
+  @keyframes lblwindow{0%{opacity:0}8%{opacity:1}92%{opacity:1}100%{opacity:0}}
   .igniteflash{position:absolute;left:753px;top:935px;width:30px;height:30px;border-radius:50%;background:var(--ember)}
-  .run .igniteflash{animation:ignite 1s 14s both, igniteride 1s 16s both;animation-timing-function:var(--ease)}
+  .run .igniteflash{animation:ignite 1s 13.7s both, igniteride 1s 15.8s both;animation-timing-function:var(--ease)}
   @keyframes ignite{0%{opacity:0;transform:scale(.4);box-shadow:0 0 0 0 rgba(229,143,31,.55)}
                     40%{opacity:1;transform:scale(1.5);box-shadow:0 0 0 60px rgba(229,143,31,0)}
                     100%{opacity:1;transform:scale(1);box-shadow:0 0 0 0 rgba(229,143,31,0)}}
   @keyframes igniteride{from{top:935px}to{top:1340px}}
+  .stamplbl{left:400px;top:900px;font-size:26px;letter-spacing:.08em;color:var(--muted)}
+  .run .stamplbl{animation:lblwindow 1.9s 13.9s both step-end}
   .dot24{position:absolute;left:794px;top:668px;width:24px;height:24px;border-radius:50%;background:var(--indigo)}
-  .run .dot24{animation:fadein .3s 15s both, dotride 1s 16s both;animation-timing-function:var(--ease)}
+  .run .dot24{animation:fadein .3s 14.6s both, dotride 1s 15.8s both;animation-timing-function:var(--ease)}
   @keyframes dotride{from{top:668px}to{top:1316px}}
-  /* ledger (top-left): the permanent record, full size */
-  .ledgergreen{left:60px;top:540px;font-size:28px;letter-spacing:.06em;color:var(--leaf)}
-  .run .ledgergreen{animation:rise .52s 14.4s both}
-  .ledgerred{left:60px;top:610px;font-size:28px;letter-spacing:.06em;color:var(--setback)}
-  .run .ledgerred{animation:rise .52s 12.3s both}
+  /* ledger: chronological, top to bottom */
+  .ledgerred{left:60px;top:540px;font-size:28px;letter-spacing:.06em;color:var(--setback)}
+  .run .ledgerred{animation:rise .52s 12.5s both}
+  .ledgergreen{left:60px;top:610px;font-size:28px;letter-spacing:.06em;color:var(--leaf)}
+  .run .ledgergreen{animation:rise .52s 15s both}
   .ledgerscale{left:60px;top:680px;font-size:28px;letter-spacing:.06em;color:var(--muted)}
-  .run .ledgerscale{animation:rise .52s 16.3s both}
-  /* projection (post-zoom world) */
+  .run .ledgerscale{animation:rise .52s 17s both}
+  /* projection */
   .proj{stroke:var(--indigo);stroke-width:6;fill:none;opacity:.55;stroke-dasharray:3 4;stroke-linecap:round}
-  .projreveal{stroke-dasharray:100;stroke-dashoffset:100}
-  .run .projwrap{animation:fadein .1s 18s both}
-  .run .projline{animation:draw 1.4s 18s both;animation-timing-function:var(--ease)}
+  .projline{stroke-dasharray:100;stroke-dashoffset:100}
+  .run .projwrap{animation:fadein .1s 17.6s both}
+  .run .projline{animation:draw 1.4s 17.6s both;animation-timing-function:var(--ease)}
   .sparcdot{position:absolute;left:849px;top:1086px;width:28px;height:28px;border-radius:50%;
             border:6px solid var(--indigo);background:var(--paper)}
-  .run .sparcdot{animation:fadein .4s 18.9s both}
+  .run .sparcdot{animation:fadein .4s 18.4s both}
   .sparclbl{left:430px;top:1062px;font-size:26px;letter-spacing:.08em;color:var(--indigo)}
-  .run .sparclbl{animation:rise .4s 18.6s both}
+  .run .sparclbl{animation:rise .4s 18.4s both}
   .goalring{position:absolute;left:897px;top:482px;width:46px;height:46px;border-radius:50%;
             border:6px solid var(--indigo);background:var(--paper)}
-  .run .goalring{animation:fadein .4s 19.6s both}
+  .run .goalring{animation:fadein .4s 19.4s both}
   .goallbl{left:560px;top:462px;font-size:26px;letter-spacing:.08em;color:var(--indigo)}
-  .run .goallbl{animation:rise .4s 19.6s both}
-  .xtick{top:1470px;font-size:24px;color:var(--muted)}
-  .run .xtick{animation:fadein .52s 9.2s both}
+  .run .goallbl{animation:rise .4s 19.4s both}
 
-  /* S4 VERDICT 21500-25500 */
-  .run .s4{animation:holdscene 4s 21.5s forwards step-end}
+  /* S4 VERDICT 21000-25000 */
+  .run .s4{animation:holdscene 4s 21s forwards step-end}
   .v1{left:60px;top:700px;font-family:var(--serif);font-style:italic;font-size:76px;line-height:1.15;color:var(--ink);width:860px}
   .v2{left:60px;top:830px;font-family:var(--serif);font-style:italic;font-size:76px;line-height:1.15;color:var(--ink);width:860px}
-  .run .v1{animation:rise .52s 21.8s both}
-  .run .v2{animation:rise .52s 23s both}
+  .run .v1{animation:rise .52s 21.3s both}
+  .run .v2{animation:rise .52s 22.5s both}
 
-  /* S5 CLOSE 25500-30000 */
-  .run .s5{animation:fadein .4s 25.5s both}
+  /* S5 CLOSE 25000-29000 */
+  .run .s5{animation:fadein .4s 25s both}
   .sprig{left:60px;top:620px}
   .tag{left:60px;top:830px;font-family:var(--serif);font-weight:700;font-size:96px;letter-spacing:-.02em;color:var(--ink)}
   .url{left:60px;top:986px;font-size:34px;letter-spacing:.08em;color:var(--indigo)}
   .support{left:60px;top:1070px;font-size:28px;letter-spacing:.14em;color:var(--muted)}
-  .run .sprig{animation:rise .52s 25.8s both}
-  .run .tag{animation:rise .52s 26.1s both}
-  .run .url{animation:rise .52s 26.5s both}
-  .run .support{animation:rise .52s 27.2s both}
+  .run .sprig{animation:rise .52s 25.3s both}
+  .run .tag{animation:rise .52s 25.6s both}
+  .run .url{animation:rise .52s 26s both}
+  .run .support{animation:rise .52s 26.7s both}
 
   @media (prefers-reduced-motion: reduce){
     .run *{animation-duration:.01s !important;animation-delay:0s !important}
-    .run .s0,.run .s1,.run .s2,.run .s3,.run .s4{opacity:0 !important}
+    .run .s1,.run .s2,.run .s3,.run .s4{opacity:0 !important}
     .run .s5,.run .s5 .el{opacity:1 !important}
   }
 </style>
 
 <h1>The climb to Q30</h1>
-<div class="sub">howclose.to · brandreel animatic v2 · 1080x1920 · 30s · the production reference</div>
+<div class="sub">howclose.to · brandreel animatic v2 rev2 · 1080x1920 · 29s · the production reference</div>
 
 <div class="stagebox">
   <div class="stagewrap" id="wrap">
     <div class="stage run" id="stage">
-
-      <div class="scene s0">
-        <div class="el hookstamp">DEC 5, 2022 · 1:03 AM</div>
-        <div class="hookflash"></div>
-      </div>
 
       <div class="scene s1">
         <div class="el kicker">NUCLEAR FUSION · AS OF SEP 2026</div>
@@ -232,7 +242,7 @@
       </div>
 
       <div class="scene s3">
-        <div class="el figlabel">FUSION ENERGY GAIN · Q · 1990-2030</div>
+        <div class="el figlabel">Q = ENERGY OUT / ENERGY IN · 1990-2030</div>
 
         <svg class="chart" viewBox="0 0 1080 1920" fill="none">
           <g class="grid" opacity="0">
@@ -242,10 +252,24 @@
             <line x1="140" y1="1400" x2="920" y2="1400" stroke="#5F6B7A" stroke-width="2"/>
           </g>
           <g class="histG">
-            <polyline class="hist" pathLength="100" vector-effect="non-scaling-stroke"
-              points="160,1396 250,1392 283,1390 293,1199 305,1385 400,1378 578,1365 749,1362 768,950 790,935 806,680"/>
+            <polyline class="histA1" pathLength="100" vector-effect="non-scaling-stroke"
+              points="160,1400 283,1400"/>
+            <polyline class="histJ" pathLength="100" vector-effect="non-scaling-stroke"
+              points="283,1400 293,1199"/>
+            <polyline class="histA2" pathLength="100" vector-effect="non-scaling-stroke"
+              points="293,1199 749,1199"/>
+            <polyline class="histB" pathLength="100" vector-effect="non-scaling-stroke"
+              points="749,1199 768,950 806,680"/>
             <polyline class="redseg" pathLength="100" vector-effect="non-scaling-stroke"
-              points="578,1365 749,1362"/>
+              points="578,1199 749,1199"/>
+            <line class="redtick rt1" x1="585" y1="1215" x2="585" y2="1239"/>
+            <line class="redtick rt2" x1="607" y1="1215" x2="607" y2="1239"/>
+            <line class="redtick rt3" x1="629" y1="1215" x2="629" y2="1239"/>
+            <line class="redtick rt4" x1="651" y1="1215" x2="651" y2="1239"/>
+            <line class="redtick rt5" x1="673" y1="1215" x2="673" y2="1239"/>
+            <line class="redtick rt6" x1="695" y1="1215" x2="695" y2="1239"/>
+            <line class="redtick rt7" x1="717" y1="1215" x2="717" y2="1239"/>
+            <line class="redtick rt8" x1="739" y1="1215" x2="739" y2="1239"/>
           </g>
           <g class="projwrap" opacity="0">
             <polyline class="proj projline" pathLength="100" vector-effect="non-scaling-stroke"
@@ -253,7 +277,6 @@
           </g>
         </svg>
 
-        <!-- Y ticks: phase 1 then phase 2 (crossfade during the zoom) -->
         <div class="el ytick p1x" style="top:1386px">0</div>
         <div class="el ytick p1x" style="top:1086px">1</div>
         <div class="el ytick p1x" style="top:786px">2</div>
@@ -270,6 +293,7 @@
         <div class="jetdot"></div>
         <div class="el jetlbl">JET · Q 0.67 · 1997</div>
         <div class="igniteflash"></div>
+        <div class="el stamplbl">DEC 5, 2022 · 1:03 AM</div>
         <div class="dot24"></div>
 
         <div class="el ledgerred">&#9662; SETBACK · 2012-2021 · A DECADE BELOW BREAKEVEN</div>
@@ -308,13 +332,16 @@
   </div>
 </div>
 
-<button id="replay" type="button">Replay &#183; 30s</button>
+<button id="replay" type="button">Replay &#183; 29s</button>
 
 <div class="legend">
   <b>Core mechanic:</b> one honest zoom-out - sixty years of climbing becomes a sliver
   at the bottom of the axis power stations actually need.<br>
-  <b>Porting contract:</b> 1:1 into Remotion; if the port looks worse, it goes back.<br>
-  <b>Production adds:</b> Kokoro VO (script in the file header) + calm music, ducked, -14 LUFS.
+  <b>rev2 audit:</b> the line is now a record (ratchets only) · the struggle draws slow
+  and linear, the event snaps · the Q definition persists into the chart · the 1:03 AM
+  timestamp lives at the ignition step · red misses drawn as attempt ticks ·
+  ledger in chronological order · the zoom lands, holds, then the road draws.<br>
+  <b>Production adds:</b> Kokoro VO (script in header) + calm music, ducked, -14 LUFS.
 </div>
 
 <script>
