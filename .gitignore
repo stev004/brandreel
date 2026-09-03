@@ -3,3 +3,11 @@ out/
 workspace/**/*.mp4
 workspace/**/render*
 .tmp-*
+workspace/**/*.wav
+workspace/**/vo/
+workspace/**/words.json
+workspace/**/vo-timing.json
+workspace/**/final/
+workspace/**/audio-report.json
+audio/.venv/
+__pycache__/
