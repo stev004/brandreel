@@ -7,7 +7,7 @@
 - **Gates all green on the trial branch:** typecheck, 12 tests, no-literal greps, both workspace renders + media lints, audio end-to-end (VO -> alignment -> polish at -13.75 LUFS).
 
 ## Waiting on Steven
-1. **Gate animatic v2 rev6** (KEEP/TWEAK/KILL): https://claude.ai/code/artifact/af17a332-4be0-4af1-a670-7e52629ced63 - 34.8s pollar-style cut (rev4 design-agent zones -> rev5 swapping-statement figure -> rev6 doubled pacing + the decade as living shot attempts). Steven 09-03: "best version i've seen" pre-rev6. On KEEP -> delegate the v2 port.
+1. **Fusion animatic PARKED at rev6** (Steven 09-03: "still not great - save it, iterate later"). Saved into the howclose.to repo at `marketing/animatics/fusion-can-we-bottle-a-star.html` (commit 62abe3f there); working copy stays here. Iteration levers + full arc: ROADMAP.md Phase 1.
 2. **Merge** the chain (command above).
 3. Optional: create a private GitHub remote so the CI render workflow runs.
 
