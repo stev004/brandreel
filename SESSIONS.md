@@ -1,5 +1,15 @@
 # SESSIONS - append-only log, newest first
 
+## 2026-09-03 (later) - graph iteration to rev6 via design agent + Steven's critiques
+
+**Summary:** the fusion animatic went rev4 -> rev6 in one sitting, each rev driven by a Steven critique. rev4: Fable design-agent spec (zoned layout, right rail, reused y1000 slot) - superseded same day. rev5: pollar.news-style rebuild (one swapping 60px serif statement replaces ledger+rail; bars tripled, 1x=400px; zoom to 0.08 makes the 30x need-bar land at exactly the 2.4x bar's former 960px height). rev6: total 34.8s, S3 17.5s, statements dwell 2-3s; the 2012-2021 beat now animates four red shot-bars rising to 0.93-0.98x and collapsing (effort visibly failing); statements rewritten explicit; dek moved under the S1 title. All browser-verified; artifact republished (commits 37594ec, f6f45b7, f1e8877).
+
+**Steven's verdicts on the way:** rev4 "still looks fucked... compacted and squashed" -> think pollar.news. rev5 "best version i've seen" but too quick + decade beat weak. rev6 awaiting gate.
+
+**Design lesson for SPEC (candidate):** short-form data video wants a narrated figure (one swapping statement + one big chart), not an information graphic; and absence must be rendered as failing effort, never as stillness.
+
+**Resume:** Steven gates rev6 -> v2 port brief (rev6 geometry + VO-timing-driven durations) -> assemble with VO + music.
+
 ## 2026-09-02/03 - repo born: spec, M1 engine, howclose trial, audio modules
 
 **Summary:** brandreel created from scratch (spec 382a675) and built through M1 + the howclose.to trial in one long session. Two rendered videos exist (Regulate demo 15.9s, howclose v1 18s), animatic v2 rev3 awaits Steven's gate, audio pipeline verified end to end.
