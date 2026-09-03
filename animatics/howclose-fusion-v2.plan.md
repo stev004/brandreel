@@ -1,4 +1,10 @@
-# howclose-fusion v2 - locked decisions (Steven, 2026-09-02)
+# howclose-fusion v2 - locked decisions (Steven, 2026-09-02; rev3 2026-09-03)
+
+> rev3 SUPERSEDES decision 2 below: the timeline chart was replaced by TWO
+> BARS (ENERGY IN vs ENERGY OUT) after Steven's clarity ruling - see the
+> animatic header and SPEC ruling 9 (motion semantics). Decisions 1, 3, 4
+> stand. Audio modules are BUILT and verified (2026-09-03); the v2 port must
+> derive scene durations from vo-timing.json (VO measured 33s vs 29s picture).
 
 Steven rated v1 well; v2 is the "actual video". Decisions locked via Q&A:
 
