@@ -1,0 +1,37 @@
+{
+  "voice": "af_heart",
+  "speed": 1.0,
+  "_note": "Pause planning assumes about 155 spoken words per minute (about 387ms per word). Stage 2 has no leading-silence field, so s1 starts at t=0; s1's pause is set to put s2 near 5.4s. The supplied s2 copy alone is about 8.9s at this rate, so later starts use zero pauses once the preceding speech has overrun the animatic entrance. Kokoro timing is authoritative after synthesis.",
+  "segments": [
+    {
+      "id": "s1",
+      "text": "Can we bottle a star?",
+      "pauseAfterMs": 3465
+    },
+    {
+      "id": "s2",
+      "text": "The fuel is seawater. The exhaust is helium. The catch is Q - you have to get more energy out than you put in.",
+      "pauseAfterMs": 0
+    },
+    {
+      "id": "s3",
+      "text": "For sixty years the line barely rose. A decade of misses. Then, December 2022 - ignition. More out than in. Repeated.",
+      "pauseAfterMs": 0
+    },
+    {
+      "id": "s3b",
+      "text": "Now zoom out. A power station needs thirty.",
+      "pauseAfterMs": 0
+    },
+    {
+      "id": "s4",
+      "text": "A tiny star has flashed. A dependable power station hasn't.",
+      "pauseAfterMs": 0
+    },
+    {
+      "id": "s5",
+      "text": "howclose dot to. Never a fake percentage.",
+      "pauseAfterMs": 0
+    }
+  ]
+}
