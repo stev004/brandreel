@@ -2,7 +2,7 @@
 <title>The Climb to Q30</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400;1,8..60,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <!--
-  brandreel animatic v2 rev3 - howclose.to - "Can we bottle a star?" 29s
+  brandreel animatic v2 rev4 - howclose.to - "Can we bottle a star?" 29s
   PORTING CONTRACT: 1:1 into Remotion. 1080x1920, ms from t=0, total 29000ms,
   ease cubic-bezier(0.2,0.7,0.2,1) unless a beat states otherwise. If the port
   looks worse than this file, it goes back.
@@ -40,13 +40,15 @@
   S4 VERDICT  21000-25000 line1 21300 · line2 22500
   S5 CLOSE    25000-29000 sprig 25300 · tagline 25600 · url 26000 · support 26700
 
-  BAR GEOMETRY: baseline y1400 (div .baseline x260-800). IN bar x300 w170
-  h300 (1x = 300px). OUT bar x560 w170: 0 -> 201px (0.67x) -> 450px (1.5x,
-  the snap) -> 720px (2.4x). Breakeven dashed at y1100. Red dashes x538
-  y1130-1210. Zoom: barsG scaleY(0.1) origin y1400 => 1x = 30px. Need-bar
-  (dashed outline, x560 w170) grows to 900px = 30x, top y500. SPARC rung
-  y1100 = 10x. Labels live outside barsG and ride or crossfade on their own
-  keyframes so type never squashes.
+  BAR GEOMETRY (v3 spec, design agent 2026-09-03): baseline y1300 x100-640.
+  IN x140 w150 h300 (1x=300px, top y1000 = BREAKEVEN, near optical center).
+  OUT x400 w150: 201px (0.67x) / 450px (1.5x) / 720px (2.4x, top y580).
+  Zoom scaleY 0.1 origin y1300 -> 1x=30px; need-bar x400 w150 dashed grows
+  to 900px = 30x, top y400; SPARC rung y1000 (10x) = the vacated breakeven
+  slot. Label zones: header y220 · right rail x660 (one tenant per slot;
+  y1000 slot tenants in sequence: BREAKEVEN -> timestamp -> SPARC) · crest
+  value tags x570 · identity y1330 · ledger strip y1420/1472/1524. Labels
+  live outside barsG; tag24 rides 562->1210 on its own keyframe.
 
   VO SCRIPT (production, Kokoro af_heart, Plain register):
   S1 "Can we bottle a star?"
@@ -119,67 +121,72 @@
   .run .st2{animation:rise .52s 5s both}
   .run .stq{animation:rise .52s 6.2s both}
 
-  /* S3 CLIMB 8200-21000 - two bars: ENERGY IN vs ENERGY OUT */
+  /* S3 CLIMB 8200-21000 - v3 per design-agent spec: zones header/figure/identity/ledger,
+     right rail x660+ with one reused slot at y1000, bars left, ledger bottom strip */
   .run .s3{animation:holdscene 12.8s 8.2s forwards step-end}
-  .figlabel{left:60px;top:360px;font-size:30px;letter-spacing:.14em;color:var(--indigo)}
-  .run .figlabel{animation:fadein .52s 8.4s both}
-  /* bars group: zoomable. baseline y1400. 1x (energy in) = 300px phase 1. */
-  .barsG{position:absolute;inset:0;transform-origin:0 1400px}
+  .hdr{left:60px;top:220px;font-size:28px;letter-spacing:.1em;color:var(--indigo)}
+  .run .hdr1{animation:hdr1 7.6s 8.4s both step-end}
+  @keyframes hdr1{0%{opacity:0}5%{opacity:1}96%{opacity:1}100%{opacity:0}}
+  .run .hdr2{animation:fadein .3s 16.2s both}
+  .barsG{position:absolute;inset:0;transform-origin:0 1300px}
   .run .barsG{animation:barszoom 1s 15.8s both;animation-timing-function:var(--ease)}
   @keyframes barszoom{from{transform:scaleY(1)}to{transform:scaleY(0.1)}}
-  .baseline{position:absolute;left:260px;top:1400px;width:540px;height:2px;background:var(--muted)}
-  .inbar{position:absolute;left:300px;bottom:520px;width:170px;height:0;background:var(--muted);opacity:.85;border-radius:4px 4px 0 0}
+  .baseline{position:absolute;left:100px;top:1300px;width:540px;height:2px;background:var(--muted)}
+  .inbar{position:absolute;left:140px;bottom:620px;width:150px;height:0;background:var(--muted);opacity:.85;border-radius:4px 4px 0 0}
   .run .inbar{animation:ingrow .6s 9s both;animation-timing-function:var(--ease)}
   @keyframes ingrow{from{height:0}to{height:300px}}
-  .outbar{position:absolute;left:560px;bottom:520px;width:170px;height:0;background:var(--indigo);border-radius:4px 4px 0 0}
-  .run .outbar{animation:outgrow 7s 9s both linear}
-  @keyframes outgrow{0%{height:0}20%{height:0}28%{height:201px}65.7%{height:201px}68.6%{height:450px}80%{height:450px}87%{height:720px}100%{height:720px}}
-  .breakeven{position:absolute;left:260px;top:1100px;width:540px;height:0;border-top:4px dashed var(--ink);opacity:.7}
-  .run .breakeven{animation:fadein .52s 9.6s both}
-  .redtickbar{position:absolute;width:34px;height:6px;background:var(--setback);border-radius:3px;left:538px}
-  .run .rb1{animation:fadein .2s 12.4s both} .run .rb2{animation:fadein .2s 12.6s both}
-  .run .rb3{animation:fadein .2s 12.8s both} .run .rb4{animation:fadein .2s 13s both}
-  .run .rb5{animation:fadein .2s 13.2s both}
-  /* labels outside the zoom group */
-  .inlbl{left:300px;top:1430px;font-size:26px;letter-spacing:.12em;color:var(--muted)}
-  .outlbl{left:560px;top:1430px;font-size:26px;letter-spacing:.12em;color:var(--indigo)}
-  .run .inlbl{animation:fadein .52s 9s both}
-  .run .outlbl{animation:fadein .52s 10.4s both}
-  .breaklbl{left:812px;top:1082px;font-size:24px;letter-spacing:.1em;color:var(--ink)}
-  .run .breaklbl{animation:lblwindow 6.2s 9.6s both step-end}
-  @keyframes lblwindow{0%{opacity:0}8%{opacity:1}92%{opacity:1}100%{opacity:0}}
-  .m067{left:745px;top:1168px;font-size:26px;letter-spacing:.08em;color:var(--muted)}
-  .run .m067{animation:lblwindow 2.4s 11s both step-end}
-  .m24{left:745px;top:648px;font-size:28px;letter-spacing:.08em;color:var(--indigo);font-weight:600}
-  .run .m24{animation:fadein .4s 14.9s both, m24ride 1s 15.8s both;animation-timing-function:var(--ease)}
-  @keyframes m24ride{from{top:648px}to{top:1296px}}
-  .igniteflash{position:absolute;left:630px;top:1085px;width:30px;height:30px;border-radius:50%;background:var(--ember)}
-  .run .igniteflash{animation:ignite 1s 13.7s both, lateout 2.1s 15.8s both step-end;animation-timing-function:var(--ease)}
+  .outbar{position:absolute;left:400px;bottom:620px;width:150px;height:0;background:var(--indigo);border-radius:4px 4px 0 0}
+  .run .outbar{animation:outgrow 4.48s 10.4s both linear}
+  @keyframes outgrow{0%{height:0}5.58%{height:201px}71.43%{height:201px}76.34%{height:450px}93.75%{height:450px}100%{height:720px}}
+  .breakeven{position:absolute;left:100px;top:1000px;width:540px;height:0;border-top:4px dashed var(--ink);opacity:0}
+  .run .breakeven{animation:bewin 6.15s 9.6s both step-end}
+  @keyframes bewin{0%{opacity:0}6%{opacity:.7}97%{opacity:.7}100%{opacity:0}}
+  .redtickbar{position:absolute;width:34px;height:6px;background:var(--setback);border-radius:3px;left:360px;opacity:0}
+  .run .rb1{animation:rdwin 3.45s 12.3s both step-end} .run .rb2{animation:rdwin 3.25s 12.5s both step-end}
+  .run .rb3{animation:rdwin 3.05s 12.7s both step-end} .run .rb4{animation:rdwin 2.85s 12.9s both step-end}
+  .run .rb5{animation:rdwin 2.65s 13.1s both step-end}
+  @keyframes rdwin{0%{opacity:0}6%{opacity:1}94%{opacity:1}100%{opacity:0}}
+  /* rail + tags (outside barsG, never squash) */
+  .breaklbl{left:660px;top:984px;font-size:24px;letter-spacing:.06em;color:var(--ink)}
+  .run .breaklbl{animation:lblwindow 3.5s 9.8s both step-end}
+  @keyframes lblwindow{0%{opacity:0}8%{opacity:1}93%{opacity:1}100%{opacity:0}}
+  .tag067{left:570px;top:1085px;font-size:26px;letter-spacing:.06em;color:var(--muted)}
+  .run .tag067{animation:lblwindow 2.6s 10.7s both step-end}
+  .tag24{left:570px;top:562px;font-size:30px;letter-spacing:.06em;color:var(--indigo);font-weight:600}
+  .run .tag24{animation:fadein .3s 14.9s both, tagride 1s 15.8s both;animation-timing-function:var(--ease)}
+  @keyframes tagride{from{top:562px}to{top:1210px}}
+  .stampl1{left:660px;top:966px;font-size:24px;letter-spacing:.06em;color:var(--ink)}
+  .stampl2{left:660px;top:1002px;font-size:24px;letter-spacing:.06em;color:var(--ink)}
+  .run .stampl1,.run .stampl2{animation:lblwindow 1.5s 13.95s both step-end}
+  .igniteflash{position:absolute;left:460px;top:985px;width:30px;height:30px;border-radius:50%;background:var(--ember);opacity:0}
+  .run .igniteflash{animation:ignite 1s 13.7s both, lateout .4s 16s both step-end;animation-timing-function:var(--ease)}
   @keyframes ignite{0%{opacity:0;transform:scale(.4);box-shadow:0 0 0 0 rgba(229,143,31,.55)}
                     40%{opacity:1;transform:scale(1.5);box-shadow:0 0 0 60px rgba(229,143,31,0)}
                     100%{opacity:1;transform:scale(1);box-shadow:0 0 0 0 rgba(229,143,31,0)}}
-  @keyframes lateout{0%{opacity:1}30%{opacity:0}100%{opacity:0}}
-  .stamplbl{left:60px;top:900px;font-size:26px;letter-spacing:.08em;color:var(--muted)}
-  .run .stamplbl{animation:lblwindow 1.9s 13.9s both step-end}
-  /* ledger: chronological, top to bottom */
-  .ledgerjet{left:60px;top:540px;font-size:28px;letter-spacing:.06em;color:var(--muted)}
-  .run .ledgerjet{animation:rise .52s 10.6s both}
-  .ledgerred{left:60px;top:605px;font-size:28px;letter-spacing:.06em;color:var(--setback)}
-  .run .ledgerred{animation:rise .52s 12.5s both}
-  .ledgergreen{left:60px;top:670px;font-size:28px;letter-spacing:.06em;color:var(--leaf)}
-  .run .ledgergreen{animation:rise .52s 15s both}
-  .ledgerscale{left:60px;top:735px;font-size:28px;letter-spacing:.06em;color:var(--muted)}
-  .run .ledgerscale{animation:rise .52s 17s both}
-  /* post-zoom: the bar a power station needs (30x = 900px when 1x = 30px) */
-  .needbar{position:absolute;left:560px;bottom:520px;width:170px;height:0;border:6px dashed var(--indigo);border-bottom:none;opacity:.55;border-radius:4px 4px 0 0;background:transparent}
-  .run .needbar{animation:needgrow 1.2s 17.6s both;animation-timing-function:var(--ease)}
+  @keyframes lateout{0%{opacity:1}100%{opacity:0}}
+  /* identity row - persistent */
+  .inlbl{left:140px;top:1330px;font-size:26px;letter-spacing:.1em;color:var(--muted)}
+  .outlbl{left:400px;top:1330px;font-size:26px;letter-spacing:.1em;color:var(--indigo)}
+  .run .inlbl{animation:fadein .4s 9.2s both}
+  .run .outlbl{animation:fadein .4s 10.5s both}
+  /* ledger - bottom strip, 3 real events */
+  .ledger1{left:100px;top:1420px;font-size:26px;letter-spacing:.04em;color:var(--muted)}
+  .ledger2{left:100px;top:1472px;font-size:26px;letter-spacing:.04em;color:var(--setback)}
+  .ledger3{left:100px;top:1524px;font-size:26px;letter-spacing:.04em;color:var(--leaf)}
+  .run .ledger1{animation:rise .52s 10.8s both}
+  .run .ledger2{animation:rise .52s 12.6s both}
+  .run .ledger3{animation:rise .52s 15s both}
+  /* post-zoom */
+  .needbar{position:absolute;left:400px;bottom:620px;width:150px;height:0;border:6px dashed var(--indigo);border-bottom:none;opacity:.55;border-radius:4px 4px 0 0;background:transparent}
+  .run .needbar{animation:needgrow 1.2s 17.4s both;animation-timing-function:var(--ease)}
   @keyframes needgrow{from{height:0}to{height:900px}}
-  .sparcline{position:absolute;left:560px;top:1100px;width:170px;height:0;border-top:4px dashed var(--indigo);opacity:.8}
-  .run .sparcline{animation:fadein .4s 18.4s both}
-  .sparclbl{left:60px;top:1082px;font-size:26px;letter-spacing:.08em;color:var(--indigo)}
-  .run .sparclbl{animation:rise .4s 18.4s both}
-  .goallbl{left:60px;top:472px;font-size:26px;letter-spacing:.08em;color:var(--indigo)}
-  .run .goallbl{animation:rise .4s 19.4s both}
+  .sparcline{position:absolute;left:400px;top:1000px;width:150px;height:0;border-top:4px dashed var(--indigo);opacity:.8}
+  .run .sparcline{animation:fadein .3s 17.9s both}
+  .sparclbl{left:660px;top:984px;font-size:24px;letter-spacing:.06em;color:var(--indigo)}
+  .run .sparclbl{animation:rise .4s 18.1s both}
+  .goall1{left:660px;top:352px;font-size:24px;letter-spacing:.06em;color:var(--indigo)}
+  .goall2{left:660px;top:388px;font-size:30px;letter-spacing:.06em;color:var(--indigo);font-weight:600}
+  .run .goall1,.run .goall2{animation:rise .4s 18.9s both}
 
   /* S4 VERDICT 21000-25000 */
   .run .s4{animation:holdscene 4s 21s forwards step-end}
@@ -207,7 +214,7 @@
 </style>
 
 <h1>The climb to Q30</h1>
-<div class="sub">howclose.to · brandreel animatic v2 rev2 · 1080x1920 · 29s · the production reference</div>
+<div class="sub">howclose.to · brandreel animatic v2 rev4 · 1080x1920 · 29s · the production reference</div>
 
 <div class="stagebox">
   <div class="stagewrap" id="wrap">
@@ -226,37 +233,40 @@
       </div>
 
       <div class="scene s3">
-        <div class="el figlabel">ONE FUSION SHOT · ENERGY IN vs ENERGY OUT</div>
+        <div class="el hdr hdr1">ONE FUSION SHOT · ENERGY IN vs ENERGY OUT</div>
+        <div class="el hdr hdr2">SAME BARS · ZOOMED OUT</div>
 
         <div class="barsG">
           <div class="baseline"></div>
           <div class="inbar"></div>
           <div class="outbar"></div>
           <div class="breakeven"></div>
-          <div class="redtickbar rb1" style="top:1130px"></div>
-          <div class="redtickbar rb2" style="top:1150px"></div>
-          <div class="redtickbar rb3" style="top:1170px"></div>
-          <div class="redtickbar rb4" style="top:1190px"></div>
-          <div class="redtickbar rb5" style="top:1210px"></div>
+          <div class="redtickbar rb1" style="top:1030px"></div>
+          <div class="redtickbar rb2" style="top:1050px"></div>
+          <div class="redtickbar rb3" style="top:1070px"></div>
+          <div class="redtickbar rb4" style="top:1090px"></div>
+          <div class="redtickbar rb5" style="top:1110px"></div>
         </div>
         <div class="needbar"></div>
         <div class="sparcline"></div>
 
+        <div class="el breaklbl">BREAKEVEN</div>
+        <div class="el tag067">0.67x</div>
+        <div class="el tag24">2.4x</div>
+        <div class="igniteflash"></div>
+        <div class="el stampl1">DEC 5, 2022</div>
+        <div class="el stampl2">1:03 AM</div>
+
         <div class="el inlbl">ENERGY IN</div>
         <div class="el outlbl">ENERGY OUT</div>
-        <div class="el breaklbl">BREAKEVEN</div>
-        <div class="el m067">0.67x</div>
-        <div class="el m24">2.4x</div>
-        <div class="igniteflash"></div>
-        <div class="el stamplbl">DEC 5, 2022 · 1:03 AM</div>
 
-        <div class="el ledgerjet">1997 · JET · TWO-THIRDS OF BREAKEVEN</div>
-        <div class="el ledgerred">&#9662; SETBACK · 2012-2021 · SHOTS FELL SHORT</div>
-        <div class="el ledgergreen">&#10003; IGNITION · DEC 2022 · OUT BEAT IN</div>
-        <div class="el ledgerscale">SAME BARS · ZOOMED OUT</div>
+        <div class="el ledger1">1997 · JET · 0.67x</div>
+        <div class="el ledger2">&#9662; 2012-2021 · SHOTS FELL SHORT</div>
+        <div class="el ledger3">&#10003; DEC 5, 2022 · IGNITION · OUT BEAT IN</div>
 
-        <div class="el sparclbl">SPARC TARGET · 2027 · 10x</div>
-        <div class="el goallbl">A POWER STATION · ~30x</div>
+        <div class="el sparclbl">SPARC · 2027 · 10x</div>
+        <div class="el goall1">A POWER STATION</div>
+        <div class="el goall2">~30x</div>
       </div>
 
       <div class="scene s4">
