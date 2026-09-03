@@ -2,8 +2,8 @@
 <title>The Climb to Q30</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400;1,8..60,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <!--
-  brandreel animatic v2 rev5 - howclose.to - "Can we bottle a star?" 29s
-  PORTING CONTRACT: 1:1 into Remotion. 1080x1920, ms from t=0, total 29000ms,
+  brandreel animatic v2 rev6 - howclose.to - "Can we bottle a star?" 34.8s
+  PORTING CONTRACT: 1:1 into Remotion. 1080x1920, ms from t=0, total 34800ms,
   ease cubic-bezier(0.2,0.7,0.2,1) unless a beat states otherwise. If the port
   looks worse than this file, it goes back.
 
@@ -28,16 +28,20 @@
   - Ledger rows appear in chronological order, top to bottom.
 
   SCENE TABLE (ms)
-  S1 QUESTION 0-4000     kicker 200 · lines 500/800 · dek 2200
-  S2 STAKES   4000-8200  fuel 4200 · exhaust 5000 · Q definition 6200
-  S3 CLIMB    8200-21000 kicker 8400 · IN 9000 · breakeven 9400
-                         stmt A + OUT 0.67x 9900/10400 · stmt B (red) +
-                         miss dashes 12200-13100 · stmt C + SNAP + flash
-                         13500-13700 · stmt D + 2.4x 14600-15000
-                         stmt E + ZOOM 16600 · SAME BARS stamp 17700
-                         need-bar 17900-19000 · SPARC rung/label 19200-19800
-  S4 VERDICT  21000-25000 line1 21300 · line2 22500
-  S5 CLOSE    25000-29000 sprig 25300 · tagline 25600 · url 26000 · support 26700
+  S1 QUESTION 0-4200     kicker 200 · lines 500/800 · dek 2200
+  S2 STAKES   4200-9000  fuel 4400 · exhaust 5200 · Q definition 6400
+  S3 CLIMB    9000-26500 kicker 9200 · IN 9600 (900ms) · breakeven 10400
+                         stmt A0 11000 · OUT to 0.67x 12200 (500ms) · stmt A
+                         13000 · stmt B + NIF substamp 15000 · SHOT ATTEMPTS
+                         15400-18200 (four red rises to 0.84-0.92x, each
+                         falling back - effort, visibly failing) · stmt C ("more out than in") + IGNITION substamp
+                         18400/18800 · SNAP to 1.5x 19100 (260ms) + flash 19200 ·
+                         stmt D 20400 · rise to 2.4x 20600 (500ms) · tag24
+                         21100 · stmt E 22400 · ZOOM 22600 (1400ms) · SAME
+                         BARS stamp 24200 · need-bar 24400-25800 · SPARC
+                         25600/25800 · hold to 26500
+  S4 VERDICT  26500-30700 line1 26800 · line2 28000
+  S5 CLOSE    30700-34800 sprig 31000 · tagline 31300 · url 31700 · support 32400
 
   BAR GEOMETRY (v4 pollar-style, 2026-09-03): ONE swapping serif statement
   (y290, 60px) narrates the beats and replaces ledger+rail; figure fills the
@@ -102,7 +106,7 @@
   @keyframes holdscene{0%,99%{opacity:1}100%{opacity:0}}
 
   /* S1 QUESTION 0-4000 */
-  .run .s1{animation:holdscene 4s 0s forwards step-end;opacity:1}
+  .run .s1{animation:holdscene 4.2s 0s forwards step-end;opacity:1}
   .kicker{left:60px;top:470px;font-size:30px;letter-spacing:.32em;color:var(--muted)}
   .q1{position:absolute;left:60px;top:560px;font-family:var(--serif);font-weight:700;font-size:128px;
       line-height:1.04;letter-spacing:-.02em;color:var(--ink);width:860px}
@@ -114,62 +118,70 @@
   .run .dek{animation:rise .52s 2.2s both}
 
   /* S2 STAKES 4000-8200 */
-  .run .s2{animation:holdscene 4.2s 4s forwards step-end}
+  .run .s2{animation:holdscene 4.8s 4.2s forwards step-end}
   .st1{left:60px;top:640px;font-family:var(--serif);font-weight:600;font-size:88px;line-height:1.12;
        letter-spacing:-.015em;color:var(--ink);width:900px}
   .st2{left:60px;top:790px;font-family:var(--serif);font-weight:600;font-size:88px;line-height:1.12;
        letter-spacing:-.015em;color:var(--ink);width:900px}
   .stq{left:60px;top:1010px;font-size:32px;letter-spacing:.14em;color:var(--indigo)}
-  .run .st1{animation:rise .52s 4.2s both}
-  .run .st2{animation:rise .52s 5s both}
-  .run .stq{animation:rise .52s 6.2s both}
+  .run .st1{animation:rise .52s 4.4s both}
+  .run .st2{animation:rise .52s 5.2s both}
+  .run .stq{animation:rise .52s 6.4s both}
 
-  /* S3 CLIMB 8200-21000 - v4 pollar-style: one swapping statement + one big figure */
-  .run .s3{animation:holdscene 12.8s 8.2s forwards step-end}
+  /* S3 CLIMB 9000-26500 (17.5s) - v5: slower pacing, explicit statements,
+     the decade shown as ATTEMPTS (red shot-bars that rise and fall short) */
+  .run .s3{animation:holdscene 17.5s 9s forwards step-end}
   .kick3{left:60px;top:220px;font-size:28px;letter-spacing:.14em;color:var(--indigo)}
-  .run .kick3{animation:fadein .4s 8.4s both}
+  .run .kick3{animation:fadein .4s 9.2s both}
   .stmt{left:60px;top:290px;width:920px;font-family:var(--serif);font-weight:600;font-size:60px;
         line-height:1.1;letter-spacing:-.01em;color:var(--ink)}
-  .run .stA{animation:stwin 2.3s 9.9s both step-end}
-  .run .stB{animation:stwin 1.3s 12.2s both step-end}
-  .run .stC{animation:stwin 1.3s 13.5s both step-end}
-  .run .stD{animation:stwin 1.6s 14.8s both step-end}
-  .run .stE{animation:fadein .4s 16.6s both}
-  @keyframes stwin{0%{opacity:0;transform:translateY(24px)}12%{opacity:1;transform:none}90%{opacity:1}100%{opacity:0}}
+  .run .stA0{animation:stwin 1.8s 11s both step-end}
+  .run .stA{animation:stwin 1.8s 13s both step-end}
+  .run .stB{animation:stwin 3.4s 15s both step-end}
+  .run .stC{animation:stwin 2s 18.4s both step-end}
+  .run .stD{animation:stwin 1.8s 20.4s both step-end}
+  .run .stE{animation:fadein .4s 22.4s both}
+  @keyframes stwin{0%{opacity:0;transform:translateY(24px)}12%{opacity:1;transform:none}92%{opacity:1}100%{opacity:0}}
   .stB{color:var(--setback)}
-  .subzoom{left:60px;top:400px;font-size:26px;letter-spacing:.12em;color:var(--muted)}
-  .run .subzoom{animation:fadein .4s 17.7s both}
+  .substamp{left:60px;top:440px;font-size:26px;letter-spacing:.12em;color:var(--muted)}
+  .run .substamp{animation:stwin 3.1s 15.3s both step-end}
+  .substampC{left:60px;top:440px;font-size:26px;letter-spacing:.12em;color:var(--muted)}
+  .run .substampC{animation:stwin 3.4s 18.8s both step-end}
+  .subzoom{left:60px;top:440px;font-size:26px;letter-spacing:.12em;color:var(--muted)}
+  .run .subzoom{animation:fadein .4s 24.2s both}
   /* figure: baseline y1500, 1x = 400px, bars w240 */
   .barsG{position:absolute;inset:0;transform-origin:0 1500px}
-  .run .barsG{animation:barszoom 1s 16.6s both;animation-timing-function:var(--ease)}
+  .run .barsG{animation:barszoom 1.4s 22.6s both;animation-timing-function:var(--ease)}
   @keyframes barszoom{from{transform:scaleY(1)}to{transform:scaleY(0.08)}}
   .baseline{position:absolute;left:150px;top:1500px;width:780px;height:2px;background:var(--muted)}
   .inbar{position:absolute;left:210px;bottom:420px;width:240px;height:0;background:var(--muted);opacity:.85;border-radius:5px 5px 0 0}
-  .run .inbar{animation:ingrow .6s 9s both;animation-timing-function:var(--ease)}
+  .run .inbar{animation:ingrow .9s 9.6s both;animation-timing-function:var(--ease)}
   @keyframes ingrow{from{height:0}to{height:400px}}
+  /* shots of the lost decade: rise toward breakeven, fall back. behind the record bar */
+  .shotbar{position:absolute;left:630px;bottom:420px;width:240px;height:0;background:var(--setback);opacity:.5;border-radius:5px 5px 0 0}
+  .run .shotbar{animation:shots 2.8s 15.4s both linear}
+  @keyframes shots{0%{height:0}12%{height:380px}25%{height:0}37%{height:392px}50%{height:0}
+                   62%{height:372px}75%{height:0}88%{height:386px}100%{height:0}}
   .outbar{position:absolute;left:630px;bottom:420px;width:240px;height:0;background:var(--indigo);border-radius:5px 5px 0 0}
-  .run .outbar{animation:outgrow 4.48s 10.4s both linear}
-  @keyframes outgrow{0%{height:0}5.58%{height:268px}71.43%{height:268px}76.34%{height:600px}93.75%{height:600px}100%{height:960px}}
+  .run .outbar{animation:outgrow 9.5s 12.2s both linear}
+  /* 12.2s +0.5s rise to 0.67x · hold · 19.1s +0.26s SNAP to 1.5x · hold · 20.6s +0.5s to 2.4x
+     duration 9.5s: 0.5/9.5=5.26% · (19.1-12.2)/9.5=72.63% · +0.26=75.37% · (20.6-12.2)/9.5=88.42% · +0.5=93.68% */
+  @keyframes outgrow{0%{height:0}5.26%{height:268px}72.63%{height:268px}75.37%{height:600px}88.42%{height:600px}93.68%{height:960px}100%{height:960px}}
   .breakeven{position:absolute;left:150px;top:1100px;width:780px;height:0;border-top:4px dashed var(--ink);opacity:0}
-  .run .breakeven{animation:bewin 7.15s 9.4s both step-end}
-  @keyframes bewin{0%{opacity:0}5%{opacity:.7}97%{opacity:.7}100%{opacity:0}}
+  .run .breakeven{animation:bewin 12.4s 10.4s both step-end}
+  @keyframes bewin{0%{opacity:0}3%{opacity:.7}98%{opacity:.7}100%{opacity:0}}
   .breaklbl{left:150px;top:1058px;font-size:26px;letter-spacing:.08em;color:var(--ink)}
-  .run .breaklbl{animation:lblwindow 7.1s 9.5s both step-end}
-  @keyframes lblwindow{0%{opacity:0}5%{opacity:1}95%{opacity:1}100%{opacity:0}}
-  .redtickbar{position:absolute;width:44px;height:6px;background:var(--setback);border-radius:3px;left:566px;opacity:0}
-  .run .rb1{animation:rdwin 4.05s 12.3s both step-end} .run .rb2{animation:rdwin 3.85s 12.5s both step-end}
-  .run .rb3{animation:rdwin 3.65s 12.7s both step-end} .run .rb4{animation:rdwin 3.45s 12.9s both step-end}
-  .run .rb5{animation:rdwin 3.25s 13.1s both step-end}
-  @keyframes rdwin{0%{opacity:0}5%{opacity:1}95%{opacity:1}100%{opacity:0}}
+  .run .breaklbl{animation:lblwindow 12.1s 10.6s both step-end}
+  @keyframes lblwindow{0%{opacity:0}4%{opacity:1}96%{opacity:1}100%{opacity:0}}
   /* value tag rides the OUT crest; centered over the bar */
   .valtag{left:630px;width:240px;text-align:center;font-size:44px;font-weight:600;letter-spacing:.04em}
   .tag067{top:1168px;color:var(--muted)}
-  .run .tag067{animation:lblwindow 2.7s 10.7s both step-end}
+  .run .tag067{animation:lblwindow 5.9s 12.8s both step-end}
   .tag24{top:476px;color:var(--indigo)}
-  .run .tag24{animation:fadein .3s 15s both, tagride 1s 16.6s both;animation-timing-function:var(--ease)}
+  .run .tag24{animation:fadein .3s 21.1s both, tagride 1.4s 22.6s both;animation-timing-function:var(--ease)}
   @keyframes tagride{from{top:476px}to{top:1359px}}
   .igniteflash{position:absolute;left:735px;top:1085px;width:30px;height:30px;border-radius:50%;background:var(--ember);opacity:0}
-  .run .igniteflash{animation:ignite 1s 13.7s both, lateout .4s 16.6s both step-end;animation-timing-function:var(--ease)}
+  .run .igniteflash{animation:ignite 1.2s 19.2s both, lateout .5s 22.6s both step-end;animation-timing-function:var(--ease)}
   @keyframes ignite{0%{opacity:0;transform:scale(.4);box-shadow:0 0 0 0 rgba(229,143,31,.55)}
                     40%{opacity:1;transform:scale(1.5);box-shadow:0 0 0 70px rgba(229,143,31,0)}
                     100%{opacity:1;transform:scale(1);box-shadow:0 0 0 0 rgba(229,143,31,0)}}
@@ -177,34 +189,34 @@
   /* identity - persistent */
   .inlbl{left:210px;width:240px;text-align:center;top:1530px;font-size:28px;letter-spacing:.1em;color:var(--muted)}
   .outlbl{left:630px;width:240px;text-align:center;top:1530px;font-size:28px;letter-spacing:.1em;color:var(--indigo)}
-  .run .inlbl{animation:fadein .4s 9.2s both}
-  .run .outlbl{animation:fadein .4s 10.5s both}
+  .run .inlbl{animation:fadein .4s 10s both}
+  .run .outlbl{animation:fadein .4s 12.4s both}
   /* post-zoom */
   .needbar{position:absolute;left:630px;bottom:420px;width:240px;height:0;border:6px dashed var(--indigo);border-bottom:none;opacity:.55;border-radius:5px 5px 0 0;background:transparent}
-  .run .needbar{animation:needgrow 1.1s 17.9s both;animation-timing-function:var(--ease)}
+  .run .needbar{animation:needgrow 1.4s 24.4s both;animation-timing-function:var(--ease)}
   @keyframes needgrow{from{height:0}to{height:960px}}
   .sparcline{position:absolute;left:630px;top:1180px;width:240px;height:0;border-top:4px dashed var(--indigo);opacity:.8}
-  .run .sparcline{animation:fadein .3s 19.2s both}
+  .run .sparcline{animation:fadein .3s 25.6s both}
   .sparclbl{left:150px;width:460px;text-align:right;top:1164px;font-size:26px;letter-spacing:.08em;color:var(--indigo)}
-  .run .sparclbl{animation:rise .4s 19.4s both}
+  .run .sparclbl{animation:rise .4s 25.8s both}
 
   /* S4 VERDICT 21000-25000 */
-  .run .s4{animation:holdscene 4s 21s forwards step-end}
+  .run .s4{animation:holdscene 4.2s 26.5s forwards step-end}
   .v1{left:60px;top:700px;font-family:var(--serif);font-style:italic;font-size:76px;line-height:1.15;color:var(--ink);width:860px}
   .v2{left:60px;top:830px;font-family:var(--serif);font-style:italic;font-size:76px;line-height:1.15;color:var(--ink);width:860px}
-  .run .v1{animation:rise .52s 21.3s both}
-  .run .v2{animation:rise .52s 22.5s both}
+  .run .v1{animation:rise .52s 26.8s both}
+  .run .v2{animation:rise .52s 28s both}
 
   /* S5 CLOSE 25000-29000 */
-  .run .s5{animation:fadein .4s 25s both}
+  .run .s5{animation:fadein .4s 30.7s both}
   .sprig{left:60px;top:620px}
   .tag{left:60px;top:830px;font-family:var(--serif);font-weight:700;font-size:96px;letter-spacing:-.02em;color:var(--ink)}
   .url{left:60px;top:986px;font-size:34px;letter-spacing:.08em;color:var(--indigo)}
   .support{left:60px;top:1070px;font-size:28px;letter-spacing:.14em;color:var(--muted)}
-  .run .sprig{animation:rise .52s 25.3s both}
-  .run .tag{animation:rise .52s 25.6s both}
-  .run .url{animation:rise .52s 26s both}
-  .run .support{animation:rise .52s 26.7s both}
+  .run .sprig{animation:rise .52s 31s both}
+  .run .tag{animation:rise .52s 31.3s both}
+  .run .url{animation:rise .52s 31.7s both}
+  .run .support{animation:rise .52s 32.4s both}
 
   @media (prefers-reduced-motion: reduce){
     .run *{animation-duration:.01s !important;animation-delay:0s !important}
@@ -234,23 +246,22 @@
 
       <div class="scene s3">
         <div class="el kick3">FUSION · ENERGY OUT vs ENERGY IN</div>
-        <div class="el stmt stA">1997: two-thirds of the way.</div>
-        <div class="el stmt stB">Then, a decade of misses.</div>
-        <div class="el stmt stC">Dec 5, 2022, 1:03 am: ignition.</div>
-        <div class="el stmt stD">The record today: 2.4x.</div>
+        <div class="el stmt stA0">Every shot: energy in, energy out.</div>
+        <div class="el stmt stA">1997: the best shot returned 0.67x.</div>
+        <div class="el stmt stB">Ten years of shots fell short.</div>
+        <div class="el stmt stC">Dec 5, 2022: more out than in.</div>
+        <div class="el stmt stD">The record now stands at 2.4x.</div>
         <div class="el stmt stE">A power station needs ~30x.</div>
+        <div class="el substamp">NIF · 2012-2021</div>
+        <div class="el substampC">IGNITION · REPEATED SINCE</div>
         <div class="el subzoom">SAME BARS · ZOOMED OUT</div>
 
         <div class="barsG">
           <div class="baseline"></div>
           <div class="inbar"></div>
+          <div class="shotbar"></div>
           <div class="outbar"></div>
           <div class="breakeven"></div>
-          <div class="redtickbar rb1" style="top:1130px"></div>
-          <div class="redtickbar rb2" style="top:1160px"></div>
-          <div class="redtickbar rb3" style="top:1190px"></div>
-          <div class="redtickbar rb4" style="top:1220px"></div>
-          <div class="redtickbar rb5" style="top:1250px"></div>
         </div>
         <div class="needbar"></div>
         <div class="sparcline"></div>
@@ -292,7 +303,7 @@
   </div>
 </div>
 
-<button id="replay" type="button">Replay &#183; 29s</button>
+<button id="replay" type="button">Replay &#183; 35s</button>
 
 <div class="legend">
   <b>Core mechanic:</b> one honest zoom-out - the bar we have built is a sliver of the
