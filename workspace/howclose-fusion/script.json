@@ -1,0 +1,53 @@
+{
+  "id": "nuclear-fusion",
+  "brand": "howclose",
+  "coreMechanic": "The honest short line against the long dashed road to Q30.",
+  "beats": [
+    {
+      "kind": "question",
+      "kicker": "NUCLEAR FUSION · AS OF SEP 2026",
+      "lines": ["Can we", "bottle a star?"],
+      "dek": "or, precisely: how close are we?",
+      "durationMs": 4200
+    },
+    {
+      "kind": "figure",
+      "label": "FUSION ENERGY GAIN · Q",
+      "value": { "to": 2.4, "decimals": 1 },
+      "goalText": "→ 30",
+      "unitLabel": "ENERGY OUT / ENERGY IN",
+      "axis": { "min": 0, "max": 30, "achieved": 2.4, "goal": 30 },
+      "minTick": "0",
+      "achievedTick": "2.4",
+      "goalTick": "Q 30 · COMMERCIAL",
+      "stamps": [
+        {
+          "tone": "done",
+          "text": "✓ ACHIEVED · DEC 2022 · NIF, REPEATED",
+          "offsetMs": 3200
+        },
+        {
+          "tone": "setback",
+          "text": "▾ SETBACK · 2012-2021 · A DECADE BELOW BREAKEVEN",
+          "offsetMs": 6400
+        }
+      ],
+      "flash": { "colorKey": "energy" },
+      "durationMs": 8600
+    },
+    {
+      "kind": "verdict",
+      "lines": ["A tiny star has flashed.", "A dependable power station hasn't."],
+      "durationMs": 2800
+    }
+  ],
+  "close": {
+    "line": "",
+    "showWordmark": false,
+    "tagline": "How close are we?",
+    "url": "howclose.to/problems/nuclear-fusion",
+    "durationMs": 2400
+  },
+  "caption": "",
+  "hashtags": ["#fusion", "#howclose"]
+}

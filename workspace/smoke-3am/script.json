@@ -1,0 +1,96 @@
+{
+  "id": "smoke-3am",
+  "brand": "regulate",
+  "coreMechanic": "A timeline bar climbs through the hours since the meeting ended while a pinned marker shows the exact point where your nervous system got stuck.",
+  "modules": {
+    "vo": {
+      "voice": "regulate-narrator"
+    },
+    "music": {
+      "file": "audio/music.wav"
+    }
+  },
+  "beats": [
+    {
+      "kind": "moment",
+      "eyebrow": "HOOK",
+      "line": "It's 3am. You're still in that meeting.",
+      "thoughts": [
+        "The one that ended hours ago."
+      ],
+      "bg": "#0a1812",
+      "durationMs": 4000
+    },
+    {
+      "kind": "question",
+      "kicker": "NOTICE",
+      "lines": [
+        "Why is your body still running a meeting that's over?"
+      ],
+      "dek": "Your mind replays it. Your nervous system never got word it ended.",
+      "durationMs": 4000
+    },
+    {
+      "kind": "moment",
+      "eyebrow": "DIFFERENCE",
+      "line": "This isn't about thinking calmer thoughts.",
+      "thoughts": [
+        "It's about giving your body a signal the meeting is actually over."
+      ],
+      "bg": "#0a1812",
+      "durationMs": 4000
+    },
+    {
+      "kind": "figure",
+      "label": "Hours since the meeting ended",
+      "unitLabel": "hours",
+      "value": {
+        "to": 9,
+        "decimals": 0
+      },
+      "goalText": "Where your nervous system stopped",
+      "axis": {
+        "min": 0,
+        "max": 9,
+        "achieved": 9,
+        "goal": 0
+      },
+      "achievedTick": "Now",
+      "goalTick": "Meeting",
+      "minTick": "0",
+      "stamps": [
+        {
+          "tone": "done",
+          "text": "Meeting ends",
+          "offsetMs": 800
+        }
+      ],
+      "flash": {
+        "colorKey": "accent"
+      },
+      "durationMs": 6000
+    },
+    {
+      "kind": "verdict",
+      "lines": [
+        "The clock moved on. Your body's still in the room.",
+        "Regulation is how you tell it the meeting is over."
+      ],
+      "durationMs": 7000
+    }
+  ],
+  "close": {
+    "line": "Give your nervous system the signal it's over.",
+    "showWordmark": true,
+    "tagline": "Not meditation. Regulation.",
+    "durationMs": 3000
+  },
+  "caption": "It's 3am and your body's still in that meeting. Here's why, and what actually tells your nervous system it's over.",
+  "hashtags": [
+    "#Regulate",
+    "#NervousSystem",
+    "#SleepHygiene",
+    "#Overthinking",
+    "#3am"
+  ]
+}

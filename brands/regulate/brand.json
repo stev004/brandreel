@@ -1,0 +1,36 @@
+{
+  "name": "regulate",
+  "palette": {
+    "bg": "#0a1812",
+    "fg": "#F2F0E9",
+    "muted": "#8F9E8B",
+    "accent": "#4FD1C5",
+    "extras": {
+      "cardBg": "#1a1f1c",
+      "hairline": "#16241d",
+      "dot": "#FFFFFF",
+      "stateAnxious": "#D4A574",
+      "stateFrozen": "#7E9AA6",
+      "stateAngry": "#C06C4D",
+      "stateBalanced": "#7FA77F"
+    }
+  },
+  "fonts": {
+    "display": { "family": "Playfair Display", "italic": true },
+    "body": { "family": "Inter" },
+    "mono": { "family": "IBM Plex Mono" }
+  },
+  "wordmark": {
+    "text": "regulate.",
+    "dotColor": "#FFFFFF"
+  },
+  "motion": {
+    "bezier": [0.2, 0.7, 0.2, 1],
+    "entranceMs": 520,
+    "holdMsDefault": 1400
+  },
+  "voice": {
+    "tone": ["direct", "honest", "intelligent but accessible", "warm without being soft", "grounded in lived experience"],
+    "notes": "Source of truth: Regulate Brand Book (regulate-hivemind marketing/BRAND_BOOK.html, 2026-09-04). Laws: the dot is always white (#FFFFFF, never cream, teal or a state colour); a state colour names a state (one per surface, only on the thing that is that state); emerald #0a1812 is the ground (never pure black, no light mode, no gradient hero); teal #4FD1C5 is a supplement (one live thing per surface: kicker, status dot, ring, link; never a fill, banner, background or button face). Display: Playfair Display, the app's Cormorant is drift. Mono in renders is IBM Plex Mono standing in for the site's system-mono stack. Copy bans: treats/cures/heals/rewires/clears cortisol; wellness cliches (journey, self-care, inner peace, what no longer serves you); invented statistics; 'Medical' framing. Message order: recognition, reframe, difference, demonstration, proof, invitation. Tagline 'Not meditation. Regulation.' closes, never opens. Hook first, wordmark only at the end."
+  }
+}
