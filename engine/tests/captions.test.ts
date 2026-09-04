@@ -39,9 +39,28 @@ describe("captionWindow", () => {
 
   it("shows the next upcoming window in a gap between windows", () => {
     expect(captionWindow(words, 3425, opts)).toEqual({
-      lines: [["five"]],
+      lines: [["one", "two"], ["three", "four"]],
       activeIndex: null,
     });
+  });
+
+  it("uses the last started word's window and the highest overlapping active word", () => {
+    const overlappingWords = [
+      { text: "first", startMs: 0, endMs: 1000 },
+      { text: "zero", startMs: 500, endMs: 500 },
+      { text: "second", startMs: 500, endMs: 1200 },
+      { text: "third", startMs: 1200, endMs: 1600 },
+      { text: "fourth", startMs: 3000, endMs: 3400 },
+    ];
+
+    expect(captionWindow(overlappingWords, 600, opts)).toEqual({
+      lines: [["first", "zero"], ["second", "third"]],
+      activeIndex: 2,
+    });
+    expect(captionWindow(overlappingWords, 2000, opts).lines).toEqual([
+      ["first", "zero"],
+      ["second", "third"],
+    ]);
   });
 
   it("returns empty lines after the final grace period", () => {

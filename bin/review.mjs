@@ -105,6 +105,9 @@ export function buildReview(script, lintReport, workspaceDir) {
   const altText = typeof script.altText === "string" && script.altText.trim()
     ? script.altText
     : "TODO";
+  const cta = [script.close.line];
+  if (script.close.tagline?.trim()) cta.push(script.close.tagline);
+  if (script.close.url?.trim()) cta.push(script.close.url);
   const files = outputFiles(workspaceDir);
 
   return [
@@ -119,6 +122,10 @@ export function buildReview(script, lintReport, workspaceDir) {
     "- [ ] KEEP",
     "- [ ] TWEAK",
     "- [ ] KILL",
+    "",
+    "## CTA",
+    "",
+    ...cta,
     "",
     "## Caption",
     "",
