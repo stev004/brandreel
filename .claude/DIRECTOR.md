@@ -19,3 +19,5 @@ Bootstrapped unattended 2026-09-04 from CLAUDE.md, SPEC.md, .claude/DEVTEAM.md. 
 
 ## Lessons
 (symptom -> root cause -> RULE; append only)
+- 2026-09-04: auditor flagged Root.tsx neutralBrand hexes and fonts.ts family names as brand literals -> they are Studio preview defaults and the font loader registry -> RULE: the no-literal rule covers engine/src/templates and components (what the guard test scans); Root.tsx defaults must stay neutral greys, fonts.ts may name families it can load.
+- 2026-09-04: U2 created bin/tests/index.js as the only file node --test loads from the directory; U3's new test file was silently skipped -> RULE: bin briefs must state "node --test bin/tests/ must report the total test count" and the director checks the count, not just exit 0.
