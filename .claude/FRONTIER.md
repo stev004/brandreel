@@ -13,7 +13,7 @@ Updated 2026-09-04 (after the CTA-lint run; branch names only, no SHAs).
 - Remotion caret ranges cause a version-mismatch warning on every render.
 
 ## Next predicate (candidates)
-M3 assets + Broll template; or pin Remotion + remote + CI; or real glyph measurement. Taste-gated work needs Steven first.
+First: close.tagline from brand.json (model truncated "Not meditation. Regulation." to fit a limit). Then M3 assets + Broll template; or pin Remotion + remote + CI; or real glyph measurement. Taste-gated work needs Steven first.
 
 ## Doc authority
 SPEC.md > .claude/DEVTEAM.md > .claude/DIRECTOR.md > STATE.md > ROADMAP.md.
