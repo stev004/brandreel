@@ -43,6 +43,39 @@ test("fake model happy path writes script.json with the workspace basename as id
     const script = JSON.parse(readFileSync(join(dir, "script.json"), "utf8"));
     assert.equal(script.id, dir.split("/").at(-1));
     assert.equal(script.brand, "regulate");
+    assert.equal(Object.hasOwn(script, "modules"), false);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("vo and music flags write only the requested module values", () => {
+  const dir = workspace();
+  try {
+    const result = runScript(dir, [
+      "--vo", "af_heart",
+      "--music", "audio/custom.wav",
+      "--model-cmd", `node ${fakeModel}`,
+    ]);
+    assert.equal(result.status, 0, result.stderr);
+    const script = JSON.parse(readFileSync(join(dir, "script.json"), "utf8"));
+    assert.deepEqual(script.modules, {
+      vo: { voice: "af_heart" },
+      music: { file: "audio/custom.wav" },
+    });
+    assert.match(result.stdout, /dropped model-provided modules/);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("a model module is dropped when no module flags are given", () => {
+  const dir = workspace();
+  try {
+    const result = runScript(dir, ["--model-cmd", `node ${fakeModel}`]);
+    assert.equal(result.status, 0, result.stderr);
+    const script = JSON.parse(readFileSync(join(dir, "script.json"), "utf8"));
+    assert.equal(Object.hasOwn(script, "modules"), false);
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
@@ -67,6 +100,53 @@ test("banned phrase in a model reply is rejected", () => {
     const bannedResult = runScript(dir, ["--model-cmd", `node ${fakeModel}`], { FAKE_MODEL_BANNED: "1" });
     assert.notEqual(bannedResult.status, 0);
     assert.match(bannedResult.stderr, /banned phrase found: journey/);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("copy limit violations name the beat field", () => {
+  const dir = workspace();
+  try {
+    const result = runScript(dir, ["--model-cmd", `node ${fakeModel}`], { FAKE_MODEL_LONG_MOMENT: "1" });
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /beats\[0\]\.line must be 44 characters or fewer/);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("caption with more than two lines is rejected", () => {
+  const dir = workspace();
+  try {
+    const result = runScript(dir, ["--model-cmd", `node ${fakeModel}`], { FAKE_MODEL_THREE_LINE_CAPTION: "1" });
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /caption must contain at most 2 lines/);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("hashtags must start with a hash and contain no spaces", () => {
+  const dir = workspace();
+  try {
+    const result = runScript(dir, ["--model-cmd", `node ${fakeModel}`], { FAKE_MODEL_BAD_HASHTAG: "1" });
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /hashtags\[0\] must start with # and contain no spaces/);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("dry-run prompt states the copy limits and module rule", () => {
+  const dir = workspace();
+  try {
+    const result = runScript(dir, ["--dry-run"]);
+    assert.equal(result.status, 0, result.stderr);
+    const prompt = readFileSync(join(dir, "script-prompt.md"), "utf8");
+    assert.match(prompt, /moment\.line <= 44/);
+    assert.match(prompt, /caption has at most 2 newline-separated lines/);
+    assert.match(prompt, /Do not emit a modules key/);
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
