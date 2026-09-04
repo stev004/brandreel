@@ -16,6 +16,8 @@ Evidence: before docs/runs/2026-09-04-smoke-3am-lint-before-fixes.json (25 viola
 
 Discarded: nothing. Director errors caught and turned into rules (DIRECTOR.md): the CTA rule misread SPEC; copy limits were guessed instead of derived from layout constants.
 
+Trail audit (gpt-5.6-terra) attention list, all accepted: the CTA lint is trivial and can pass on hidden text (high; next run predicate, G5); text-fit is an estimate; pixel-bands ignores uniform blocks; the retry loop is render-free; FRONTIER was stale (rewritten); provenance of the real-model run is partial (raw reply not kept). Full list: docs/runs/2026-09-04-trail-audit-terra-layout-lints.md.
+
 Open gates: G1 remote (default not yet); G3 music (taste); G5 minimum close dwell (default: no rule, closeDwellMs reported). G2 and G4 resolved by Steven this session.
 
 Next run's obvious predicate: Phase 1 or M3. Engineering candidates: (a) caption-vs-thought overlap rule and a real glyph measurement path (render-time DOM measurement in a Manifest composition, or a font-metrics table); (b) M3 bin/assets (Pexels/Pixabay + Veo manifest) + Broll template; (c) pin Remotion versions (warning on every render) and create the remote so CI renders run. Taste-gated: fusion animatic iteration, first Regulate video from the six approved concepts.

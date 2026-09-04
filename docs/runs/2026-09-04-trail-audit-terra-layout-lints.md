@@ -1,0 +1,17 @@
+Verified: L1-L6 and merge commits exist and are ancestors of HEAD; current tests pass at 27 engine / 46 bin; `layout.json` regenerates byte-identically. The 25-violation baseline was committed at `9ec3c35`, before L4-L6; its categories are consistent with those subsequent diffs.
+
+## Attention list
+
+1. **High — CTA asserted / all 10 rules pass.** The CTA rule is effectively “`close.line` is non-empty”: `closeStartMs < totalDurationMs` is automatic for any nonzero close. Worse, v2’s CloseD path suppresses `close.line`; it passes on hidden “Not meditation. Regulation.” while rendering only logo, “Make room.” and `example.com`. This does not establish a CTA in the final 20%. References: [SPEC.md](/private/tmp/fm-brandreel-state/SPEC.md:88), [lint rule](/private/tmp/fm-brandreel-state/bin/lint-rules.mjs:104), [Close](/private/tmp/fm-brandreel-state/engine/src/components/Close.tsx:23), [v2 script](/private/tmp/fm-brandreel-state/workspace/smoke-3am-v2/script.json:1).
+
+2. **Medium — text-fit means rendered text fits.** It is a character-count average-glyph estimate, not font/DOM measurement; it cannot establish actual wrapping or clipping for the rendered fonts. The digest accurately names this as future work, but “passes text fit” needs that qualification. Reference: [manifest estimator](/private/tmp/fm-brandreel-state/engine/src/manifest.ts:27).
+
+3. **Medium — pixel-band pass means unsafe visual content is absent.** The heuristic permits a wholly uniform unsafe band by design, and only flags >0.4% divergent pixels relative to the band’s median. It can therefore miss substantial uniform logos, blocks, or overlays. Reference: [pixel rule](/private/tmp/fm-brandreel-state/bin/lint-rules.mjs:161), [explicit passing test](/private/tmp/fm-brandreel-state/bin/tests/lint.test.mjs:148).
+
+4. **Medium — retry loop proves rendered lint success.** Default retries validate manifest plus `lint --no-render`; ffprobe and pixel checks are skipped. The loop properly retains the previous script until a candidate passes, so it does not mask malformed JSON/schema/manifest failures, but it can accept a model output with render-only defects until `reel` runs. `--skip-lint` is also an explicit bypass. Reference: [retry implementation](/private/tmp/fm-brandreel-state/bin/script.mjs:502).
+
+5. **Medium — current-state documents are synced.** `FRONTIER.md` is timestamped before this run and still says the phase2 run is current, 20/20 and 14/14 tests, smoke-3am lint OK, and `feature/phase2-machine` is HEAD. `STATE.md` and G5 repeat the false “literal CTA” reading. References: [FRONTIER](/private/tmp/fm-brandreel-state/.claude/FRONTIER.md:3), [STATE](/private/tmp/fm-brandreel-state/STATE.md:7), [GATES](/private/tmp/fm-brandreel-state/.claude/GATES.md:9).
+
+6. **Low — committed real-model workspace evidence is not provenance-complete.** The tracked v2 script/layout/report make the manifest reproducible, but no raw model reply, invocation metadata, or render hash is retained; the ignored MP4 and two non-close frames cannot independently substantiate the final close/CTA claim. Reference: [digest evidence claim](/private/tmp/fm-brandreel-state/docs/runs/2026-09-04-digest-layout-lints.md:15).
+
+AUDITOR: gpt-5.6-terra.
