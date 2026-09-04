@@ -26,7 +26,7 @@ export function planStages(script, options = {}) {
   }
 
   const hasVo = Boolean(script?.modules?.vo);
-  const hasMusic = Boolean(script?.modules?.music);
+  const hasMusic = Boolean(script?.modules?.music) || Boolean(options.music);
   return STAGES.slice(fromIndex, toIndex + 1).filter((stage) => {
     if (skip.has(stage)) return false;
     if ((stage === "vo" || stage === "align") && !hasVo) return false;
@@ -121,8 +121,8 @@ export function run(argv = process.argv.slice(2)) {
   const options = parseArgs(argv);
   const workspaceDir = resolve(repoRoot, options.workspaceArg);
   const script = readScript(workspaceDir);
-  const stages = planStages(script, options);
   const music = options.music ?? script.modules?.music?.file;
+  const stages = planStages(script, { ...options, music });
 
   if (options.dryRun) {
     for (const stage of stages) {

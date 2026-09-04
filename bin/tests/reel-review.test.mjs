@@ -31,6 +31,15 @@ test("planStages includes polish for music-only scripts", () => {
   assert.deepEqual(planStages(script), ["compose", "polish", "lint", "review"]);
 });
 
+test("planStages includes polish for explicit music", () => {
+  assert.deepEqual(planStages(baseScript, { music: "audio/custom.wav" }), [
+    "compose",
+    "polish",
+    "lint",
+    "review",
+  ]);
+});
+
 test("planStages applies an inclusive range and skips named stages", () => {
   const script = { ...baseScript, modules: { vo: { voice: "af_heart" } } };
   assert.deepEqual(planStages(script, {
@@ -84,4 +93,19 @@ test("buildReview reports lint checks and optional handoff copy", () => {
   } finally {
     rmSync(workspace, { recursive: true, force: true });
   }
+});
+
+test("buildReview renders the CTA fields in order", () => {
+  const content = buildReview({
+    ...baseScript,
+    close: {
+      ...baseScript.close,
+      line: "take a breath",
+      tagline: "Make room for quiet.",
+      url: "https://example.test/quiet",
+    },
+  }, null, "");
+
+  assert.match(content, /## CTA\n\ntake a breath\nMake room for quiet\.\nhttps:\/\/example\.test\/quiet/);
+  assert.match(content, /## Decision[\s\S]*- \[ \] KEEP[\s\S]*- \[ \] TWEAK[\s\S]*- \[ \] KILL/);
 });
