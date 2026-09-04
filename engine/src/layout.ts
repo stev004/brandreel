@@ -12,6 +12,23 @@ import {
 } from "./config";
 import type { Beat, BrandKit, Script } from "./schema";
 
+export const CAPTION_LAYOUT = {
+  contentX: SAFE_LEFT,
+  contentWidth: WIDTH - SAFE_LEFT - SAFE_RIGHT,
+  fontSize: 36,
+  lineHeight: 1.25,
+  maxWordsPerLine: 5,
+  maxLines: 2,
+  bottomOffset: 42,
+} as const;
+
+const lineBoxHeight = (fontSize: number, lineHeight: number, maxLines: number): number =>
+  fontSize * lineHeight * maxLines;
+
+const MOMENT_MAX_THOUGHTS = 3;
+const MOMENT_THOUGHT_CAPTION_GAP = 40;
+const MOMENT_THOUGHT_PREFERRED_STEP = 140;
+
 export const MOMENT_LAYOUT = {
   contentX: SAFE_LEFT,
   contentWidth: WIDTH - SAFE_LEFT - SAFE_RIGHT,
@@ -27,9 +44,38 @@ export const MOMENT_LAYOUT = {
   thoughtFontSize: 30,
   thoughtLineHeight: 1.3,
   thoughtMaxLines: 3,
-  thoughtStep: 140,
+  thoughtStep: MOMENT_THOUGHT_PREFERRED_STEP,
   thoughtEntranceDrift: 24,
 };
+
+const deriveMomentThoughtGeometry = (): Pick<typeof MOMENT_LAYOUT, "thoughtsTop" | "thoughtStep"> => {
+  const captionTop = HEIGHT - SAFE_BOTTOM - CAPTION_LAYOUT.bottomOffset -
+    lineBoxHeight(CAPTION_LAYOUT.fontSize, CAPTION_LAYOUT.lineHeight, CAPTION_LAYOUT.maxLines);
+  const thoughtHeight = lineBoxHeight(
+    MOMENT_LAYOUT.thoughtFontSize,
+    MOMENT_LAYOUT.thoughtLineHeight,
+    MOMENT_LAYOUT.thoughtMaxLines,
+  ) + MOMENT_LAYOUT.thoughtEntranceDrift;
+  const minimumThoughtsTop = MOMENT_LAYOUT.momentLineTop +
+    lineBoxHeight(
+      MOMENT_LAYOUT.momentLineFontSize,
+      MOMENT_LAYOUT.momentLineHeight,
+      MOMENT_LAYOUT.momentLineMaxLines,
+    ) + MOMENT_LAYOUT.momentLineEntranceDrift + MOMENT_THOUGHT_CAPTION_GAP;
+  const maximumThoughtStep = Math.floor(
+    (captionTop - MOMENT_THOUGHT_CAPTION_GAP - thoughtHeight - minimumThoughtsTop) /
+      (MOMENT_MAX_THOUGHTS - 1),
+  );
+  const thoughtStep = Math.max(0, Math.min(MOMENT_THOUGHT_PREFERRED_STEP, maximumThoughtStep));
+
+  return {
+    thoughtStep,
+    thoughtsTop: captionTop - MOMENT_THOUGHT_CAPTION_GAP - thoughtHeight -
+      (MOMENT_MAX_THOUGHTS - 1) * thoughtStep,
+  };
+};
+
+Object.assign(MOMENT_LAYOUT, deriveMomentThoughtGeometry());
 
 export const QUESTION_LAYOUT = {
   contentX: SAFE_LEFT,
@@ -183,16 +229,6 @@ export const CLOSE_D_TIMING = {
   logoMs: 200,
   taglineMs: 500,
   urlMs: 900,
-} as const;
-
-export const CAPTION_LAYOUT = {
-  contentX: SAFE_LEFT,
-  contentWidth: WIDTH - SAFE_LEFT - SAFE_RIGHT,
-  fontSize: 36,
-  lineHeight: 1.25,
-  maxWordsPerLine: 5,
-  maxLines: 2,
-  bottomOffset: 42,
 } as const;
 
 export const GLYPH_EM = {
@@ -574,9 +610,6 @@ const metadataForTextBox = (
 
   throw new Error(`No manifest metadata for text box ${box.id}`);
 };
-
-const lineBoxHeight = (fontSize: number, lineHeight: number, maxLines: number): number =>
-  fontSize * lineHeight * maxLines;
 
 export const computeTextBoxes = (script: Script, brand: BrandKit): LayoutTextBox[] => {
   const boxes: TextBox[] = [];
