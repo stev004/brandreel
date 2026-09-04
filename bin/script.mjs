@@ -36,7 +36,7 @@ export const DURATION_LIMITS = {
   question: { min: 2500, max: 4500 },
   verdict: { min: 2000, max: 4000 },
   figure: { min: 6000, max: 8500 },
-  close: { min: 2500, max: 4000 },
+  close: { min: 2500, max: 3800 },
 };
 
 export function parseArgs(argv) {
