@@ -8,11 +8,23 @@ import { spawnSync } from "node:child_process";
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const allowedKinds = new Set(["moment", "question", "figure", "verdict"]);
 const requiredScriptKeys = ["id", "brand", "coreMechanic", "beats", "close", "caption", "hashtags"];
+// Mirror engine FIGURE_TIMING.goalMs and the pacing lint's maximum static gap.
+export const FIGURE_LAST_EVENT_MS = 5600;
+export const MAX_STATIC_MS = 3000;
 
 export const COPY_LIMITS = {
   moment: { line: 44, eyebrow: 24, thoughts: 3, thought: 60 },
   question: { line: 12, lines: 3, kicker: 24, dek: 36 },
-  figure: { label: 40, goalText: 30, unitLabel: 12, tick: 12, stamps: 4, stamp: 32 },
+  figure: {
+    label: 40,
+    goalText: 30,
+    unitLabel: 12,
+    minTick: 1,
+    achievedTick: 5,
+    goalTick: 18,
+    stamps: 4,
+    stamp: 32,
+  },
   verdict: { line: 20, lines: 3 },
   close: { line: 44, tagline: 18 },
   caption: { lines: 2, line: 44 },
@@ -23,7 +35,7 @@ export const DURATION_LIMITS = {
   moment: { min: 2000, max: 4000 },
   question: { min: 2500, max: 4500 },
   verdict: { min: 2000, max: 4000 },
-  figure: { min: 6000, max: 9000 },
+  figure: { min: 6000, max: 8500 },
 };
 
 export function parseArgs(argv) {
@@ -133,7 +145,7 @@ function scriptExample() {
         axis: { min: 0, max: 3, achieved: 1, goal: 3 },
         achievedTick: "Now",
         goalTick: "Goal",
-        minTick: "Start",
+        minTick: "0",
         stamps: [{ tone: "done", text: "First step", offsetMs: 1000 }],
         flash: { colorKey: "accent" },
         durationMs: 6000,
@@ -188,7 +200,8 @@ Rules:
 - Do not emit a modules key. Modules are supplied by the command flags.
 - Copy limits: moment.line <= ${COPY_LIMITS.moment.line} characters; moment.eyebrow <= ${COPY_LIMITS.moment.eyebrow}; moment.thoughts has at most ${COPY_LIMITS.moment.thoughts} entries and each is <= ${COPY_LIMITS.moment.thought} characters.
 - question.lines has 1 to ${COPY_LIMITS.question.lines} entries and each is <= ${COPY_LIMITS.question.line} characters; question.kicker <= ${COPY_LIMITS.question.kicker}; question.dek <= ${COPY_LIMITS.question.dek}.
-- figure.label <= ${COPY_LIMITS.figure.label}; figure.goalText <= ${COPY_LIMITS.figure.goalText}; figure.unitLabel <= ${COPY_LIMITS.figure.unitLabel}; each figure tick label <= ${COPY_LIMITS.figure.tick}; stamps has at most ${COPY_LIMITS.figure.stamps} entries and each stamp text is <= ${COPY_LIMITS.figure.stamp} characters.
+- figure.label <= ${COPY_LIMITS.figure.label}; figure.goalText <= ${COPY_LIMITS.figure.goalText}; figure.unitLabel <= ${COPY_LIMITS.figure.unitLabel}; figure.minTick <= ${COPY_LIMITS.figure.minTick} character; minTick is a single character such as 0; figure.achievedTick <= ${COPY_LIMITS.figure.achievedTick} characters; figure.goalTick <= ${COPY_LIMITS.figure.goalTick} characters; stamps has at most ${COPY_LIMITS.figure.stamps} entries and each stamp text is <= ${COPY_LIMITS.figure.stamp} characters.
+- Figure pacing: leave no more than ${MAX_STATIC_MS}ms static after the last figure event. The goal marker lands at ${FIGURE_LAST_EVENT_MS}ms, so if no stamp is later than ${FIGURE_LAST_EVENT_MS}ms, shorten durationMs or add a stamp after ${FIGURE_LAST_EVENT_MS}ms; durationMs over ${FIGURE_LAST_EVENT_MS + MAX_STATIC_MS}ms is invalid.
 - verdict.lines has 1 to ${COPY_LIMITS.verdict.lines} entries and each is <= ${COPY_LIMITS.verdict.line} characters.
 - close.line <= ${COPY_LIMITS.close.line}; close.tagline <= ${COPY_LIMITS.close.tagline}.
 - caption has at most ${COPY_LIMITS.caption.lines} newline-separated lines and each line is <= ${COPY_LIMITS.caption.line} characters.
@@ -339,7 +352,7 @@ function validateBeat(beat, index, violations) {
     addOptionalStringLimit(violations, beat.goalText, `${label}.goalText`, COPY_LIMITS.figure.goalText);
     addOptionalStringLimit(violations, beat.unitLabel, `${label}.unitLabel`, COPY_LIMITS.figure.unitLabel);
     for (const tick of ["minTick", "achievedTick", "goalTick"]) {
-      addOptionalStringLimit(violations, beat[tick], `${label}.${tick}`, COPY_LIMITS.figure.tick);
+      addOptionalStringLimit(violations, beat[tick], `${label}.${tick}`, COPY_LIMITS.figure[tick]);
     }
     if (!beat.value || typeof beat.value !== "object" || typeof beat.value.to !== "number" || typeof beat.value.decimals !== "number") {
       violations.push(`${label}.value must contain numeric to and decimals`);
@@ -361,6 +374,18 @@ function validateBeat(beat, index, violations) {
         addStringViolation(violations, stamp.text, `${label}.stamps[${stampIndex}].text`);
         addMaxLengthViolation(violations, stamp.text, `${label}.stamps[${stampIndex}].text`, COPY_LIMITS.figure.stamp);
       });
+    }
+    if (typeof beat.durationMs === "number" && Number.isFinite(beat.durationMs) && beat.durationMs > 0) {
+      const lateStampOffsets = Array.isArray(beat.stamps)
+        ? beat.stamps
+          .map((stamp) => stamp?.offsetMs)
+          .filter((offsetMs) => typeof offsetMs === "number" && Number.isFinite(offsetMs) && offsetMs > FIGURE_LAST_EVENT_MS)
+        : [];
+      const lastEventMs = lateStampOffsets.length > 0 ? Math.max(...lateStampOffsets) : FIGURE_LAST_EVENT_MS;
+      const staticMs = beat.durationMs - lastEventMs;
+      if (beat.durationMs > FIGURE_LAST_EVENT_MS + MAX_STATIC_MS || staticMs > MAX_STATIC_MS) {
+        violations.push(`[pacing] figure beat ${index} would be static for ${staticMs}ms after its last event; shorten durationMs or add a stamp after ${FIGURE_LAST_EVENT_MS}ms`);
+      }
     }
   }
   if (beat.kind === "verdict") {
@@ -528,8 +553,10 @@ function run(options) {
 
   const scriptPath = join(workspaceDir, "script.json");
   const layoutPath = join(workspaceDir, "layout.json");
+  const rejectedScriptPath = join(workspaceDir, "script-rejected.json");
   let retryPrompt = prompt;
   let violations = [];
+  let lastParsedScript = null;
 
   for (let attempt = 0; attempt <= options.retries; attempt += 1) {
     const result = spawnSync(options.modelCmd, {
@@ -555,6 +582,7 @@ function run(options) {
 
     if (script) {
       applyModules(script, options);
+      lastParsedScript = script;
       violations = validateScript(script, options.brand, workspaceId, brand.voice.notes);
       if (violations.length === 0) {
         const tempWorkspace = attemptWorkspace(workspaceDir, script);
@@ -563,6 +591,7 @@ function run(options) {
           if (violations.length === 0) {
             copyFileSync(join(tempWorkspace, "script.json"), scriptPath);
             copyFileSync(join(tempWorkspace, "layout.json"), layoutPath);
+            rmSync(rejectedScriptPath, { force: true });
             console.log(`wrote ${scriptPath}`);
             console.log(`wrote ${layoutPath}`);
             return 0;
@@ -578,7 +607,8 @@ function run(options) {
     }
   }
 
-  throw new Error(`script validation failed:\n${violations.map((violation) => `- ${violation}`).join("\n")}`);
+  writeFileSync(rejectedScriptPath, `${JSON.stringify({ violations, script: lastParsedScript }, null, 2)}\n`, "utf8");
+  throw new Error(`script validation failed:\n${violations.map((violation) => `- ${violation}`).join("\n")}\nLast rejected script written to ${rejectedScriptPath}`);
 }
 
 export { extractFirstJsonObject, run };
