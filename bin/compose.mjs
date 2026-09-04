@@ -20,6 +20,7 @@ if (!workspaceArg) {
 
 const workspaceDir = resolve(repoRoot, workspaceArg);
 const scriptPath = join(workspaceDir, "script.json");
+const wordsPath = join(workspaceDir, "words.json");
 
 if (!existsSync(scriptPath)) {
   fail(`missing script.json at ${scriptPath}`);
@@ -30,6 +31,15 @@ try {
   script = JSON.parse(readFileSync(scriptPath, "utf8"));
 } catch (error) {
   fail(`could not read or parse ${scriptPath}: ${error.message}`);
+}
+
+let words;
+if (existsSync(wordsPath)) {
+  try {
+    words = JSON.parse(readFileSync(wordsPath, "utf8"));
+  } catch (error) {
+    fail(`could not read or parse ${wordsPath}: ${error.message}`);
+  }
 }
 
 if (!script || typeof script.brand !== "string" || script.brand.length === 0) {
@@ -50,7 +60,11 @@ try {
 
 const tempDir = mkdtempSync(join(tmpdir(), "brandreel-props-"));
 const propsPath = join(tempDir, "props.json");
-writeFileSync(propsPath, JSON.stringify({ brand, script }, null, 2));
+const props = { brand, script };
+if (words !== undefined) {
+  props.words = words;
+}
+writeFileSync(propsPath, JSON.stringify(props, null, 2));
 
 const outputPath = join(workspaceDir, "render.mp4");
 const result = spawnSync(

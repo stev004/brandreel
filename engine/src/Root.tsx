@@ -1,13 +1,14 @@
 import { Composition } from "remotion";
 import { FPS, HEIGHT, WIDTH, msToFrames } from "./config";
 import { closeDurationMs } from "./layout";
-import { BrandKit, Script } from "./schema";
+import { BrandKit, Script, Words } from "./schema";
 import { Stack, type StackProps } from "./Stack";
 import { z } from "zod";
 
 export const StackPropsSchema = z.object({
   brand: BrandKit,
   script: Script,
+  words: Words.optional(),
 });
 
 const neutralBrand: StackProps["brand"] = {

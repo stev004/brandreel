@@ -7,14 +7,15 @@ import { Moment } from "./templates/Moment";
 import { Figure } from "./templates/Figure";
 import { Question } from "./templates/Question";
 import { Verdict } from "./templates/Verdict";
-import type { BrandKit, Script } from "./schema";
+import type { BrandKit, Script, Words } from "./schema";
 
 export type StackProps = {
   brand: BrandKit;
   script: Script;
+  words?: Words;
 };
 
-export const Stack = ({ brand, script }: StackProps) => {
+export const Stack = ({ brand, script, words }: StackProps) => {
   let fromFrame = 0;
 
   const moments = script.beats.map((beat, index) => {
@@ -56,7 +57,7 @@ export const Stack = ({ brand, script }: StackProps) => {
       {close}
       {fromFrame > 0 ? (
         <Sequence from={0} durationInFrames={fromFrame} name="caption">
-          <Caption brand={brand} text={script.caption} />
+          <Caption brand={brand} text={script.caption} words={words} />
         </Sequence>
       ) : null}
     </AbsoluteFill>
