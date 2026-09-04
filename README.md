@@ -22,4 +22,12 @@ Chain the stages selected by a script with:
 node bin/reel.mjs workspace/demo --dry-run
 ```
 
+Draft a validated stage 1 script with a configured model CLI:
+
+```sh
+node bin/script.mjs workspace/demo --brand regulate --topic "cannot sleep at 3am"
+```
+
+Use `--dry-run` to write `script-prompt.md` without calling the model. The default model command is `claude -p`; override it with `--model-cmd` for another CLI or a fake model.
+
 Add a brand by copying the `brands/regulate/brand.json` shape and pointing a script at the new brand directory. See [SPEC.md](SPEC.md) for the design and stage contracts.
