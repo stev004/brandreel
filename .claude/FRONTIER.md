@@ -9,7 +9,7 @@ Updated 2026-09-04 (after the CTA-lint run; branch names only, no SHAs).
 - Phase 1 (fusion video) still parked on Steven's taste gate.
 
 ## Known weaknesses
-- text-fit is a glyph-width estimate; pixel-bands ignores uniform blocks in a band by design; script.mjs retries validate render-free.
+- text-fit is a glyph-width estimate; pixel-bands ignores uniform blocks in a band by design; script.mjs retries validate render-free; the overlap lint covers text elements only (axis, rings, logo are not manifest boxes); CTA dwell counts the fade-in start frame (about one frame optimistic).
 - Remotion caret ranges cause a version-mismatch warning on every render.
 
 ## Next predicate (candidates)

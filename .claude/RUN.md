@@ -1,2 +1,2 @@
 # RUN - idle
-No run in flight. Last run 2026-09-04 (CTA lint) met its predicate; digest docs/runs/2026-09-04-digest-cta-lint.md. Next candidates in that digest and .claude/FRONTIER.md.
+Run reopened 2026-09-04T22:05 for audit fixes: C4 /private/tmp/br-c4-bin (fm/c4-bin) report /private/tmp/claude-501/-Users-stevenmatson-Documents-brandreel/ca1cc81f-f570-49f0-9640-5a37fc3e573f/scratchpad/c4.last.md. Cold start: verify per brief, commit, merge --no-ff into feature/cta-lint, rerun node --test bin/tests/ and node bin/lint.mjs workspace/smoke-3am-v3 --no-render, then close RUN.md again.

@@ -1,6 +1,6 @@
 # brandreel roadmap
 
-Where the pipeline goes from here. STATE.md = now; this = the arc. Updated 2026-09-03.
+Where the pipeline goes from here. STATE.md = now; this = the arc. Updated 2026-09-04.
 
 ## Phase 1 - finish the first real video (fusion, howclose)
 - [ ] Iterate the animatic past Steven's gate (rev6 parked "still not great"; working copy `animatics/howclose-fusion-v2.html`, parked copy in howclose.to repo `marketing/animatics/`). Next levers: scene 1/2 typography energy, statement copy voice pass against the brand book, maybe motion on the bars' entrances, test with the VO played alongside.
