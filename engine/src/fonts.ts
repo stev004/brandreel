@@ -60,6 +60,7 @@ const resolveFamily = (family: { family: string; italic?: boolean }, role: strin
 export const resolveFonts = (brand: BrandKit): {
   display: string;
   displayItalic: string;
+  displayUpright: string;
   body: string;
   mono: string;
 } => {
@@ -68,9 +69,15 @@ export const resolveFonts = (brand: BrandKit): {
     ? displayFamily
     : resolveFamily({ family: brand.fonts.display.family, italic: true }, "display italic");
 
+  // Wordmarks are set upright whatever the kit's display italic preference.
+  const displayUprightFamily = brand.fonts.display.italic
+    ? resolveFamily({ family: brand.fonts.display.family, italic: false }, "display upright")
+    : displayFamily;
+
   return {
     display: withFallback(displayFamily, FALLBACK_STACKS.display),
     displayItalic: withFallback(displayItalicFamily, FALLBACK_STACKS.display),
+    displayUpright: withFallback(displayUprightFamily, FALLBACK_STACKS.display),
     body: withFallback(resolveFamily(brand.fonts.body, "body"), FALLBACK_STACKS.body),
     mono: withFallback(resolveFamily(brand.fonts.mono, "mono"), FALLBACK_STACKS.mono),
   };

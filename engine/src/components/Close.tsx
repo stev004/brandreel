@@ -72,7 +72,7 @@ export const Close = ({ brand, close }: CloseProps) => {
             height: CLOSE_LAYOUT.wordmarkFontSize * CLOSE_LAYOUT.wordmarkLineHeight,
             color: brand.palette.fg,
             // A wordmark is set in its brand's display face, upright, never the body face.
-            fontFamily: fonts.display,
+            fontFamily: fonts.displayUpright,
             fontStyle: "normal",
             fontWeight: 500,
             fontSize: CLOSE_LAYOUT.wordmarkFontSize,

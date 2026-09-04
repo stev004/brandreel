@@ -4,7 +4,7 @@
 
 **Summary:** The Regulate Brand Book was published the same day (hivemind `marketing/BRAND_BOOK.html`, artifact 2c016ffe). The taste pass against it found the kit shipping a cream wordmark dot (#F2F0E9) - a violation of law 1 - plus an invented `extras.sage` and a placeholder voice. Kit refreshed: dot #FFFFFF (also `extras.dot`), sage dropped, voice filled with the book's tone, four laws, copy bans and message order. Steven's rulings carried in: Playfair Display canonical, #4FD1C5 accent as a supplement only, wordmark only (no symbol).
 
-**Template fix:** `Close.tsx` set the wordmark in the body face; a wordmark takes its brand's display face, upright (fontStyle normal, 500). Brand-agnostic, applies to howclose too.
+**Template fix:** `Close.tsx` set the wordmark in the body face; a wordmark takes its brand's display face, upright, 500. Because a kit may load its display face as italic, `resolveFonts` now also returns `displayUpright` (normal-style load of the same family). Brand-agnostic, applies to howclose too.
 
 **Tests:** `schema.test.ts` asserted the cream dot - it had encoded the violation. Now asserts the white-dot law on both `wordmark.dotColor` and `extras.dot`.
 
