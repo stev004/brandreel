@@ -25,16 +25,22 @@ export const captionWindow = (
     return { lines: [], activeIndex: null };
   }
 
+  let lastStartedIndex = -1;
+  let activeIndex = -1;
+  for (let index = 0; index < timedWords.length; index += 1) {
+    const word = timedWords[index];
+    if (word.startMs <= timeMs) lastStartedIndex = index;
+    if (word.startMs <= timeMs && timeMs < word.endMs) activeIndex = index;
+  }
+
   const lastWord = timedWords[timedWords.length - 1];
-  if (timeMs >= lastWord.endMs + GAP_GRACE_MS) {
+  if (activeIndex === -1 && timeMs >= lastWord.endMs + GAP_GRACE_MS) {
     return { lines: [], activeIndex: null };
   }
 
-  let lastStartedIndex = -1;
-  for (let index = 0; index < timedWords.length; index += 1) {
-    if (timedWords[index].startMs <= timeMs) lastStartedIndex = index;
-  }
-  const shownIndex = lastStartedIndex === -1 ? 0 : lastStartedIndex;
+  const shownIndex = activeIndex === -1
+    ? (lastStartedIndex === -1 ? 0 : lastStartedIndex)
+    : activeIndex;
   const windowStart = Math.floor(shownIndex / windowSize) * windowSize;
 
   const windowEnd = Math.min(windowStart + windowSize, timedWords.length);
@@ -44,17 +50,8 @@ export const captionWindow = (
     lines.push(windowWords.slice(index, index + opts.maxWordsPerLine).map((word) => word.text));
   }
 
-  let activeOffset = null;
-  for (let index = windowWords.length - 1; index >= 0; index -= 1) {
-    const word = windowWords[index];
-    if (word.startMs <= timeMs && timeMs < word.endMs) {
-      activeOffset = index;
-      break;
-    }
-  }
-
   return {
     lines,
-    activeIndex: activeOffset,
+    activeIndex: activeIndex === -1 ? null : activeIndex - windowStart,
   };
 };

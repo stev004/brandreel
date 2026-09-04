@@ -63,6 +63,28 @@ describe("captionWindow", () => {
     ]);
   });
 
+  it("keeps an earlier active word's window when a later word has ended", () => {
+    const overlappingWords = [
+      { text: "A", startMs: 0, endMs: 1000 },
+      { text: "Z", startMs: 500, endMs: 500 },
+      { text: "C", startMs: 600, endMs: 900 },
+    ];
+    const singleLineOpts = { maxWordsPerLine: 2, maxLines: 1 };
+
+    expect(captionWindow(overlappingWords, 500, singleLineOpts)).toEqual({
+      lines: [["A", "Z"]],
+      activeIndex: 0,
+    });
+    expect(captionWindow(overlappingWords, 700, singleLineOpts)).toEqual({
+      lines: [["C"]],
+      activeIndex: 0,
+    });
+    expect(captionWindow(overlappingWords, 950, singleLineOpts)).toEqual({
+      lines: [["A", "Z"]],
+      activeIndex: 0,
+    });
+  });
+
   it("returns empty lines after the final grace period", () => {
     expect(captionWindow(words, 4301, opts)).toEqual({ lines: [], activeIndex: null });
   });
