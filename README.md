@@ -16,6 +16,19 @@ Create the stage 8 review sheet with:
 node bin/review.mjs workspace/demo
 ```
 
+Run stage 7 lint checks with:
+
+```sh
+node bin/lint.mjs workspace/demo
+```
+
+The linter checks the 1080x1920, 60fps render with ffprobe, validates the
+layout.json safe zones, text fit, hook, pacing and CTA rules, and samples
+rendered pixels for overflow in the top, bottom and right bands. Use
+`--no-pixels` when ffmpeg frame decoding is not available. A
+`durationOverride` with a non-empty `reason` in script.json skips the 15-35
+second duration check and records that reason in lint-report.json.
+
 Chain the stages selected by a script with:
 
 ```sh
