@@ -1,5 +1,8 @@
 # SESSIONS - append-only log, newest first
 
+## 2026-09-04 (latest) - foreman run 3: CTA lint
+Steven merged layout-lints to main (2fd01a5) and started the CTA run. Landed on feature/cta-lint: cta lint from rendered close elements with 2500ms dwell, overlap lint (found two Figure template collisions, fixed), thought geometry derived from the caption box, script.mjs --url and close duration limits. smoke-3am-v3 passes all 11 rules. Digest docs/runs/2026-09-04-digest-cta-lint.md. Waiting on Steven: merge cta-lint, G1 remote.
+
 ## 2026-09-04 (late) - foreman run 2: layout lints
 Steven merged phase2-machine to main (fce5a38) and started the layout-lints run. Landed on feature/layout-lints: bin/manifest.mjs (stage 5 layout.json), lint rules safe-zone/text-fit/hook/pacing/cta/pixel-bands, engine geometry fixes (figure ring, goalText box, dissolve events), script.mjs lint-and-retry with geometry-derived limits. smoke-3am: 25 violations before, smoke-3am-v2: 0 after. Digest docs/runs/2026-09-04-digest-layout-lints.md. Waiting on Steven: merge layout-lints, G5 close dwell, G1 remote.
 
