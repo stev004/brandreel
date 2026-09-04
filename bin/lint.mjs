@@ -6,8 +6,10 @@ import { fileURLToPath } from "node:url";
 
 import {
   cta,
+  ctaDwellMs,
   durationCheck,
   hook,
+  overlap,
   pacing,
   pixelBands,
   safeZones,
@@ -126,6 +128,7 @@ const rules = {
   hook: "skipped",
   pacing: "skipped",
   cta: "skipped",
+  overlap: "skipped",
   "pixel-bands": noRender || noPixels ? "skipped" : "pass",
 };
 
@@ -163,7 +166,7 @@ if (existsSync(layoutPath)) {
   const layoutResult = readJson(layoutPath);
   if (layoutResult.error) {
     violations.push(`[layout] invalid layout.json: ${layoutResult.error.message}`);
-    for (const name of ["safe-zone", "text-fit", "hook", "pacing", "cta"]) rules[name] = "fail";
+    for (const name of ["safe-zone", "text-fit", "hook", "pacing", "cta", "overlap"]) rules[name] = "fail";
   } else {
     layout = layoutResult.value;
     const manifestRules = [
@@ -172,6 +175,7 @@ if (existsSync(layoutPath)) {
       ["hook", hook(layout)],
       ["pacing", pacing(layout)],
       ["cta", cta(layout, script)],
+      ["overlap", overlap(layout)],
     ];
     for (const [name, ruleViolations] of manifestRules) {
       violations.push(...ruleViolations);
@@ -214,6 +218,7 @@ const report = {
   closeDwellMs: layout && Number.isFinite(layout.totalDurationMs) && Number.isFinite(layout.closeStartMs)
     ? layout.totalDurationMs - layout.closeStartMs
     : null,
+  ctaDwellMs: layout ? ctaDwellMs(layout) : null,
   durationOverrideReason: durationResult.reason,
 };
 

@@ -23,5 +23,20 @@
     "fromMs": 900,
     "toMs": 4000,
     "estimatedLines": 2
+  }, {
+    "id": "close-line",
+    "role": "display",
+    "text": "A clear close.",
+    "x": 60,
+    "y": 700,
+    "w": 900,
+    "h": 121.4,
+    "fontSize": 76,
+    "lineHeight": 1.15,
+    "maxLines": 1,
+    "letterSpacingEm": 0,
+    "fromMs": 12000,
+    "toMs": 15000,
+    "estimatedLines": 1
   }]
 }
