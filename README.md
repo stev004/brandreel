@@ -10,4 +10,16 @@ From the repository root, render the demo with:
 node bin/compose.mjs workspace/demo
 ```
 
+Create the stage 8 review sheet with:
+
+```sh
+node bin/review.mjs workspace/demo
+```
+
+Chain the stages selected by a script with:
+
+```sh
+node bin/reel.mjs workspace/demo --dry-run
+```
+
 Add a brand by copying the `brands/regulate/brand.json` shape and pointing a script at the new brand directory. See [SPEC.md](SPEC.md) for the design and stage contracts.
