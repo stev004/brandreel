@@ -1,7 +1,9 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { tmpdir } from "node:os";
+import { spawnSync } from "node:child_process";
 
 import {
   cta,
@@ -62,11 +64,11 @@ test("pacing failing fixture catches a gap over three seconds", () => {
   assert.match(violations[0], /^\[pacing\]/);
 });
 
-test("CTA passing fixture has a close line in the final 20 percent", () => {
+test("CTA passing fixture has a close line before the timeline ends", () => {
   assert.deepEqual(cta(fixture("lint-cta-pass.json"), closeScript), []);
 });
 
-test("CTA failing fixture catches a close that starts too early", () => {
+test("CTA failing fixture catches a close at the timeline end", () => {
   const violations = cta(fixture("lint-cta-fail.json"), closeScript);
   assert.equal(violations.length, 1);
   assert.match(violations[0], /^\[cta\]/);
@@ -86,6 +88,26 @@ test("duration override fixture skips the duration range", () => {
   assert.deepEqual(result.violations, []);
   assert.equal(result.skipped, true);
   assert.equal(result.reason, "The story needs a shorter cut.");
+});
+
+test("no-render lint writes a report with render rules skipped", () => {
+  const workspace = mkdtempSync(join(tmpdir(), "brandreel-no-render-test-"));
+  try {
+    writeFileSync(join(workspace, "layout.json"), readFileSync(join(fixtures, "layout-pass.json")));
+    writeFileSync(join(workspace, "script.json"), JSON.stringify({ close: { line: "A clear close." } }));
+    const result = spawnSync(process.execPath, [join(new URL("../lint.mjs", import.meta.url).pathname), workspace, "--no-render"], {
+      encoding: "utf8",
+    });
+    assert.equal(result.status, 0, result.stderr);
+    const report = JSON.parse(readFileSync(join(workspace, "lint-report.json"), "utf8"));
+    assert.equal(report.rules.fps, "skipped");
+    assert.equal(report.rules.duration, "skipped");
+    assert.equal(report.rules["pixel-bands"], "skipped");
+    assert.equal(report.closeDwellMs, 3000);
+    assert.equal(existsSync(join(workspace, "render.mp4")), false);
+  } finally {
+    rmSync(workspace, { recursive: true, force: true });
+  }
 });
 
 function frame(width, height, color = [0, 0, 0]) {
@@ -121,4 +143,3 @@ test("pixel bands pass when a whole band is a different uniform colour", () => {
   }
   assert.deepEqual(pixelBands([sampled], pixelOptions), []);
 });
-

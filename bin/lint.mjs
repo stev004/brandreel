@@ -17,6 +17,7 @@ import {
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const args = process.argv.slice(2);
 const noPixels = args.includes("--no-pixels");
+const noRender = args.includes("--no-render");
 const workspaceArg = args.find((arg) => !arg.startsWith("--"));
 const fail = (message) => {
   console.error(`lint: ${message}`);
@@ -24,7 +25,7 @@ const fail = (message) => {
 };
 
 if (!workspaceArg) {
-  fail("usage: node bin/lint.mjs <workspace-dir> [--no-pixels]");
+  fail("usage: node bin/lint.mjs <workspace-dir> [--no-render] [--no-pixels]");
 }
 
 const workspaceDir = resolve(repoRoot, workspaceArg);
@@ -33,7 +34,7 @@ const layoutPath = join(workspaceDir, "layout.json");
 const scriptPath = join(workspaceDir, "script.json");
 const reportPath = join(workspaceDir, "lint-report.json");
 
-if (!existsSync(renderPath)) {
+if (!noRender && !existsSync(renderPath)) {
   fail(`missing render.mp4 at ${renderPath}`);
 }
 
@@ -113,30 +114,30 @@ function sampleFrames(width, height, durationSeconds) {
   return { frames, error: null };
 }
 
-const stream = probeRender();
+const stream = noRender ? {} : probeRender();
 const violations = [];
 const rules = {
-  width: "pass",
-  height: "pass",
-  fps: "pass",
-  duration: "pass",
+  width: noRender ? "skipped" : "pass",
+  height: noRender ? "skipped" : "pass",
+  fps: noRender ? "skipped" : "pass",
+  duration: noRender ? "skipped" : "pass",
   "safe-zone": "skipped",
   "text-fit": "skipped",
   hook: "skipped",
   pacing: "skipped",
   cta: "skipped",
-  "pixel-bands": noPixels ? "skipped" : "pass",
+  "pixel-bands": noRender || noPixels ? "skipped" : "pass",
 };
 
-if (stream.width !== 1080) {
+if (!noRender && stream.width !== 1080) {
   violations.push(`width must be 1080; got ${stream.width ?? "missing"}`);
   rules.width = "fail";
 }
-if (stream.height !== 1920) {
+if (!noRender && stream.height !== 1920) {
   violations.push(`height must be 1920; got ${stream.height ?? "missing"}`);
   rules.height = "fail";
 }
-if (stream.avg_frame_rate !== "60/1") {
+if (!noRender && stream.avg_frame_rate !== "60/1") {
   violations.push(`fps must be exactly 60/1; got ${stream.avg_frame_rate ?? "missing"}`);
   rules.fps = "fail";
 }
@@ -147,7 +148,9 @@ if (scriptResult.error) {
   violations.push(`[script] invalid script.json: ${scriptResult.error.message}`);
 }
 const script = scriptResult.value ?? {};
-const durationResult = durationCheck(durationSeconds, script);
+const durationResult = noRender
+  ? { violations: [], skipped: true, reason: null }
+  : durationCheck(durationSeconds, script);
 violations.push(...durationResult.violations);
 if (durationResult.skipped) {
   rules.duration = "skipped";
@@ -180,7 +183,7 @@ if (existsSync(layoutPath)) {
 }
 
 let samples = 0;
-if (!noPixels) {
+if (!noRender && !noPixels) {
   const sampled = sampleFrames(
     Number(stream.width),
     Number(stream.height),
@@ -208,6 +211,9 @@ const report = {
   },
   rules,
   samples,
+  closeDwellMs: layout && Number.isFinite(layout.totalDurationMs) && Number.isFinite(layout.closeStartMs)
+    ? layout.totalDurationMs - layout.closeStartMs
+    : null,
   durationOverrideReason: durationResult.reason,
 };
 

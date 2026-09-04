@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-export const STAGES = ["vo", "align", "compose", "polish", "lint", "review"];
+export const STAGES = ["vo", "align", "manifest", "compose", "polish", "lint", "review"];
 
 export function planStages(script, options = {}) {
   const from = options.from ?? STAGES[0];
@@ -87,6 +87,7 @@ function commandFor(stage, workspaceArg, music) {
   const commands = {
     vo: ["audio/.venv/bin/python", ["bin/vo.py", workspaceArg]],
     align: ["audio/.venv/bin/python", ["bin/align.py", workspaceArg]],
+    manifest: ["node", ["bin/manifest.mjs", workspaceArg]],
     compose: ["node", ["bin/compose.mjs", workspaceArg]],
     polish: ["node", ["bin/polish.mjs", workspaceArg]],
     lint: ["node", ["bin/lint.mjs", workspaceArg]],

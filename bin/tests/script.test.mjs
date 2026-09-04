@@ -1,9 +1,11 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { existsSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { spawnSync } from "node:child_process";
+
+import { validateScript } from "../script.mjs";
 
 const repoRoot = new URL("../..", import.meta.url).pathname;
 const scriptCli = join(repoRoot, "bin", "script.mjs");
@@ -19,6 +21,30 @@ function runScript(workspaceDir, extraArgs = [], env = {}) {
     encoding: "utf8",
     env: { ...process.env, ...env },
   });
+}
+
+function validationScript(durations = { moment: 3000, question: 3000, figure: 6000, verdict: 3000 }) {
+  return {
+    id: "validation",
+    brand: "regulate",
+    coreMechanic: "One visual mechanism carries the idea.",
+    beats: [
+      { kind: "moment", line: "Still awake?", durationMs: durations.moment },
+      { kind: "question", lines: ["Need rest?"], durationMs: durations.question },
+      {
+        kind: "figure",
+        label: "A small shift",
+        value: { to: 3, decimals: 0 },
+        axis: { min: 0, max: 3, achieved: 1, goal: 3 },
+        stamps: [],
+        durationMs: durations.figure,
+      },
+      { kind: "verdict", lines: ["Start with less."], durationMs: durations.verdict },
+    ],
+    close: { line: "Make room.", showWordmark: true },
+    caption: "A small shift.",
+    hashtags: ["#one", "#two", "#three"],
+  };
 }
 
 test("dry-run writes a prompt containing the tone words and notes", () => {
@@ -158,6 +184,69 @@ test("fenced JSON is extracted and persisted", () => {
     const result = runScript(dir, ["--model-cmd", `node ${fakeModel}`]);
     assert.equal(result.status, 0, result.stderr);
     assert.match(readFileSync(join(dir, "script.json"), "utf8"), /"kind": "figure"/);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("each beat kind accepts its minimum duration", () => {
+  const minimums = { moment: 2000, question: 2500, figure: 6000, verdict: 2000 };
+  for (const [kind, minimum] of Object.entries(minimums)) {
+    const durations = { moment: 4000, question: 4500, figure: 9000, verdict: 4000 };
+    durations[kind] = minimum;
+    const index = ["moment", "question", "figure", "verdict"].indexOf(kind);
+    const violations = validateScript(validationScript(durations), "regulate", "validation", "");
+    assert.equal(violations.some((violation) => violation.startsWith(`beats[${index}].durationMs`)), false, kind);
+  }
+});
+
+test("each beat kind rejects a duration below its minimum", () => {
+  const minimums = { moment: 2000, question: 2500, figure: 6000, verdict: 2000 };
+  for (const [kind, minimum] of Object.entries(minimums)) {
+    const durations = { moment: 4000, question: 4500, figure: 9000, verdict: 4000 };
+    durations[kind] = minimum - 1;
+    const index = ["moment", "question", "figure", "verdict"].indexOf(kind);
+    const violations = validateScript(validationScript(durations), "regulate", "validation", "");
+    assert.ok(violations.some((violation) => violation.startsWith(`beats[${index}].durationMs must be between`)), kind);
+  }
+});
+
+test("question lines reject thirteen characters", () => {
+  const script = validationScript();
+  script.beats[1].lines = ["1234567890123"];
+  const violations = validateScript(script, "regulate", "validation", "");
+  assert.ok(violations.some((violation) => violation.includes("beats[1].lines[0] must be 12 characters or fewer")));
+});
+
+test("retry loop succeeds on the second attempt and writes both artifacts", () => {
+  const dir = workspace();
+  const modelState = join(dir, "model-state");
+  const lintState = join(dir, "lint-state");
+  try {
+    const result = runScript(dir, [
+      "--retries", "1",
+      "--lint-cmd", `node ${join(repoRoot, "bin/tests/fixtures/fake-lint.mjs")}`,
+      "--model-cmd", `node ${fakeModel}`,
+    ], { FAKE_MODEL_STATE: modelState, FAKE_LINT_STATE: lintState });
+    assert.equal(result.status, 0, result.stderr);
+    assert.equal(JSON.parse(readFileSync(join(dir, "script.json"), "utf8")).brand, "regulate");
+    assert.equal(existsSync(join(dir, "layout.json")), true);
+    assert.equal(readFileSync(modelState, "utf8"), "2");
+    assert.equal(readFileSync(lintState, "utf8"), "2");
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("retry loop fails after retries and preserves an existing script", () => {
+  const dir = workspace();
+  const original = JSON.stringify({ keep: true });
+  writeFileSync(join(dir, "script.json"), original);
+  try {
+    const result = runScript(dir, ["--retries", "1", "--skip-lint", "--model-cmd", `node ${fakeModel}`], { FAKE_MODEL_INVALID: "1" });
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /missing required key: coreMechanic/);
+    assert.equal(readFileSync(join(dir, "script.json"), "utf8"), original);
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
