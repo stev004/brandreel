@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "outDir": "out/manifest",
+    "noEmit": false
+  },
+  "include": ["src/manifest-cli.ts"]
+}

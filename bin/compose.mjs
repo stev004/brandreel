@@ -66,6 +66,28 @@ if (words !== undefined) {
 }
 writeFileSync(propsPath, JSON.stringify(props, null, 2));
 
+const manifestBuild = spawnSync("npm", ["run", "manifest", "--silent"], {
+  cwd: engineDir,
+  stdio: "inherit",
+});
+
+if (manifestBuild.error || manifestBuild.status !== 0) {
+  rmSync(tempDir, { recursive: true, force: true });
+  fail(`manifest build failed${manifestBuild.error ? `: ${manifestBuild.error.message}` : ""}`);
+}
+
+const layoutPath = join(workspaceDir, "layout.json");
+const manifestWrite = spawnSync(
+  process.execPath,
+  [join(engineDir, "out", "manifest", "manifest-cli.js"), propsPath, layoutPath],
+  { cwd: engineDir, stdio: "inherit" },
+);
+
+if (manifestWrite.error || manifestWrite.status !== 0) {
+  rmSync(tempDir, { recursive: true, force: true });
+  fail(`manifest emission failed${manifestWrite.error ? `: ${manifestWrite.error.message}` : ""}`);
+}
+
 const outputPath = join(workspaceDir, "render.mp4");
 const result = spawnSync(
   "npx",

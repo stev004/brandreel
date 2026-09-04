@@ -9,6 +9,7 @@ workspace/**/words.json
 workspace/**/vo-timing.json
 workspace/**/final/
 workspace/**/audio-report.json
+engine/out/
 audio/.venv/
 __pycache__/
 workspace/**/review.md
