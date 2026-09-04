@@ -183,6 +183,7 @@ export const CAPTION_LAYOUT = {
   contentWidth: WIDTH - SAFE_LEFT - SAFE_RIGHT,
   fontSize: 36,
   lineHeight: 1.25,
+  maxWordsPerLine: 5,
   maxLines: 2,
   bottomOffset: 42,
 } as const;
