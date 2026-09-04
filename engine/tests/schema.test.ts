@@ -9,7 +9,9 @@ describe("M1 JSON contracts", () => {
   it("parses the curated Regulate brand", () => {
     const brand = BrandKit.parse(readJson("../../brands/regulate/brand.json"));
     expect(brand.name).toBe("regulate");
-    expect(brand.wordmark.dotColor).toBe("#F2F0E9");
+    // Brand Book law 1 (2026-09-04): the dot is always pure white, never cream, teal or a state colour.
+    expect(brand.wordmark.dotColor).toBe("#FFFFFF");
+    expect(brand.palette.extras.dot).toBe("#FFFFFF");
   });
 
   it("parses the complete demo script", () => {

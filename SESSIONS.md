@@ -1,5 +1,17 @@
 # SESSIONS - append-only log, newest first
 
+## 2026-09-04 - Regulate kit refreshed from the Brand Book
+
+**Summary:** The Regulate Brand Book was published the same day (hivemind `marketing/BRAND_BOOK.html`, artifact 2c016ffe). The taste pass against it found the kit shipping a cream wordmark dot (#F2F0E9) - a violation of law 1 - plus an invented `extras.sage` and a placeholder voice. Kit refreshed: dot #FFFFFF (also `extras.dot`), sage dropped, voice filled with the book's tone, four laws, copy bans and message order. Steven's rulings carried in: Playfair Display canonical, #4FD1C5 accent as a supplement only, wordmark only (no symbol).
+
+**Template fix:** `Close.tsx` set the wordmark in the body face; a wordmark takes its brand's display face, upright (fontStyle normal, 500). Brand-agnostic, applies to howclose too.
+
+**Tests:** `schema.test.ts` asserted the cream dot - it had encoded the violation. Now asserts the white-dot law on both `wordmark.dotColor` and `extras.dot`.
+
+**Verified:** typecheck clean · 12/12 tests · demo compose + lint green (1080x1920 @ 60, 15.9s) · frames checked: Playfair wordmark, white dot.
+
+**Not done (by design):** no new animatic - Phase 1 is howclose and parked on Steven; the first real Regulate video is queued in STATE.md next steps and needs a breath-pacing beat kind.
+
 ## 2026-09-03 (later) - graph iteration to rev6 via design agent + Steven's critiques
 
 **Summary:** the fusion animatic went rev4 -> rev6 in one sitting, each rev driven by a Steven critique. rev4: Fable design-agent spec (zoned layout, right rail, reused y1000 slot) - superseded same day. rev5: pollar.news-style rebuild (one swapping 60px serif statement replaces ledger+rail; bars tripled, 1x=400px; zoom to 0.08 makes the 30x need-bar land at exactly the 2.4x bar's former 960px height). rev6: total 34.8s, S3 17.5s, statements dwell 2-3s; the 2012-2021 beat now animates four red shot-bars rising to 0.93-0.98x and collapsing (effort visibly failing); statements rewritten explicit; dek moved under the S1 title. All browser-verified; artifact republished (commits 37594ec, f6f45b7, f1e8877).

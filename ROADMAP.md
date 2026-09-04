@@ -18,7 +18,7 @@ Where the pipeline goes from here. STATE.md = now; this = the arc. Updated 2026-
 ## Phase 3 - footage + more brands
 - [ ] `bin/assets`: Pexels/Pixabay fetcher + Veo free-tier prompt manifests; `bin/conform` RIFE 60fps.
 - [ ] `Broll` template (clip + captions + safe-zone overlays).
-- [ ] `bin/extract-brand` + onboard photography (Matson Studios) and regulate content kits.
+- [x] ~~regulate content kit~~ refreshed from the Brand Book 2026-09-04 (`feature/regulate-kit`). Still open: `bin/extract-brand` + photography (Matson Studios) kit.
 - [ ] Optional paid plug-ins behind the same interfaces when earned: ElevenLabs VO, fal.ai clips, Higgsfield cinema.
 
 ## Phase 4 - distribution (post first posts, per sequence doctrine)
