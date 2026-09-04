@@ -1,5 +1,8 @@
 # SESSIONS - append-only log, newest first
 
+## 2026-09-04 (evening) - foreman run: Phase 2 engineering
+Director Fable 5.1, executor Codex gpt-5.6-luna, auditors sol + terra. Landed on feature/phase2-machine: karaoke captions, bin/review.mjs, bin/reel.mjs, bin/script.mjs, audit fixes; full chain proven with a real model (workspace/smoke-3am). State tower in .claude/ (DIRECTOR/FRONTIER/GATES/RUN/decisions.tsv), evidence in docs/runs/. Digest: docs/runs/2026-09-04-digest.md. Waiting on Steven: merge (G2), remote (G1). Next predicate: layout manifest + safe-zone/text-fit lints.
+
 ## 2026-09-04 - Regulate kit refreshed from the Brand Book
 
 **Summary:** The Regulate Brand Book was published the same day (hivemind `marketing/BRAND_BOOK.html`, artifact 2c016ffe). The taste pass against it found the kit shipping a cream wordmark dot (#F2F0E9) - a violation of law 1 - plus an invented `extras.sage` and a placeholder voice. Kit refreshed: dot #FFFFFF (also `extras.dot`), sage dropped, voice filled with the book's tone, four laws, copy bans and message order. Steven's rulings carried in: Playfair Display canonical, #4FD1C5 accent as a supplement only, wordmark only (no symbol).
