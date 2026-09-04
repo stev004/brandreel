@@ -64,12 +64,14 @@ test("dry-run writes a prompt containing the tone words and notes", () => {
 test("fake model happy path writes script.json with the workspace basename as id", () => {
   const dir = workspace();
   try {
+    writeFileSync(join(dir, "script-rejected.json"), "stale");
     const result = runScript(dir, ["--model-cmd", `node ${fakeModel}`]);
     assert.equal(result.status, 0, result.stderr);
     const script = JSON.parse(readFileSync(join(dir, "script.json"), "utf8"));
     assert.equal(script.id, dir.split("/").at(-1));
     assert.equal(script.brand, "regulate");
     assert.equal(Object.hasOwn(script, "modules"), false);
+    assert.equal(existsSync(join(dir, "script-rejected.json")), false);
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
@@ -115,6 +117,10 @@ test("invalid fake model reply exits nonzero and lists each violation", () => {
     assert.match(result.stderr, /missing required key: coreMechanic/);
     assert.match(result.stderr, /total beat durationMs must be between 15000 and 35000/);
     assert.equal(existsSync(join(dir, "script.json")), false);
+    const rejected = JSON.parse(readFileSync(join(dir, "script-rejected.json"), "utf8"));
+    assert.ok(Array.isArray(rejected.violations));
+    assert.equal(rejected.script.id, dir.split("/").at(-1));
+    assert.match(result.stderr, /script-rejected\.json/);
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
@@ -171,6 +177,11 @@ test("dry-run prompt states the copy limits and module rule", () => {
     assert.equal(result.status, 0, result.stderr);
     const prompt = readFileSync(join(dir, "script-prompt.md"), "utf8");
     assert.match(prompt, /moment\.line <= 44/);
+    assert.match(prompt, /figure\.minTick <= 1 character; minTick is a single character such as 0/);
+    assert.match(prompt, /figure\.achievedTick <= 5 characters/);
+    assert.match(prompt, /figure\.goalTick <= 18 characters/);
+    assert.match(prompt, /Figure pacing:.*3000ms static/);
+    assert.match(prompt, /stamp after 5600ms/);
     assert.match(prompt, /caption has at most 2 newline-separated lines/);
     assert.match(prompt, /Do not emit a modules key/);
   } finally {
@@ -216,6 +227,36 @@ test("question lines reject thirteen characters", () => {
   script.beats[1].lines = ["1234567890123"];
   const violations = validateScript(script, "regulate", "validation", "");
   assert.ok(violations.some((violation) => violation.includes("beats[1].lines[0] must be 12 characters or fewer")));
+});
+
+test("figure minTick limit names the beat and field", () => {
+  const script = validationScript();
+  script.beats[2].minTick = "0h";
+  const violations = validateScript(script, "regulate", "validation", "");
+  assert.ok(violations.some((violation) => violation.includes("beats[2].minTick must be 1 characters or fewer")));
+});
+
+test("figure goalTick accepts eighteen characters and rejects nineteen", () => {
+  const accepted = validationScript();
+  accepted.beats[2].goalTick = "123456789012345678";
+  assert.equal(validateScript(accepted, "regulate", "validation", "").some((violation) => violation.includes("goalTick")), false);
+
+  const rejected = validationScript();
+  rejected.beats[2].goalTick = "1234567890123456789";
+  const violations = validateScript(rejected, "regulate", "validation", "");
+  assert.ok(violations.some((violation) => violation.includes("beats[2].goalTick must be 18 characters or fewer")));
+});
+
+test("figure static-tail rule rejects a long beat without a late stamp", () => {
+  const script = validationScript({ moment: 3000, question: 3000, figure: 9000, verdict: 3000 });
+  const violations = validateScript(script, "regulate", "validation", "");
+  assert.ok(violations.includes("[pacing] figure beat 2 would be static for 3400ms after its last event; shorten durationMs or add a stamp after 5600ms"));
+});
+
+test("figure static-tail rule accepts an 8000ms beat with a stamp at 6000ms", () => {
+  const script = validationScript({ moment: 3000, question: 3000, figure: 8000, verdict: 3000 });
+  script.beats[2].stamps = [{ tone: "done", text: "Now", offsetMs: 6000 }];
+  assert.equal(validateScript(script, "regulate", "validation", "").some((violation) => violation.startsWith("[pacing] figure beat")), false);
 });
 
 test("retry loop succeeds on the second attempt and writes both artifacts", () => {
