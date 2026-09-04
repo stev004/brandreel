@@ -1,5 +1,8 @@
 # SESSIONS - append-only log, newest first
 
+## 2026-09-04 (late) - foreman run 2: layout lints
+Steven merged phase2-machine to main (fce5a38) and started the layout-lints run. Landed on feature/layout-lints: bin/manifest.mjs (stage 5 layout.json), lint rules safe-zone/text-fit/hook/pacing/cta/pixel-bands, engine geometry fixes (figure ring, goalText box, dissolve events), script.mjs lint-and-retry with geometry-derived limits. smoke-3am: 25 violations before, smoke-3am-v2: 0 after. Digest docs/runs/2026-09-04-digest-layout-lints.md. Waiting on Steven: merge layout-lints, G5 close dwell, G1 remote.
+
 ## 2026-09-04 (evening) - foreman run: Phase 2 engineering
 Director Fable 5.1, executor Codex gpt-5.6-luna, auditors sol + terra. Landed on feature/phase2-machine: karaoke captions, bin/review.mjs, bin/reel.mjs, bin/script.mjs, audit fixes; full chain proven with a real model (workspace/smoke-3am). State tower in .claude/ (DIRECTOR/FRONTIER/GATES/RUN/decisions.tsv), evidence in docs/runs/. Digest: docs/runs/2026-09-04-digest.md. Waiting on Steven: merge (G2), remote (G1). Next predicate: layout manifest + safe-zone/text-fit lints.
 

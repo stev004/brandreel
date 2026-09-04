@@ -1,5 +1,2 @@
-# RUN - in flight (layout lints, iteration 2, 2026-09-04T20:33)
-Predicate: see run-start row. Budget 5 iterations / 6 codex runs; spent: iteration 3, 6 runs (L6 in flight, last).
-State branch feature/layout-lints at /private/tmp/fm-brandreel-state. Merged: L1 687ec80, L2 7dbf976, L3 ad5c787. Baseline lint failure filed: docs/runs/2026-09-04-smoke-3am-lint-before-fixes.json.
-In flight: L6 /private/tmp/br-l6-script (fm/l6-script) report /private/tmp/claude-501/-Users-stevenmatson-Documents-brandreel/ca1cc81f-f570-49f0-9640-5a37fc3e573f/scratchpad/l6.last.md. L4 77f00f8 and L5 a22f617 are merged.
-Cold start: read both reports; verify per VERIFY lines; commit; merge L4 then L5 (--no-ff); then director: regenerate the smoke script with the real model: rm -rf workspace/smoke-3am-v2 && node bin/script.mjs workspace/smoke-3am-v2 --brand regulate --topic "cannot sleep at 3am, mind still at the meeting" --model-cmd "claude -p --model claude-sonnet-5"; node bin/reel.mjs workspace/smoke-3am-v2 --skip vo,align,polish; lint must pass (predicate). One codex run left for a fix if not. Then digest + terra trail audit.
+# RUN - idle
+No run in flight. Last run 2026-09-04 (layout lints) met its predicate; digest at docs/runs/2026-09-04-digest-layout-lints.md. Next predicate options in that digest and .claude/FRONTIER.md.
