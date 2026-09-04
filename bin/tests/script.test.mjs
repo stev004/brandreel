@@ -210,16 +210,16 @@ test("dry-run prompt states the copy limits and module rule", () => {
     assert.match(prompt, /caption has at most 2 newline-separated lines/);
     assert.match(prompt, /Do not emit a modules key/);
     assert.match(prompt, /Do not emit close\.url/);
-    assert.match(prompt, /close\.durationMs must be between 2500 and 4000ms/);
+    assert.match(prompt, /close\.durationMs must be between 2500 and 3800ms/);
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
 });
 
-test("close duration must be between 2500 and 4000ms", () => {
+test("close duration must be between 2500 and 3800ms", () => {
   const rejected = validationScript();
   rejected.close.durationMs = 2000;
-  assert.ok(validateScript(rejected, "regulate", "validation", "").some((violation) => violation.includes("close.durationMs must be between 2500 and 4000ms")));
+  assert.ok(validateScript(rejected, "regulate", "validation", "").some((violation) => violation.includes("close.durationMs must be between 2500 and 3800ms")));
 
   const accepted = validationScript();
   accepted.close.durationMs = 3000;
