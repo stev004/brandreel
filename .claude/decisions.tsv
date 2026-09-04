@@ -1,0 +1,2 @@
+ts	phase	decision	why	evidence	result
+2026-09-04T19:22	run-start	Predicate: Phase 2 engineering landed on feature/phase2-machine - karaoke captions from words.json, bin/review.mjs, bin/reel.mjs orchestrator, bin/script.mjs LLM stage - with typecheck+tests green and workspace/demo rendered+linted by the director. Budget 5 iterations / 6 codex runs.	User asked to keep iterating the automated pipeline with minimal director tokens; Phase 1 is taste-gated, Phase 2 is delegable engineering	fork abeacfb8de3715cf7d896cc643b871bcebf0f9af	started
