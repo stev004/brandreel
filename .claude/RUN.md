@@ -1,0 +1,6 @@
+# RUN - in flight
+
+Predicate: Phase 2 engineering on feature/phase2-machine - karaoke captions, bin/review.mjs, bin/reel.mjs, bin/script.mjs - gates green + demo render/lint by director.
+Budget: 5 iterations / 6 codex runs. Spent: iteration 1, 2 codex runs.
+In flight: U1 (captions) worktree /private/tmp/br-u1-captions branch fm/u1-captions, log /private/tmp/claude-501/-Users-stevenmatson-Documents-brandreel/ca1cc81f-f570-49f0-9640-5a37fc3e573f/scratchpad/u1.log, report /private/tmp/claude-501/-Users-stevenmatson-Documents-brandreel/ca1cc81f-f570-49f0-9640-5a37fc3e573f/scratchpad/u1.last.md. U2 (review+reel) worktree /private/tmp/br-u2-bin branch fm/u2-bin, log /private/tmp/claude-501/-Users-stevenmatson-Documents-brandreel/ca1cc81f-f570-49f0-9640-5a37fc3e573f/scratchpad/u2.log, report /private/tmp/claude-501/-Users-stevenmatson-Documents-brandreel/ca1cc81f-f570-49f0-9640-5a37fc3e573f/scratchpad/u2.last.md. Launched 19:23.
+Cold start: read the two .last.md files; if missing, check pgrep -f codex; verify each branch (engine: npm run typecheck && npm test; bin: node --test bin/tests/); merge kept branches --no-ff into feature/phase2-machine at /private/tmp/fm-brandreel-state; render workspace/demo with node bin/compose.mjs workspace/demo && node bin/lint.mjs workspace/demo; then U3 = bin/script.mjs.
