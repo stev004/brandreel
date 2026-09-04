@@ -9,6 +9,7 @@ const readJson = (relativePath: string): unknown =>
 
 const brand = BrandKit.parse(readJson("../../brands/regulate/brand.json"));
 const demo = Script.parse(readJson("../../workspace/demo/script.json"));
+const smoke = Script.parse(readJson("../../workspace/smoke-3am/script.json"));
 
 describe("layout manifest", () => {
   it("includes every demo beat text and each caption line", () => {
@@ -75,7 +76,17 @@ describe("layout manifest", () => {
     const manifest = buildManifest(script, brand);
     const goal = manifest.elements.find((element) => element.id === "beat-0-goal");
 
+    expect(goal?.w).toBe(540);
+    expect(goal?.maxLines).toBe(2);
+    expect(goal?.h).toBe(60 * 1.2 * 2);
     expect(goal?.estimatedLines).toBeGreaterThan(goal?.maxLines ?? 0);
+  });
+
+  it("gives the smoke figure goal a wrapped two-line safe box", () => {
+    const manifest = buildManifest(smoke, brand);
+    const goal = manifest.elements.find((element) => element.id === "beat-3-goal");
+
+    expect(goal).toMatchObject({ w: 540, maxLines: 2, h: 60 * 1.2 * 2 });
   });
 
   it("uses the shared frame and safe-zone dimensions", () => {
