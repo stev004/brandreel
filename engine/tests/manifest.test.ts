@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { BrandKit, Script } from "../src/schema";
 import { buildManifest } from "../src/manifest";
-import { computeTimeline } from "../src/layout";
+import { CAPTION_LAYOUT, computeTimeline, MOMENT_LAYOUT } from "../src/layout";
 import { describe, expect, it } from "vitest";
 
 const readJson = (relativePath: string): unknown =>
@@ -97,5 +97,34 @@ describe("layout manifest", () => {
     expect(manifest.fps).toBe(60);
     expect(manifest.safe).toEqual({ top: 150, bottom: 320, left: 60, right: 120 });
     expect(manifest.totalDurationMs).toBe(4500 + 5000 + 4500 + 1920);
+  });
+
+  it("keeps three Moment thoughts clear of the caption block", () => {
+    const script: Script = {
+      id: "moment-thought-caption-gap",
+      brand: "regulate",
+      coreMechanic: "Thoughts settle before the caption arrives.",
+      beats: [{
+        kind: "moment",
+        line: "the room gets quiet",
+        thoughts: ["one thought", "another thought", "one last thought"],
+        durationMs: 15000,
+      }],
+      close: { line: "", showWordmark: false },
+      caption: "a caption line\nwith a second line",
+      hashtags: [],
+    };
+    const manifest = buildManifest(script, brand);
+    const thoughtBoxes = manifest.elements.filter((element) => /^beat-0-thought-/.test(element.id));
+    const captionBoxes = manifest.elements.filter((element) => element.id.startsWith("caption-line-"));
+    const overlaps = (first: typeof thoughtBoxes[number], second: typeof captionBoxes[number]): boolean =>
+      first.x < second.x + second.w && first.x + first.w > second.x &&
+      first.y < second.y + second.h && first.y + first.h > second.y;
+    const momentLine = manifest.elements.find((element) => element.id === "beat-0-line");
+
+    expect(thoughtBoxes).toHaveLength(3);
+    expect(captionBoxes).toHaveLength(CAPTION_LAYOUT.maxLines);
+    expect(thoughtBoxes.every((thought) => captionBoxes.every((caption) => !overlaps(thought, caption)))).toBe(true);
+    expect(MOMENT_LAYOUT.thoughtsTop).toBeGreaterThan((momentLine?.y ?? 0) + (momentLine?.h ?? 0));
   });
 });
