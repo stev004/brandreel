@@ -1,0 +1,27 @@
+{
+  "width": 1080,
+  "height": 1920,
+  "fps": 60,
+  "totalDurationMs": 15000,
+  "firstOnScreenTextMs": 900,
+  "visualChangeMs": [0, 2500, 5000, 7500, 10500, 13500, 15000],
+  "closeStartMs": 12000,
+  "safe": { "top": 150, "bottom": 320, "left": 60, "right": 120 },
+  "elements": [{
+    "id": "headline",
+    "beatIndex": 0,
+    "role": "headline",
+    "text": "A small shift changes the night.",
+    "x": 60,
+    "y": 150,
+    "w": 900,
+    "h": 120,
+    "fontSize": 72,
+    "lineHeight": 1.1,
+    "maxLines": 2,
+    "letterSpacingEm": 0,
+    "fromMs": 900,
+    "toMs": 4000,
+    "estimatedLines": 2
+  }]
+}
