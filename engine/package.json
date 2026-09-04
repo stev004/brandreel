@@ -6,7 +6,8 @@
     "dev": "remotion studio src/index.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "render": "remotion render src/index.ts"
+    "render": "remotion render src/index.ts",
+    "manifest": "tsc -p tsconfig.manifest.json"
   },
   "dependencies": {
     "@remotion/cli": "^4.0.0",
