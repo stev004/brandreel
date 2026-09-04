@@ -1,2 +1,5 @@
-# RUN - idle
-No run in flight. Last run 2026-09-04 (Phase 2 engineering) met its predicate; digest at docs/runs/2026-09-04-digest.md. Next predicate: .claude/FRONTIER.md.
+# RUN - in flight (layout lints, started 2026-09-04T20:19)
+Predicate: see decisions.tsv run-start row of 2026-09-04T20:19. Budget 5 iterations / 6 codex runs; spent: iteration 1, 3 runs.
+State branch: feature/layout-lints (worktree /private/tmp/fm-brandreel-state), forked from main fce5a38.
+In flight: L1 /private/tmp/br-l1-manifest (fm/l1-manifest) report /private/tmp/claude-501/-Users-stevenmatson-Documents-brandreel/ca1cc81f-f570-49f0-9640-5a37fc3e573f/scratchpad/l1.last.md; L2 /private/tmp/br-l2-lint (fm/l2-lint) report /private/tmp/claude-501/-Users-stevenmatson-Documents-brandreel/ca1cc81f-f570-49f0-9640-5a37fc3e573f/scratchpad/l2.last.md; L3 /private/tmp/br-l3-script (fm/l3-script) report /private/tmp/claude-501/-Users-stevenmatson-Documents-brandreel/ca1cc81f-f570-49f0-9640-5a37fc3e573f/scratchpad/l3.last.md.
+Cold start: read the three .last.md; verify per brief VERIFY lines; commit each on its branch; merge --no-ff into feature/layout-lints (L1 first, then L2, resolve bin/tests/index.js if both touched it, then L3); director: node bin/compose.mjs workspace/smoke-3am (writes layout.json) && node bin/lint.mjs workspace/smoke-3am - EXPECT failures (goalText overflow, caption truncation); then brief L4 template fixes (Figure goalText box width/wrap, Caption) and re-run until lint passes; digest with terra trail audit.
