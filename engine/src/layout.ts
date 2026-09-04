@@ -59,6 +59,10 @@ export const QUESTION_TIMING = {
   dekMs: 2400,
 } as const;
 
+const FIGURE_AXIS_END = 860;
+const FIGURE_GOAL_X = 420;
+const FIGURE_GOAL_RING_SIZE = 46;
+
 export const FIGURE_LAYOUT = {
   contentX: SAFE_LEFT,
   contentWidth: WIDTH - SAFE_LEFT - SAFE_RIGHT,
@@ -69,16 +73,19 @@ export const FIGURE_LAYOUT = {
   counterTop: 470,
   counterFontSize: 190,
   counterLineHeight: 1.2,
-  goalX: 420,
+  goalX: FIGURE_GOAL_X,
+  goalWidth: WIDTH - SAFE_RIGHT - FIGURE_GOAL_X,
   goalTop: 590,
   goalFontSize: 60,
   goalLineHeight: 1.2,
+  goalMaxLines: 2,
   unitLabelTop: 730,
   unitLabelFontSize: 28,
   unitLabelLetterSpacing: "0.18em",
   unitLabelLineHeight: 1.2,
   axisX: 60,
-  axisWidth: 900,
+  axisWidth: FIGURE_AXIS_END - SAFE_LEFT,
+  axisEnd: FIGURE_AXIS_END,
   axisY: 1100,
   axisHeight: 2,
   solidTop: 1096,
@@ -93,9 +100,9 @@ export const FIGURE_LAYOUT = {
   flashPeakScale: 1.5,
   flashRingSpread: 48,
   flashRingOpacity: 0.55,
-  goalRingLeft: 934,
+  goalRingLeft: FIGURE_AXIS_END - FIGURE_GOAL_RING_SIZE / 2,
   goalRingTop: 1078,
-  goalRingSize: 46,
+  goalRingSize: FIGURE_GOAL_RING_SIZE,
   goalRingBorder: 6,
   tickTop: 1140,
   tickFontSize: 24,
@@ -188,6 +195,12 @@ export const CAPTION_LAYOUT = {
   bottomOffset: 42,
 } as const;
 
+export const GLYPH_EM = {
+  display: 0.52,
+  body: 0.55,
+  mono: 0.6,
+} as const;
+
 export const thoughtPhaseInStartMs = (brand: BrandKit, beat: Beat): number =>
   Math.min(brand.motion.entranceMs, Math.round(beat.durationMs * 0.12));
 
@@ -273,12 +286,18 @@ export const computeTimeline = (script: Script, brand: BrandKit): Timeline => {
         firstOnScreenTextMs = Math.min(...textTimes);
       }
 
-      thoughts.forEach((thought, thoughtIndex) => {
+      if (hasText(beat.eyebrow) || hasText(beat.line)) {
+        addVisualChange(startMs, endMs);
+      }
+
+      thoughts.forEach((_, thoughtIndex) => {
         const phaseInMs =
           startMs + thoughtPhaseInStartMs(brand, beat) + thoughtIndex * thoughtStaggerMs(brand);
-        if (phaseInMs < endMs) {
-          visualChangeMs.push(phaseInMs);
-        }
+        addVisualChange(phaseInMs, endMs);
+        addVisualChange(
+          startMs + thoughtDissolveStartMs(brand, beat, thoughts.length, thoughtIndex),
+          endMs,
+        );
       });
     }
 
@@ -371,10 +390,195 @@ export type TextBox = {
   h: number;
 };
 
+export type TextRole = keyof typeof GLYPH_EM;
+
+export type LayoutTextBox = TextBox & {
+  beatIndex: number | null;
+  role: TextRole;
+  text: string;
+  fontSize: number;
+  lineHeight: number;
+  maxLines: number;
+  letterSpacingEm: number;
+  fromMs: number;
+  toMs: number;
+};
+
+type TextBoxMetadata = Omit<LayoutTextBox, keyof TextBox>;
+
+const beatMetadata = (
+  timeline: Timeline,
+  beatIndex: number,
+  brand: BrandKit,
+  text: string,
+  role: TextRole,
+  fontSize: number,
+  lineHeight: number,
+  maxLines: number,
+  letterSpacingEm: number,
+  fromOffsetMs = 0,
+): TextBoxMetadata => {
+  const span = timeline.beats[beatIndex];
+  const offsetMs = Math.max(0, Math.min(fromOffsetMs, span.endMs - span.startMs));
+  return {
+    beatIndex,
+    role,
+    text,
+    fontSize,
+    lineHeight,
+    maxLines,
+    letterSpacingEm,
+    fromMs: span.startMs + offsetMs,
+    toMs: span.endMs,
+  };
+};
+
+const metadataForTextBox = (
+  box: TextBox,
+  script: Script,
+  brand: BrandKit,
+  timeline: Timeline,
+): TextBoxMetadata => {
+  const beatMatch = /^beat-(\d+)-(.+)$/.exec(box.id);
+  if (beatMatch) {
+    const beatIndex = Number(beatMatch[1]);
+    const part = beatMatch[2];
+    const beat = script.beats[beatIndex];
+
+    if (beat.kind === "moment") {
+      if (part === "eyebrow") {
+        return beatMetadata(timeline, beatIndex, brand, beat.eyebrow ?? "", "mono", MOMENT_LAYOUT.eyebrowFontSize, MOMENT_LAYOUT.eyebrowLineHeight, 1, 0.4);
+      }
+      if (part === "line") {
+        return beatMetadata(timeline, beatIndex, brand, beat.line, "display", MOMENT_LAYOUT.momentLineFontSize, MOMENT_LAYOUT.momentLineHeight, MOMENT_LAYOUT.momentLineMaxLines, 0);
+      }
+      const thoughtMatch = /^thought-(\d+)$/.exec(part);
+      if (thoughtMatch) {
+        const thoughtIndex = Number(thoughtMatch[1]);
+        return beatMetadata(
+          timeline,
+          beatIndex,
+          brand,
+          beat.thoughts?.filter(hasText)[thoughtIndex] ?? "",
+          "body",
+          MOMENT_LAYOUT.thoughtFontSize,
+          MOMENT_LAYOUT.thoughtLineHeight,
+          MOMENT_LAYOUT.thoughtMaxLines,
+          0,
+          thoughtPhaseInStartMs(brand, beat) + thoughtIndex * thoughtStaggerMs(brand),
+        );
+      }
+    }
+
+    if (beat.kind === "question") {
+      if (part === "kicker") {
+        return beatMetadata(timeline, beatIndex, brand, beat.kicker ?? "", "mono", QUESTION_LAYOUT.kickerFontSize, QUESTION_LAYOUT.kickerLineHeight, 1, 0.32, QUESTION_TIMING.kickerMs);
+      }
+      const lineMatch = /^question-line-(\d+)$/.exec(part);
+      if (lineMatch) {
+        const lineIndex = Number(lineMatch[1]);
+        return beatMetadata(timeline, beatIndex, brand, beat.lines.filter(hasText)[lineIndex] ?? "", "display", QUESTION_LAYOUT.lineFontSize, QUESTION_LAYOUT.lineLineHeight, 1, -0.02, QUESTION_TIMING.lineStartMs + lineIndex * QUESTION_TIMING.lineStaggerMs);
+      }
+      if (part === "dek") {
+        return beatMetadata(timeline, beatIndex, brand, beat.dek ?? "", "display", QUESTION_LAYOUT.dekFontSize, QUESTION_LAYOUT.dekLineHeight, 1, 0, QUESTION_TIMING.dekMs);
+      }
+    }
+
+    if (beat.kind === "figure") {
+      const figureMetadata: Record<string, TextBoxMetadata> = {
+        "figure-label": beatMetadata(timeline, beatIndex, brand, beat.label, "mono", FIGURE_LAYOUT.labelFontSize, FIGURE_LAYOUT.labelLineHeight, 1, 0.24, FIGURE_TIMING.introMs),
+        counter: beatMetadata(timeline, beatIndex, brand, beat.value.to.toFixed(beat.value.decimals), "mono", FIGURE_LAYOUT.counterFontSize, FIGURE_LAYOUT.counterLineHeight, 1, 0, FIGURE_TIMING.introMs),
+        goal: beatMetadata(timeline, beatIndex, brand, beat.goalText ?? "", "mono", FIGURE_LAYOUT.goalFontSize, FIGURE_LAYOUT.goalLineHeight, FIGURE_LAYOUT.goalMaxLines, 0, FIGURE_TIMING.introMs),
+        "unit-label": beatMetadata(timeline, beatIndex, brand, beat.unitLabel ?? "", "mono", FIGURE_LAYOUT.unitLabelFontSize, FIGURE_LAYOUT.unitLabelLineHeight, 1, 0.18, FIGURE_TIMING.introMs),
+        "min-tick": beatMetadata(timeline, beatIndex, brand, beat.minTick ?? "", "mono", FIGURE_LAYOUT.tickFontSize, FIGURE_LAYOUT.tickLineHeight, 1, 0, FIGURE_TIMING.introMs),
+        "achieved-tick": beatMetadata(timeline, beatIndex, brand, beat.achievedTick ?? "", "mono", FIGURE_LAYOUT.tickFontSize, FIGURE_LAYOUT.tickLineHeight, 1, 0, FIGURE_TIMING.achievedTickMs),
+        "goal-tick": beatMetadata(timeline, beatIndex, brand, beat.goalTick ?? "", "mono", FIGURE_LAYOUT.tickFontSize, FIGURE_LAYOUT.tickLineHeight, 1, 0.1, FIGURE_TIMING.goalMs),
+      };
+      if (figureMetadata[part]) {
+        return figureMetadata[part];
+      }
+      const stampMatch = /^stamp-(\d+)$/.exec(part);
+      if (stampMatch) {
+        const stampIndex = Number(stampMatch[1]);
+        const stamp = beat.stamps[stampIndex];
+        return beatMetadata(timeline, beatIndex, brand, stamp.text, "mono", FIGURE_LAYOUT.stampFontSize, FIGURE_LAYOUT.stampLineHeight, 1, 0.06, stamp.offsetMs);
+      }
+    }
+
+    if (beat.kind === "verdict") {
+      const lineMatch = /^verdict-line-(\d+)$/.exec(part);
+      if (lineMatch) {
+        const lineIndex = Number(lineMatch[1]);
+        return beatMetadata(timeline, beatIndex, brand, beat.lines.filter(hasText)[lineIndex] ?? "", "display", VERDICT_LAYOUT.lineFontSize, VERDICT_LAYOUT.lineLineHeight, 1, 0, VERDICT_TIMING.lineStartMs + lineIndex * VERDICT_TIMING.lineStaggerMs);
+      }
+    }
+  }
+
+  const closeStartMs = timeline.beats.at(-1)?.endMs ?? 0;
+  const closeDuration = timeline.totalDurationMs - closeStartMs;
+  const closeOffset = (offsetMs: number): TextBoxMetadata => ({
+    beatIndex: null,
+    role: "display",
+    text: "",
+    fontSize: 0,
+    lineHeight: 1,
+    maxLines: 1,
+    letterSpacingEm: 0,
+    fromMs: closeStartMs + Math.max(0, Math.min(offsetMs, closeDuration)),
+    toMs: timeline.totalDurationMs,
+  });
+
+  if (box.id === "close-line") {
+    return {
+      ...closeOffset(0),
+      text: script.close.line,
+      fontSize: CLOSE_LAYOUT.lineFontSize,
+      lineHeight: CLOSE_LAYOUT.lineHeight,
+      maxLines: CLOSE_LAYOUT.lineMaxLines,
+    };
+  }
+  if (box.id === "close-wordmark") {
+    return {
+      ...closeOffset(0),
+      text: brand.wordmark.text,
+      fontSize: CLOSE_LAYOUT.wordmarkFontSize,
+      lineHeight: CLOSE_LAYOUT.wordmarkLineHeight,
+    };
+  }
+  if (box.id === "close-logo") {
+    return { ...closeOffset(CLOSE_D_TIMING.logoMs), text: "", fontSize: CLOSE_D_LAYOUT.logoSize };
+  }
+  if (box.id === "close-tagline") {
+    return { ...closeOffset(CLOSE_D_TIMING.taglineMs), text: script.close.tagline ?? "", fontSize: CLOSE_D_LAYOUT.taglineFontSize, lineHeight: CLOSE_D_LAYOUT.taglineLineHeight, letterSpacingEm: -0.02 };
+  }
+  if (box.id === "close-url") {
+    return { ...closeOffset(CLOSE_D_TIMING.urlMs), role: "mono", text: script.close.url ?? "", fontSize: CLOSE_D_LAYOUT.urlFontSize, lineHeight: CLOSE_D_LAYOUT.urlLineHeight, letterSpacingEm: 0.08 };
+  }
+
+  const captionMatch = /^caption-line-(\d+)$/.exec(box.id);
+  if (captionMatch) {
+    const lineIndex = Number(captionMatch[1]);
+    const lines = script.caption.split(/\r?\n/).map((line) => line.trim()).filter(Boolean).slice(0, CAPTION_LAYOUT.maxLines);
+    return {
+      beatIndex: null,
+      role: "body",
+      text: lines[lineIndex] ?? "",
+      fontSize: CAPTION_LAYOUT.fontSize,
+      lineHeight: CAPTION_LAYOUT.lineHeight,
+      maxLines: CAPTION_LAYOUT.maxLines,
+      letterSpacingEm: 0,
+      fromMs: 0,
+      toMs: closeStartMs,
+    };
+  }
+
+  throw new Error(`No manifest metadata for text box ${box.id}`);
+};
+
 const lineBoxHeight = (fontSize: number, lineHeight: number, maxLines: number): number =>
   fontSize * lineHeight * maxLines;
 
-export const computeTextBoxes = (script: Script, brand: BrandKit): TextBox[] => {
+export const computeTextBoxes = (script: Script, brand: BrandKit): LayoutTextBox[] => {
   const boxes: TextBox[] = [];
 
   script.beats.forEach((beat, index) => {
@@ -477,8 +681,8 @@ export const computeTextBoxes = (script: Script, brand: BrandKit): TextBox[] => 
           id: `beat-${index}-goal`,
           x: FIGURE_LAYOUT.goalX,
           y: FIGURE_LAYOUT.goalTop,
-          w: WIDTH - FIGURE_LAYOUT.goalX - SAFE_RIGHT,
-          h: lineBoxHeight(FIGURE_LAYOUT.goalFontSize, FIGURE_LAYOUT.goalLineHeight, 1),
+          w: FIGURE_LAYOUT.goalWidth,
+          h: lineBoxHeight(FIGURE_LAYOUT.goalFontSize, FIGURE_LAYOUT.goalLineHeight, FIGURE_LAYOUT.goalMaxLines),
         });
       }
 
@@ -611,21 +815,28 @@ export const computeTextBoxes = (script: Script, brand: BrandKit): TextBox[] => 
   }
 
   if (hasText(script.caption)) {
-    const height = lineBoxHeight(
-      CAPTION_LAYOUT.fontSize,
-      CAPTION_LAYOUT.lineHeight,
-      CAPTION_LAYOUT.maxLines,
-    );
-    boxes.push({
-      id: "caption",
-      x: CAPTION_LAYOUT.contentX,
-      y: HEIGHT - SAFE_BOTTOM - CAPTION_LAYOUT.bottomOffset - height,
-      w: CAPTION_LAYOUT.contentWidth,
-      h: height,
+    const lines = script.caption
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .filter(Boolean)
+      .slice(0, CAPTION_LAYOUT.maxLines);
+    const lineHeight = lineBoxHeight(CAPTION_LAYOUT.fontSize, CAPTION_LAYOUT.lineHeight, 1);
+    lines.forEach((_, lineIndex) => {
+      boxes.push({
+        id: `caption-line-${lineIndex}`,
+        x: CAPTION_LAYOUT.contentX,
+        y: HEIGHT - SAFE_BOTTOM - CAPTION_LAYOUT.bottomOffset - lineHeight * CAPTION_LAYOUT.maxLines + lineHeight * lineIndex,
+        w: CAPTION_LAYOUT.contentWidth,
+        h: lineHeight,
+      });
     });
   }
 
-  return boxes;
+  const timeline = computeTimeline(script, brand);
+  return boxes.map((box) => ({
+    ...box,
+    ...metadataForTextBox(box, script, brand, timeline),
+  }));
 };
 
 export type LintResult = {

@@ -58,12 +58,18 @@ try {
   fail(`could not read or parse ${brandPath}: ${error.message}`);
 }
 
+const manifest = spawnSync(process.execPath, [join(repoRoot, "bin", "manifest.mjs"), workspaceArg], {
+  cwd: repoRoot,
+  stdio: "inherit",
+});
+if (manifest.error || manifest.status !== 0) {
+  fail(`manifest stage failed${manifest.error ? `: ${manifest.error.message}` : ""}`);
+}
+
 const tempDir = mkdtempSync(join(tmpdir(), "brandreel-props-"));
 const propsPath = join(tempDir, "props.json");
 const props = { brand, script };
-if (words !== undefined) {
-  props.words = words;
-}
+if (words !== undefined) props.words = words;
 writeFileSync(propsPath, JSON.stringify(props, null, 2));
 
 const outputPath = join(workspaceDir, "render.mp4");

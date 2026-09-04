@@ -148,10 +148,21 @@ export const Figure = ({ brand, beat }: FigureProps) => {
             position: "absolute",
             left: FIGURE_LAYOUT.goalX,
             top: FIGURE_LAYOUT.goalTop,
+            width: FIGURE_LAYOUT.goalWidth,
+            height:
+              FIGURE_LAYOUT.goalFontSize *
+              FIGURE_LAYOUT.goalLineHeight *
+              FIGURE_LAYOUT.goalMaxLines,
             color: brand.palette.muted,
             fontFamily: fonts.mono,
             fontSize: FIGURE_LAYOUT.goalFontSize,
+            lineHeight: FIGURE_LAYOUT.goalLineHeight,
             opacity: intro,
+            overflow: "hidden",
+            whiteSpace: "normal",
+            WebkitBoxOrient: "vertical",
+            WebkitLineClamp: FIGURE_LAYOUT.goalMaxLines,
+            display: "-webkit-box",
           }}
         >
           {beat.goalText}

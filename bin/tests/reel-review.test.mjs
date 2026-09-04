@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
+import { spawnSync } from "node:child_process";
 
 import { planStages } from "../reel.mjs";
 import { buildReview, writeReview } from "../review.mjs";
@@ -18,21 +19,22 @@ const baseScript = {
 };
 
 test("planStages skips voice stages when modules.vo is absent", () => {
-  assert.deepEqual(planStages(baseScript), ["compose", "lint", "review"]);
+  assert.deepEqual(planStages(baseScript), ["manifest", "compose", "lint", "review"]);
 });
 
 test("planStages includes vo and align when modules.vo is set", () => {
   const script = { ...baseScript, modules: { vo: { voice: "af_heart" } } };
-  assert.deepEqual(planStages(script), ["vo", "align", "compose", "polish", "lint", "review"]);
+  assert.deepEqual(planStages(script), ["vo", "align", "manifest", "compose", "polish", "lint", "review"]);
 });
 
 test("planStages includes polish for music-only scripts", () => {
   const script = { ...baseScript, modules: { music: { file: "audio/music.wav" } } };
-  assert.deepEqual(planStages(script), ["compose", "polish", "lint", "review"]);
+  assert.deepEqual(planStages(script), ["manifest", "compose", "polish", "lint", "review"]);
 });
 
 test("planStages includes polish for explicit music", () => {
   assert.deepEqual(planStages(baseScript, { music: "audio/custom.wav" }), [
+    "manifest",
     "compose",
     "polish",
     "lint",
@@ -46,11 +48,25 @@ test("planStages applies an inclusive range and skips named stages", () => {
     from: "align",
     to: "review",
     skip: ["polish", "lint"],
-  }), ["align", "compose", "review"]);
+  }), ["align", "manifest", "compose", "review"]);
 });
 
 test("planStages accepts comma-separated skips", () => {
-  assert.deepEqual(planStages(baseScript, { skip: "compose,review" }), ["lint"]);
+  assert.deepEqual(planStages(baseScript, { skip: "compose,review" }), ["manifest", "lint"]);
+});
+
+test("reel dry-run prints manifest before compose and lint", () => {
+  const workspace = mkdtempSync(join(tmpdir(), "brandreel-reel-dry-run-test-"));
+  try {
+    writeFileSync(join(workspace, "script.json"), JSON.stringify(baseScript));
+    const result = spawnSync(process.execPath, [join(new URL("../reel.mjs", import.meta.url).pathname), workspace, "--dry-run"], {
+      encoding: "utf8",
+    });
+    assert.equal(result.status, 0, result.stderr);
+    assert.deepEqual(result.stdout.trim().split("\n").map((line) => line.split(":")[0]), ["manifest", "compose", "lint", "review"]);
+  } finally {
+    rmSync(workspace, { recursive: true, force: true });
+  }
 });
 
 test("buildReview writes the required review content and TODO fallbacks", () => {

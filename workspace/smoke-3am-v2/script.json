@@ -1,0 +1,102 @@
+{
+  "id": "smoke-3am-v2",
+  "brand": "regulate",
+  "coreMechanic": "A tally of meeting replays counts down toward a single settling breath.",
+  "beats": [
+    {
+      "kind": "moment",
+      "eyebrow": "HOOK",
+      "line": "3am. Mind still in the meeting.",
+      "thoughts": [
+        "Body never got the memo."
+      ],
+      "bg": "#0a1812",
+      "durationMs": 3500
+    },
+    {
+      "kind": "question",
+      "kicker": "REFRAME",
+      "lines": [
+        "Not broken."
+      ],
+      "dek": "Just leftover alert, unspent.",
+      "durationMs": 3500
+    },
+    {
+      "kind": "figure",
+      "label": "Meeting replays tonight",
+      "unitLabel": "replays",
+      "value": {
+        "to": 1,
+        "decimals": 0
+      },
+      "goalText": "One slow breath",
+      "axis": {
+        "min": 0,
+        "max": 3,
+        "achieved": 1,
+        "goal": 3
+      },
+      "achievedTick": "Now",
+      "goalTick": "Goal",
+      "minTick": "0",
+      "stamps": [
+        {
+          "tone": "done",
+          "text": "Breath one",
+          "offsetMs": 1500
+        },
+        {
+          "tone": "done",
+          "text": "Settling",
+          "offsetMs": 6200
+        }
+      ],
+      "flash": {
+        "colorKey": "accent"
+      },
+      "durationMs": 8000
+    },
+    {
+      "kind": "moment",
+      "eyebrow": "STILL",
+      "line": "The meeting is over. You're not.",
+      "thoughts": [
+        "That gap is real."
+      ],
+      "bg": "#0a1812",
+      "durationMs": 3000
+    },
+    {
+      "kind": "question",
+      "kicker": "DIFFERENCE",
+      "lines": [
+        "Less push."
+      ],
+      "dek": "One breath outweighs a scroll.",
+      "durationMs": 3000
+    },
+    {
+      "kind": "verdict",
+      "lines": [
+        "Let it end.",
+        "Rest starts here."
+      ],
+      "durationMs": 3500
+    }
+  ],
+  "close": {
+    "line": "Not meditation. Regulation.",
+    "showWordmark": true,
+    "tagline": "Make room.",
+    "url": "https://example.com",
+    "durationMs": 1500
+  },
+  "caption": "Still replaying the meeting at 3am?\nRegulate the body, not the replay.",
+  "hashtags": [
+    "#regulate",
+    "#3amthoughts",
+    "#cantsleep",
+    "#nervoussystem"
+  ]
+}

@@ -1,21 +1,55 @@
 #!/usr/bin/env node
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { cpSync, copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { basename, dirname, join, resolve } from "node:path";
+import { tmpdir } from "node:os";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const allowedKinds = new Set(["moment", "question", "figure", "verdict"]);
 const requiredScriptKeys = ["id", "brand", "coreMechanic", "beats", "close", "caption", "hashtags"];
+// Mirror engine FIGURE_TIMING.goalMs and the pacing lint's maximum static gap.
+export const FIGURE_LAST_EVENT_MS = 5600;
+export const MAX_STATIC_MS = 3000;
 
-function parseArgs(argv) {
+export const COPY_LIMITS = {
+  moment: { line: 44, eyebrow: 24, thoughts: 3, thought: 60 },
+  question: { line: 12, lines: 3, kicker: 24, dek: 36 },
+  figure: {
+    label: 40,
+    goalText: 30,
+    unitLabel: 12,
+    minTick: 1,
+    achievedTick: 5,
+    goalTick: 18,
+    stamps: 4,
+    stamp: 32,
+  },
+  verdict: { line: 20, lines: 3 },
+  close: { line: 44, tagline: 18 },
+  caption: { lines: 2, line: 44 },
+  hashtags: { min: 3, max: 6 },
+};
+
+export const DURATION_LIMITS = {
+  moment: { min: 2000, max: 4000 },
+  question: { min: 2500, max: 4500 },
+  verdict: { min: 2000, max: 4000 },
+  figure: { min: 6000, max: 8500 },
+};
+
+export function parseArgs(argv) {
   let workspaceArg = null;
-  const options = { modelCmd: "claude -p", durationMs: 25000, dryRun: false };
+  const options = { modelCmd: "claude -p", durationMs: 25000, retries: 2, dryRun: false, skipLint: false };
   const valueOptions = new Map([
     ["--brand", "brand"],
     ["--topic", "topic"],
     ["--model-cmd", "modelCmd"],
     ["--duration-ms", "durationMs"],
+    ["--retries", "retries"],
+    ["--lint-cmd", "lintCmd"],
+    ["--vo", "vo"],
+    ["--music", "music"],
   ]);
 
   for (let index = 0; index < argv.length; index += 1) {
@@ -26,6 +60,10 @@ function parseArgs(argv) {
     }
     if (arg === "--dry-run") {
       options.dryRun = true;
+      continue;
+    }
+    if (arg === "--skip-lint") {
+      options.skipLint = true;
       continue;
     }
     const optionName = [...valueOptions.keys()].find((name) => arg === name || arg.startsWith(`${name}=`));
@@ -54,6 +92,10 @@ function parseArgs(argv) {
   if (!Number.isFinite(options.durationMs) || options.durationMs <= 0) {
     throw new Error("--duration-ms must be a positive number");
   }
+  options.retries = Number(options.retries);
+  if (!Number.isInteger(options.retries) || options.retries < 0) {
+    throw new Error("--retries must be a non-negative integer");
+  }
   return { workspaceArg, ...options };
 }
 
@@ -78,10 +120,6 @@ function scriptExample() {
     id: "workspace-basename",
     brand: "brand-name",
     coreMechanic: "One sentence describing the single visual mechanism.",
-    modules: {
-      vo: { voice: "voice-id" },
-      music: { file: "audio/music.wav" },
-    },
     beats: [
       {
         kind: "moment",
@@ -94,38 +132,38 @@ function scriptExample() {
       {
         kind: "question",
         kicker: "NOTICE",
-        lines: ["A question on screen?"],
-        dek: "Optional supporting line.",
-        durationMs: 4000,
+        lines: ["Need rest?"],
+        dek: "Try one small step.",
+        durationMs: 3000,
       },
       {
         kind: "figure",
         label: "A measurable idea",
         unitLabel: "steps",
         value: { to: 3, decimals: 0 },
-        goalText: "The goal",
+        goalText: "A smaller step",
         axis: { min: 0, max: 3, achieved: 1, goal: 3 },
         achievedTick: "Now",
         goalTick: "Goal",
-        minTick: "Start",
+        minTick: "0",
         stamps: [{ tone: "done", text: "First step", offsetMs: 1000 }],
         flash: { colorKey: "accent" },
-        durationMs: 4000,
+        durationMs: 6000,
       },
       {
         kind: "verdict",
-        lines: ["The closing insight.", "A practical invitation."],
-        durationMs: 4000,
+        lines: ["Start with less.", "Let night soften."],
+        durationMs: 3000,
       },
     ],
     close: {
       line: "A clear closing line.",
       showWordmark: true,
-      tagline: "Optional tagline.",
+      tagline: "Make room.",
       url: "https://example.com",
       durationMs: 1000,
     },
-    caption: "A caption of no more than 150 characters.",
+    caption: "A short caption for the post.",
     hashtags: ["#one", "#two", "#three"],
   };
 }
@@ -158,8 +196,16 @@ Rules:
 - Every on-screen string lives in the beats. Keep the close and metadata purposeful.
 - Use 4 to 8 beats. Every beat has a positive durationMs.
 - Total beat durationMs must be between 15000 and 35000.
-- caption must be 150 characters or fewer.
-- hashtags must be an array of 3 to 6 strings.
+- Beat duration limits: moment ${DURATION_LIMITS.moment.min}-${DURATION_LIMITS.moment.max}ms; question ${DURATION_LIMITS.question.min}-${DURATION_LIMITS.question.max}ms; figure ${DURATION_LIMITS.figure.min}-${DURATION_LIMITS.figure.max}ms; verdict ${DURATION_LIMITS.verdict.min}-${DURATION_LIMITS.verdict.max}ms.
+- Do not emit a modules key. Modules are supplied by the command flags.
+- Copy limits: moment.line <= ${COPY_LIMITS.moment.line} characters; moment.eyebrow <= ${COPY_LIMITS.moment.eyebrow}; moment.thoughts has at most ${COPY_LIMITS.moment.thoughts} entries and each is <= ${COPY_LIMITS.moment.thought} characters.
+- question.lines has 1 to ${COPY_LIMITS.question.lines} entries and each is <= ${COPY_LIMITS.question.line} characters; question.kicker <= ${COPY_LIMITS.question.kicker}; question.dek <= ${COPY_LIMITS.question.dek}.
+- figure.label <= ${COPY_LIMITS.figure.label}; figure.goalText <= ${COPY_LIMITS.figure.goalText}; figure.unitLabel <= ${COPY_LIMITS.figure.unitLabel}; figure.minTick <= ${COPY_LIMITS.figure.minTick} character; minTick is a single character such as 0; figure.achievedTick <= ${COPY_LIMITS.figure.achievedTick} characters; figure.goalTick <= ${COPY_LIMITS.figure.goalTick} characters; stamps has at most ${COPY_LIMITS.figure.stamps} entries and each stamp text is <= ${COPY_LIMITS.figure.stamp} characters.
+- Figure pacing: leave no more than ${MAX_STATIC_MS}ms static after the last figure event. The goal marker lands at ${FIGURE_LAST_EVENT_MS}ms, so if no stamp is later than ${FIGURE_LAST_EVENT_MS}ms, shorten durationMs or add a stamp after ${FIGURE_LAST_EVENT_MS}ms; durationMs over ${FIGURE_LAST_EVENT_MS + MAX_STATIC_MS}ms is invalid.
+- verdict.lines has 1 to ${COPY_LIMITS.verdict.lines} entries and each is <= ${COPY_LIMITS.verdict.line} characters.
+- close.line <= ${COPY_LIMITS.close.line}; close.tagline <= ${COPY_LIMITS.close.tagline}.
+- caption has at most ${COPY_LIMITS.caption.lines} newline-separated lines and each line is <= ${COPY_LIMITS.caption.line} characters.
+- hashtags must contain ${COPY_LIMITS.hashtags.min} to ${COPY_LIMITS.hashtags.max} strings, each starting with # and containing no spaces.
 - Do not use any banned phrases from the brand voice notes, case-insensitively.
 - Respond with JSON only, no prose and no markdown.
 `;
@@ -240,6 +286,26 @@ function addStringViolation(violations, value, label) {
   if (!isNonEmptyString(value)) violations.push(`${label} must be a non-empty string`);
 }
 
+function addMaxLengthViolation(violations, value, label, limit) {
+  if (typeof value === "string" && value.length > limit) {
+    violations.push(`${label} must be ${limit} characters or fewer (got ${value.length})`);
+  }
+}
+
+function addOptionalStringLimit(violations, value, label, limit) {
+  if (value === undefined) return;
+  addStringViolation(violations, value, label);
+  addMaxLengthViolation(violations, value, label, limit);
+}
+
+function validateStringArray(violations, values, label, maxItems, itemLimit) {
+  if (!Array.isArray(values) || values.length < 1 || values.length > maxItems || values.some((value) => !isNonEmptyString(value))) {
+    violations.push(`${label} must contain 1 to ${maxItems} non-empty strings`);
+    return;
+  }
+  values.forEach((value, itemIndex) => addMaxLengthViolation(violations, value, `${label}[${itemIndex}]`, itemLimit));
+}
+
 function validateBeat(beat, index, violations) {
   const label = `beats[${index}]`;
   if (!beat || typeof beat !== "object" || Array.isArray(beat)) {
@@ -252,27 +318,78 @@ function validateBeat(beat, index, violations) {
   }
   if (typeof beat.durationMs !== "number" || !Number.isFinite(beat.durationMs) || beat.durationMs <= 0) {
     violations.push(`${label}.durationMs must be a positive number`);
-  }
-  if (beat.kind === "moment") addStringViolation(violations, beat.line, `${label}.line`);
-  if (beat.kind === "question") {
-    if (!Array.isArray(beat.lines) || beat.lines.length < 1 || beat.lines.length > 3 || beat.lines.some((line) => !isNonEmptyString(line))) {
-      violations.push(`${label}.lines must contain 1 to 3 non-empty strings`);
+  } else {
+    const duration = DURATION_LIMITS[beat.kind];
+    if (duration && (beat.durationMs < duration.min || beat.durationMs > duration.max)) {
+      violations.push(`${label}.durationMs must be between ${duration.min} and ${duration.max}ms for ${beat.kind} (got ${beat.durationMs})`);
     }
+  }
+  if (beat.kind === "moment") {
+    addOptionalStringLimit(violations, beat.eyebrow, `${label}.eyebrow`, COPY_LIMITS.moment.eyebrow);
+    addStringViolation(violations, beat.line, `${label}.line`);
+    addMaxLengthViolation(violations, beat.line, `${label}.line`, COPY_LIMITS.moment.line);
+    if (beat.thoughts !== undefined) {
+      if (!Array.isArray(beat.thoughts) || beat.thoughts.length > COPY_LIMITS.moment.thoughts || beat.thoughts.some((thought) => !isNonEmptyString(thought))) {
+        violations.push(`${label}.thoughts must contain at most ${COPY_LIMITS.moment.thoughts} non-empty strings`);
+      } else {
+        beat.thoughts.forEach((thought, thoughtIndex) => addMaxLengthViolation(
+          violations,
+          thought,
+          `${label}.thoughts[${thoughtIndex}]`,
+          COPY_LIMITS.moment.thought,
+        ));
+      }
+    }
+  }
+  if (beat.kind === "question") {
+    validateStringArray(violations, beat.lines, `${label}.lines`, COPY_LIMITS.question.lines, COPY_LIMITS.question.line);
+    addOptionalStringLimit(violations, beat.kicker, `${label}.kicker`, COPY_LIMITS.question.kicker);
+    addOptionalStringLimit(violations, beat.dek, `${label}.dek`, COPY_LIMITS.question.dek);
   }
   if (beat.kind === "figure") {
     addStringViolation(violations, beat.label, `${label}.label`);
+    addMaxLengthViolation(violations, beat.label, `${label}.label`, COPY_LIMITS.figure.label);
+    addOptionalStringLimit(violations, beat.goalText, `${label}.goalText`, COPY_LIMITS.figure.goalText);
+    addOptionalStringLimit(violations, beat.unitLabel, `${label}.unitLabel`, COPY_LIMITS.figure.unitLabel);
+    for (const tick of ["minTick", "achievedTick", "goalTick"]) {
+      addOptionalStringLimit(violations, beat[tick], `${label}.${tick}`, COPY_LIMITS.figure[tick]);
+    }
     if (!beat.value || typeof beat.value !== "object" || typeof beat.value.to !== "number" || typeof beat.value.decimals !== "number") {
       violations.push(`${label}.value must contain numeric to and decimals`);
     }
     if (!beat.axis || typeof beat.axis !== "object" || ["min", "max", "achieved", "goal"].some((key) => typeof beat.axis[key] !== "number")) {
       violations.push(`${label}.axis must contain numeric min, max, achieved, and goal`);
     }
-    if (!Array.isArray(beat.stamps)) violations.push(`${label}.stamps must be an array`);
+    if (!Array.isArray(beat.stamps)) {
+      violations.push(`${label}.stamps must be an array`);
+    } else {
+      if (beat.stamps.length > COPY_LIMITS.figure.stamps) {
+        violations.push(`${label}.stamps must contain at most ${COPY_LIMITS.figure.stamps} entries`);
+      }
+      beat.stamps.forEach((stamp, stampIndex) => {
+        if (!stamp || typeof stamp !== "object" || Array.isArray(stamp)) {
+          violations.push(`${label}.stamps[${stampIndex}] must be an object`);
+          return;
+        }
+        addStringViolation(violations, stamp.text, `${label}.stamps[${stampIndex}].text`);
+        addMaxLengthViolation(violations, stamp.text, `${label}.stamps[${stampIndex}].text`, COPY_LIMITS.figure.stamp);
+      });
+    }
+    if (typeof beat.durationMs === "number" && Number.isFinite(beat.durationMs) && beat.durationMs > 0) {
+      const lateStampOffsets = Array.isArray(beat.stamps)
+        ? beat.stamps
+          .map((stamp) => stamp?.offsetMs)
+          .filter((offsetMs) => typeof offsetMs === "number" && Number.isFinite(offsetMs) && offsetMs > FIGURE_LAST_EVENT_MS)
+        : [];
+      const lastEventMs = lateStampOffsets.length > 0 ? Math.max(...lateStampOffsets) : FIGURE_LAST_EVENT_MS;
+      const staticMs = beat.durationMs - lastEventMs;
+      if (beat.durationMs > FIGURE_LAST_EVENT_MS + MAX_STATIC_MS || staticMs > MAX_STATIC_MS) {
+        violations.push(`[pacing] figure beat ${index} would be static for ${staticMs}ms after its last event; shorten durationMs or add a stamp after ${FIGURE_LAST_EVENT_MS}ms`);
+      }
+    }
   }
   if (beat.kind === "verdict") {
-    if (!Array.isArray(beat.lines) || beat.lines.length < 1 || beat.lines.length > 3 || beat.lines.some((line) => !isNonEmptyString(line))) {
-      violations.push(`${label}.lines must contain 1 to 3 non-empty strings`);
-    }
+    validateStringArray(violations, beat.lines, `${label}.lines`, COPY_LIMITS.verdict.lines, COPY_LIMITS.verdict.line);
   }
 }
 
@@ -309,18 +426,36 @@ export function validateScript(script, brandName, workspaceId, notes) {
     violations.push("close must be an object");
   } else {
     addStringViolation(violations, script.close.line, "close.line");
+    addMaxLengthViolation(violations, script.close.line, "close.line", COPY_LIMITS.close.line);
+    addOptionalStringLimit(violations, script.close.tagline, "close.tagline", COPY_LIMITS.close.tagline);
     if (typeof script.close.showWordmark !== "boolean") violations.push("close.showWordmark must be a boolean");
     if (script.close.durationMs !== undefined && (typeof script.close.durationMs !== "number" || script.close.durationMs <= 0)) {
       violations.push("close.durationMs must be a positive number when present");
     }
   }
   if (typeof script.caption !== "string") violations.push("caption must be a string");
-  else if (script.caption.length > 150) violations.push(`caption must be 150 characters or fewer (got ${script.caption.length})`);
+  else {
+    const captionLines = script.caption.split(/\r?\n/);
+    if (captionLines.length > COPY_LIMITS.caption.lines) {
+      violations.push(`caption must contain at most ${COPY_LIMITS.caption.lines} lines (got ${captionLines.length})`);
+    }
+    captionLines.forEach((line, lineIndex) => addMaxLengthViolation(
+      violations,
+      line,
+      `caption.lines[${lineIndex}]`,
+      COPY_LIMITS.caption.line,
+    ));
+  }
   if (!Array.isArray(script.hashtags)) violations.push("hashtags must be an array");
   else {
-    if (script.hashtags.length < 3 || script.hashtags.length > 6 || script.hashtags.some((tag) => !isNonEmptyString(tag))) {
-      violations.push("hashtags must contain 3 to 6 non-empty strings");
+    if (script.hashtags.length < COPY_LIMITS.hashtags.min || script.hashtags.length > COPY_LIMITS.hashtags.max) {
+      violations.push(`hashtags must contain ${COPY_LIMITS.hashtags.min} to ${COPY_LIMITS.hashtags.max} strings`);
     }
+    script.hashtags.forEach((tag, tagIndex) => {
+      if (!isNonEmptyString(tag) || !/^#[^\s]+$/.test(tag)) {
+        violations.push(`hashtags[${tagIndex}] must start with # and contain no spaces`);
+      }
+    });
   }
   const banned = bannedPhrases(notes);
   for (const phrase of banned) {
@@ -329,6 +464,77 @@ export function validateScript(script, brandName, workspaceId, notes) {
     }
   }
   return violations;
+}
+
+function applyModules(script, options) {
+  if (Object.prototype.hasOwnProperty.call(script, "modules")) {
+    console.log("dropped model-provided modules");
+  }
+  delete script.modules;
+  const modules = {};
+  if (options.vo !== undefined) modules.vo = { voice: options.vo };
+  if (options.music !== undefined) modules.music = { file: options.music };
+  if (Object.keys(modules).length > 0) script.modules = modules;
+}
+
+function shellQuote(value) {
+  return /^[A-Za-z0-9_./:-]+$/.test(value) ? value : JSON.stringify(value);
+}
+
+function commandFailure(label, result) {
+  const detail = String(result.stderr || result.stdout || "").trim();
+  return `[${label}] command exited with ${result.status ?? 1}${detail ? `: ${detail}` : ""}`;
+}
+
+function readLintViolations(workspaceDir, result) {
+  const reportPath = join(workspaceDir, "lint-report.json");
+  if (existsSync(reportPath)) {
+    try {
+      const report = JSON.parse(readFileSync(reportPath, "utf8"));
+      if (Array.isArray(report.violations) && report.violations.length > 0) return report.violations;
+    } catch {
+      // Fall through to the command result so a malformed report is still actionable.
+    }
+  }
+  return [commandFailure("lint", result)];
+}
+
+function runGenerationChecks(workspaceDir, options) {
+  const manifestResult = spawnSync(process.execPath, [join(repoRoot, "bin", "manifest.mjs"), workspaceDir], {
+    cwd: repoRoot,
+    encoding: "utf8",
+    maxBuffer: 10 * 1024 * 1024,
+  });
+  if (manifestResult.error || manifestResult.status !== 0) {
+    return [`[manifest] ${manifestResult.error?.message ?? commandFailure("manifest", manifestResult)}`];
+  }
+
+  if (options.skipLint) return [];
+
+  const lintResult = options.lintCmd
+    ? spawnSync(`${options.lintCmd} ${shellQuote(workspaceDir)}`, {
+      cwd: repoRoot,
+      encoding: "utf8",
+      shell: true,
+      maxBuffer: 10 * 1024 * 1024,
+    })
+    : spawnSync(process.execPath, [join(repoRoot, "bin", "lint.mjs"), workspaceDir, "--no-render"], {
+      cwd: repoRoot,
+      encoding: "utf8",
+      maxBuffer: 10 * 1024 * 1024,
+    });
+  if (lintResult.error || lintResult.status !== 0) {
+    return lintResult.error ? [`[lint] ${lintResult.error.message}`] : readLintViolations(workspaceDir, lintResult);
+  }
+  return [];
+}
+
+function attemptWorkspace(workspaceDir, script) {
+  const tempWorkspace = mkdtempSync(join(tmpdir(), "brandreel-script-attempt-"));
+  cpSync(workspaceDir, tempWorkspace, { recursive: true });
+  rmSync(join(tempWorkspace, "lint-report.json"), { force: true });
+  writeFileSync(join(tempWorkspace, "script.json"), `${JSON.stringify(script, null, 2)}\n`, "utf8");
+  return tempWorkspace;
 }
 
 function run(options) {
@@ -345,35 +551,67 @@ function run(options) {
     return 0;
   }
 
-  const result = spawnSync(options.modelCmd, {
-    cwd: repoRoot,
-    input: prompt,
-    encoding: "utf8",
-    shell: true,
-    maxBuffer: 10 * 1024 * 1024,
-  });
-  if (result.error) throw new Error(`model command failed to start: ${result.error.message}`);
-  if (result.status !== 0) {
-    const detail = String(result.stderr || "").trim();
-    throw new Error(`model command exited with ${result.status ?? 1}${detail ? `: ${detail}` : ""}`);
-  }
-
-  let script;
-  try {
-    script = extractFirstJsonObject(String(result.stdout || ""));
-  } catch (error) {
-    throw new Error(error.message);
-  }
-  const violations = validateScript(script, options.brand, workspaceId, brand.voice.notes);
-  if (violations.length > 0) throw new Error(`script validation failed:\n${violations.map((violation) => `- ${violation}`).join("\n")}`);
-
   const scriptPath = join(workspaceDir, "script.json");
-  writeFileSync(scriptPath, `${JSON.stringify(script, null, 2)}\n`, "utf8");
-  console.log(`wrote ${scriptPath}`);
-  return 0;
+  const layoutPath = join(workspaceDir, "layout.json");
+  const rejectedScriptPath = join(workspaceDir, "script-rejected.json");
+  let retryPrompt = prompt;
+  let violations = [];
+  let lastParsedScript = null;
+
+  for (let attempt = 0; attempt <= options.retries; attempt += 1) {
+    const result = spawnSync(options.modelCmd, {
+      cwd: repoRoot,
+      input: retryPrompt,
+      encoding: "utf8",
+      shell: true,
+      maxBuffer: 10 * 1024 * 1024,
+    });
+    if (result.error) throw new Error(`model command failed to start: ${result.error.message}`);
+    if (result.status !== 0) {
+      const detail = String(result.stderr || "").trim();
+      throw new Error(`model command exited with ${result.status ?? 1}${detail ? `: ${detail}` : ""}`);
+    }
+
+    let script;
+    try {
+      script = extractFirstJsonObject(String(result.stdout || ""));
+    } catch (error) {
+      violations = [error.message];
+      script = null;
+    }
+
+    if (script) {
+      applyModules(script, options);
+      lastParsedScript = script;
+      violations = validateScript(script, options.brand, workspaceId, brand.voice.notes);
+      if (violations.length === 0) {
+        const tempWorkspace = attemptWorkspace(workspaceDir, script);
+        try {
+          violations = runGenerationChecks(tempWorkspace, options);
+          if (violations.length === 0) {
+            copyFileSync(join(tempWorkspace, "script.json"), scriptPath);
+            copyFileSync(join(tempWorkspace, "layout.json"), layoutPath);
+            rmSync(rejectedScriptPath, { force: true });
+            console.log(`wrote ${scriptPath}`);
+            console.log(`wrote ${layoutPath}`);
+            return 0;
+          }
+        } finally {
+          rmSync(tempWorkspace, { recursive: true, force: true });
+        }
+      }
+    }
+
+    if (attempt < options.retries) {
+      retryPrompt = `${prompt}\n\nFix these violations and return the full JSON again:\n${violations.map((violation) => `- ${violation}`).join("\n")}\n`;
+    }
+  }
+
+  writeFileSync(rejectedScriptPath, `${JSON.stringify({ violations, script: lastParsedScript }, null, 2)}\n`, "utf8");
+  throw new Error(`script validation failed:\n${violations.map((violation) => `- ${violation}`).join("\n")}\nLast rejected script written to ${rejectedScriptPath}`);
 }
 
-export { extractFirstJsonObject, parseArgs, run };
+export { extractFirstJsonObject, run };
 
 function main() {
   try {

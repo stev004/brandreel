@@ -1,0 +1,4 @@
+{
+  "durationSeconds": 10,
+  "script": { "durationOverride": { "reason": "The story needs a shorter cut." } }
+}

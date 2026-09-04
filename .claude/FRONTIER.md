@@ -1,20 +1,26 @@
 # FRONTIER - brandreel
 
-Updated 2026-09-04T19:43.
+Updated 2026-09-04 (after the layout-lints run; SHAs deliberately omitted, see DIRECTOR lessons).
 
 ## Where the project is
-- Frontier: feature/phase2-machine (HEAD of the branch) (worktree /private/tmp/fm-brandreel-state). Chain: main <- m1-engine <- howclose-trial <- regulate-kit <- phase2-machine; one merge of phase2-machine gets everything. No remote.
-- Phase 2 engineering landed this run: karaoke captions (43c1ee4), review + reel (0f1f1fb), script stage, audit fixes (fe75208). Gates: typecheck 0, engine 20/20, bin 14/14, demo and smoke-3am renders lint ok.
-- Full chain proven with a real model: topic -> script.json -> render -> lint -> review.md (workspace/smoke-3am).
+- Frontier: feature/layout-lints (HEAD of the branch), worktree /private/tmp/fm-brandreel-state, forked from main fce5a38 which already carries phase2-machine. One merge of layout-lints gets everything. No remote.
+- Gates on the frontier: typecheck 0, engine 27 tests, bin 46 tests. workspace/smoke-3am-v2 (real-model script) passes all lint rules; workspace/smoke-3am is the kept failing baseline (25 violations).
+- Two foreman runs today: phase2 (captions, review, reel, script stages; merged to main) and layout-lints (manifest stage, lint rules, engine geometry fixes, script lint-and-retry). Digests: docs/runs/2026-09-04-digest.md, docs/runs/2026-09-04-digest-layout-lints.md.
 - Phase 1 (fusion video) still parked on Steven's taste gate.
 
+## Known weaknesses (from the terra trail audit, accepted)
+- CTA lint is effectively "close.line non-empty"; when close has a tagline or url the CloseD path does not render close.line at all, so the lint can pass on hidden text. Needs a real definition (gate G5).
+- text-fit is a glyph-width estimate, not measurement; pixel-bands ignores uniform blocks in a band by design.
+- script.mjs retries validate against the render-free lint only; render-only defects surface at reel time.
+
 ## Next predicate (obvious)
-Stage 5 emits a layout manifest (bboxes per text/logo element per frame range) and stage 7 asserts safe zones, text fit (no clipping/ellipsis), hook <= 3s, pacing, CTA in final 20%; smoke-3am must FAIL the new lints, then pass after template fixes. Plus: script.mjs must not invent modules.
+Also: script.mjs must not let the model invent close.url (take it from brand.json or a flag). CTA lint that asserts a rendered CTA element (close line or tagline or url, whichever CloseD shows) is on screen for at least the dwell Steven picks in G5, and the manifest carries what CloseD actually renders; plus caption-vs-thought overlap rule. After that: M3 assets + Broll, pin Remotion versions, remote + CI.
 
 ## Doc authority
 SPEC.md > .claude/DEVTEAM.md > .claude/DIRECTOR.md (foreman rules) > STATE.md > ROADMAP.md.
 
 ## Branch index
-- feature/regulate-kit: last human-driven state; worktree /private/tmp/brandreel-reg-wt (not ours).
-- feature/phase2-machine (HEAD of the branch): this run's integration + state branch.
-- fm/u1-captions, fm/u2-bin, fm/u3-script, fm/u4-fixes: merged, disposable.
+- main: carries everything through phase2-machine (fce5a38).
+- feature/layout-lints: this frontier; Steven merges.
+- feature/regulate-kit: worktree /private/tmp/brandreel-reg-wt (not ours; provides engine/node_modules).
+- fm/* branches: merged unit branches, disposable.

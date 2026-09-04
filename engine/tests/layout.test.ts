@@ -1,6 +1,13 @@
 import { readFileSync } from "node:fs";
 import { BrandKit, Script } from "../src/schema";
-import { lintScript, MOMENT_LAYOUT } from "../src/layout";
+import {
+  FIGURE_LAYOUT,
+  lintScript,
+  MOMENT_LAYOUT,
+  computeTimeline,
+  thoughtDissolveStartMs,
+  thoughtPhaseInStartMs,
+} from "../src/layout";
 import { describe, expect, it } from "vitest";
 
 const readJson = (relativePath: string): unknown =>
@@ -12,6 +19,48 @@ const howcloseBrand = BrandKit.parse(readJson("../../brands/howclose/brand.json"
 const howclose = Script.parse(readJson("../../workspace/howclose-fusion/script.json"));
 
 describe("script lint core", () => {
+  it("keeps the figure goal marker inside the right safe edge at the axis maximum", () => {
+    const figure: Script["beats"][number] = {
+      kind: "figure",
+      label: "TEST FIGURE",
+      value: { to: 9, decimals: 0 },
+      goalText: "the goal",
+      axis: { min: 0, max: 9, achieved: 9, goal: 9 },
+      stamps: [],
+      durationMs: 6000,
+    };
+    const markerCenter = FIGURE_LAYOUT.axisX +
+      FIGURE_LAYOUT.axisWidth * ((figure.axis.goal - figure.axis.min) / (figure.axis.max - figure.axis.min));
+
+    expect(FIGURE_LAYOUT.goalRingLeft).toBe(markerCenter - FIGURE_LAYOUT.goalRingSize / 2);
+    expect(FIGURE_LAYOUT.goalRingLeft + FIGURE_LAYOUT.goalRingSize).toBeLessThanOrEqual(1080 - 120);
+  });
+
+  it("counts a thought dissolve as a visual change during a long moment", () => {
+    const beat: Script["beats"][number] = {
+      kind: "moment",
+      line: "",
+      thoughts: ["a thought fades"],
+      durationMs: 4000,
+    };
+    const script: Script = {
+      id: "thought-dissolve",
+      brand: "regulate",
+      coreMechanic: "A thought changes over time.",
+      beats: [beat],
+      close: { line: "", showWordmark: false },
+      caption: "",
+      hashtags: [],
+    };
+    const phaseInMs = thoughtPhaseInStartMs(regulate, beat);
+    const dissolveMs = thoughtDissolveStartMs(regulate, beat, 1, 0);
+    const timeline = computeTimeline(script, regulate);
+
+    expect(dissolveMs).toBeGreaterThan(phaseInMs);
+    expect(dissolveMs).toBeLessThan(beat.durationMs);
+    expect(timeline.visualChangeMs).toContain(dissolveMs);
+  });
+
   it("accepts the demo", () => {
     expect(lintScript(demo, regulate)).toEqual({ ok: true, violations: [] });
   });
