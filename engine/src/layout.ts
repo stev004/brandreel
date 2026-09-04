@@ -108,6 +108,12 @@ export const QUESTION_TIMING = {
 const FIGURE_AXIS_END = 860;
 const FIGURE_GOAL_X = 420;
 const FIGURE_GOAL_RING_SIZE = 46;
+const FIGURE_COUNTER_GOAL_GAP = 24;
+const FIGURE_GOAL_UNIT_LABEL_GAP = 16;
+const FIGURE_GOAL_TOP = 590;
+const FIGURE_GOAL_FONT_SIZE = 60;
+const FIGURE_GOAL_LINE_HEIGHT = 1.2;
+const FIGURE_GOAL_MAX_LINES = 2;
 
 export const FIGURE_LAYOUT = {
   contentX: SAFE_LEFT,
@@ -119,13 +125,17 @@ export const FIGURE_LAYOUT = {
   counterTop: 470,
   counterFontSize: 190,
   counterLineHeight: 1.2,
+  // A counter longer than this column clips in Figure.tsx; text-fit flags it.
+  counterWidth: FIGURE_GOAL_X - SAFE_LEFT - FIGURE_COUNTER_GOAL_GAP,
   goalX: FIGURE_GOAL_X,
   goalWidth: WIDTH - SAFE_RIGHT - FIGURE_GOAL_X,
-  goalTop: 590,
-  goalFontSize: 60,
-  goalLineHeight: 1.2,
-  goalMaxLines: 2,
-  unitLabelTop: 730,
+  goalTop: FIGURE_GOAL_TOP,
+  goalFontSize: FIGURE_GOAL_FONT_SIZE,
+  goalLineHeight: FIGURE_GOAL_LINE_HEIGHT,
+  goalMaxLines: FIGURE_GOAL_MAX_LINES,
+  unitLabelTop: FIGURE_GOAL_TOP +
+    FIGURE_GOAL_MAX_LINES * FIGURE_GOAL_FONT_SIZE * FIGURE_GOAL_LINE_HEIGHT +
+    FIGURE_GOAL_UNIT_LABEL_GAP,
   unitLabelFontSize: 28,
   unitLabelLetterSpacing: "0.18em",
   unitLabelLineHeight: 1.2,
@@ -705,7 +715,7 @@ export const computeTextBoxes = (script: Script, brand: BrandKit): LayoutTextBox
         id: `beat-${index}-counter`,
         x: FIGURE_LAYOUT.contentX,
         y: FIGURE_LAYOUT.counterTop,
-        w: FIGURE_LAYOUT.contentWidth,
+        w: FIGURE_LAYOUT.counterWidth,
         h: lineBoxHeight(FIGURE_LAYOUT.counterFontSize, FIGURE_LAYOUT.counterLineHeight, 1),
       });
 

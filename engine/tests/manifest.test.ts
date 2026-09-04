@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { BrandKit, Script } from "../src/schema";
 import { buildManifest } from "../src/manifest";
-import { CAPTION_LAYOUT, computeTimeline, MOMENT_LAYOUT } from "../src/layout";
+import { CAPTION_LAYOUT, computeTimeline, FIGURE_LAYOUT, MOMENT_LAYOUT } from "../src/layout";
 import { describe, expect, it } from "vitest";
 
 const readJson = (relativePath: string): unknown =>
@@ -10,6 +10,7 @@ const readJson = (relativePath: string): unknown =>
 const brand = BrandKit.parse(readJson("../../brands/regulate/brand.json"));
 const demo = Script.parse(readJson("../../workspace/demo/script.json"));
 const smoke = Script.parse(readJson("../../workspace/smoke-3am/script.json"));
+const smokeV2 = Script.parse(readJson("../../workspace/smoke-3am-v2/script.json"));
 
 describe("layout manifest", () => {
   it("includes every demo beat text and each caption line", () => {
@@ -87,6 +88,22 @@ describe("layout manifest", () => {
     const goal = manifest.elements.find((element) => element.id === "beat-3-goal");
 
     expect(goal).toMatchObject({ w: 540, maxLines: 2, h: 60 * 1.2 * 2 });
+  });
+
+  it("keeps the smoke v2 figure counter, goal, and unit label clear", () => {
+    const manifest = buildManifest(smokeV2, brand);
+    const boxes = ["counter", "goal", "unit-label"].map((part) =>
+      manifest.elements.find((element) => element.id === `beat-2-${part}`),
+    );
+    const overlaps = (first: typeof boxes[number], second: typeof boxes[number]): boolean => {
+      if (!first || !second) return false;
+      return first.x < second.x + second.w && first.x + first.w > second.x &&
+        first.y < second.y + second.h && first.y + first.h > second.y;
+    };
+
+    expect(boxes[0]?.w).toBe(FIGURE_LAYOUT.counterWidth);
+    expect(overlaps(boxes[0], boxes[1])).toBe(false);
+    expect(overlaps(boxes[1], boxes[2])).toBe(false);
   });
 
   it("uses the shared frame and safe-zone dimensions", () => {
