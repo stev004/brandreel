@@ -41,7 +41,7 @@ node bin/reel.mjs workspace/demo --dry-run
 Draft a validated stage 1 script with a configured model CLI:
 
 ```sh
-node bin/script.mjs workspace/demo --brand regulate --topic "cannot sleep at 3am" [--vo <voice-id>] [--music <file>]
+node bin/script.mjs workspace/demo --brand regulate --topic "cannot sleep at 3am" [--vo <voice-id>] [--music <file>] [--url <url>] [--tagline <text>]
 ```
 
 Script generation retries layout lint failures twice by default. Use

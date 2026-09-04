@@ -86,6 +86,20 @@ test("CTA passes when a tagline alone is rendered for at least 2500ms", () => {
   assert.deepEqual(cta(manifest, closeScript), []);
 });
 
+test("CTA fails closed when a rendered close tagline has malformed timing", () => {
+  const manifest = fixture("lint-cta-tagline-short.json");
+  manifest.elements[0].fromMs = "x";
+  const violations = cta(manifest, closeScript);
+  assert.ok(violations.some((violation) => violation.startsWith("[cta] cannot measure CTA dwell:")));
+});
+
+test("CTA fails closed when total duration is missing", () => {
+  const manifest = fixture("lint-cta-tagline-short.json");
+  delete manifest.totalDurationMs;
+  const violations = cta(manifest, closeScript);
+  assert.ok(violations.some((violation) => violation.startsWith("[cta] cannot measure CTA dwell:")));
+});
+
 test("overlap passes for text boxes that do not intersect", () => {
   assert.deepEqual(overlap({
     elements: [
