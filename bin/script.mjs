@@ -1,6 +1,7 @@
 #!/usr/bin/env node
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { cpSync, copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { basename, dirname, join, resolve } from "node:path";
+import { tmpdir } from "node:os";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 
@@ -10,22 +11,31 @@ const requiredScriptKeys = ["id", "brand", "coreMechanic", "beats", "close", "ca
 
 export const COPY_LIMITS = {
   moment: { line: 44, eyebrow: 24, thoughts: 3, thought: 60 },
-  question: { line: 36, lines: 3, kicker: 24, dek: 90 },
-  figure: { label: 40, goalText: 26, unitLabel: 12, tick: 12, stamps: 4, stamp: 32 },
-  verdict: { line: 36, lines: 3 },
-  close: { line: 44, tagline: 40 },
+  question: { line: 12, lines: 3, kicker: 24, dek: 36 },
+  figure: { label: 40, goalText: 30, unitLabel: 12, tick: 12, stamps: 4, stamp: 32 },
+  verdict: { line: 20, lines: 3 },
+  close: { line: 44, tagline: 18 },
   caption: { lines: 2, line: 44 },
   hashtags: { min: 3, max: 6 },
 };
 
-function parseArgs(argv) {
+export const DURATION_LIMITS = {
+  moment: { min: 2000, max: 4000 },
+  question: { min: 2500, max: 4500 },
+  verdict: { min: 2000, max: 4000 },
+  figure: { min: 6000, max: 9000 },
+};
+
+export function parseArgs(argv) {
   let workspaceArg = null;
-  const options = { modelCmd: "claude -p", durationMs: 25000, dryRun: false };
+  const options = { modelCmd: "claude -p", durationMs: 25000, retries: 2, dryRun: false, skipLint: false };
   const valueOptions = new Map([
     ["--brand", "brand"],
     ["--topic", "topic"],
     ["--model-cmd", "modelCmd"],
     ["--duration-ms", "durationMs"],
+    ["--retries", "retries"],
+    ["--lint-cmd", "lintCmd"],
     ["--vo", "vo"],
     ["--music", "music"],
   ]);
@@ -38,6 +48,10 @@ function parseArgs(argv) {
     }
     if (arg === "--dry-run") {
       options.dryRun = true;
+      continue;
+    }
+    if (arg === "--skip-lint") {
+      options.skipLint = true;
       continue;
     }
     const optionName = [...valueOptions.keys()].find((name) => arg === name || arg.startsWith(`${name}=`));
@@ -65,6 +79,10 @@ function parseArgs(argv) {
   options.durationMs = Number(options.durationMs);
   if (!Number.isFinite(options.durationMs) || options.durationMs <= 0) {
     throw new Error("--duration-ms must be a positive number");
+  }
+  options.retries = Number(options.retries);
+  if (!Number.isInteger(options.retries) || options.retries < 0) {
+    throw new Error("--retries must be a non-negative integer");
   }
   return { workspaceArg, ...options };
 }
@@ -102,34 +120,34 @@ function scriptExample() {
       {
         kind: "question",
         kicker: "NOTICE",
-        lines: ["A question on screen?"],
-        dek: "Optional supporting line.",
-        durationMs: 4000,
+        lines: ["Need rest?"],
+        dek: "Try one small step.",
+        durationMs: 3000,
       },
       {
         kind: "figure",
         label: "A measurable idea",
         unitLabel: "steps",
         value: { to: 3, decimals: 0 },
-        goalText: "The goal",
+        goalText: "A smaller step",
         axis: { min: 0, max: 3, achieved: 1, goal: 3 },
         achievedTick: "Now",
         goalTick: "Goal",
         minTick: "Start",
         stamps: [{ tone: "done", text: "First step", offsetMs: 1000 }],
         flash: { colorKey: "accent" },
-        durationMs: 4000,
+        durationMs: 6000,
       },
       {
         kind: "verdict",
-        lines: ["The closing insight.", "A practical invitation."],
-        durationMs: 4000,
+        lines: ["Start with less.", "Let night soften."],
+        durationMs: 3000,
       },
     ],
     close: {
       line: "A clear closing line.",
       showWordmark: true,
-      tagline: "Optional tagline.",
+      tagline: "Make room.",
       url: "https://example.com",
       durationMs: 1000,
     },
@@ -166,6 +184,7 @@ Rules:
 - Every on-screen string lives in the beats. Keep the close and metadata purposeful.
 - Use 4 to 8 beats. Every beat has a positive durationMs.
 - Total beat durationMs must be between 15000 and 35000.
+- Beat duration limits: moment ${DURATION_LIMITS.moment.min}-${DURATION_LIMITS.moment.max}ms; question ${DURATION_LIMITS.question.min}-${DURATION_LIMITS.question.max}ms; figure ${DURATION_LIMITS.figure.min}-${DURATION_LIMITS.figure.max}ms; verdict ${DURATION_LIMITS.verdict.min}-${DURATION_LIMITS.verdict.max}ms.
 - Do not emit a modules key. Modules are supplied by the command flags.
 - Copy limits: moment.line <= ${COPY_LIMITS.moment.line} characters; moment.eyebrow <= ${COPY_LIMITS.moment.eyebrow}; moment.thoughts has at most ${COPY_LIMITS.moment.thoughts} entries and each is <= ${COPY_LIMITS.moment.thought} characters.
 - question.lines has 1 to ${COPY_LIMITS.question.lines} entries and each is <= ${COPY_LIMITS.question.line} characters; question.kicker <= ${COPY_LIMITS.question.kicker}; question.dek <= ${COPY_LIMITS.question.dek}.
@@ -286,6 +305,11 @@ function validateBeat(beat, index, violations) {
   }
   if (typeof beat.durationMs !== "number" || !Number.isFinite(beat.durationMs) || beat.durationMs <= 0) {
     violations.push(`${label}.durationMs must be a positive number`);
+  } else {
+    const duration = DURATION_LIMITS[beat.kind];
+    if (duration && (beat.durationMs < duration.min || beat.durationMs > duration.max)) {
+      violations.push(`${label}.durationMs must be between ${duration.min} and ${duration.max}ms for ${beat.kind} (got ${beat.durationMs})`);
+    }
   }
   if (beat.kind === "moment") {
     addOptionalStringLimit(violations, beat.eyebrow, `${label}.eyebrow`, COPY_LIMITS.moment.eyebrow);
@@ -428,6 +452,66 @@ function applyModules(script, options) {
   if (Object.keys(modules).length > 0) script.modules = modules;
 }
 
+function shellQuote(value) {
+  return /^[A-Za-z0-9_./:-]+$/.test(value) ? value : JSON.stringify(value);
+}
+
+function commandFailure(label, result) {
+  const detail = String(result.stderr || result.stdout || "").trim();
+  return `[${label}] command exited with ${result.status ?? 1}${detail ? `: ${detail}` : ""}`;
+}
+
+function readLintViolations(workspaceDir, result) {
+  const reportPath = join(workspaceDir, "lint-report.json");
+  if (existsSync(reportPath)) {
+    try {
+      const report = JSON.parse(readFileSync(reportPath, "utf8"));
+      if (Array.isArray(report.violations) && report.violations.length > 0) return report.violations;
+    } catch {
+      // Fall through to the command result so a malformed report is still actionable.
+    }
+  }
+  return [commandFailure("lint", result)];
+}
+
+function runGenerationChecks(workspaceDir, options) {
+  const manifestResult = spawnSync(process.execPath, [join(repoRoot, "bin", "manifest.mjs"), workspaceDir], {
+    cwd: repoRoot,
+    encoding: "utf8",
+    maxBuffer: 10 * 1024 * 1024,
+  });
+  if (manifestResult.error || manifestResult.status !== 0) {
+    return [`[manifest] ${manifestResult.error?.message ?? commandFailure("manifest", manifestResult)}`];
+  }
+
+  if (options.skipLint) return [];
+
+  const lintResult = options.lintCmd
+    ? spawnSync(`${options.lintCmd} ${shellQuote(workspaceDir)}`, {
+      cwd: repoRoot,
+      encoding: "utf8",
+      shell: true,
+      maxBuffer: 10 * 1024 * 1024,
+    })
+    : spawnSync(process.execPath, [join(repoRoot, "bin", "lint.mjs"), workspaceDir, "--no-render"], {
+      cwd: repoRoot,
+      encoding: "utf8",
+      maxBuffer: 10 * 1024 * 1024,
+    });
+  if (lintResult.error || lintResult.status !== 0) {
+    return lintResult.error ? [`[lint] ${lintResult.error.message}`] : readLintViolations(workspaceDir, lintResult);
+  }
+  return [];
+}
+
+function attemptWorkspace(workspaceDir, script) {
+  const tempWorkspace = mkdtempSync(join(tmpdir(), "brandreel-script-attempt-"));
+  cpSync(workspaceDir, tempWorkspace, { recursive: true });
+  rmSync(join(tempWorkspace, "lint-report.json"), { force: true });
+  writeFileSync(join(tempWorkspace, "script.json"), `${JSON.stringify(script, null, 2)}\n`, "utf8");
+  return tempWorkspace;
+}
+
 function run(options) {
   const workspaceDir = resolve(repoRoot, options.workspaceArg);
   const workspaceId = basename(workspaceDir);
@@ -442,36 +526,62 @@ function run(options) {
     return 0;
   }
 
-  const result = spawnSync(options.modelCmd, {
-    cwd: repoRoot,
-    input: prompt,
-    encoding: "utf8",
-    shell: true,
-    maxBuffer: 10 * 1024 * 1024,
-  });
-  if (result.error) throw new Error(`model command failed to start: ${result.error.message}`);
-  if (result.status !== 0) {
-    const detail = String(result.stderr || "").trim();
-    throw new Error(`model command exited with ${result.status ?? 1}${detail ? `: ${detail}` : ""}`);
-  }
-
-  let script;
-  try {
-    script = extractFirstJsonObject(String(result.stdout || ""));
-  } catch (error) {
-    throw new Error(error.message);
-  }
-  applyModules(script, options);
-  const violations = validateScript(script, options.brand, workspaceId, brand.voice.notes);
-  if (violations.length > 0) throw new Error(`script validation failed:\n${violations.map((violation) => `- ${violation}`).join("\n")}`);
-
   const scriptPath = join(workspaceDir, "script.json");
-  writeFileSync(scriptPath, `${JSON.stringify(script, null, 2)}\n`, "utf8");
-  console.log(`wrote ${scriptPath}`);
-  return 0;
+  const layoutPath = join(workspaceDir, "layout.json");
+  let retryPrompt = prompt;
+  let violations = [];
+
+  for (let attempt = 0; attempt <= options.retries; attempt += 1) {
+    const result = spawnSync(options.modelCmd, {
+      cwd: repoRoot,
+      input: retryPrompt,
+      encoding: "utf8",
+      shell: true,
+      maxBuffer: 10 * 1024 * 1024,
+    });
+    if (result.error) throw new Error(`model command failed to start: ${result.error.message}`);
+    if (result.status !== 0) {
+      const detail = String(result.stderr || "").trim();
+      throw new Error(`model command exited with ${result.status ?? 1}${detail ? `: ${detail}` : ""}`);
+    }
+
+    let script;
+    try {
+      script = extractFirstJsonObject(String(result.stdout || ""));
+    } catch (error) {
+      violations = [error.message];
+      script = null;
+    }
+
+    if (script) {
+      applyModules(script, options);
+      violations = validateScript(script, options.brand, workspaceId, brand.voice.notes);
+      if (violations.length === 0) {
+        const tempWorkspace = attemptWorkspace(workspaceDir, script);
+        try {
+          violations = runGenerationChecks(tempWorkspace, options);
+          if (violations.length === 0) {
+            copyFileSync(join(tempWorkspace, "script.json"), scriptPath);
+            copyFileSync(join(tempWorkspace, "layout.json"), layoutPath);
+            console.log(`wrote ${scriptPath}`);
+            console.log(`wrote ${layoutPath}`);
+            return 0;
+          }
+        } finally {
+          rmSync(tempWorkspace, { recursive: true, force: true });
+        }
+      }
+    }
+
+    if (attempt < options.retries) {
+      retryPrompt = `${prompt}\n\nFix these violations and return the full JSON again:\n${violations.map((violation) => `- ${violation}`).join("\n")}\n`;
+    }
+  }
+
+  throw new Error(`script validation failed:\n${violations.map((violation) => `- ${violation}`).join("\n")}`);
 }
 
-export { extractFirstJsonObject, parseArgs, run };
+export { extractFirstJsonObject, run };
 
 function main() {
   try {

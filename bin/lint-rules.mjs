@@ -107,8 +107,8 @@ export function cta(manifest, script) {
   const totalDurationMs = manifest?.totalDurationMs;
   const closeLine = script?.close?.line;
 
-  if (!isNumber(closeStartMs) || !isNumber(totalDurationMs) || closeStartMs > 0.8 * totalDurationMs) {
-    violations.push(`[cta] close must start in the final 20% of the timeline; got ${closeStartMs ?? "missing"}ms of ${totalDurationMs ?? "missing"}ms`);
+  if (!isNumber(closeStartMs) || !isNumber(totalDurationMs) || closeStartMs >= totalDurationMs) {
+    violations.push(`[cta] close must start before the end of the timeline; got ${closeStartMs ?? "missing"}ms of ${totalDurationMs ?? "missing"}ms`);
   }
   if (typeof closeLine !== "string" || closeLine.trim() === "") {
     violations.push("[cta] script.close.line must be non-empty");

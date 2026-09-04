@@ -22,6 +22,9 @@ Run stage 7 lint checks with:
 node bin/lint.mjs workspace/demo
 ```
 
+Use `node bin/lint.mjs workspace/demo --no-render` to lint layout.json without
+ffprobe or pixel sampling. The render-dependent rules are marked skipped.
+
 The linter checks the 1080x1920, 60fps render with ffprobe, validates the
 layout.json safe zones, text fit, hook, pacing and CTA rules, and samples
 rendered pixels for overflow in the top, bottom and right bands. Use
@@ -40,6 +43,9 @@ Draft a validated stage 1 script with a configured model CLI:
 ```sh
 node bin/script.mjs workspace/demo --brand regulate --topic "cannot sleep at 3am" [--vo <voice-id>] [--music <file>]
 ```
+
+Script generation retries layout lint failures twice by default. Use
+`--retries N`, `--skip-lint`, or `--lint-cmd <command>` to control that loop.
 
 Use `--vo` and `--music` to opt into those modules. Model-provided modules are ignored. Use `--dry-run` to write `script-prompt.md` without calling the model. The default model command is `claude -p`; override it with `--model-cmd` for another CLI or a fake model.
 
