@@ -59,6 +59,10 @@ export const QUESTION_TIMING = {
   dekMs: 2400,
 } as const;
 
+const FIGURE_AXIS_END = 860;
+const FIGURE_GOAL_X = 420;
+const FIGURE_GOAL_RING_SIZE = 46;
+
 export const FIGURE_LAYOUT = {
   contentX: SAFE_LEFT,
   contentWidth: WIDTH - SAFE_LEFT - SAFE_RIGHT,
@@ -69,16 +73,19 @@ export const FIGURE_LAYOUT = {
   counterTop: 470,
   counterFontSize: 190,
   counterLineHeight: 1.2,
-  goalX: 420,
+  goalX: FIGURE_GOAL_X,
+  goalWidth: WIDTH - SAFE_RIGHT - FIGURE_GOAL_X,
   goalTop: 590,
   goalFontSize: 60,
   goalLineHeight: 1.2,
+  goalMaxLines: 2,
   unitLabelTop: 730,
   unitLabelFontSize: 28,
   unitLabelLetterSpacing: "0.18em",
   unitLabelLineHeight: 1.2,
   axisX: 60,
-  axisWidth: 900,
+  axisWidth: FIGURE_AXIS_END - SAFE_LEFT,
+  axisEnd: FIGURE_AXIS_END,
   axisY: 1100,
   axisHeight: 2,
   solidTop: 1096,
@@ -93,9 +100,9 @@ export const FIGURE_LAYOUT = {
   flashPeakScale: 1.5,
   flashRingSpread: 48,
   flashRingOpacity: 0.55,
-  goalRingLeft: 934,
+  goalRingLeft: FIGURE_AXIS_END - FIGURE_GOAL_RING_SIZE / 2,
   goalRingTop: 1078,
-  goalRingSize: 46,
+  goalRingSize: FIGURE_GOAL_RING_SIZE,
   goalRingBorder: 6,
   tickTop: 1140,
   tickFontSize: 24,
@@ -279,12 +286,18 @@ export const computeTimeline = (script: Script, brand: BrandKit): Timeline => {
         firstOnScreenTextMs = Math.min(...textTimes);
       }
 
-      thoughts.forEach((thought, thoughtIndex) => {
+      if (hasText(beat.eyebrow) || hasText(beat.line)) {
+        addVisualChange(startMs, endMs);
+      }
+
+      thoughts.forEach((_, thoughtIndex) => {
         const phaseInMs =
           startMs + thoughtPhaseInStartMs(brand, beat) + thoughtIndex * thoughtStaggerMs(brand);
-        if (phaseInMs < endMs) {
-          visualChangeMs.push(phaseInMs);
-        }
+        addVisualChange(phaseInMs, endMs);
+        addVisualChange(
+          startMs + thoughtDissolveStartMs(brand, beat, thoughts.length, thoughtIndex),
+          endMs,
+        );
       });
     }
 
@@ -475,7 +488,7 @@ const metadataForTextBox = (
       const figureMetadata: Record<string, TextBoxMetadata> = {
         "figure-label": beatMetadata(timeline, beatIndex, brand, beat.label, "mono", FIGURE_LAYOUT.labelFontSize, FIGURE_LAYOUT.labelLineHeight, 1, 0.24, FIGURE_TIMING.introMs),
         counter: beatMetadata(timeline, beatIndex, brand, beat.value.to.toFixed(beat.value.decimals), "mono", FIGURE_LAYOUT.counterFontSize, FIGURE_LAYOUT.counterLineHeight, 1, 0, FIGURE_TIMING.introMs),
-        goal: beatMetadata(timeline, beatIndex, brand, beat.goalText ?? "", "mono", FIGURE_LAYOUT.goalFontSize, FIGURE_LAYOUT.goalLineHeight, 1, 0, FIGURE_TIMING.introMs),
+        goal: beatMetadata(timeline, beatIndex, brand, beat.goalText ?? "", "mono", FIGURE_LAYOUT.goalFontSize, FIGURE_LAYOUT.goalLineHeight, FIGURE_LAYOUT.goalMaxLines, 0, FIGURE_TIMING.introMs),
         "unit-label": beatMetadata(timeline, beatIndex, brand, beat.unitLabel ?? "", "mono", FIGURE_LAYOUT.unitLabelFontSize, FIGURE_LAYOUT.unitLabelLineHeight, 1, 0.18, FIGURE_TIMING.introMs),
         "min-tick": beatMetadata(timeline, beatIndex, brand, beat.minTick ?? "", "mono", FIGURE_LAYOUT.tickFontSize, FIGURE_LAYOUT.tickLineHeight, 1, 0, FIGURE_TIMING.introMs),
         "achieved-tick": beatMetadata(timeline, beatIndex, brand, beat.achievedTick ?? "", "mono", FIGURE_LAYOUT.tickFontSize, FIGURE_LAYOUT.tickLineHeight, 1, 0, FIGURE_TIMING.achievedTickMs),
@@ -668,8 +681,8 @@ export const computeTextBoxes = (script: Script, brand: BrandKit): LayoutTextBox
           id: `beat-${index}-goal`,
           x: FIGURE_LAYOUT.goalX,
           y: FIGURE_LAYOUT.goalTop,
-          w: WIDTH - FIGURE_LAYOUT.goalX - SAFE_RIGHT,
-          h: lineBoxHeight(FIGURE_LAYOUT.goalFontSize, FIGURE_LAYOUT.goalLineHeight, 1),
+          w: FIGURE_LAYOUT.goalWidth,
+          h: lineBoxHeight(FIGURE_LAYOUT.goalFontSize, FIGURE_LAYOUT.goalLineHeight, FIGURE_LAYOUT.goalMaxLines),
         });
       }
 
