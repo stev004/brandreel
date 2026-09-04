@@ -1,10 +1,11 @@
 # STATE - brandreel snapshot
 
-*Updated 2026-09-04. Snapshot of current truth; history in SESSIONS.md and git.*
+*Updated 2026-09-04 (evening, foreman run). Snapshot of current truth; history in SESSIONS.md and git.*
 
 ## Where things stand
-- **Branch chain (all local, no remote):** `main` <- `feature/m1-engine` <- `feature/howclose-trial` <- **`feature/regulate-kit`** (09-04: Regulate kit refreshed from the Brand Book, wordmark-in-display-face fix, white-dot law test). **One merge gets everything:** `git -C ~/Documents/brandreel merge --no-ff feature/regulate-kit`. Only live worktree: /tmp/brandreel-reg-wt (older /tmp worktrees were pruned; recreate on demand).
-- **Gates all green on the trial branch:** typecheck, 12 tests, no-literal greps, both workspace renders + media lints, audio end-to-end (VO -> alignment -> polish at -13.75 LUFS).
+- **Branch chain (all local, no remote):** `main` <- `feature/m1-engine` <- `feature/howclose-trial` <- `feature/regulate-kit` <- **`feature/phase2-machine`** @ 722f888 (09-04 foreman run: karaoke captions, bin/review.mjs, bin/reel.mjs, bin/script.mjs; foreman state tower in `.claude/`, executor reports in `docs/runs/`). **One merge gets everything:** `git -C ~/Documents/brandreel merge --no-ff feature/phase2-machine`. Live worktrees: /tmp/brandreel-reg-wt (reg-kit), /private/tmp/fm-brandreel-state (phase2-machine); fm/u1..u4 worktrees under /private/tmp/br-* are merged and disposable.
+- **Gates all green on phase2-machine:** typecheck, 19 engine tests, 14 bin tests (`node --test bin/tests/`), demo + smoke-3am renders lint ok. Full chain proven: `node bin/script.mjs workspace/<id> --brand regulate --topic "..."` (claude -p) -> `node bin/reel.mjs workspace/<id> --skip vo,align,polish` -> render, lint-report, review.md. Audio venv not present in these worktrees (rebuild per audio/README.md).
+- **Known lint gaps (next foreman predicate):** no layout manifest, so safe-zone overflow (smoke-3am Figure goalText clips the right edge), caption truncation, and Moment thoughts sitting on the caption block all pass lint. script.mjs also lets the model invent modules.vo/music.
 
 ## Waiting on Steven
 0. **Regulate demo re-render for a look** (optional): `workspace/demo/render.mp4` in the reg worktree now shows Playfair wordmark + pure white dot. The demo's copy ("let the night be enough", "a softer landing") is placeholder and softer than the Brand Book voice - the first real Regulate script replaces it, not a copy edit.

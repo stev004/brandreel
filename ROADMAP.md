@@ -9,10 +9,10 @@ Where the pipeline goes from here. STATE.md = now; this = the arc. Updated 2026-
 - [ ] Assemble: compose -> polish -> lint -> first finished video with VO + music.
 
 ## Phase 2 - make it a weekly machine
-- [ ] `bin/reel.mjs` orchestrator chaining the stages per script.json modules.
-- [ ] `bin/script` LLM stage (topic + brand.json -> script.json with required coreMechanic, hook-archetype constraints, banned phrases).
-- [ ] `bin/review` - review sheet with KEEP/TWEAK/KILL boxes per video.
-- [ ] Karaoke word-timed captions in the engine (words.json exists; Caption component consumes it).
+- [x] `bin/reel.mjs` orchestrator (09-04, feature/phase2-machine).
+- [x] `bin/script.mjs` LLM stage (09-04). Open: stop the model inventing modules.vo/music; voice id should come from brand.json.
+- [x] `bin/review.mjs` review sheet (09-04).
+- [x] Karaoke captions (09-04). Open: layout manifest from stage 5 + safe-zone/text-fit lints in stage 7 (SPEC lints section, unbuilt).
 - [ ] GitHub remote + CI renders on push (workflow already written).
 
 ## Phase 3 - footage + more brands
