@@ -36,6 +36,7 @@ export const DURATION_LIMITS = {
   question: { min: 2500, max: 4500 },
   verdict: { min: 2000, max: 4000 },
   figure: { min: 6000, max: 8500 },
+  close: { min: 2500, max: 4000 },
 };
 
 export function parseArgs(argv) {
@@ -50,6 +51,7 @@ export function parseArgs(argv) {
     ["--lint-cmd", "lintCmd"],
     ["--vo", "vo"],
     ["--music", "music"],
+    ["--url", "url"],
   ]);
 
   for (let index = 0; index < argv.length; index += 1) {
@@ -160,8 +162,7 @@ function scriptExample() {
       line: "A clear closing line.",
       showWordmark: true,
       tagline: "Make room.",
-      url: "https://example.com",
-      durationMs: 1000,
+      durationMs: 3000,
     },
     caption: "A short caption for the post.",
     hashtags: ["#one", "#two", "#three"],
@@ -203,7 +204,8 @@ Rules:
 - figure.label <= ${COPY_LIMITS.figure.label}; figure.goalText <= ${COPY_LIMITS.figure.goalText}; figure.unitLabel <= ${COPY_LIMITS.figure.unitLabel}; figure.minTick <= ${COPY_LIMITS.figure.minTick} character; minTick is a single character such as 0; figure.achievedTick <= ${COPY_LIMITS.figure.achievedTick} characters; figure.goalTick <= ${COPY_LIMITS.figure.goalTick} characters; stamps has at most ${COPY_LIMITS.figure.stamps} entries and each stamp text is <= ${COPY_LIMITS.figure.stamp} characters.
 - Figure pacing: leave no more than ${MAX_STATIC_MS}ms static after the last figure event. The goal marker lands at ${FIGURE_LAST_EVENT_MS}ms, so if no stamp is later than ${FIGURE_LAST_EVENT_MS}ms, shorten durationMs or add a stamp after ${FIGURE_LAST_EVENT_MS}ms; durationMs over ${FIGURE_LAST_EVENT_MS + MAX_STATIC_MS}ms is invalid.
 - verdict.lines has 1 to ${COPY_LIMITS.verdict.lines} entries and each is <= ${COPY_LIMITS.verdict.line} characters.
-- close.line <= ${COPY_LIMITS.close.line}; close.tagline <= ${COPY_LIMITS.close.tagline}.
+- Do not emit close.url. close.line <= ${COPY_LIMITS.close.line}; close.tagline <= ${COPY_LIMITS.close.tagline}.
+- close.durationMs must be between ${DURATION_LIMITS.close.min} and ${DURATION_LIMITS.close.max}ms.
 - caption has at most ${COPY_LIMITS.caption.lines} newline-separated lines and each line is <= ${COPY_LIMITS.caption.line} characters.
 - hashtags must contain ${COPY_LIMITS.hashtags.min} to ${COPY_LIMITS.hashtags.max} strings, each starting with # and containing no spaces.
 - Do not use any banned phrases from the brand voice notes, case-insensitively.
@@ -429,8 +431,9 @@ export function validateScript(script, brandName, workspaceId, notes) {
     addMaxLengthViolation(violations, script.close.line, "close.line", COPY_LIMITS.close.line);
     addOptionalStringLimit(violations, script.close.tagline, "close.tagline", COPY_LIMITS.close.tagline);
     if (typeof script.close.showWordmark !== "boolean") violations.push("close.showWordmark must be a boolean");
-    if (script.close.durationMs !== undefined && (typeof script.close.durationMs !== "number" || script.close.durationMs <= 0)) {
-      violations.push("close.durationMs must be a positive number when present");
+    const closeDuration = DURATION_LIMITS.close;
+    if (typeof script.close.durationMs !== "number" || !Number.isFinite(script.close.durationMs) || script.close.durationMs < closeDuration.min || script.close.durationMs > closeDuration.max) {
+      violations.push(`close.durationMs must be between ${closeDuration.min} and ${closeDuration.max}ms (got ${script.close.durationMs ?? "missing"})`);
     }
   }
   if (typeof script.caption !== "string") violations.push("caption must be a string");
@@ -471,6 +474,13 @@ function applyModules(script, options) {
     console.log("dropped model-provided modules");
   }
   delete script.modules;
+  if (script.close && typeof script.close === "object" && !Array.isArray(script.close) && Object.prototype.hasOwnProperty.call(script.close, "url")) {
+    console.log("dropped model-provided close.url");
+    delete script.close.url;
+  }
+  if (options.url !== undefined && script.close && typeof script.close === "object" && !Array.isArray(script.close)) {
+    script.close.url = options.url;
+  }
   const modules = {};
   if (options.vo !== undefined) modules.vo = { voice: options.vo };
   if (options.music !== undefined) modules.music = { file: options.music };
