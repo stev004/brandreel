@@ -110,6 +110,14 @@ export function cta(manifest, script) {
   ));
   if (ctaElements.length === 0) return ["[cta] no rendered CTA text element in the close"];
 
+  if (!isNumber(manifest?.totalDurationMs)) {
+    return ["[cta] cannot measure CTA dwell: manifest.totalDurationMs must be a number"];
+  }
+  const malformedStart = ctaElements.find((element) => !isNumber(element.fromMs));
+  if (malformedStart) {
+    return [`[cta] cannot measure CTA dwell: ${elementName(malformedStart, 0)}.fromMs must be a number`];
+  }
+
   const dwellMs = ctaDwellMs(manifest);
   if (isNumber(dwellMs) && dwellMs < MIN_CTA_DWELL_MS) {
     return [`[cta] CTA on screen for ${dwellMs}ms; minimum ${MIN_CTA_DWELL_MS}ms`];
