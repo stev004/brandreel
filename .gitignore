@@ -11,3 +11,4 @@ workspace/**/final/
 workspace/**/audio-report.json
 audio/.venv/
 __pycache__/
+workspace/**/review.md
