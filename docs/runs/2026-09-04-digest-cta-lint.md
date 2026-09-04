@@ -17,3 +17,6 @@ Discarded: nothing. The overlap lint immediately paid for itself by finding two 
 Open gates: G1 remote (default not yet); G3 music (taste). G5 resolved by default (any rendered close text element, 2500ms).
 
 Next run candidates: M3 assets (Pexels/Pixabay + Veo manifest) + Broll template; pin Remotion versions + remote + CI renders; real glyph measurement to replace the estimate. Taste-gated: fusion animatic, first Regulate video from the six approved concepts (the smoke scripts are pipeline proofs, not copy Steven has approved).
+
+## Addendum after the trail audit (gpt-5.6-terra)
+Attention list (docs/runs/2026-09-04-trail-audit-terra-cta-lint.md), all accepted: the director's close max 3800ms was variant-blind (fixed in C4: plain 3000 / tagline 3500 / url 3800); the cta rule failed open on malformed timing (fixed in C4); CTA dwell counts the fade-in frame (known, about one frame); overlap covers text elements only (known); ROADMAP header date (fixed). Also from the close frame: the model had truncated the brand tagline, so C4 drops model taglines and adds --tagline; the real Regulate tagline does not fit the CloseD row, parked as gate G6. Codex runs used: 4 of 6.

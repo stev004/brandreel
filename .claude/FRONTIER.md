@@ -4,7 +4,7 @@ Updated 2026-09-04 (after the CTA-lint run; branch names only, no SHAs).
 
 ## Where the project is
 - Frontier: feature/cta-lint (HEAD of the branch), worktree /private/tmp/fm-brandreel-state, forked from main 2fd01a5 (which carries phase2 + layout-lints). One merge of cta-lint gets everything. No remote.
-- Gates on the frontier: typecheck 0, engine 29 tests, bin 54 tests. workspace/smoke-3am-v3 (real-model script) passes all 11 lint rules incl. cta (dwell 2500ms) and overlap; smoke-3am (25 violations) and smoke-3am-v2 (cta dwell) are kept failing baselines.
+- Gates on the frontier: typecheck 0, engine 29 tests, bin 61 tests. workspace/smoke-3am-v3 (real-model script) passes all 11 lint rules incl. cta (dwell 2500ms) and overlap; smoke-3am (25 violations) and smoke-3am-v2 (cta dwell) are kept failing baselines.
 - Three foreman runs today; digests docs/runs/2026-09-04-digest*.md.
 - Phase 1 (fusion video) still parked on Steven's taste gate.
 
