@@ -14,7 +14,7 @@ Updated 2026-09-04 (after the layout-lints run; SHAs deliberately omitted, see D
 - script.mjs retries validate against the render-free lint only; render-only defects surface at reel time.
 
 ## Next predicate (obvious)
-CTA lint that asserts a rendered CTA element (close line or tagline or url, whichever CloseD shows) is on screen for at least the dwell Steven picks in G5, and the manifest carries what CloseD actually renders; plus caption-vs-thought overlap rule. After that: M3 assets + Broll, pin Remotion versions, remote + CI.
+Also: script.mjs must not let the model invent close.url (take it from brand.json or a flag). CTA lint that asserts a rendered CTA element (close line or tagline or url, whichever CloseD shows) is on screen for at least the dwell Steven picks in G5, and the manifest carries what CloseD actually renders; plus caption-vs-thought overlap rule. After that: M3 assets + Broll, pin Remotion versions, remote + CI.
 
 ## Doc authority
 SPEC.md > .claude/DEVTEAM.md > .claude/DIRECTOR.md (foreman rules) > STATE.md > ROADMAP.md.
