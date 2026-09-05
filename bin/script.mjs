@@ -49,7 +49,7 @@ const CLOSE_VARIANT_LIMITS = {
 
 export function parseArgs(argv) {
   let workspaceArg = null;
-  const options = { modelCmd: "claude -p", durationMs: 25000, retries: 2, dryRun: false, skipLint: false };
+  const options = { modelCmd: "claude -p", durationMs: 25000, durationExplicit: false, retries: 2, dryRun: false, skipLint: false };
   const valueOptions = new Map([
     ["--brand", "brand"],
     ["--topic", "topic"],
@@ -91,14 +91,13 @@ export function parseArgs(argv) {
       }
       if (!value) throw new Error(`${optionName} requires a value`);
       options[valueOptions.get(optionName)] = value;
+      if (optionName === "--duration-ms") options.durationExplicit = true;
       continue;
     }
     throw new Error(`unknown argument ${arg}`);
   }
 
   if (!workspaceArg) throw new Error("missing workspace directory");
-  if (!options.brand) throw new Error("missing --brand");
-  if (!options.topic) throw new Error("missing --topic");
   if (options.tagline !== undefined && options.tagline.length > COPY_LIMITS.close.tagline) {
     throw new Error(`--tagline must be ${COPY_LIMITS.close.tagline} characters or fewer (got ${options.tagline.length})`);
   }
@@ -180,13 +179,34 @@ function scriptExample() {
   };
 }
 
-export function buildPrompt(brand, topic, targetDurationMs) {
+function promptList(values) {
+  return Array.isArray(values) && values.length > 0 ? values.map((value) => `- ${value}`).join("\n") : "- none";
+}
+
+export function buildPrompt(brand, topic, targetDurationMs, brief = null) {
   const tone = brand.voice.tone.map((word) => `- ${word}`).join("\n");
+  const briefSection = brief ? `
+BRIEF - creative contract. These values are copied verbatim from brief.json:
+audience: ${brief.audience}
+hook archetype: ${brief.hookArchetype}
+hook line: ${brief.hookLine || "none"}
+core mechanic: ${brief.coreMechanic}
+facts:
+${promptList(brief.facts)}
+allowed beat kinds:
+${promptList(brief.beatKinds)}
+required phrases:
+${promptList(brief.requiredPhrases)}
+banned phrases:
+${promptList(brief.bannedPhrases)}
+notes: ${brief.notes || ""}
+` : "";
   return `You are writing stage 1 of a short-form video pipeline.
 
 Topic: ${topic}
 Target total beat duration: ${targetDurationMs}ms
 Brand: ${brand.name}
+${briefSection}
 
 Brand voice tone:
 ${tone}
@@ -221,6 +241,14 @@ Rules:
 - caption has at most ${COPY_LIMITS.caption.lines} newline-separated lines and each line is <= ${COPY_LIMITS.caption.line} characters.
 - hashtags must contain ${COPY_LIMITS.hashtags.min} to ${COPY_LIMITS.hashtags.max} strings, each starting with # and containing no spaces.
 - Do not use any banned phrases from the brand voice notes, case-insensitively.
+${brief ? `- coreMechanic in the output must equal the brief core mechanic, ignoring surrounding whitespace and letter case.
+- The first beat must follow the brief hook archetype: ${brief.hookArchetype}.
+- Every figure beat value.to, axis number, and number in figure label, unitLabel, goalText, tick text or stamp text must come from a number in brief.facts.
+- Use only the allowed beat kinds from the brief.
+- Every required phrase must appear somewhere on screen, and every banned phrase from the brief must be absent.
+- If the brief hook line is set, the first beat's first on-screen text must equal it exactly.
+- The brief is the creative contract. Do not invent facts, numbers, hook copy, mechanics or close data outside it.
+` : ""}
 - Respond with JSON only, no prose and no markdown.
 `;
 }
@@ -420,7 +448,65 @@ function allStrings(value) {
   return [];
 }
 
-export function validateScript(script, brandName, workspaceId, notes) {
+function numbersIn(value) {
+  return String(value ?? "").match(/-?\d+(?:\.\d+)?/g)?.map(Number) ?? [];
+}
+
+function firstBeatText(beat) {
+  if (!beat || typeof beat !== "object") return "";
+  if (beat.kind === "moment") return beat.line ?? "";
+  if (beat.kind === "question") return beat.lines?.[0] ?? "";
+  if (beat.kind === "figure") return beat.label ?? "";
+  if (beat.kind === "verdict") return beat.lines?.[0] ?? "";
+  return "";
+}
+
+function screenStrings(script) {
+  const strings = [];
+  for (const beat of script.beats ?? []) {
+    if (beat?.kind === "moment") strings.push(beat.eyebrow, beat.line, ...(beat.thoughts ?? []));
+    if (beat?.kind === "question") strings.push(beat.kicker, ...(beat.lines ?? []), beat.dek);
+    if (beat?.kind === "figure") strings.push(beat.label, beat.unitLabel, beat.goalText, beat.minTick, beat.achievedTick, beat.goalTick, ...(beat.stamps ?? []).map((stamp) => stamp?.text), beat.value?.to);
+    if (beat?.kind === "verdict") strings.push(...(beat.lines ?? []));
+  }
+  strings.push(script.close?.line, script.close?.tagline, script.close?.url);
+  return strings.filter((value) => value !== undefined && value !== null).map(String);
+}
+
+function validateBriefContract(script, brief, violations) {
+  if (!brief) return;
+  if (typeof script.coreMechanic === "string" && script.coreMechanic.trim().toLowerCase() !== String(brief.coreMechanic).trim().toLowerCase()) {
+    violations.push("brief rule: coreMechanic must equal brief.coreMechanic");
+  }
+  if (Array.isArray(brief.beatKinds) && Array.isArray(script.beats)) {
+    const allowed = new Set(brief.beatKinds);
+    script.beats.forEach((beat, index) => {
+      if (beat && !allowed.has(beat.kind)) violations.push(`brief rule: beats[${index}].kind ${beat.kind} is not allowed by brief.beatKinds`);
+    });
+  }
+  const factNumbers = new Set((brief.facts ?? []).flatMap(numbersIn));
+  script.beats?.forEach((beat, index) => {
+    if (beat?.kind !== "figure") return;
+    const numbers = [beat.value?.to, beat.axis?.min, beat.axis?.max, beat.axis?.achieved, beat.axis?.goal].flatMap(numbersIn);
+    for (const field of ["label", "unitLabel", "goalText", "minTick", "achievedTick", "goalTick"]) numbers.push(...numbersIn(beat[field]));
+    for (const stamp of beat.stamps ?? []) numbers.push(...numbersIn(stamp?.text));
+    for (const number of numbers) {
+      if (!factNumbers.has(number)) violations.push(`brief rule: beats[${index}] figure number ${number} is not in brief.facts`);
+    }
+  });
+  const screenText = screenStrings(script).join("\n").toLowerCase();
+  for (const phrase of brief.requiredPhrases ?? []) {
+    if (!screenText.includes(String(phrase).toLowerCase())) violations.push(`brief rule: required phrase missing: ${phrase}`);
+  }
+  for (const phrase of brief.bannedPhrases ?? []) {
+    if (allStrings(script).join("\n").toLowerCase().includes(String(phrase).toLowerCase())) violations.push(`brief rule: banned phrase found: ${phrase}`);
+  }
+  if (brief.hookLine && Array.isArray(script.beats) && script.beats.length > 0 && firstBeatText(script.beats[0]) !== brief.hookLine) {
+    violations.push("brief rule: first beat hook line does not equal brief.hookLine");
+  }
+}
+
+export function validateScript(script, brandName, workspaceId, notes, brief = null) {
   const violations = [];
   if (!script || typeof script !== "object" || Array.isArray(script)) {
     return ["script must be a JSON object"];
@@ -485,10 +571,11 @@ export function validateScript(script, brandName, workspaceId, notes) {
       violations.push(`banned phrase found: ${phrase}`);
     }
   }
+  validateBriefContract(script, brief, violations);
   return violations;
 }
 
-function applyModules(script, options) {
+function applyModules(script, options, brief) {
   if (Object.prototype.hasOwnProperty.call(script, "modules")) {
     console.log("dropped model-provided modules");
   }
@@ -501,15 +588,19 @@ function applyModules(script, options) {
     console.log("dropped model-provided close.tagline");
     delete script.close.tagline;
   }
-  if (options.url !== undefined && script.close && typeof script.close === "object" && !Array.isArray(script.close)) {
-    script.close.url = options.url;
+  const url = options.url !== undefined ? options.url : brief?.url;
+  const tagline = options.tagline !== undefined ? options.tagline : brief?.tagline;
+  if (url !== undefined && url !== "none" && script.close && typeof script.close === "object" && !Array.isArray(script.close)) {
+    script.close.url = url;
   }
-  if (options.tagline !== undefined && script.close && typeof script.close === "object" && !Array.isArray(script.close)) {
-    script.close.tagline = options.tagline;
+  if (tagline !== undefined && tagline !== "none" && script.close && typeof script.close === "object" && !Array.isArray(script.close)) {
+    script.close.tagline = tagline;
   }
   const modules = {};
-  if (options.vo !== undefined) modules.vo = { voice: options.vo };
-  if (options.music !== undefined) modules.music = { file: options.music };
+  const voice = options.vo !== undefined ? options.vo : brief?.voice;
+  const music = options.music !== undefined ? options.music : brief?.music;
+  if (voice !== undefined && voice !== "none") modules.vo = { voice };
+  if (music !== undefined && music !== "none") modules.music = { file: music };
   if (Object.keys(modules).length > 0) script.modules = modules;
 }
 
@@ -576,9 +667,24 @@ function attemptWorkspace(workspaceDir, script) {
 function run(options) {
   const workspaceDir = resolve(repoRoot, options.workspaceArg);
   const workspaceId = basename(workspaceDir);
-  const brand = readBrand(options.brand);
-  const prompt = buildPrompt(brand, options.topic, options.durationMs);
   mkdirSync(workspaceDir, { recursive: true });
+  const briefPath = join(workspaceDir, "brief.json");
+  let brief = null;
+  if (existsSync(briefPath)) {
+    try {
+      brief = JSON.parse(readFileSync(briefPath, "utf8"));
+    } catch (error) {
+      throw new Error(`could not read or parse ${briefPath}: ${error.message}`);
+    }
+  }
+  const brandName = options.brand ?? brief?.brand;
+  const topic = options.topic ?? brief?.topic;
+  if (!brandName) throw new Error("missing --brand (or brief.brand)");
+  if (!topic) throw new Error("missing --topic (or brief.topic)");
+  if (options.topic && brief?.topic) console.log("--topic overrides brief.topic");
+  const brand = readBrand(brandName);
+  const targetDurationMs = options.durationExplicit ? options.durationMs : brief?.targetDurationMs ?? options.durationMs;
+  const prompt = buildPrompt(brand, topic, targetDurationMs, brief);
 
   if (options.dryRun) {
     const promptPath = join(workspaceDir, "script-prompt.md");
@@ -617,9 +723,9 @@ function run(options) {
     }
 
     if (script) {
-      applyModules(script, options);
+      applyModules(script, options, brief);
       lastParsedScript = script;
-      violations = validateScript(script, options.brand, workspaceId, brand.voice.notes);
+      violations = validateScript(script, brandName, workspaceId, brand.voice.notes, brief);
       if (violations.length === 0) {
         const tempWorkspace = attemptWorkspace(workspaceDir, script);
         try {

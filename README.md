@@ -44,6 +44,18 @@ Draft a validated stage 1 script with a configured model CLI:
 node bin/script.mjs workspace/demo --brand regulate --topic "cannot sleep at 3am" [--vo <voice-id>] [--music <file>] [--url <url>] [--tagline <text>]
 ```
 
+Start a creative brief first with the interview stage:
+
+```sh
+node bin/interview.mjs workspace/demo [--answers <file.json>] [--brand <name>] [--defaults]
+```
+
+When `brief.json` exists, script generation uses its topic, mechanic, facts,
+allowed beat kinds, phrases, modules and close data as the creative contract.
+Explicit script flags override the matching brief values. A reel with neither
+`brief.json` nor `script.json` runs interview before script; existing scripts
+continue directly to downstream stages.
+
 Script generation retries layout lint failures twice by default. Use
 `--retries N`, `--skip-lint`, or `--lint-cmd <command>` to control that loop.
 
