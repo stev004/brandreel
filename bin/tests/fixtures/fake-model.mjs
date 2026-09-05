@@ -42,7 +42,7 @@ const script = {
     },
     { kind: "verdict", lines: ["Start with less."], durationMs: invalid ? 10000 : 3000 },
   ],
-  close: { line: "Make room for the next breath.", showWordmark: true, durationMs: 1000 },
+  close: { line: "Make room for the next breath.", showWordmark: true, tagline: "Make room.", url: "https://model.example", durationMs: 3000 },
   caption: threeLineCaption ? "one\ntwo\nthree" : "A small shift can change tonight.",
   hashtags: [badHashtag ? "regulation" : "#regulation", "#rest", "#sleep"],
 };

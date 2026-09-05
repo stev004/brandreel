@@ -1,6 +1,6 @@
 # brandreel roadmap
 
-Where the pipeline goes from here. STATE.md = now; this = the arc. Updated 2026-09-03.
+Where the pipeline goes from here. STATE.md = now; this = the arc. Updated 2026-09-04.
 
 ## Phase 1 - finish the first real video (fusion, howclose)
 - [ ] Iterate the animatic past Steven's gate (rev6 parked "still not great"; working copy `animatics/howclose-fusion-v2.html`, parked copy in howclose.to repo `marketing/animatics/`). Next levers: scene 1/2 typography energy, statement copy voice pass against the brand book, maybe motion on the bars' entrances, test with the VO played alongside.
@@ -13,7 +13,7 @@ Where the pipeline goes from here. STATE.md = now; this = the arc. Updated 2026-
 - [x] `bin/script.mjs` LLM stage (09-04). Open: stop the model inventing modules.vo/music; voice id should come from brand.json.
 - [x] `bin/review.mjs` review sheet (09-04).
 - [x] Karaoke captions (09-04).
-- [x] Layout manifest (stage 5, `bin/manifest.mjs`) + stage 7 lints: safe zones, text fit, hook, pacing, CTA, pixel bands (09-04, `feature/layout-lints`). Open: minimum close dwell (G5), caption/thought overlap rule, real glyph measurement.
+- [x] Layout manifest (stage 5, `bin/manifest.mjs`) + stage 7 lints: safe zones, text fit, hook, pacing, CTA, pixel bands (09-04, `feature/layout-lints`). CTA dwell + overlap lints landed 09-04 (`feature/cta-lint`). Open: real glyph measurement.
 - [ ] GitHub remote + CI renders on push (workflow already written).
 
 ## Phase 3 - footage + more brands

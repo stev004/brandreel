@@ -1,0 +1,29 @@
+{
+  "ok": false,
+  "violations": [
+    "[cta] CTA on screen for 1000ms; minimum 2500ms"
+  ],
+  "stream": {
+    "width": null,
+    "height": null,
+    "avgFrameRate": null,
+    "duration": null
+  },
+  "rules": {
+    "width": "skipped",
+    "height": "skipped",
+    "fps": "skipped",
+    "duration": "skipped",
+    "safe-zone": "pass",
+    "text-fit": "pass",
+    "hook": "pass",
+    "pacing": "pass",
+    "cta": "fail",
+    "overlap": "pass",
+    "pixel-bands": "skipped"
+  },
+  "samples": 0,
+  "closeDwellMs": 1500,
+  "ctaDwellMs": 1000,
+  "durationOverrideReason": null
+}

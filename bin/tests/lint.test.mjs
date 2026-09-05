@@ -9,6 +9,7 @@ import {
   cta,
   durationCheck,
   hook,
+  overlap,
   pacing,
   pixelBands,
   safeZones,
@@ -64,14 +65,67 @@ test("pacing failing fixture catches a gap over three seconds", () => {
   assert.match(violations[0], /^\[pacing\]/);
 });
 
-test("CTA passing fixture has a close line before the timeline ends", () => {
+test("CTA passing fixture has rendered close text for the minimum dwell", () => {
   assert.deepEqual(cta(fixture("lint-cta-pass.json"), closeScript), []);
 });
 
-test("CTA failing fixture catches a close at the timeline end", () => {
+test("CTA failing fixture reports when no close text is rendered", () => {
   const violations = cta(fixture("lint-cta-fail.json"), closeScript);
   assert.equal(violations.length, 1);
-  assert.match(violations[0], /^\[cta\]/);
+  assert.equal(violations[0], "[cta] no rendered CTA text element in the close");
+});
+
+test("CTA fails on a short rendered tagline even when close.line is non-empty", () => {
+  const violations = cta(fixture("lint-cta-tagline-short.json"), closeScript);
+  assert.deepEqual(violations, ["[cta] CTA on screen for 1000ms; minimum 2500ms"]);
+});
+
+test("CTA passes when a tagline alone is rendered for at least 2500ms", () => {
+  const manifest = fixture("lint-cta-tagline-short.json");
+  manifest.elements[0].fromMs = 23500;
+  assert.deepEqual(cta(manifest, closeScript), []);
+});
+
+test("CTA fails closed when a rendered close tagline has malformed timing", () => {
+  const manifest = fixture("lint-cta-tagline-short.json");
+  manifest.elements[0].fromMs = "x";
+  const violations = cta(manifest, closeScript);
+  assert.ok(violations.some((violation) => violation.startsWith("[cta] cannot measure CTA dwell:")));
+});
+
+test("CTA fails closed when total duration is missing", () => {
+  const manifest = fixture("lint-cta-tagline-short.json");
+  delete manifest.totalDurationMs;
+  const violations = cta(manifest, closeScript);
+  assert.ok(violations.some((violation) => violation.startsWith("[cta] cannot measure CTA dwell:")));
+});
+
+test("overlap passes for text boxes that do not intersect", () => {
+  assert.deepEqual(overlap({
+    elements: [
+      { id: "a", text: "A", x: 0, y: 0, w: 100, h: 50, fromMs: 0, toMs: 1000 },
+      { id: "b", text: "B", x: 0, y: 60, w: 100, h: 50, fromMs: 0, toMs: 1000 },
+    ],
+  }), []);
+});
+
+test("overlap reports two text boxes intersecting in time and space", () => {
+  const violations = overlap({
+    elements: [
+      { id: "a", text: "A", x: 10, y: 20, w: 100, h: 50, fromMs: 100, toMs: 1000 },
+      { id: "b", text: "B", x: 50, y: 40, w: 100, h: 50, fromMs: 500, toMs: 1200 },
+    ],
+  });
+  assert.deepEqual(violations, ["[overlap] a and b intersect at 50,40 during 500-1000ms"]);
+});
+
+test("overlap passes when text boxes do not intersect in time", () => {
+  assert.deepEqual(overlap({
+    elements: [
+      { id: "a", text: "A", x: 0, y: 0, w: 100, h: 50, fromMs: 0, toMs: 500 },
+      { id: "b", text: "B", x: 0, y: 0, w: 100, h: 50, fromMs: 600, toMs: 1000 },
+    ],
+  }), []);
 });
 
 test("duration fixture fails without a valid override", () => {
@@ -103,7 +157,9 @@ test("no-render lint writes a report with render rules skipped", () => {
     assert.equal(report.rules.fps, "skipped");
     assert.equal(report.rules.duration, "skipped");
     assert.equal(report.rules["pixel-bands"], "skipped");
+    assert.equal(report.rules.overlap, "pass");
     assert.equal(report.closeDwellMs, 3000);
+    assert.equal(report.ctaDwellMs, 3000);
     assert.equal(existsSync(join(workspace, "render.mp4")), false);
   } finally {
     rmSync(workspace, { recursive: true, force: true });

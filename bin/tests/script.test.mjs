@@ -5,7 +5,7 @@ import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { spawnSync } from "node:child_process";
 
-import { validateScript } from "../script.mjs";
+import { buildPrompt, validateScript } from "../script.mjs";
 
 const repoRoot = new URL("../..", import.meta.url).pathname;
 const scriptCli = join(repoRoot, "bin", "script.mjs");
@@ -41,7 +41,7 @@ function validationScript(durations = { moment: 3000, question: 3000, figure: 60
       },
       { kind: "verdict", lines: ["Start with less."], durationMs: durations.verdict },
     ],
-    close: { line: "Make room.", showWordmark: true },
+    close: { line: "Make room.", showWordmark: true, durationMs: 3000 },
     caption: "A small shift.",
     hashtags: ["#one", "#two", "#three"],
   };
@@ -104,6 +104,57 @@ test("a model module is dropped when no module flags are given", () => {
     assert.equal(result.status, 0, result.stderr);
     const script = JSON.parse(readFileSync(join(dir, "script.json"), "utf8"));
     assert.equal(Object.hasOwn(script, "modules"), false);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("model-provided close.url and close.tagline are dropped", () => {
+  const dir = workspace();
+  try {
+    const result = runScript(dir, ["--model-cmd", `node ${fakeModel}`]);
+    assert.equal(result.status, 0, result.stderr);
+    const script = JSON.parse(readFileSync(join(dir, "script.json"), "utf8"));
+    assert.equal(Object.hasOwn(script.close, "url"), false);
+    assert.equal(Object.hasOwn(script.close, "tagline"), false);
+    assert.match(result.stdout, /dropped model-provided close\.url/);
+    assert.match(result.stdout, /dropped model-provided close\.tagline/);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("--url sets the close URL after dropping any model URL", () => {
+  const dir = workspace();
+  try {
+    const result = runScript(dir, ["--url", "https://regulate.example", "--tagline", "Make room.", "--model-cmd", `node ${fakeModel}`]);
+    assert.equal(result.status, 0, result.stderr);
+    const script = JSON.parse(readFileSync(join(dir, "script.json"), "utf8"));
+    assert.equal(script.close.url, "https://regulate.example");
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("--tagline sets the close tagline after dropping any model tagline", () => {
+  const dir = workspace();
+  try {
+    const result = runScript(dir, ["--tagline", "Make room.", "--model-cmd", `node ${fakeModel}`]);
+    assert.equal(result.status, 0, result.stderr);
+    const script = JSON.parse(readFileSync(join(dir, "script.json"), "utf8"));
+    assert.equal(script.close.tagline, "Make room.");
+    assert.match(result.stdout, /dropped model-provided close\.tagline/);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("--tagline rejects values over eighteen characters", () => {
+  const dir = workspace();
+  try {
+    const result = runScript(dir, ["--dry-run", "--tagline", "1234567890123456789"]);
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /--tagline must be 18 characters or fewer/);
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
@@ -184,9 +235,46 @@ test("dry-run prompt states the copy limits and module rule", () => {
     assert.match(prompt, /stamp after 5600ms/);
     assert.match(prompt, /caption has at most 2 newline-separated lines/);
     assert.match(prompt, /Do not emit a modules key/);
+    assert.match(prompt, /Do not emit close\.url/);
+    assert.match(prompt, /Do not emit close\.tagline; a curated tagline is supplied only by the --tagline flag/);
+    assert.match(prompt, /2500 and 3000ms for a plain close/);
+    assert.match(prompt, /2500 and 3500ms for a tagline-only close/);
+    assert.match(prompt, /2500 and 3800ms for a close with a URL/);
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
+});
+
+test("plain close duration must be between 2500 and 3000ms", () => {
+  const rejected = validationScript();
+  rejected.close.durationMs = 2000;
+  assert.ok(validateScript(rejected, "regulate", "validation", "").some((violation) => violation.includes("close.durationMs must be between 2500 and 3000ms for plain close")));
+
+  const accepted = validationScript();
+  accepted.close.durationMs = 3000;
+  assert.equal(validateScript(accepted, "regulate", "validation", "").some((violation) => violation.startsWith("close.durationMs")), false);
+});
+
+test("plain close rejects 3800ms because its maximum is 3000ms", () => {
+  const script = validationScript();
+  script.close.durationMs = 3800;
+  const violations = validateScript(script, "regulate", "validation", "");
+  assert.ok(violations.some((violation) => violation.includes("plain close") && violation.includes("3000ms")));
+});
+
+test("tagline-only close rejects 3600ms because its maximum is 3500ms", () => {
+  const script = validationScript();
+  script.close.tagline = "Make room.";
+  script.close.durationMs = 3600;
+  const violations = validateScript(script, "regulate", "validation", "");
+  assert.ok(violations.some((violation) => violation.includes("tagline-only close") && violation.includes("3500ms")));
+});
+
+test("close with a URL accepts 3800ms", () => {
+  const script = validationScript();
+  script.close.url = "https://regulate.example";
+  script.close.durationMs = 3800;
+  assert.equal(validateScript(script, "regulate", "validation", "").some((violation) => violation.startsWith("close.durationMs")), false);
 });
 
 test("fenced JSON is extracted and persisted", () => {

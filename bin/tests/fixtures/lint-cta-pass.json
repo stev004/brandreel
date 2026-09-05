@@ -1,4 +1,14 @@
 {
   "totalDurationMs": 10000,
-  "closeStartMs": 1000
+  "closeStartMs": 7500,
+  "elements": [{
+    "id": "close-line",
+    "text": "Make room for the next breath.",
+    "x": 60,
+    "y": 700,
+    "w": 900,
+    "h": 121.4,
+    "fromMs": 7500,
+    "toMs": 10000
+  }]
 }

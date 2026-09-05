@@ -1,0 +1,27 @@
+{
+  "ok": true,
+  "violations": [],
+  "stream": {
+    "width": 1080,
+    "height": 1920,
+    "avgFrameRate": "60/1",
+    "duration": 28
+  },
+  "rules": {
+    "width": "pass",
+    "height": "pass",
+    "fps": "pass",
+    "duration": "pass",
+    "safe-zone": "pass",
+    "text-fit": "pass",
+    "hook": "pass",
+    "pacing": "pass",
+    "cta": "pass",
+    "overlap": "pass",
+    "pixel-bands": "pass"
+  },
+  "samples": 56,
+  "closeDwellMs": 3000,
+  "ctaDwellMs": 2500,
+  "durationOverrideReason": null
+}

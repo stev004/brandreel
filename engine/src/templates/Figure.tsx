@@ -131,11 +131,13 @@ export const Figure = ({ brand, beat }: FigureProps) => {
           position: "absolute",
           left: FIGURE_LAYOUT.contentX,
           top: FIGURE_LAYOUT.counterTop,
+          width: FIGURE_LAYOUT.counterWidth,
           color: brand.palette.fg,
           fontFamily: fonts.mono,
           fontSize: FIGURE_LAYOUT.counterFontSize,
           fontWeight: 600,
           fontVariantNumeric: "tabular-nums",
+          overflow: "hidden",
           opacity: intro,
         }}
       >

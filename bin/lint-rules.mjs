@@ -1,4 +1,6 @@
 const DEFAULT_SAFE = { top: 150, bottom: 320, left: 60, right: 120 };
+export const MIN_CTA_DWELL_MS = 2500;
+const CTA_TEXT_IDS = new Set(["close-line", "close-tagline", "close-url"]);
 
 function elementsOf(manifest) {
   return Array.isArray(manifest?.elements) ? manifest.elements : [];
@@ -102,18 +104,61 @@ export function pacing(manifest) {
 }
 
 export function cta(manifest, script) {
-  const violations = [];
-  const closeStartMs = manifest?.closeStartMs;
+  void script;
+  const ctaElements = elementsOf(manifest).filter((element) => (
+    CTA_TEXT_IDS.has(element?.id) && typeof element?.text === "string" && element.text.trim() !== ""
+  ));
+  if (ctaElements.length === 0) return ["[cta] no rendered CTA text element in the close"];
+
+  if (!isNumber(manifest?.totalDurationMs)) {
+    return ["[cta] cannot measure CTA dwell: manifest.totalDurationMs must be a number"];
+  }
+  const malformedStart = ctaElements.find((element) => !isNumber(element.fromMs));
+  if (malformedStart) {
+    return [`[cta] cannot measure CTA dwell: ${elementName(malformedStart, 0)}.fromMs must be a number`];
+  }
+
+  const dwellMs = ctaDwellMs(manifest);
+  if (isNumber(dwellMs) && dwellMs < MIN_CTA_DWELL_MS) {
+    return [`[cta] CTA on screen for ${dwellMs}ms; minimum ${MIN_CTA_DWELL_MS}ms`];
+  }
+  return [];
+}
+
+export function ctaDwellMs(manifest) {
+  const ctaElements = elementsOf(manifest).filter((element) => (
+    CTA_TEXT_IDS.has(element?.id) && typeof element?.text === "string" && element.text.trim() !== ""
+  ));
   const totalDurationMs = manifest?.totalDurationMs;
-  const closeLine = script?.close?.line;
+  const starts = ctaElements.map((element) => element.fromMs);
+  if (ctaElements.length === 0 || !isNumber(totalDurationMs) || starts.some((startMs) => !isNumber(startMs))) return null;
+  return totalDurationMs - Math.min(...starts);
+}
 
-  if (!isNumber(closeStartMs) || !isNumber(totalDurationMs) || closeStartMs >= totalDurationMs) {
-    violations.push(`[cta] close must start before the end of the timeline; got ${closeStartMs ?? "missing"}ms of ${totalDurationMs ?? "missing"}ms`);
-  }
-  if (typeof closeLine !== "string" || closeLine.trim() === "") {
-    violations.push("[cta] script.close.line must be non-empty");
-  }
+function boxesIntersect(a, b) {
+  return a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
+}
 
+export function overlap(manifest) {
+  const textElements = elementsOf(manifest).filter((element) => (
+    typeof element?.text === "string" && element.text.trim() !== ""
+  ));
+  const violations = [];
+
+  for (let firstIndex = 0; firstIndex < textElements.length; firstIndex += 1) {
+    const first = textElements[firstIndex];
+    if (![first.x, first.y, first.w, first.h, first.fromMs, first.toMs].every(isNumber)) continue;
+    for (let secondIndex = firstIndex + 1; secondIndex < textElements.length; secondIndex += 1) {
+      const second = textElements[secondIndex];
+      if (![second.x, second.y, second.w, second.h, second.fromMs, second.toMs].every(isNumber)) continue;
+      const fromMs = Math.max(first.fromMs, second.fromMs);
+      const toMs = Math.min(first.toMs, second.toMs);
+      if (fromMs >= toMs || !boxesIntersect(first, second)) continue;
+      const x = Math.max(first.x, second.x);
+      const y = Math.max(first.y, second.y);
+      violations.push(`[overlap] ${first.id} and ${second.id} intersect at ${x},${y} during ${fromMs}-${toMs}ms`);
+    }
+  }
   return violations;
 }
 

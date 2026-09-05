@@ -1,0 +1,16 @@
+{
+  "totalDurationMs": 26000,
+  "closeStartMs": 25000,
+  "elements": [
+    {
+      "id": "close-tagline",
+      "text": "Make room.",
+      "x": 60,
+      "y": 830,
+      "w": 900,
+      "h": 149.2,
+      "fromMs": 25000,
+      "toMs": 26000
+    }
+  ]
+}

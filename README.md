@@ -26,7 +26,7 @@ Use `node bin/lint.mjs workspace/demo --no-render` to lint layout.json without
 ffprobe or pixel sampling. The render-dependent rules are marked skipped.
 
 The linter checks the 1080x1920, 60fps render with ffprobe, validates the
-layout.json safe zones, text fit, hook, pacing and CTA rules, and samples
+layout.json safe zones, text fit, hook, pacing, CTA and text overlap rules, and samples
 rendered pixels for overflow in the top, bottom and right bands. Use
 `--no-pixels` when ffmpeg frame decoding is not available. A
 `durationOverride` with a non-empty `reason` in script.json skips the 15-35
@@ -41,7 +41,7 @@ node bin/reel.mjs workspace/demo --dry-run
 Draft a validated stage 1 script with a configured model CLI:
 
 ```sh
-node bin/script.mjs workspace/demo --brand regulate --topic "cannot sleep at 3am" [--vo <voice-id>] [--music <file>]
+node bin/script.mjs workspace/demo --brand regulate --topic "cannot sleep at 3am" [--vo <voice-id>] [--music <file>] [--url <url>] [--tagline <text>]
 ```
 
 Script generation retries layout lint failures twice by default. Use

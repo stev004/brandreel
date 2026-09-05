@@ -1,0 +1,93 @@
+{
+  "id": "smoke-3am-v3",
+  "brand": "regulate",
+  "coreMechanic": "A settle counter climbs from zero toward a goal marker while stamps mark real moments of calming down.",
+  "beats": [
+    {
+      "kind": "moment",
+      "eyebrow": "HOOK",
+      "line": "3am. Still in that meeting.",
+      "thoughts": [
+        "Replaying what you should've said."
+      ],
+      "bg": "#0a1812",
+      "durationMs": 4000
+    },
+    {
+      "kind": "question",
+      "kicker": "NOTICE",
+      "lines": [
+        "Mind racing?"
+      ],
+      "dek": "That's your body, not your mind.",
+      "durationMs": 4500
+    },
+    {
+      "kind": "moment",
+      "eyebrow": "THE DIFFERENCE",
+      "line": "It's not about calming your mind.",
+      "thoughts": [
+        "It's about calming your body first."
+      ],
+      "bg": "#0a1812",
+      "durationMs": 4000
+    },
+    {
+      "kind": "figure",
+      "label": "Minutes to settle",
+      "unitLabel": "min",
+      "value": {
+        "to": 4,
+        "decimals": 0
+      },
+      "goalText": "One settled breath",
+      "axis": {
+        "min": 0,
+        "max": 6,
+        "achieved": 2,
+        "goal": 4
+      },
+      "achievedTick": "Now",
+      "goalTick": "Goal",
+      "minTick": "0",
+      "stamps": [
+        {
+          "tone": "done",
+          "text": "First breath",
+          "offsetMs": 1000
+        },
+        {
+          "tone": "done",
+          "text": "Body settling",
+          "offsetMs": 7000
+        }
+      ],
+      "flash": {
+        "colorKey": "accent"
+      },
+      "durationMs": 8500
+    },
+    {
+      "kind": "verdict",
+      "lines": [
+        "You're not broken.",
+        "Just still running."
+      ],
+      "durationMs": 4000
+    }
+  ],
+  "close": {
+    "line": "Try it before 3am arrives again.",
+    "showWordmark": true,
+    "tagline": "Not meditation.",
+    "durationMs": 3000,
+    "url": "regulate.app"
+  },
+  "caption": "Still replaying the meeting at 3am?\nRegulate, don't relive it.",
+  "hashtags": [
+    "#regulate",
+    "#3am",
+    "#nervoussystem",
+    "#stillrunning"
+  ]
+}

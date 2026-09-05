@@ -12,6 +12,23 @@ import {
 } from "./config";
 import type { Beat, BrandKit, Script } from "./schema";
 
+export const CAPTION_LAYOUT = {
+  contentX: SAFE_LEFT,
+  contentWidth: WIDTH - SAFE_LEFT - SAFE_RIGHT,
+  fontSize: 36,
+  lineHeight: 1.25,
+  maxWordsPerLine: 5,
+  maxLines: 2,
+  bottomOffset: 42,
+} as const;
+
+const lineBoxHeight = (fontSize: number, lineHeight: number, maxLines: number): number =>
+  fontSize * lineHeight * maxLines;
+
+const MOMENT_MAX_THOUGHTS = 3;
+const MOMENT_THOUGHT_CAPTION_GAP = 40;
+const MOMENT_THOUGHT_PREFERRED_STEP = 140;
+
 export const MOMENT_LAYOUT = {
   contentX: SAFE_LEFT,
   contentWidth: WIDTH - SAFE_LEFT - SAFE_RIGHT,
@@ -27,9 +44,38 @@ export const MOMENT_LAYOUT = {
   thoughtFontSize: 30,
   thoughtLineHeight: 1.3,
   thoughtMaxLines: 3,
-  thoughtStep: 140,
+  thoughtStep: MOMENT_THOUGHT_PREFERRED_STEP,
   thoughtEntranceDrift: 24,
 };
+
+const deriveMomentThoughtGeometry = (): Pick<typeof MOMENT_LAYOUT, "thoughtsTop" | "thoughtStep"> => {
+  const captionTop = HEIGHT - SAFE_BOTTOM - CAPTION_LAYOUT.bottomOffset -
+    lineBoxHeight(CAPTION_LAYOUT.fontSize, CAPTION_LAYOUT.lineHeight, CAPTION_LAYOUT.maxLines);
+  const thoughtHeight = lineBoxHeight(
+    MOMENT_LAYOUT.thoughtFontSize,
+    MOMENT_LAYOUT.thoughtLineHeight,
+    MOMENT_LAYOUT.thoughtMaxLines,
+  ) + MOMENT_LAYOUT.thoughtEntranceDrift;
+  const minimumThoughtsTop = MOMENT_LAYOUT.momentLineTop +
+    lineBoxHeight(
+      MOMENT_LAYOUT.momentLineFontSize,
+      MOMENT_LAYOUT.momentLineHeight,
+      MOMENT_LAYOUT.momentLineMaxLines,
+    ) + MOMENT_LAYOUT.momentLineEntranceDrift + MOMENT_THOUGHT_CAPTION_GAP;
+  const maximumThoughtStep = Math.floor(
+    (captionTop - MOMENT_THOUGHT_CAPTION_GAP - thoughtHeight - minimumThoughtsTop) /
+      (MOMENT_MAX_THOUGHTS - 1),
+  );
+  const thoughtStep = Math.max(0, Math.min(MOMENT_THOUGHT_PREFERRED_STEP, maximumThoughtStep));
+
+  return {
+    thoughtStep,
+    thoughtsTop: captionTop - MOMENT_THOUGHT_CAPTION_GAP - thoughtHeight -
+      (MOMENT_MAX_THOUGHTS - 1) * thoughtStep,
+  };
+};
+
+Object.assign(MOMENT_LAYOUT, deriveMomentThoughtGeometry());
 
 export const QUESTION_LAYOUT = {
   contentX: SAFE_LEFT,
@@ -62,6 +108,12 @@ export const QUESTION_TIMING = {
 const FIGURE_AXIS_END = 860;
 const FIGURE_GOAL_X = 420;
 const FIGURE_GOAL_RING_SIZE = 46;
+const FIGURE_COUNTER_GOAL_GAP = 24;
+const FIGURE_GOAL_UNIT_LABEL_GAP = 16;
+const FIGURE_GOAL_TOP = 590;
+const FIGURE_GOAL_FONT_SIZE = 60;
+const FIGURE_GOAL_LINE_HEIGHT = 1.2;
+const FIGURE_GOAL_MAX_LINES = 2;
 
 export const FIGURE_LAYOUT = {
   contentX: SAFE_LEFT,
@@ -73,13 +125,17 @@ export const FIGURE_LAYOUT = {
   counterTop: 470,
   counterFontSize: 190,
   counterLineHeight: 1.2,
+  // A counter longer than this column clips in Figure.tsx; text-fit flags it.
+  counterWidth: FIGURE_GOAL_X - SAFE_LEFT - FIGURE_COUNTER_GOAL_GAP,
   goalX: FIGURE_GOAL_X,
   goalWidth: WIDTH - SAFE_RIGHT - FIGURE_GOAL_X,
-  goalTop: 590,
-  goalFontSize: 60,
-  goalLineHeight: 1.2,
-  goalMaxLines: 2,
-  unitLabelTop: 730,
+  goalTop: FIGURE_GOAL_TOP,
+  goalFontSize: FIGURE_GOAL_FONT_SIZE,
+  goalLineHeight: FIGURE_GOAL_LINE_HEIGHT,
+  goalMaxLines: FIGURE_GOAL_MAX_LINES,
+  unitLabelTop: FIGURE_GOAL_TOP +
+    FIGURE_GOAL_MAX_LINES * FIGURE_GOAL_FONT_SIZE * FIGURE_GOAL_LINE_HEIGHT +
+    FIGURE_GOAL_UNIT_LABEL_GAP,
   unitLabelFontSize: 28,
   unitLabelLetterSpacing: "0.18em",
   unitLabelLineHeight: 1.2,
@@ -183,16 +239,6 @@ export const CLOSE_D_TIMING = {
   logoMs: 200,
   taglineMs: 500,
   urlMs: 900,
-} as const;
-
-export const CAPTION_LAYOUT = {
-  contentX: SAFE_LEFT,
-  contentWidth: WIDTH - SAFE_LEFT - SAFE_RIGHT,
-  fontSize: 36,
-  lineHeight: 1.25,
-  maxWordsPerLine: 5,
-  maxLines: 2,
-  bottomOffset: 42,
 } as const;
 
 export const GLYPH_EM = {
@@ -575,9 +621,6 @@ const metadataForTextBox = (
   throw new Error(`No manifest metadata for text box ${box.id}`);
 };
 
-const lineBoxHeight = (fontSize: number, lineHeight: number, maxLines: number): number =>
-  fontSize * lineHeight * maxLines;
-
 export const computeTextBoxes = (script: Script, brand: BrandKit): LayoutTextBox[] => {
   const boxes: TextBox[] = [];
 
@@ -672,7 +715,7 @@ export const computeTextBoxes = (script: Script, brand: BrandKit): LayoutTextBox
         id: `beat-${index}-counter`,
         x: FIGURE_LAYOUT.contentX,
         y: FIGURE_LAYOUT.counterTop,
-        w: FIGURE_LAYOUT.contentWidth,
+        w: FIGURE_LAYOUT.counterWidth,
         h: lineBoxHeight(FIGURE_LAYOUT.counterFontSize, FIGURE_LAYOUT.counterLineHeight, 1),
       });
 
