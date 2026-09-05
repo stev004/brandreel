@@ -1,0 +1,66 @@
+{
+  "id": "regulate-sigh",
+  "brand": "regulate",
+  "coreMechanic": "One line of text at a time holds the screen for the length of one slow exhale, so the pacing itself is the regulation.",
+  "beats": [
+    {
+      "kind": "moment",
+      "eyebrow": "HOOK",
+      "line": "Can't meditate?",
+      "thoughts": [
+        "Neither could we."
+      ],
+      "bg": "#0a1812",
+      "durationMs": 3400
+    },
+    {
+      "kind": "question",
+      "kicker": "RECOGNITION",
+      "lines": [
+        "Sat still.",
+        "Felt worse."
+      ],
+      "dek": "Stillness isn't the goal.",
+      "durationMs": 4200
+    },
+    {
+      "kind": "verdict",
+      "lines": [
+        "The body leads.",
+        "Not the mind."
+      ],
+      "durationMs": 3600
+    },
+    {
+      "kind": "question",
+      "kicker": "DIFFERENCE",
+      "lines": [
+        "One line.",
+        "One breath."
+      ],
+      "dek": "Timed to one slow exhale.",
+      "durationMs": 4200
+    },
+    {
+      "kind": "verdict",
+      "lines": [
+        "Try one breath."
+      ],
+      "durationMs": 3000
+    }
+  ],
+  "close": {
+    "line": "Begin with one exhale.",
+    "showWordmark": true,
+    "durationMs": 3600,
+    "url": "regulate.app",
+    "tagline": "Not meditation. Regulation."
+  },
+  "caption": "Can't meditate? Neither could we.\nOne breath at a time.",
+  "hashtags": [
+    "#regulate",
+    "#breathe",
+    "#nervoussystem",
+    "#noquickfix"
+  ]
+}

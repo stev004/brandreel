@@ -1,5 +1,8 @@
 # SESSIONS - append-only log, newest first
 
+## 2026-09-05 - foreman run 4: interview stage + remote
+Steven merged cta-lint (fb3f599), resolved G1 (public remote, created), G3 (CC0 by path), G6 (two rows). Run landed on feature/interview: bin/interview.mjs + brief-enforced script.mjs, two-row tagline, thought/drift geometry model, lint-implying duration limits, CI with ffmpeg. First brief-driven video workspace/regulate-sigh passes all lints on the model's first attempt. Digest docs/runs/2026-09-05-digest-interview.md. Waiting on Steven: merge feature/interview, KEEP/TWEAK/KILL on regulate-sigh.
+
 ## 2026-09-04 (latest) - foreman run 3: CTA lint
 Steven merged layout-lints to main (2fd01a5) and started the CTA run. Landed on feature/cta-lint: cta lint from rendered close elements with 2500ms dwell, overlap lint (found two Figure template collisions, fixed), thought geometry derived from the caption box, script.mjs --url and close duration limits. smoke-3am-v3 passes all 11 rules. Digest docs/runs/2026-09-04-digest-cta-lint.md. Waiting on Steven: merge cta-lint, G1 remote.
 

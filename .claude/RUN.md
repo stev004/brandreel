@@ -1,5 +1,2 @@
-# RUN - in flight (interview run, started 2026-09-05T13:37)
-Predicate: run-start row 2026-09-05T13:37. Budget 5 iterations / 6 codex runs; spent: iteration 1, 2 runs.
-State branch feature/interview (worktree /private/tmp/fm-brandreel-state) from main fb3f599. Remote exists now: push the state branch after each write-back (git push -u origin feature/interview).
-In flight: I5 /private/tmp/br-i5-limits (fm/i5-limits) /private/tmp/claude-501/-Users-stevenmatson-Documents-brandreel/ca1cc81f-f570-49f0-9640-5a37fc3e573f/scratchpad/i5.last.md (last codex run). I1-I4 merged. After I5: regen workspace/regulate-sigh with claude -p, reel --skip vo,align,polish, digest + terra audit.
-Cold start: read reports; verify per VERIFY; commit; merge I2 then I1; director fills a brief (workspace/regulate-sigh: topic "Can't meditate? Neither could we.", Regulate) via --answers, runs node bin/script.mjs with claude -p, then reel --skip vo,align,polish; lint must pass; file evidence; digest + terra audit; push.
+# RUN - idle
+No run in flight. Last run 2026-09-05 (interview stage) met its predicate; digest docs/runs/2026-09-05-digest-interview.md. Next: Steven reviews workspace/regulate-sigh/review.md (KEEP/TWEAK/KILL); candidates in FRONTIER.md.
