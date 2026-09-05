@@ -1,0 +1,78 @@
+{
+  "violations": [
+    "[overlap] beat-1-question-line-0 and beat-1-question-line-1 intersect at 60,693.12 during 3900-6500ms",
+    "[overlap] beat-3-question-line-0 and beat-3-question-line-1 intersect at 60,693.12 during 10900-14000ms"
+  ],
+  "script": {
+    "id": "regulate-sigh",
+    "brand": "regulate",
+    "coreMechanic": "One line of text at a time holds the screen for the length of one slow exhale, so the pacing itself is the regulation.",
+    "beats": [
+      {
+        "kind": "moment",
+        "eyebrow": "HOOK",
+        "line": "Can't meditate?",
+        "bg": "#0a1812",
+        "durationMs": 3000
+      },
+      {
+        "kind": "question",
+        "kicker": "SO DID WE",
+        "lines": [
+          "Sat down.",
+          "Felt worse."
+        ],
+        "dek": "Tight chest. Shallow breath.",
+        "durationMs": 3500
+      },
+      {
+        "kind": "verdict",
+        "lines": [
+          "Not your mind.",
+          "Your body first."
+        ],
+        "durationMs": 3500
+      },
+      {
+        "kind": "question",
+        "kicker": "THE DIFFERENCE",
+        "lines": [
+          "One line.",
+          "One breath."
+        ],
+        "dek": "Paced to your exhale.",
+        "durationMs": 4000
+      },
+      {
+        "kind": "verdict",
+        "lines": [
+          "Breath sets pace.",
+          "No forcing calm."
+        ],
+        "durationMs": 4000
+      },
+      {
+        "kind": "verdict",
+        "lines": [
+          "Start with one.",
+          "Just one line."
+        ],
+        "durationMs": 4000
+      }
+    ],
+    "close": {
+      "line": "Less noise. One line at a time.",
+      "showWordmark": true,
+      "durationMs": 3100,
+      "url": "regulate.app",
+      "tagline": "Not meditation. Regulation."
+    },
+    "caption": "Can't sit still? You don't have to.\nOne line, one breath. That's it.",
+    "hashtags": [
+      "#regulate",
+      "#breathwork",
+      "#stillness",
+      "#noquickfix"
+    ]
+  }
+}

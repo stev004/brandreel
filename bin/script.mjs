@@ -28,7 +28,7 @@ export const COPY_LIMITS = {
     stamp: 32,
   },
   verdict: { line: 20, lines: 3 },
-  close: { line: 44, tagline: 18 },
+  close: { line: 44, tagline: 36 },
   caption: { lines: 2, line: 44 },
   hashtags: { min: 3, max: 6 },
 };
