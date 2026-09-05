@@ -1,7 +1,8 @@
 {
   "violations": [
-    "[overlap] beat-1-question-line-0 and beat-1-question-line-1 intersect at 60,693.12 during 3900-6500ms",
-    "[overlap] beat-3-question-line-0 and beat-3-question-line-1 intersect at 60,693.12 during 10900-14000ms"
+    "[hook] first visual change after 0ms must be at or before 3000ms; got 4000",
+    "[pacing] visual change gap 0-4000ms is greater than 3000ms",
+    "[cta] CTA on screen for 2300ms; minimum 2500ms"
   ],
   "script": {
     "id": "regulate-sigh",
@@ -13,66 +14,65 @@
         "eyebrow": "HOOK",
         "line": "Can't meditate?",
         "bg": "#0a1812",
+        "durationMs": 4000
+      },
+      {
+        "kind": "moment",
+        "eyebrow": "TRUTH",
+        "line": "Neither could we.",
+        "bg": "#0a1812",
         "durationMs": 3000
       },
       {
         "kind": "question",
-        "kicker": "SO DID WE",
+        "kicker": "REFRAME",
         "lines": [
-          "Sat down.",
-          "Felt worse."
+          "Not empty."
         ],
-        "dek": "Tight chest. Shallow breath.",
-        "durationMs": 3500
-      },
-      {
-        "kind": "verdict",
-        "lines": [
-          "Not your mind.",
-          "Your body first."
-        ],
-        "durationMs": 3500
+        "dek": "Just slower breathing.",
+        "durationMs": 4000
       },
       {
         "kind": "question",
-        "kicker": "THE DIFFERENCE",
+        "kicker": "THE SHIFT",
         "lines": [
           "One line.",
           "One breath."
         ],
-        "dek": "Paced to your exhale.",
+        "dek": "Text paces your exhale.",
         "durationMs": 4000
+      },
+      {
+        "kind": "question",
+        "kicker": "TRY IT",
+        "lines": [
+          "Read slow."
+        ],
+        "dek": "Let it set the pace.",
+        "durationMs": 3500
       },
       {
         "kind": "verdict",
         "lines": [
-          "Breath sets pace.",
-          "No forcing calm."
+          "Start smaller.",
+          "Let night soften."
         ],
-        "durationMs": 4000
-      },
-      {
-        "kind": "verdict",
-        "lines": [
-          "Start with one.",
-          "Just one line."
-        ],
-        "durationMs": 4000
+        "durationMs": 3500
       }
     ],
     "close": {
-      "line": "Less noise. One line at a time.",
+      "line": "One breath. Then another.",
       "showWordmark": true,
-      "durationMs": 3100,
+      "durationMs": 2800,
       "url": "regulate.app",
       "tagline": "Not meditation. Regulation."
     },
-    "caption": "Can't sit still? You don't have to.\nOne line, one breath. That's it.",
+    "caption": "Can't meditate? Neither could we.\nOne breath at a time.",
     "hashtags": [
-      "#regulate",
       "#breathwork",
-      "#stillness",
-      "#noquickfix"
+      "#regulate",
+      "#onebreath",
+      "#slowdown"
     ]
   }
 }
