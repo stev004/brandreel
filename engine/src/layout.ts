@@ -27,7 +27,8 @@ const lineBoxHeight = (fontSize: number, lineHeight: number, maxLines: number): 
 
 const MOMENT_MAX_THOUGHTS = 3;
 const MOMENT_THOUGHT_CAPTION_GAP = 40;
-const MOMENT_THOUGHT_PREFERRED_STEP = 140;
+const MOMENT_THOUGHT_LINE_GAP = 40;
+const MOMENT_THOUGHT_ROW_GAP = 8;
 
 export const MOMENT_LAYOUT = {
   contentX: SAFE_LEFT,
@@ -43,35 +44,38 @@ export const MOMENT_LAYOUT = {
   thoughtsTop: 1150,
   thoughtFontSize: 30,
   thoughtLineHeight: 1.3,
-  thoughtMaxLines: 3,
-  thoughtStep: MOMENT_THOUGHT_PREFERRED_STEP,
+  thoughtMaxLines: 2,
+  thoughtStep: 0,
   thoughtEntranceDrift: 24,
 };
+
+export const momentThoughtBoxHeight = (): number => lineBoxHeight(
+  MOMENT_LAYOUT.thoughtFontSize,
+  MOMENT_LAYOUT.thoughtLineHeight,
+  MOMENT_LAYOUT.thoughtMaxLines,
+) + MOMENT_LAYOUT.thoughtEntranceDrift;
 
 const deriveMomentThoughtGeometry = (): Pick<typeof MOMENT_LAYOUT, "thoughtsTop" | "thoughtStep"> => {
   const captionTop = HEIGHT - SAFE_BOTTOM - CAPTION_LAYOUT.bottomOffset -
     lineBoxHeight(CAPTION_LAYOUT.fontSize, CAPTION_LAYOUT.lineHeight, CAPTION_LAYOUT.maxLines);
-  const thoughtHeight = lineBoxHeight(
-    MOMENT_LAYOUT.thoughtFontSize,
-    MOMENT_LAYOUT.thoughtLineHeight,
-    MOMENT_LAYOUT.thoughtMaxLines,
-  ) + MOMENT_LAYOUT.thoughtEntranceDrift;
+  const thoughtHeight = momentThoughtBoxHeight();
+  const thoughtStep = thoughtHeight + MOMENT_THOUGHT_ROW_GAP;
   const minimumThoughtsTop = MOMENT_LAYOUT.momentLineTop +
     lineBoxHeight(
       MOMENT_LAYOUT.momentLineFontSize,
       MOMENT_LAYOUT.momentLineHeight,
       MOMENT_LAYOUT.momentLineMaxLines,
-    ) + MOMENT_LAYOUT.momentLineEntranceDrift + MOMENT_THOUGHT_CAPTION_GAP;
-  const maximumThoughtStep = Math.floor(
-    (captionTop - MOMENT_THOUGHT_CAPTION_GAP - thoughtHeight - minimumThoughtsTop) /
-      (MOMENT_MAX_THOUGHTS - 1),
-  );
-  const thoughtStep = Math.max(0, Math.min(MOMENT_THOUGHT_PREFERRED_STEP, maximumThoughtStep));
+    ) + MOMENT_LAYOUT.momentLineEntranceDrift + MOMENT_THOUGHT_LINE_GAP;
+  const thoughtsTop = captionTop - MOMENT_THOUGHT_CAPTION_GAP - thoughtHeight -
+    (MOMENT_MAX_THOUGHTS - 1) * thoughtStep;
+
+  if (thoughtsTop < minimumThoughtsTop) {
+    throw new Error("Moment thoughts do not clear the moment line.");
+  }
 
   return {
     thoughtStep,
-    thoughtsTop: captionTop - MOMENT_THOUGHT_CAPTION_GAP - thoughtHeight -
-      (MOMENT_MAX_THOUGHTS - 1) * thoughtStep,
+    thoughtsTop,
   };
 };
 
@@ -669,11 +673,7 @@ export const computeTextBoxes = (script: Script, brand: BrandKit): LayoutTextBox
           x: MOMENT_LAYOUT.contentX,
           y: MOMENT_LAYOUT.thoughtsTop + thoughtIndex * MOMENT_LAYOUT.thoughtStep,
           w: MOMENT_LAYOUT.contentWidth,
-          h: lineBoxHeight(
-            MOMENT_LAYOUT.thoughtFontSize,
-            MOMENT_LAYOUT.thoughtLineHeight,
-            MOMENT_LAYOUT.thoughtMaxLines,
-          ) + MOMENT_LAYOUT.thoughtEntranceDrift,
+          h: momentThoughtBoxHeight(),
         });
       });
     }
