@@ -5,7 +5,7 @@ import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { spawnSync } from "node:child_process";
 
-import { buildPrompt, validateScript } from "../script.mjs";
+import { buildPrompt, HOOK_ARCHETYPE_RULES, validateScript } from "../script.mjs";
 
 const repoRoot = new URL("../..", import.meta.url).pathname;
 const scriptCli = join(repoRoot, "bin", "script.mjs");
@@ -47,6 +47,18 @@ function validationScript(durations = { moment: 3000, question: 3000, figure: 60
   };
 }
 
+function hookBrief(hookArchetype, hookLine = "") {
+  return {
+    coreMechanic: "One visual mechanism carries the idea.",
+    hookArchetype,
+    hookLine,
+    facts: ["0 to 3 steps", "1 small shift"],
+    beatKinds: ["moment", "question", "figure", "verdict"],
+    requiredPhrases: [],
+    bannedPhrases: [],
+  };
+}
+
 test("dry-run writes a prompt containing the tone words and notes", () => {
   const dir = workspace();
   try {
@@ -56,6 +68,93 @@ test("dry-run writes a prompt containing the tone words and notes", () => {
     assert.match(prompt, /direct/);
     assert.match(prompt, /grounded in lived experience/);
     assert.match(prompt, /Brand voice notes, copied verbatim:/);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("direct-callout rejects a numbered-promise opener", () => {
+  const script = validationScript();
+  script.beats[0].line = "Three ways to reset.";
+  const violations = validateScript(script, "regulate", "validation", "", hookBrief("direct-callout"));
+  assert.ok(violations.some((violation) => violation.includes("direct-callout") && violation.includes("Three ways to reset")));
+});
+
+test("numbered-promise accepts a number word", () => {
+  const accepted = validationScript();
+  accepted.beats[0].line = "Three ways to reset.";
+  assert.equal(validateScript(accepted, "regulate", "validation", "", hookBrief("numbered-promise")).some((violation) => violation.includes("hook archetype")), false);
+});
+
+test("numbered-promise rejects a plain opener", () => {
+  const rejected = validationScript();
+  rejected.beats[0].line = "Reset your body.";
+  assert.ok(validateScript(rejected, "regulate", "validation", "", hookBrief("numbered-promise")).some((violation) => violation.includes("numbered-promise")));
+});
+
+test("curiosity-gap accepts a question", () => {
+  const accepted = validationScript();
+  accepted.beats[0].line = "Why are you awake?";
+  assert.equal(validateScript(accepted, "regulate", "validation", "", hookBrief("curiosity-gap")).some((violation) => violation.includes("hook archetype")), false);
+});
+
+test("curiosity-gap rejects a plain opener", () => {
+  const rejected = validationScript();
+  rejected.beats[0].line = "Start with less.";
+  assert.ok(validateScript(rejected, "regulate", "validation", "", hookBrief("curiosity-gap")).some((violation) => violation.includes("curiosity-gap")));
+});
+
+test("contrarian-claim accepts a challenge", () => {
+  const accepted = validationScript();
+  accepted.beats[0].line = "This is not rest.";
+  assert.equal(validateScript(accepted, "regulate", "validation", "", hookBrief("contrarian-claim")).some((violation) => violation.includes("hook archetype")), false);
+});
+
+test("contrarian-claim rejects a question", () => {
+  const rejected = validationScript();
+  rejected.beats[0].line = "Need rest?";
+  assert.ok(validateScript(rejected, "regulate", "validation", "", hookBrief("contrarian-claim")).some((violation) => violation.includes("contrarian-claim")));
+});
+
+test("direct-callout accepts a person-facing opener", () => {
+  const accepted = validationScript();
+  accepted.beats[0].line = "You are still awake.";
+  assert.equal(validateScript(accepted, "regulate", "validation", "", hookBrief("direct-callout")).some((violation) => violation.includes("hook archetype")), false);
+});
+
+test("direct-callout rejects an abstract opener", () => {
+  const rejected = validationScript();
+  rejected.beats[0].line = "A quiet reset helps.";
+  assert.ok(validateScript(rejected, "regulate", "validation", "", hookBrief("direct-callout")).some((violation) => violation.includes("direct-callout")));
+});
+
+test("hook archetype rules expose descriptions and predicates", () => {
+  for (const rule of Object.values(HOOK_ARCHETYPE_RULES)) {
+    assert.equal(typeof rule.predicate, "function");
+    assert.equal(typeof rule.description, "string");
+    assert.ok(rule.description.length > 0);
+  }
+});
+
+test("an incompatible exact hook line is rejected by both brief rules", () => {
+  const script = validationScript();
+  script.beats[0].line = "Three ways to reset.";
+  const violations = validateScript(script, "regulate", "validation", "", hookBrief("direct-callout", "Three ways to reset."));
+  assert.ok(violations.some((violation) => violation.includes("direct-callout")));
+});
+
+test("script exits clearly when a loaded brief hook line conflicts with its archetype", () => {
+  const dir = workspace();
+  try {
+    writeFileSync(join(dir, "brief.json"), JSON.stringify({
+      brand: "regulate",
+      topic: "cannot sleep at 3am",
+      hookArchetype: "direct-callout",
+      hookLine: "Three ways to reset.",
+    }));
+    const result = runScript(dir, ["--retries", "0", "--skip-lint", "--model-cmd", `node ${fakeModel}`]);
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /brief\.hookLine .*does not satisfy hook archetype direct-callout/);
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
@@ -407,6 +506,50 @@ test("figure goalTick accepts eighteen characters and rejects nineteen", () => {
   assert.ok(violations.some((violation) => violation.includes("beats[2].goalTick must be 18 characters or fewer")));
 });
 
+test("figure value.decimals must be an integer from zero to two", () => {
+  const script = validationScript();
+  script.beats[2].value.decimals = 17;
+  const violations = validateScript(script, "regulate", "validation", "");
+  assert.ok(violations.some((violation) => violation.includes("beats[2].value.decimals") && violation.includes("integer from 0 to 2")));
+});
+
+test("figure value.decimals must match the matching fact number", () => {
+  const script = validationScript();
+  script.beats[2].value = { to: 3.5, decimals: 0 };
+  script.beats[2].axis = { min: 0, max: 3.5, achieved: 1, goal: 3.5 };
+  const brief = hookBrief("direct-callout");
+  brief.facts = ["0 to 3.5 steps", "1 small shift"];
+  const violations = validateScript(script, "regulate", "validation", "", brief);
+  assert.ok(violations.some((violation) => violation.includes("beats[2].value.decimals") && violation.includes("3.5")));
+});
+
+test("figure stamp offsets must be strictly increasing", () => {
+  const script = validationScript();
+  script.beats[2].stamps = [
+    { tone: "done", text: "First", offsetMs: 2000 },
+    { tone: "done", text: "Second", offsetMs: 1000 },
+  ];
+  const violations = validateScript(script, "regulate", "validation", "");
+  assert.ok(violations.some((violation) => violation.includes("beats[2].stamps[1].offsetMs") && violation.includes("strictly increasing")));
+});
+
+test("figure stamp offsets must be before the beat duration", () => {
+  const script = validationScript();
+  script.beats[2].stamps = [{ tone: "done", text: "Late", offsetMs: 6000 }];
+  const violations = validateScript(script, "regulate", "validation", "");
+  assert.ok(violations.some((violation) => violation.includes("beats[2].stamps[0].offsetMs") && violation.includes("less than beat.durationMs")));
+});
+
+test("a figure with valid decimals and stamp offsets is accepted", () => {
+  const script = validationScript();
+  script.beats[2].stamps = [
+    { tone: "done", text: "First", offsetMs: 1000 },
+    { tone: "done", text: "Now", offsetMs: 5999 },
+  ];
+  const violations = validateScript(script, "regulate", "validation", "");
+  assert.equal(violations.some((violation) => violation.includes("beats[2].value.decimals") || violation.includes("beats[2].stamps")), false, violations.join("\n"));
+});
+
 test("figure static-tail rule rejects a long beat without a late stamp", () => {
   const script = validationScript({ moment: 3000, question: 3000, figure: 9000, verdict: 3000 });
   const violations = validateScript(script, "regulate", "validation", "");
@@ -422,18 +565,24 @@ test("figure static-tail rule accepts an 8000ms beat with a stamp at 6000ms", ()
 test("retry loop succeeds on the second attempt and writes both artifacts", () => {
   const dir = workspace();
   const modelState = join(dir, "model-state");
-  const lintState = join(dir, "lint-state");
   try {
     const result = runScript(dir, [
       "--retries", "1",
-      "--lint-cmd", `node ${join(repoRoot, "bin/tests/fixtures/fake-lint.mjs")}`,
+      "--skip-lint",
       "--model-cmd", `node ${fakeModel}`,
-    ], { FAKE_MODEL_STATE: modelState, FAKE_LINT_STATE: lintState });
+    ], { FAKE_MODEL_STATE: modelState, FAKE_MODEL_BAD_THEN_GOOD: "1" });
     assert.equal(result.status, 0, result.stderr);
     assert.equal(JSON.parse(readFileSync(join(dir, "script.json"), "utf8")).brand, "regulate");
     assert.equal(existsSync(join(dir, "layout.json")), true);
     assert.equal(readFileSync(modelState, "utf8"), "2");
-    assert.equal(readFileSync(lintState, "utf8"), "2");
+    const attempts = JSON.parse(readFileSync(join(dir, "script-attempts.json"), "utf8"));
+    assert.equal(attempts.attempts, 2);
+    assert.equal(attempts.retries, 1);
+    assert.equal(attempts.outcome, "accepted");
+    assert.equal(attempts.violationsPerAttempt.length, 2);
+    assert.ok(attempts.violationsPerAttempt[0].length > 0);
+    assert.deepEqual(attempts.violationsPerAttempt[1], []);
+    assert.match(result.stdout, /script: accepted on attempt 2 of 2/);
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
@@ -448,6 +597,12 @@ test("retry loop fails after retries and preserves an existing script", () => {
     assert.notEqual(result.status, 0);
     assert.match(result.stderr, /missing required key: coreMechanic/);
     assert.equal(readFileSync(join(dir, "script.json"), "utf8"), original);
+    const attempts = JSON.parse(readFileSync(join(dir, "script-attempts.json"), "utf8"));
+    assert.equal(attempts.attempts, 2);
+    assert.equal(attempts.retries, 1);
+    assert.equal(attempts.outcome, "rejected");
+    assert.equal(attempts.violationsPerAttempt.length, 2);
+    assert.match(result.stdout, /script: rejected after 2 attempts/);
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
