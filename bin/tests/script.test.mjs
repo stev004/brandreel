@@ -5,7 +5,7 @@ import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { spawnSync } from "node:child_process";
 
-import { buildPrompt, HOOK_ARCHETYPE_RULES, validateScript } from "../script.mjs";
+import { buildPrompt, firstOnScreenText, HOOK_ARCHETYPE_RULES, validateScript } from "../script.mjs";
 
 const repoRoot = new URL("../..", import.meta.url).pathname;
 const scriptCli = join(repoRoot, "bin", "script.mjs");
@@ -134,6 +134,76 @@ test("hook archetype rules expose descriptions and predicates", () => {
     assert.equal(typeof rule.description, "string");
     assert.ok(rule.description.length > 0);
   }
+});
+
+test("trivial No. is rejected for contrarian-claim", () => {
+  assert.equal(HOOK_ARCHETYPE_RULES["contrarian-claim"].predicate("No."), false);
+});
+
+test("Why you can't sleep is curiosity-gap but not contrarian-claim", () => {
+  assert.equal(HOOK_ARCHETYPE_RULES["curiosity-gap"].predicate("Why you can't sleep"), true);
+  assert.equal(HOOK_ARCHETYPE_RULES["contrarian-claim"].predicate("Why you can't sleep"), false);
+});
+
+test("Three reasons why you can't sleep is only numbered-promise", () => {
+  const hook = "Three reasons why you can't sleep";
+  assert.equal(HOOK_ARCHETYPE_RULES["numbered-promise"].predicate(hook), true);
+  assert.equal(HOOK_ARCHETYPE_RULES["curiosity-gap"].predicate(hook), false);
+  assert.equal(HOOK_ARCHETYPE_RULES["contrarian-claim"].predicate(hook), false);
+  assert.equal(HOOK_ARCHETYPE_RULES["direct-callout"].predicate(hook), false);
+});
+
+test("numbered-promise requires both a number and a plural payoff", () => {
+  assert.equal(HOOK_ARCHETYPE_RULES["numbered-promise"].predicate("Three steps"), false);
+  assert.equal(HOOK_ARCHETYPE_RULES["numbered-promise"].predicate("A few reasons to pause"), false);
+  assert.equal(HOOK_ARCHETYPE_RULES["numbered-promise"].predicate("The 3 mistakes to avoid"), true);
+});
+
+test("curiosity-gap enforces its four-word minimum and withholding phrases", () => {
+  assert.equal(HOOK_ARCHETYPE_RULES["curiosity-gap"].predicate("Why now?"), false);
+  assert.equal(HOOK_ARCHETYPE_RULES["curiosity-gap"].predicate("What nobody tells you"), true);
+  assert.equal(HOOK_ARCHETYPE_RULES["curiosity-gap"].predicate("The reason you wake"), true);
+});
+
+test("contrarian-claim requires a negation with a following word", () => {
+  assert.equal(HOOK_ARCHETYPE_RULES["contrarian-claim"].predicate("This is not"), false);
+  assert.equal(HOOK_ARCHETYPE_RULES["contrarian-claim"].predicate("Rest is not recovery"), true);
+  assert.equal(HOOK_ARCHETYPE_RULES["contrarian-claim"].predicate("You are not broken"), false);
+});
+
+test("direct-callout accepts an imperative and rejects a one-word opener", () => {
+  assert.equal(HOOK_ARCHETYPE_RULES["direct-callout"].predicate("Breathe slowly"), true);
+  assert.equal(HOOK_ARCHETYPE_RULES["direct-callout"].predicate("Notice"), false);
+});
+
+test("hook mismatch reports the archetypes the actual hook satisfies", () => {
+  const script = validationScript();
+  script.beats[0].line = "Why you can't sleep";
+  const violations = validateScript(script, "regulate", "validation", "", hookBrief("contrarian-claim"));
+  assert.ok(violations.some((violation) => violation.includes("satisfies curiosity-gap, direct-callout")));
+});
+
+test("firstOnScreenText follows render order for each beat kind", () => {
+  assert.equal(firstOnScreenText({ kind: "moment", eyebrow: "NOTICE", line: "The line" }), "NOTICE");
+  assert.equal(firstOnScreenText({ kind: "moment", line: "The line" }), "The line");
+  assert.equal(firstOnScreenText({ kind: "question", kicker: "NOTICE", lines: ["The question"] }), "NOTICE");
+  assert.equal(firstOnScreenText({ kind: "question", lines: ["The question"] }), "The question");
+  assert.equal(firstOnScreenText({ kind: "figure", label: "The label" }), "The label");
+  assert.equal(firstOnScreenText({ kind: "verdict", lines: ["The verdict"] }), "The verdict");
+});
+
+test("question kicker is validated as the direct-callout hook", () => {
+  const script = validationScript();
+  script.beats[0] = { kind: "question", kicker: "NOTICE", lines: ["Can't meditate?"], durationMs: 2500 };
+  const violations = validateScript(script, "regulate", "validation", "", hookBrief("direct-callout"));
+  assert.ok(violations.some((violation) => violation.includes('rejected hook text "NOTICE"')));
+});
+
+test("question without a kicker validates its first line as the direct-callout hook", () => {
+  const script = validationScript();
+  script.beats[0] = { kind: "question", lines: ["Can't meditate?"], durationMs: 2500 };
+  const violations = validateScript(script, "regulate", "validation", "", hookBrief("direct-callout"));
+  assert.equal(violations.some((violation) => violation.includes("hook archetype")), false, violations.join("\n"));
 });
 
 test("an incompatible exact hook line is rejected by both brief rules", () => {
@@ -523,6 +593,36 @@ test("figure value.decimals must match the matching fact number", () => {
   assert.ok(violations.some((violation) => violation.includes("beats[2].value.decimals") && violation.includes("3.5")));
 });
 
+test("figure decimals match a later fact with the same written precision", () => {
+  const script = validationScript();
+  script.beats[2].value = { to: 3.5, decimals: 2 };
+  script.beats[2].axis = { min: 0, max: 3.5, achieved: 1, goal: 3.5 };
+  const brief = hookBrief("direct-callout");
+  brief.facts = ["3.5 steps", "3.50 steps"];
+  const violations = validateScript(script, "regulate", "validation", "", brief);
+  assert.equal(violations.some((violation) => violation.includes("value.decimals")), false, violations.join("\n"));
+});
+
+test("figure decimals reject when only a different precision fact has the value", () => {
+  const script = validationScript();
+  script.beats[2].value = { to: 3.5, decimals: 1 };
+  script.beats[2].axis = { min: 0, max: 3.5, achieved: 1, goal: 3.5 };
+  const brief = hookBrief("direct-callout");
+  brief.facts = ["3.50 steps"];
+  const violations = validateScript(script, "regulate", "validation", "", brief);
+  assert.ok(violations.some((violation) => violation.includes("value.decimals") && violation.includes("3.50")));
+});
+
+test("figure decimals reject precision three", () => {
+  const script = validationScript();
+  script.beats[2].value = { to: 3.5, decimals: 3 };
+  script.beats[2].axis = { min: 0, max: 3.5, achieved: 1, goal: 3.5 };
+  const brief = hookBrief("direct-callout");
+  brief.facts = ["3.500 steps"];
+  const violations = validateScript(script, "regulate", "validation", "", brief);
+  assert.ok(violations.some((violation) => violation.includes("value.decimals") && violation.includes("integer from 0 to 2")));
+});
+
 test("figure stamp offsets must be strictly increasing", () => {
   const script = validationScript();
   script.beats[2].stamps = [
@@ -577,12 +677,14 @@ test("retry loop succeeds on the second attempt and writes both artifacts", () =
     assert.equal(readFileSync(modelState, "utf8"), "2");
     const attempts = JSON.parse(readFileSync(join(dir, "script-attempts.json"), "utf8"));
     assert.equal(attempts.attempts, 2);
-    assert.equal(attempts.retries, 1);
+    assert.equal(attempts.retriesUsed, 1);
+    assert.equal(attempts.retryLimit, 2);
+    assert.equal(Object.hasOwn(attempts, "retries"), false);
     assert.equal(attempts.outcome, "accepted");
     assert.equal(attempts.violationsPerAttempt.length, 2);
     assert.ok(attempts.violationsPerAttempt[0].length > 0);
     assert.deepEqual(attempts.violationsPerAttempt[1], []);
-    assert.match(result.stdout, /script: accepted on attempt 2 of 2/);
+    assert.match(result.stdout, /script: accepted on attempt 2 \(1 retries used of 2\)/);
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
@@ -599,10 +701,12 @@ test("retry loop fails after retries and preserves an existing script", () => {
     assert.equal(readFileSync(join(dir, "script.json"), "utf8"), original);
     const attempts = JSON.parse(readFileSync(join(dir, "script-attempts.json"), "utf8"));
     assert.equal(attempts.attempts, 2);
-    assert.equal(attempts.retries, 1);
+    assert.equal(attempts.retriesUsed, 1);
+    assert.equal(attempts.retryLimit, 2);
+    assert.equal(Object.hasOwn(attempts, "retries"), false);
     assert.equal(attempts.outcome, "rejected");
     assert.equal(attempts.violationsPerAttempt.length, 2);
-    assert.match(result.stdout, /script: rejected after 2 attempts/);
+    assert.match(result.stdout, /script: rejected after 2 attempts \(1 retries\)/);
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }

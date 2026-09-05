@@ -36,39 +36,74 @@ export const TAGLINE_CLOSE_MIN_MS = CTA_MIN_DWELL_MS + CLOSE_D_TIMING.taglineMs;
 // Mirror the CTA lint's URL close dwell floor.
 export const URL_CLOSE_MIN_MS = CTA_MIN_DWELL_MS + CLOSE_D_TIMING.urlMs;
 
-const hookWords = (text, words) => words.some((word) => new RegExp(`\\b${word.replace(/[.*+?^${}()|[\\]\\\\]/g, "\\\\$&")}\\b`).test(text));
 const normalizeHookText = (text) => String(text ?? "").trim().toLowerCase();
+const hookWordCount = (text) => normalizeHookText(text).match(/\S+/g)?.length ?? 0;
+const NUMBER_WORDS = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve"];
+const ORDINAL_WORDS = ["first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth", "tenth", "eleventh", "twelfth"];
+const PAYOFF_NOUNS = ["ways", "steps", "reasons", "signs", "things", "mistakes", "habits", "minutes", "seconds", "breaths", "days", "nights"];
+const NEGATIONS = ["not", "isn't", "aren't", "don't", "doesn't", "won't", "can't", "never", "no"];
+const IMPERATIVE_VERBS = ["try", "stop", "start", "notice", "breathe", "put", "take", "imagine", "remember", "listen", "look"];
+const SECOND_PERSON = ["you", "your", "you're", "yours"];
+
+function hasHookWord(text, word) {
+  return new RegExp(`\\b${word.replace(/[.*+?^${}()|[\\]\\\\]/g, "\\\\$&")}\\b`).test(text);
+}
+
+function hasNumberToken(text) {
+  return new RegExp(`(?:\\b(?:${NUMBER_WORDS.join("|")}|${ORDINAL_WORDS.join("|")})\\b|\\b\\d+(?:\\.\\d+)?(?:st|nd|rd|th)?\\b)`, "i").test(text);
+}
+
+function isNumberedPromise(text) {
+  const normalized = normalizeHookText(text);
+  return hasNumberToken(normalized) && PAYOFF_NOUNS.some((word) => hasHookWord(normalized, word)) && hookWordCount(normalized) >= 3;
+}
+
+function hasWithholdingPhrase(text) {
+  return ["why", "the reason", "what nobody", "what no one", "the one thing", "until", "the truth", "actually", "really"]
+    .some((phrase) => new RegExp(`(?:^|\\b)${phrase.replace(/[.*+?^${}()|[\\]\\\\]/g, "\\\\$&")}(?:$|\\b)`).test(text));
+}
+
+function hookTokens(text) {
+  return normalizeHookText(text).match(/[a-z0-9]+(?:'[a-z]+)?/g) ?? [];
+}
 
 export const HOOK_ARCHETYPE_RULES = Object.freeze({
   "numbered-promise": {
-    description: "contains a digit, a number word from one to twelve, an ordinal, or ways, steps, or reasons",
-    predicate: (text) => {
-      const normalized = normalizeHookText(text);
-      return /\d/.test(normalized)
-        || hookWords(normalized, ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "first", "second", "third", "ways", "steps", "reasons"]);
-    },
+    description: "has at least 3 words, a digit, number word one to twelve, or ordinal, and a plural payoff noun (ways, steps, reasons, signs, things, mistakes, habits, minutes, seconds, breaths, days, or nights)",
+    predicate: (text) => isNumberedPromise(text),
   },
   "curiosity-gap": {
-    description: "ends with a question mark or contains why, what, how, secret, nobody, no one, never, until, before, after, actually, or really",
+    description: "has at least 4 words, ends with '?' or contains a withholding phrase (why, the reason, what nobody, what no one, the one thing, until, the truth, actually, or really), and is not a numbered promise",
     predicate: (text) => {
       const normalized = normalizeHookText(text);
-      return normalized.endsWith("?") || hookWords(normalized, ["why", "what", "how", "secret", "nobody", "never", "until", "before", "after", "actually", "really"]) || normalized.includes("no one");
+      return hookWordCount(normalized) >= 4 && (normalized.endsWith("?") || hasWithholdingPhrase(normalized)) && !isNumberedPromise(normalized);
     },
   },
   "contrarian-claim": {
-    description: "does not end with a question mark and contains not, isn't, aren't, don't, doesn't, won't, can't, never, wrong, stop, forget, myth, or no",
+    description: "is a statement with no '?', at least 3 words, a negation (not, isn't, aren't, don't, doesn't, won't, can't, never, or no) followed by another word, and does not start with you, your, you're, or yours",
     predicate: (text) => {
       const normalized = normalizeHookText(text);
-      return !normalized.endsWith("?") && (hookWords(normalized, ["not", "isn't", "aren't", "don't", "doesn't", "won't", "can't", "never", "wrong", "stop", "forget", "myth", "no"]));
+      const tokens = hookTokens(normalized);
+      const negationIndex = tokens.findIndex((token) => NEGATIONS.includes(token));
+      const startsSecondPerson = SECOND_PERSON.includes(tokens[0]);
+      const startsQuestion = ["why", "what", "how"].includes(tokens[0]);
+      return hookWordCount(normalized) >= 3
+        && !normalized.endsWith("?")
+        && !startsQuestion
+        && negationIndex >= 0
+        && negationIndex < tokens.length - 1
+        && !startsSecondPerson
+        && !isNumberedPromise(normalized);
     },
   },
   "direct-callout": {
-    description: "ends with a question mark, contains you, your, you're, or yours, or starts with a direct imperative",
+    description: "has at least 2 words, contains you, your, you're, or yours, starts with an imperative (try, stop, start, notice, breathe, put, take, imagine, remember, listen, or look), or is a direct question, and is not a numbered promise",
     predicate: (text) => {
       const normalized = normalizeHookText(text);
-      return normalized.endsWith("?")
-        || hookWords(normalized, ["you", "your", "you're", "yours"])
-        || /^(?:try|stop|start|notice|breathe|put|take|imagine|remember|listen|look)\b/.test(normalized);
+      const tokens = hookTokens(normalized);
+      return hookWordCount(normalized) >= 2
+        && (normalized.endsWith("?") || tokens.some((token) => SECOND_PERSON.includes(token)) || IMPERATIVE_VERBS.includes(tokens[0]))
+        && !isNumberedPromise(normalized);
     },
   },
 });
@@ -278,6 +313,8 @@ ${brand.voice.notes}
 
 Choose one hook archetype for the opening beat:
 ${hookRules}
+
+The hook is the first on-screen text in render order. For a question beat, the kicker when present is the hook, otherwise lines[0]. For a moment beat, the eyebrow when present is the hook, otherwise line. For figure and verdict beats, the label and lines[0] are the hooks. The kicker or eyebrow must satisfy the chosen archetype, or omit it on the first beat.
 
 Write a valid script using this JSON shape. The example includes every beat kind and all schema fields:
 ${JSON.stringify(scriptExample(), null, 2)}
@@ -557,10 +594,10 @@ function factNumberDetails(facts) {
   })));
 }
 
-function firstBeatText(beat) {
+export function firstOnScreenText(beat) {
   if (!beat || typeof beat !== "object") return "";
-  if (beat.kind === "moment") return beat.line ?? "";
-  if (beat.kind === "question") return beat.lines?.[0] ?? "";
+  if (beat.kind === "moment") return isNonEmptyString(beat.eyebrow) ? beat.eyebrow : beat.line ?? "";
+  if (beat.kind === "question") return isNonEmptyString(beat.kicker) ? beat.kicker : beat.lines?.[0] ?? "";
   if (beat.kind === "figure") return beat.label ?? "";
   if (beat.kind === "verdict") return beat.lines?.[0] ?? "";
   return "";
@@ -582,7 +619,11 @@ function hookArchetypeViolation(archetype, hookText) {
   const rule = HOOK_ARCHETYPE_RULES[archetype];
   if (!rule) return `brief rule: hookArchetype must be one of ${Object.keys(HOOK_ARCHETYPE_RULES).join(", ")}`;
   if (rule.predicate(hookText)) return null;
-  return `brief rule: hook archetype ${archetype} rejected hook text ${JSON.stringify(String(hookText ?? "").trim())}: ${rule.description}`;
+  const satisfied = Object.entries(HOOK_ARCHETYPE_RULES)
+    .filter(([, candidate]) => candidate.predicate(hookText))
+    .map(([name]) => name);
+  const ambiguous = satisfied.length > 1 ? " (ambiguous)" : "";
+  return `brief rule: hook archetype ${archetype} rejected hook text ${JSON.stringify(String(hookText ?? "").trim())}: ${rule.description}; satisfies ${satisfied.length > 0 ? satisfied.join(", ") : "none"}${ambiguous}`;
 }
 
 function validateLoadedBrief(brief) {
@@ -590,7 +631,10 @@ function validateLoadedBrief(brief) {
   const rule = HOOK_ARCHETYPE_RULES[brief.hookArchetype];
   if (!rule) return `brief.hookArchetype must be one of ${Object.keys(HOOK_ARCHETYPE_RULES).join(", ")}`;
   if (brief.hookLine && !rule.predicate(brief.hookLine)) {
-    return `brief.hookLine ${JSON.stringify(brief.hookLine)} does not satisfy hook archetype ${brief.hookArchetype}: ${rule.description}`;
+    const satisfied = Object.entries(HOOK_ARCHETYPE_RULES)
+      .filter(([, candidate]) => candidate.predicate(brief.hookLine))
+      .map(([name]) => name);
+    return `brief.hookLine ${JSON.stringify(brief.hookLine)} does not satisfy hook archetype ${brief.hookArchetype}: ${rule.description}; satisfies ${satisfied.length > 0 ? satisfied.join(", ") : "none"}`;
   }
   return null;
 }
@@ -616,9 +660,15 @@ function validateBriefContract(script, brief, violations) {
     for (const number of numbers) {
       if (!factNumbers.has(number)) violations.push(`brief rule: beats[${index}] figure number ${number} is not in brief.facts`);
     }
-    const matchingFact = factDetails.find(({ value }) => value === beat.value?.to);
-    if (matchingFact && beat.value?.decimals !== matchingFact.decimals) {
-      violations.push(`brief rule: beats[${index}].value.decimals must match brief.facts number ${matchingFact.text} (${matchingFact.decimals} decimal places; got ${beat.value?.decimals})`);
+    if (beat.value && typeof beat.value.to === "number" && Number.isInteger(beat.value.decimals)) {
+      const formattedValue = beat.value.to.toFixed(beat.value.decimals);
+      const matchingFact = factDetails.find(({ value, decimals }) => value === Number(formattedValue) && decimals === beat.value.decimals);
+      if (!matchingFact) {
+        const sameValueFacts = factDetails.filter(({ value }) => value === beat.value.to);
+        const factText = sameValueFacts.map(({ text }) => text).join(", ") || formattedValue;
+        const factDecimals = sameValueFacts.map(({ decimals }) => decimals).join(", ") || "none";
+        violations.push(`brief rule: beats[${index}].value.decimals must match brief.facts number ${factText} (${factDecimals} decimal places available; got ${beat.value.decimals})`);
+      }
     }
   });
   const screenText = screenStrings(script).join("\n").toLowerCase();
@@ -628,11 +678,11 @@ function validateBriefContract(script, brief, violations) {
   for (const phrase of brief.bannedPhrases ?? []) {
     if (allStrings(script).join("\n").toLowerCase().includes(String(phrase).toLowerCase())) violations.push(`brief rule: banned phrase found: ${phrase}`);
   }
-  if (brief.hookLine && Array.isArray(script.beats) && script.beats.length > 0 && firstBeatText(script.beats[0]) !== brief.hookLine) {
+  if (brief.hookLine && Array.isArray(script.beats) && script.beats.length > 0 && firstOnScreenText(script.beats[0]) !== brief.hookLine) {
     violations.push("brief rule: first beat hook line does not equal brief.hookLine");
   }
   if (brief.hookArchetype && Array.isArray(script.beats) && script.beats.length > 0) {
-    const hookText = brief.hookLine || firstBeatText(script.beats[0]);
+    const hookText = firstOnScreenText(script.beats[0]);
     const violation = hookArchetypeViolation(brief.hookArchetype, hookText);
     if (violation) violations.push(violation);
   }
@@ -836,7 +886,13 @@ function run(options) {
 
   const writeAttemptRecord = (attempts, outcome) => {
     const attemptPath = join(workspaceDir, "script-attempts.json");
-    writeFileSync(attemptPath, `${JSON.stringify({ attempts, retries: options.retries, outcome, violationsPerAttempt }, null, 2)}\n`, "utf8");
+    writeFileSync(attemptPath, `${JSON.stringify({
+      attempts,
+      retriesUsed: Math.max(0, attempts - 1),
+      retryLimit: options.retries + 1,
+      outcome,
+      violationsPerAttempt,
+    }, null, 2)}\n`, "utf8");
   };
 
   for (let attempt = 0; attempt <= options.retries; attempt += 1) {
@@ -877,7 +933,7 @@ function run(options) {
             writeAttemptRecord(attempt + 1, "accepted");
             console.log(`wrote ${scriptPath}`);
             console.log(`wrote ${layoutPath}`);
-            console.log(`script: accepted on attempt ${attempt + 1} of ${options.retries + 1}`);
+            console.log(`script: accepted on attempt ${attempt + 1} (${attempt} retries used of ${options.retries + 1})`);
             return 0;
           }
         } finally {
@@ -895,7 +951,7 @@ function run(options) {
 
   writeFileSync(rejectedScriptPath, `${JSON.stringify({ violations, script: lastParsedScript }, null, 2)}\n`, "utf8");
   writeAttemptRecord(violationsPerAttempt.length, "rejected");
-  console.log(`script: rejected after ${violationsPerAttempt.length} attempts`);
+  console.log(`script: rejected after ${violationsPerAttempt.length} attempts (${options.retries} retries)`);
   throw new Error(`script validation failed:\n${violations.map((violation) => `- ${violation}`).join("\n")}\nLast rejected script written to ${rejectedScriptPath}`);
 }
 
