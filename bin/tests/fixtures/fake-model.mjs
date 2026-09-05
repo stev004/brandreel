@@ -1,12 +1,19 @@
 #!/usr/bin/env node
 import { readFileSync, writeFileSync } from "node:fs";
 
-readFileSync(0, "utf8");
+const prompt = readFileSync(0, "utf8");
+const briefMode = process.env.FAKE_MODEL_BRIEF === "1";
+const briefMechanic = prompt.match(/^core mechanic: (.+)$/m)?.[1];
+const briefHookLine = prompt.match(/^hook line: (.+)$/m)?.[1];
+const briefFactSection = prompt.match(/^facts:\n([\s\S]*?)^allowed beat kinds:/m)?.[1] ?? "";
+const briefNumbers = briefFactSection.match(/-?\d+(?:\.\d+)?/g)?.map(Number) ?? [];
+const briefRequired = prompt.match(/^required phrases:\n- ([^\n]+)/m)?.[1];
 const invalid = process.env.FAKE_MODEL_INVALID === "1";
 const banned = process.env.FAKE_MODEL_BANNED === "1";
 const longMoment = process.env.FAKE_MODEL_LONG_MOMENT === "1";
 const threeLineCaption = process.env.FAKE_MODEL_THREE_LINE_CAPTION === "1";
 const badHashtag = process.env.FAKE_MODEL_BAD_HASHTAG === "1";
+const closeDuration = Number(process.env.FAKE_MODEL_CLOSE_DURATION) || 3000;
 const statePath = process.env.FAKE_MODEL_STATE;
 let state = 0;
 if (statePath) {
@@ -22,12 +29,13 @@ const script = {
   id: "model-id-is-overridden",
   brand: "regulate",
   modules: { vo: { voice: "invented-voice" }, music: { file: "invented-music.wav" } },
-  ...(invalid ? {} : { coreMechanic: "A quiet visual reset makes the next step visible." }),
+  ...(invalid ? {} : { coreMechanic: briefMode ? briefMechanic : "A quiet visual reset makes the next step visible." }),
   beats: [
     {
       kind: "moment",
       eyebrow: "3AM",
-      line: longMoment ? "x".repeat(45) : (banned ? "This journey starts now." : "Still awake?"),
+      line: longMoment ? "x".repeat(45) : (banned ? "This journey starts now." : (briefMode ? briefHookLine : "Still awake?")),
+      ...(stateBad ? { thoughts: ["Let the room get quieter."] } : {}),
       durationMs: invalid ? 10000 : stateBad ? 4000 : 3000,
     },
     { kind: "question", kicker: "TRY THIS", lines: [stateBad ? "What rest?" : "Need rest?"], durationMs: invalid ? 10000 : 3000 },
@@ -35,14 +43,14 @@ const script = {
       kind: "figure",
       label: "One small shift",
       unitLabel: "step",
-      value: { to: 3, decimals: 0 },
-      axis: { min: 0, max: 3, achieved: 1, goal: 3 },
+      value: { to: briefMode ? briefNumbers[1] : 3, decimals: 0 },
+      axis: { min: briefMode ? briefNumbers[0] : 0, max: briefMode ? briefNumbers[1] : 3, achieved: briefMode ? briefNumbers[2] : 1, goal: briefMode ? briefNumbers[1] : 3 },
       stamps: [{ tone: "done", text: "Notice", offsetMs: 1000 }],
       durationMs: invalid ? 10000 : 6000,
     },
-    { kind: "verdict", lines: ["Start with less."], durationMs: invalid ? 10000 : 3000 },
+    { kind: "verdict", lines: [briefMode ? briefRequired : "Start with less."], durationMs: invalid ? 10000 : 3000 },
   ],
-  close: { line: "Make room for the next breath.", showWordmark: true, tagline: "Make room.", url: "https://model.example", durationMs: 3000 },
+  close: { line: "Make room for the next breath.", showWordmark: true, tagline: "Make room.", url: "https://model.example", durationMs: closeDuration },
   caption: threeLineCaption ? "one\ntwo\nthree" : "A small shift can change tonight.",
   hashtags: [badHashtag ? "regulation" : "#regulation", "#rest", "#sleep"],
 };

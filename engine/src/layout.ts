@@ -27,7 +27,8 @@ const lineBoxHeight = (fontSize: number, lineHeight: number, maxLines: number): 
 
 const MOMENT_MAX_THOUGHTS = 3;
 const MOMENT_THOUGHT_CAPTION_GAP = 40;
-const MOMENT_THOUGHT_PREFERRED_STEP = 140;
+const MOMENT_THOUGHT_LINE_GAP = 40;
+const MOMENT_THOUGHT_ROW_GAP = 8;
 
 export const MOMENT_LAYOUT = {
   contentX: SAFE_LEFT,
@@ -43,35 +44,38 @@ export const MOMENT_LAYOUT = {
   thoughtsTop: 1150,
   thoughtFontSize: 30,
   thoughtLineHeight: 1.3,
-  thoughtMaxLines: 3,
-  thoughtStep: MOMENT_THOUGHT_PREFERRED_STEP,
+  thoughtMaxLines: 2,
+  thoughtStep: 0,
   thoughtEntranceDrift: 24,
 };
+
+export const momentThoughtBoxHeight = (): number => lineBoxHeight(
+  MOMENT_LAYOUT.thoughtFontSize,
+  MOMENT_LAYOUT.thoughtLineHeight,
+  MOMENT_LAYOUT.thoughtMaxLines,
+);
 
 const deriveMomentThoughtGeometry = (): Pick<typeof MOMENT_LAYOUT, "thoughtsTop" | "thoughtStep"> => {
   const captionTop = HEIGHT - SAFE_BOTTOM - CAPTION_LAYOUT.bottomOffset -
     lineBoxHeight(CAPTION_LAYOUT.fontSize, CAPTION_LAYOUT.lineHeight, CAPTION_LAYOUT.maxLines);
-  const thoughtHeight = lineBoxHeight(
-    MOMENT_LAYOUT.thoughtFontSize,
-    MOMENT_LAYOUT.thoughtLineHeight,
-    MOMENT_LAYOUT.thoughtMaxLines,
-  ) + MOMENT_LAYOUT.thoughtEntranceDrift;
+  const thoughtHeight = momentThoughtBoxHeight() + MOMENT_LAYOUT.thoughtEntranceDrift;
+  const thoughtStep = thoughtHeight + MOMENT_THOUGHT_ROW_GAP;
   const minimumThoughtsTop = MOMENT_LAYOUT.momentLineTop +
     lineBoxHeight(
       MOMENT_LAYOUT.momentLineFontSize,
       MOMENT_LAYOUT.momentLineHeight,
       MOMENT_LAYOUT.momentLineMaxLines,
-    ) + MOMENT_LAYOUT.momentLineEntranceDrift + MOMENT_THOUGHT_CAPTION_GAP;
-  const maximumThoughtStep = Math.floor(
-    (captionTop - MOMENT_THOUGHT_CAPTION_GAP - thoughtHeight - minimumThoughtsTop) /
-      (MOMENT_MAX_THOUGHTS - 1),
-  );
-  const thoughtStep = Math.max(0, Math.min(MOMENT_THOUGHT_PREFERRED_STEP, maximumThoughtStep));
+    ) + MOMENT_LAYOUT.momentLineEntranceDrift + MOMENT_THOUGHT_LINE_GAP;
+  const thoughtsTop = captionTop - MOMENT_THOUGHT_CAPTION_GAP - thoughtHeight -
+    (MOMENT_MAX_THOUGHTS - 1) * thoughtStep;
+
+  if (thoughtsTop < minimumThoughtsTop) {
+    throw new Error("Moment thoughts do not clear the moment line.");
+  }
 
   return {
     thoughtStep,
-    thoughtsTop: captionTop - MOMENT_THOUGHT_CAPTION_GAP - thoughtHeight -
-      (MOMENT_MAX_THOUGHTS - 1) * thoughtStep,
+    thoughtsTop,
   };
 };
 
@@ -219,20 +223,33 @@ export const CLOSE_LAYOUT = {
   wordmarkLineHeight: 1.2,
 } as const;
 
-export const CLOSE_D_LAYOUT = {
+const CLOSE_D_TAGLINE_URL_GAP = 24;
+
+const CLOSE_D_LAYOUT_BASE = {
   contentX: SAFE_LEFT,
   logoTop: 620,
   logoSize: 150,
   taglineTop: 830,
   taglineFontSize: 96,
   taglineLineHeight: 1.2,
+  taglineMaxLines: 2,
   taglineLetterSpacing: "-0.02em",
-  urlTop: 986,
   urlFontSize: 34,
   urlLineHeight: 1.2,
   urlLetterSpacing: "0.08em",
   entranceDrift: 34,
   sceneFadeDurationMs: 400,
+} as const;
+
+export const CLOSE_D_LAYOUT = {
+  ...CLOSE_D_LAYOUT_BASE,
+  urlTop:
+    CLOSE_D_LAYOUT_BASE.taglineTop +
+    CLOSE_D_LAYOUT_BASE.taglineMaxLines *
+      CLOSE_D_LAYOUT_BASE.taglineFontSize *
+      CLOSE_D_LAYOUT_BASE.taglineLineHeight +
+    CLOSE_D_TAGLINE_URL_GAP +
+    CLOSE_D_LAYOUT_BASE.entranceDrift,
 } as const;
 
 export const CLOSE_D_TIMING = {
@@ -434,6 +451,7 @@ export type TextBox = {
   y: number;
   w: number;
   h: number;
+  driftPx: number;
 };
 
 export type TextRole = keyof typeof GLYPH_EM;
@@ -595,7 +613,7 @@ const metadataForTextBox = (
     return { ...closeOffset(CLOSE_D_TIMING.logoMs), text: "", fontSize: CLOSE_D_LAYOUT.logoSize };
   }
   if (box.id === "close-tagline") {
-    return { ...closeOffset(CLOSE_D_TIMING.taglineMs), text: script.close.tagline ?? "", fontSize: CLOSE_D_LAYOUT.taglineFontSize, lineHeight: CLOSE_D_LAYOUT.taglineLineHeight, letterSpacingEm: -0.02 };
+    return { ...closeOffset(CLOSE_D_TIMING.taglineMs), text: script.close.tagline ?? "", fontSize: CLOSE_D_LAYOUT.taglineFontSize, lineHeight: CLOSE_D_LAYOUT.taglineLineHeight, maxLines: CLOSE_D_LAYOUT.taglineMaxLines, letterSpacingEm: -0.02 };
   }
   if (box.id === "close-url") {
     return { ...closeOffset(CLOSE_D_TIMING.urlMs), role: "mono", text: script.close.url ?? "", fontSize: CLOSE_D_LAYOUT.urlFontSize, lineHeight: CLOSE_D_LAYOUT.urlLineHeight, letterSpacingEm: 0.08 };
@@ -633,6 +651,7 @@ export const computeTextBoxes = (script: Script, brand: BrandKit): LayoutTextBox
           y: MOMENT_LAYOUT.eyebrowTop,
           w: MOMENT_LAYOUT.contentWidth,
           h: lineBoxHeight(MOMENT_LAYOUT.eyebrowFontSize, MOMENT_LAYOUT.eyebrowLineHeight, 1),
+          driftPx: 0,
         });
       }
 
@@ -646,7 +665,8 @@ export const computeTextBoxes = (script: Script, brand: BrandKit): LayoutTextBox
             MOMENT_LAYOUT.momentLineFontSize,
             MOMENT_LAYOUT.momentLineHeight,
             MOMENT_LAYOUT.momentLineMaxLines,
-          ) + MOMENT_LAYOUT.momentLineEntranceDrift,
+          ),
+          driftPx: MOMENT_LAYOUT.momentLineEntranceDrift,
         });
       }
 
@@ -656,11 +676,8 @@ export const computeTextBoxes = (script: Script, brand: BrandKit): LayoutTextBox
           x: MOMENT_LAYOUT.contentX,
           y: MOMENT_LAYOUT.thoughtsTop + thoughtIndex * MOMENT_LAYOUT.thoughtStep,
           w: MOMENT_LAYOUT.contentWidth,
-          h: lineBoxHeight(
-            MOMENT_LAYOUT.thoughtFontSize,
-            MOMENT_LAYOUT.thoughtLineHeight,
-            MOMENT_LAYOUT.thoughtMaxLines,
-          ) + MOMENT_LAYOUT.thoughtEntranceDrift,
+          h: momentThoughtBoxHeight(),
+          driftPx: MOMENT_LAYOUT.thoughtEntranceDrift,
         });
       });
     }
@@ -672,8 +689,8 @@ export const computeTextBoxes = (script: Script, brand: BrandKit): LayoutTextBox
           x: QUESTION_LAYOUT.contentX,
           y: QUESTION_LAYOUT.kickerTop,
           w: QUESTION_LAYOUT.contentWidth,
-          h: lineBoxHeight(QUESTION_LAYOUT.kickerFontSize, QUESTION_LAYOUT.kickerLineHeight, 1) +
-            QUESTION_LAYOUT.lineEntranceDrift,
+          h: lineBoxHeight(QUESTION_LAYOUT.kickerFontSize, QUESTION_LAYOUT.kickerLineHeight, 1),
+          driftPx: QUESTION_LAYOUT.lineEntranceDrift,
         });
       }
 
@@ -683,8 +700,8 @@ export const computeTextBoxes = (script: Script, brand: BrandKit): LayoutTextBox
           x: QUESTION_LAYOUT.contentX,
           y: QUESTION_LAYOUT.linesTop + lineIndex * QUESTION_LAYOUT.lineStep,
           w: QUESTION_LAYOUT.linesWidth,
-          h: lineBoxHeight(QUESTION_LAYOUT.lineFontSize, QUESTION_LAYOUT.lineLineHeight, 1) +
-            QUESTION_LAYOUT.lineEntranceDrift,
+          h: lineBoxHeight(QUESTION_LAYOUT.lineFontSize, QUESTION_LAYOUT.lineLineHeight, 1),
+          driftPx: QUESTION_LAYOUT.lineEntranceDrift,
         });
       });
 
@@ -694,8 +711,8 @@ export const computeTextBoxes = (script: Script, brand: BrandKit): LayoutTextBox
           x: QUESTION_LAYOUT.contentX,
           y: QUESTION_LAYOUT.dekTop,
           w: QUESTION_LAYOUT.contentWidth,
-          h: lineBoxHeight(QUESTION_LAYOUT.dekFontSize, QUESTION_LAYOUT.dekLineHeight, 1) +
-            QUESTION_LAYOUT.dekEntranceDrift,
+          h: lineBoxHeight(QUESTION_LAYOUT.dekFontSize, QUESTION_LAYOUT.dekLineHeight, 1),
+          driftPx: QUESTION_LAYOUT.dekEntranceDrift,
         });
       }
     }
@@ -708,6 +725,7 @@ export const computeTextBoxes = (script: Script, brand: BrandKit): LayoutTextBox
           y: FIGURE_LAYOUT.labelTop,
           w: FIGURE_LAYOUT.contentWidth,
           h: lineBoxHeight(FIGURE_LAYOUT.labelFontSize, FIGURE_LAYOUT.labelLineHeight, 1),
+          driftPx: 0,
         });
       }
 
@@ -717,6 +735,7 @@ export const computeTextBoxes = (script: Script, brand: BrandKit): LayoutTextBox
         y: FIGURE_LAYOUT.counterTop,
         w: FIGURE_LAYOUT.counterWidth,
         h: lineBoxHeight(FIGURE_LAYOUT.counterFontSize, FIGURE_LAYOUT.counterLineHeight, 1),
+        driftPx: 0,
       });
 
       if (hasText(beat.goalText)) {
@@ -726,6 +745,7 @@ export const computeTextBoxes = (script: Script, brand: BrandKit): LayoutTextBox
           y: FIGURE_LAYOUT.goalTop,
           w: FIGURE_LAYOUT.goalWidth,
           h: lineBoxHeight(FIGURE_LAYOUT.goalFontSize, FIGURE_LAYOUT.goalLineHeight, FIGURE_LAYOUT.goalMaxLines),
+          driftPx: 0,
         });
       }
 
@@ -736,6 +756,7 @@ export const computeTextBoxes = (script: Script, brand: BrandKit): LayoutTextBox
           y: FIGURE_LAYOUT.unitLabelTop,
           w: FIGURE_LAYOUT.contentWidth,
           h: lineBoxHeight(FIGURE_LAYOUT.unitLabelFontSize, FIGURE_LAYOUT.unitLabelLineHeight, 1),
+          driftPx: 0,
         });
       }
 
@@ -746,6 +767,7 @@ export const computeTextBoxes = (script: Script, brand: BrandKit): LayoutTextBox
           y: FIGURE_LAYOUT.tickTop,
           w: FIGURE_LAYOUT.tickFontSize,
           h: lineBoxHeight(FIGURE_LAYOUT.tickFontSize, FIGURE_LAYOUT.tickLineHeight, 1),
+          driftPx: 0,
         });
       }
 
@@ -756,6 +778,7 @@ export const computeTextBoxes = (script: Script, brand: BrandKit): LayoutTextBox
           y: FIGURE_LAYOUT.tickTop,
           w: FIGURE_LAYOUT.tickFontSize * 3,
           h: lineBoxHeight(FIGURE_LAYOUT.tickFontSize, FIGURE_LAYOUT.tickLineHeight, 1),
+          driftPx: 0,
         });
       }
 
@@ -766,6 +789,7 @@ export const computeTextBoxes = (script: Script, brand: BrandKit): LayoutTextBox
           y: FIGURE_LAYOUT.tickTop,
           w: WIDTH - SAFE_RIGHT - FIGURE_LAYOUT.goalTickX,
           h: lineBoxHeight(FIGURE_LAYOUT.tickFontSize, FIGURE_LAYOUT.tickLineHeight, 1),
+          driftPx: 0,
         });
       }
 
@@ -776,8 +800,8 @@ export const computeTextBoxes = (script: Script, brand: BrandKit): LayoutTextBox
             x: FIGURE_LAYOUT.contentX,
             y: FIGURE_LAYOUT.stampTop + stampIndex * FIGURE_LAYOUT.stampStep,
             w: FIGURE_LAYOUT.contentWidth,
-            h: lineBoxHeight(FIGURE_LAYOUT.stampFontSize, FIGURE_LAYOUT.stampLineHeight, 1) +
-              FIGURE_LAYOUT.stampEntranceDrift,
+            h: lineBoxHeight(FIGURE_LAYOUT.stampFontSize, FIGURE_LAYOUT.stampLineHeight, 1),
+            driftPx: FIGURE_LAYOUT.stampEntranceDrift,
           });
         }
       });
@@ -790,8 +814,8 @@ export const computeTextBoxes = (script: Script, brand: BrandKit): LayoutTextBox
           x: VERDICT_LAYOUT.contentX,
           y: VERDICT_LAYOUT.linesTop + lineIndex * VERDICT_LAYOUT.lineStep,
           w: VERDICT_LAYOUT.linesWidth,
-          h: lineBoxHeight(VERDICT_LAYOUT.lineFontSize, VERDICT_LAYOUT.lineLineHeight, 1) +
-            VERDICT_LAYOUT.lineEntranceDrift,
+          h: lineBoxHeight(VERDICT_LAYOUT.lineFontSize, VERDICT_LAYOUT.lineLineHeight, 1),
+          driftPx: VERDICT_LAYOUT.lineEntranceDrift,
         });
       });
     }
@@ -807,9 +831,8 @@ export const computeTextBoxes = (script: Script, brand: BrandKit): LayoutTextBox
       x: CLOSE_LAYOUT.contentX,
       y: CLOSE_LAYOUT.lineTop,
       w: CLOSE_LAYOUT.contentWidth,
-      h:
-        lineBoxHeight(CLOSE_LAYOUT.lineFontSize, CLOSE_LAYOUT.lineHeight, CLOSE_LAYOUT.lineMaxLines) +
-        CLOSE_LAYOUT.lineEntranceDrift,
+      h: lineBoxHeight(CLOSE_LAYOUT.lineFontSize, CLOSE_LAYOUT.lineHeight, CLOSE_LAYOUT.lineMaxLines),
+      driftPx: CLOSE_LAYOUT.lineEntranceDrift,
     });
   }
 
@@ -820,6 +843,7 @@ export const computeTextBoxes = (script: Script, brand: BrandKit): LayoutTextBox
       y: CLOSE_LAYOUT.wordmarkTop,
       w: CLOSE_LAYOUT.contentWidth,
       h: lineBoxHeight(CLOSE_LAYOUT.wordmarkFontSize, CLOSE_LAYOUT.wordmarkLineHeight, 1),
+      driftPx: 0,
     });
   }
 
@@ -830,7 +854,8 @@ export const computeTextBoxes = (script: Script, brand: BrandKit): LayoutTextBox
         x: CLOSE_D_LAYOUT.contentX,
         y: CLOSE_D_LAYOUT.logoTop,
         w: CLOSE_D_LAYOUT.logoSize,
-        h: CLOSE_D_LAYOUT.logoSize + CLOSE_D_LAYOUT.entranceDrift,
+        h: CLOSE_D_LAYOUT.logoSize,
+        driftPx: CLOSE_D_LAYOUT.entranceDrift,
       });
     }
 
@@ -840,8 +865,8 @@ export const computeTextBoxes = (script: Script, brand: BrandKit): LayoutTextBox
         x: CLOSE_D_LAYOUT.contentX,
         y: CLOSE_D_LAYOUT.taglineTop,
         w: CLOSE_LAYOUT.contentWidth,
-        h: lineBoxHeight(CLOSE_D_LAYOUT.taglineFontSize, CLOSE_D_LAYOUT.taglineLineHeight, 1) +
-          CLOSE_D_LAYOUT.entranceDrift,
+        h: lineBoxHeight(CLOSE_D_LAYOUT.taglineFontSize, CLOSE_D_LAYOUT.taglineLineHeight, CLOSE_D_LAYOUT.taglineMaxLines),
+        driftPx: CLOSE_D_LAYOUT.entranceDrift,
       });
     }
 
@@ -851,8 +876,8 @@ export const computeTextBoxes = (script: Script, brand: BrandKit): LayoutTextBox
         x: CLOSE_D_LAYOUT.contentX,
         y: CLOSE_D_LAYOUT.urlTop,
         w: CLOSE_LAYOUT.contentWidth,
-        h: lineBoxHeight(CLOSE_D_LAYOUT.urlFontSize, CLOSE_D_LAYOUT.urlLineHeight, 1) +
-          CLOSE_D_LAYOUT.entranceDrift,
+        h: lineBoxHeight(CLOSE_D_LAYOUT.urlFontSize, CLOSE_D_LAYOUT.urlLineHeight, 1),
+        driftPx: CLOSE_D_LAYOUT.entranceDrift,
       });
     }
   }
@@ -871,6 +896,7 @@ export const computeTextBoxes = (script: Script, brand: BrandKit): LayoutTextBox
         y: HEIGHT - SAFE_BOTTOM - CAPTION_LAYOUT.bottomOffset - lineHeight * CAPTION_LAYOUT.maxLines + lineHeight * lineIndex,
         w: CAPTION_LAYOUT.contentWidth,
         h: lineHeight,
+        driftPx: 0,
       });
     });
   }
@@ -907,7 +933,7 @@ export const lintScript = (script: Script, brand: BrandKit): LintResult => {
       box.x < SAFE_LEFT ||
       box.y < SAFE_TOP ||
       box.x + box.w > safeRightEdge ||
-      box.y + box.h > safeBottomEdge
+      box.y + box.h + box.driftPx > safeBottomEdge
     ) {
       violations.push(
         `Text box ${box.id} is outside the safe zone: (${box.x}, ${box.y}, ${box.w}, ${box.h}).`,

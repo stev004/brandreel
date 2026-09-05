@@ -31,7 +31,8 @@ export function safeZones(manifest) {
     const w = element?.w;
     const h = element?.h;
     const rightEdge = isNumber(x) && isNumber(w) ? x + w : null;
-    const bottomEdge = isNumber(y) && isNumber(h) ? y + h : null;
+    const driftPx = isNumber(element?.driftPx) ? element.driftPx : 0;
+    const bottomEdge = isNumber(y) && isNumber(h) ? y + h + driftPx : null;
 
     if (!isNumber(x) || x < safe.left) {
       violations.push(`[safe-zone] ${name}: x ${isNumber(x) ? x : "missing"} is less than ${safe.left}`);
@@ -136,6 +137,7 @@ export function ctaDwellMs(manifest) {
 }
 
 function boxesIntersect(a, b) {
+  // h is the resting height; entrance drift is intentionally excluded here.
   return a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
 }
 

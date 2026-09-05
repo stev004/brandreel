@@ -6,12 +6,18 @@ import { spawnSync } from "node:child_process";
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 export const STAGES = ["vo", "align", "manifest", "compose", "polish", "lint", "review"];
+export const PRE_STAGES = ["interview", "script"];
 
 export function planStages(script, options = {}) {
-  const from = options.from ?? STAGES[0];
-  const to = options.to ?? STAGES.at(-1);
-  const fromIndex = STAGES.indexOf(from);
-  const toIndex = STAGES.indexOf(to);
+  const allStages = [
+    ...(options.includeInterview ? ["interview"] : []),
+    ...(options.includeScript ? ["script"] : []),
+    ...STAGES,
+  ];
+  const from = options.from ?? allStages[0];
+  const to = options.to ?? allStages.at(-1);
+  const fromIndex = allStages.indexOf(from);
+  const toIndex = allStages.indexOf(to);
   if (fromIndex === -1) throw new Error(`unknown stage ${from}`);
   if (toIndex === -1) throw new Error(`unknown stage ${to}`);
   if (fromIndex > toIndex) throw new Error("--from must not come after --to");
@@ -22,12 +28,12 @@ export function planStages(script, options = {}) {
       : String(options.skip ?? "").split(",").filter(Boolean),
   );
   for (const stage of skip) {
-    if (!STAGES.includes(stage)) throw new Error(`unknown stage ${stage}`);
+    if (!allStages.includes(stage)) throw new Error(`unknown stage ${stage}`);
   }
 
   const hasVo = Boolean(script?.modules?.vo);
   const hasMusic = Boolean(script?.modules?.music) || Boolean(options.music);
-  return STAGES.slice(fromIndex, toIndex + 1).filter((stage) => {
+  return allStages.slice(fromIndex, toIndex + 1).filter((stage) => {
     if (skip.has(stage)) return false;
     if ((stage === "vo" || stage === "align") && !hasVo) return false;
     if (stage === "polish" && !hasVo && !hasMusic) return false;
@@ -37,7 +43,7 @@ export function planStages(script, options = {}) {
 
 function parseArgs(argv) {
   let workspaceArg = null;
-  const options = { skip: [] };
+  const options = { skip: [], modelCmd: "claude -p" };
 
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
@@ -49,7 +55,7 @@ function parseArgs(argv) {
       options.dryRun = true;
       continue;
     }
-    if (["--from", "--to", "--skip", "--music"].includes(arg)) {
+    if (["--from", "--to", "--skip", "--music", "--model-cmd", "--brand", "--topic"].includes(arg)) {
       const value = argv[index + 1];
       if (!value || value.startsWith("--")) throw new Error(`${arg} requires a value`);
       index += 1;
@@ -57,7 +63,7 @@ function parseArgs(argv) {
       else options[arg.slice(2)] = value;
       continue;
     }
-    if (arg.startsWith("--from=") || arg.startsWith("--to=") || arg.startsWith("--skip=") || arg.startsWith("--music=")) {
+    if (["--from=", "--to=", "--skip=", "--music=", "--model-cmd=", "--brand=", "--topic="].some((prefix) => arg.startsWith(prefix))) {
       const separator = arg.indexOf("=");
       const name = arg.slice(2, separator);
       const value = arg.slice(separator + 1);
@@ -83,8 +89,10 @@ function readScript(workspaceDir) {
   }
 }
 
-function commandFor(stage, workspaceArg, music) {
+function commandFor(stage, workspaceArg, music, options) {
   const commands = {
+    interview: ["node", ["bin/interview.mjs", workspaceArg, ...(options.brand ? ["--brand", options.brand] : [])]],
+    script: ["node", ["bin/script.mjs", workspaceArg, "--model-cmd", options.modelCmd, ...(options.brand ? ["--brand", options.brand] : []), ...(options.topic ? ["--topic", options.topic] : [])]],
     vo: ["audio/.venv/bin/python", ["bin/vo.py", workspaceArg]],
     align: ["audio/.venv/bin/python", ["bin/align.py", workspaceArg]],
     manifest: ["node", ["bin/manifest.mjs", workspaceArg]],
@@ -102,13 +110,13 @@ function shellQuote(value) {
   return /^[A-Za-z0-9_./:-]+$/.test(value) ? value : JSON.stringify(value);
 }
 
-function displayCommand(stage, workspaceArg, music) {
-  const [executable, args] = commandFor(stage, workspaceArg, music);
+function displayCommand(stage, workspaceArg, music, options) {
+  const [executable, args] = commandFor(stage, workspaceArg, music, options);
   return [executable, ...args].map(shellQuote).join(" ");
 }
 
-function runStage(stage, workspaceArg, music) {
-  const [executable, args] = commandFor(stage, workspaceArg, music);
+function runStage(stage, workspaceArg, music, options) {
+  const [executable, args] = commandFor(stage, workspaceArg, music, options);
   const result = spawnSync(executable, args, { cwd: repoRoot, stdio: "inherit" });
   if (result.error) {
     throw new Error(`${stage} failed to start: ${result.error.message}`);
@@ -121,18 +129,29 @@ function runStage(stage, workspaceArg, music) {
 export function run(argv = process.argv.slice(2)) {
   const options = parseArgs(argv);
   const workspaceDir = resolve(repoRoot, options.workspaceArg);
-  const script = readScript(workspaceDir);
-  const music = options.music ?? script.modules?.music?.file;
-  const stages = planStages(script, { ...options, music });
+  const scriptPath = join(workspaceDir, "script.json");
+  const briefPath = join(workspaceDir, "brief.json");
+  const script = existsSync(scriptPath) ? readScript(workspaceDir) : null;
+  const brief = existsSync(briefPath) ? JSON.parse(readFileSync(briefPath, "utf8")) : null;
+  const includeInterview = !existsSync(briefPath) && !script;
+  const includeScript = !script;
+  const planningScript = script ?? {
+    modules: {
+      ...(brief?.voice && brief.voice !== "none" ? { vo: { voice: brief.voice } } : {}),
+      ...(brief?.music && brief.music !== "none" ? { music: { file: brief.music } } : {}),
+    },
+  };
+  const music = options.music ?? script?.modules?.music?.file ?? (brief?.music !== "none" ? brief?.music : undefined);
+  const stages = planStages(planningScript, { ...options, music, includeInterview, includeScript });
 
   if (options.dryRun) {
     for (const stage of stages) {
-      console.log(`${stage}: ${displayCommand(stage, options.workspaceArg, music)}`);
+      console.log(`${stage}: ${displayCommand(stage, options.workspaceArg, music, options)}`);
     }
     return 0;
   }
 
-  for (const stage of stages) runStage(stage, options.workspaceArg, music);
+  for (const stage of stages) runStage(stage, options.workspaceArg, music, options);
   return 0;
 }
 

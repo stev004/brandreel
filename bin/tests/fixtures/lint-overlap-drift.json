@@ -1,0 +1,6 @@
+{
+  "elements": [
+    { "id": "beat-1-question-line-0", "text": "first line", "x": 60, "y": 560, "w": 860, "h": 133.12, "driftPx": 34, "fromMs": 3900, "toMs": 6500 },
+    { "id": "beat-1-question-line-1", "text": "second line", "x": 60, "y": 693.12, "w": 860, "h": 133.12, "driftPx": 34, "fromMs": 3900, "toMs": 6500 }
+  ]
+}

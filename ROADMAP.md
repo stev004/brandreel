@@ -10,11 +10,12 @@ Where the pipeline goes from here. STATE.md = now; this = the arc. Updated 2026-
 
 ## Phase 2 - make it a weekly machine
 - [x] `bin/reel.mjs` orchestrator (09-04, feature/phase2-machine).
-- [x] `bin/script.mjs` LLM stage (09-04). Open: stop the model inventing modules.vo/music; voice id should come from brand.json.
+- [x] `bin/script.mjs` LLM stage (09-04); modules only from the brief or flags (09-05).
 - [x] `bin/review.mjs` review sheet (09-04).
 - [x] Karaoke captions (09-04).
 - [x] Layout manifest (stage 5, `bin/manifest.mjs`) + stage 7 lints: safe zones, text fit, hook, pacing, CTA, pixel bands (09-04, `feature/layout-lints`). CTA dwell + overlap lints landed 09-04 (`feature/cta-lint`). Open: real glyph measurement.
-- [ ] GitHub remote + CI renders on push (workflow already written).
+- [x] GitHub remote + CI renders on push (09-05, public repo).
+- [x] Interview stage -> brief.json, script enforces the brief (09-05).
 
 ## Phase 3 - footage + more brands
 - [ ] `bin/assets`: Pexels/Pixabay fetcher + Veo free-tier prompt manifests; `bin/conform` RIFE 60fps.

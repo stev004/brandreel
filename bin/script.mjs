@@ -13,6 +13,28 @@ export const FIGURE_LAST_EVENT_MS = 5600;
 export const MAX_STATIC_MS = 3000;
 // Mirror engine CLOSE_D_TIMING.taglineMs and urlMs for close pacing validation.
 export const CLOSE_D_TIMING = { taglineMs: 500, urlMs: 900 };
+// Mirror the hook lint's first visual-change deadline.
+export const HOOK_MAX_FIRST_VISUAL_CHANGE_MS = 3000;
+// Mirror the hook and pacing lints for a moment with no thought event.
+export const MOMENT_NO_THOUGHTS_MAX_MS = HOOK_MAX_FIRST_VISUAL_CHANGE_MS;
+// Mirror the pacing lint's verdict first-line timing.
+export const VERDICT_FIRST_LINE_MS = 200;
+// Mirror the pacing lint's verdict line stagger.
+export const VERDICT_LINE_STAGGER_MS = 1200;
+// Mirror the pacing lint's question first-line timing.
+export const QUESTION_FIRST_LINE_MS = 600;
+// Mirror the pacing lint's question line stagger.
+export const QUESTION_LINE_STAGGER_MS = 300;
+// Mirror the pacing lint's question dek timing.
+export const QUESTION_DEK_MS = 2400;
+// Mirror the CTA lint's minimum rendered close-text dwell.
+export const CTA_MIN_DWELL_MS = 2500;
+// Mirror the CTA lint's plain-close dwell floor.
+export const PLAIN_CLOSE_MIN_MS = CTA_MIN_DWELL_MS;
+// Mirror the CTA lint's tagline-only close dwell floor.
+export const TAGLINE_CLOSE_MIN_MS = CTA_MIN_DWELL_MS + CLOSE_D_TIMING.taglineMs;
+// Mirror the CTA lint's URL close dwell floor.
+export const URL_CLOSE_MIN_MS = CTA_MIN_DWELL_MS + CLOSE_D_TIMING.urlMs;
 
 export const COPY_LIMITS = {
   moment: { line: 44, eyebrow: 24, thoughts: 3, thought: 60 },
@@ -28,7 +50,7 @@ export const COPY_LIMITS = {
     stamp: 32,
   },
   verdict: { line: 20, lines: 3 },
-  close: { line: 44, tagline: 18 },
+  close: { line: 44, tagline: 36 },
   caption: { lines: 2, line: 44 },
   hashtags: { min: 3, max: 6 },
 };
@@ -42,14 +64,14 @@ export const DURATION_LIMITS = {
 };
 
 const CLOSE_VARIANT_LIMITS = {
-  plain: { label: "plain close", max: MAX_STATIC_MS },
-  "tagline-only": { label: "tagline-only close", max: CLOSE_D_TIMING.taglineMs + MAX_STATIC_MS },
-  "with-url": { label: "close with URL", max: DURATION_LIMITS.close.max },
+  plain: { label: "plain close", min: PLAIN_CLOSE_MIN_MS, max: MAX_STATIC_MS },
+  "tagline-only": { label: "tagline-only close", min: TAGLINE_CLOSE_MIN_MS, max: CLOSE_D_TIMING.taglineMs + MAX_STATIC_MS },
+  "with-url": { label: "close with URL", min: URL_CLOSE_MIN_MS, max: DURATION_LIMITS.close.max },
 };
 
 export function parseArgs(argv) {
   let workspaceArg = null;
-  const options = { modelCmd: "claude -p", durationMs: 25000, retries: 2, dryRun: false, skipLint: false };
+  const options = { modelCmd: "claude -p", durationMs: 25000, durationExplicit: false, retries: 2, dryRun: false, skipLint: false };
   const valueOptions = new Map([
     ["--brand", "brand"],
     ["--topic", "topic"],
@@ -91,14 +113,13 @@ export function parseArgs(argv) {
       }
       if (!value) throw new Error(`${optionName} requires a value`);
       options[valueOptions.get(optionName)] = value;
+      if (optionName === "--duration-ms") options.durationExplicit = true;
       continue;
     }
     throw new Error(`unknown argument ${arg}`);
   }
 
   if (!workspaceArg) throw new Error("missing workspace directory");
-  if (!options.brand) throw new Error("missing --brand");
-  if (!options.topic) throw new Error("missing --topic");
   if (options.tagline !== undefined && options.tagline.length > COPY_LIMITS.close.tagline) {
     throw new Error(`--tagline must be ${COPY_LIMITS.close.tagline} characters or fewer (got ${options.tagline.length})`);
   }
@@ -180,13 +201,34 @@ function scriptExample() {
   };
 }
 
-export function buildPrompt(brand, topic, targetDurationMs) {
+function promptList(values) {
+  return Array.isArray(values) && values.length > 0 ? values.map((value) => `- ${value}`).join("\n") : "- none";
+}
+
+export function buildPrompt(brand, topic, targetDurationMs, brief = null) {
   const tone = brand.voice.tone.map((word) => `- ${word}`).join("\n");
+  const briefSection = brief ? `
+BRIEF - creative contract. These values are copied verbatim from brief.json:
+audience: ${brief.audience}
+hook archetype: ${brief.hookArchetype}
+hook line: ${brief.hookLine || "none"}
+core mechanic: ${brief.coreMechanic}
+facts:
+${promptList(brief.facts)}
+allowed beat kinds:
+${promptList(brief.beatKinds)}
+required phrases:
+${promptList(brief.requiredPhrases)}
+banned phrases:
+${promptList(brief.bannedPhrases)}
+notes: ${brief.notes || ""}
+` : "";
   return `You are writing stage 1 of a short-form video pipeline.
 
 Topic: ${topic}
 Target total beat duration: ${targetDurationMs}ms
 Brand: ${brand.name}
+${briefSection}
 
 Brand voice tone:
 ${tone}
@@ -209,6 +251,7 @@ Rules:
 - Use 4 to 8 beats. Every beat has a positive durationMs.
 - Total beat durationMs must be between 15000 and 35000.
 - Beat duration limits: moment ${DURATION_LIMITS.moment.min}-${DURATION_LIMITS.moment.max}ms; question ${DURATION_LIMITS.question.min}-${DURATION_LIMITS.question.max}ms; figure ${DURATION_LIMITS.figure.min}-${DURATION_LIMITS.figure.max}ms; verdict ${DURATION_LIMITS.verdict.min}-${DURATION_LIMITS.verdict.max}ms.
+- Lint-safe timing contract (hook, pacing, CTA): a moment with no thoughts is at most ${MOMENT_NO_THOUGHTS_MAX_MS}ms and must add a thought or shorten; a moment with at least one thought is at most ${DURATION_LIMITS.moment.max}ms; the verdict must end within ${MAX_STATIC_MS}ms after its last line (last line at ${VERDICT_FIRST_LINE_MS}ms + ${VERDICT_LINE_STAGGER_MS}ms per extra line); the question must end within ${MAX_STATIC_MS}ms after its dek at ${QUESTION_DEK_MS}ms, or after its last line at ${QUESTION_FIRST_LINE_MS}ms + ${QUESTION_LINE_STAGGER_MS}ms per extra line when there is no dek; close duration must be ${PLAIN_CLOSE_MIN_MS}-${CLOSE_VARIANT_LIMITS.plain.max}ms plain, ${TAGLINE_CLOSE_MIN_MS}-${CLOSE_VARIANT_LIMITS["tagline-only"].max}ms tagline-only, or ${URL_CLOSE_MIN_MS}-${CLOSE_VARIANT_LIMITS["with-url"].max}ms with a URL. The example above satisfies this contract.
 - Do not emit a modules key. Modules are supplied by the command flags.
 - Copy limits: moment.line <= ${COPY_LIMITS.moment.line} characters; moment.eyebrow <= ${COPY_LIMITS.moment.eyebrow}; moment.thoughts has at most ${COPY_LIMITS.moment.thoughts} entries and each is <= ${COPY_LIMITS.moment.thought} characters.
 - question.lines has 1 to ${COPY_LIMITS.question.lines} entries and each is <= ${COPY_LIMITS.question.line} characters; question.kicker <= ${COPY_LIMITS.question.kicker}; question.dek <= ${COPY_LIMITS.question.dek}.
@@ -217,10 +260,18 @@ Rules:
 - verdict.lines has 1 to ${COPY_LIMITS.verdict.lines} entries and each is <= ${COPY_LIMITS.verdict.line} characters.
 - Do not emit close.url. Do not emit close.tagline; a curated tagline is supplied only by the --tagline flag.
 - close.line <= ${COPY_LIMITS.close.line}; close.tagline <= ${COPY_LIMITS.close.tagline} when supplied by the flag.
-- close.durationMs must be between ${DURATION_LIMITS.close.min} and ${CLOSE_VARIANT_LIMITS.plain.max}ms for a plain close (no tagline or URL), between ${DURATION_LIMITS.close.min} and ${CLOSE_VARIANT_LIMITS["tagline-only"].max}ms for a tagline-only close, or between ${DURATION_LIMITS.close.min} and ${CLOSE_VARIANT_LIMITS["with-url"].max}ms for a close with a URL.
+- close.durationMs must be between ${PLAIN_CLOSE_MIN_MS} and ${CLOSE_VARIANT_LIMITS.plain.max}ms for a plain close (no tagline or URL), between ${TAGLINE_CLOSE_MIN_MS} and ${CLOSE_VARIANT_LIMITS["tagline-only"].max}ms for a tagline-only close, or between ${URL_CLOSE_MIN_MS} and ${CLOSE_VARIANT_LIMITS["with-url"].max}ms for a close with a URL.
 - caption has at most ${COPY_LIMITS.caption.lines} newline-separated lines and each line is <= ${COPY_LIMITS.caption.line} characters.
 - hashtags must contain ${COPY_LIMITS.hashtags.min} to ${COPY_LIMITS.hashtags.max} strings, each starting with # and containing no spaces.
 - Do not use any banned phrases from the brand voice notes, case-insensitively.
+${brief ? `- coreMechanic in the output must equal the brief core mechanic, ignoring surrounding whitespace and letter case.
+- The first beat must follow the brief hook archetype: ${brief.hookArchetype}.
+- Every figure beat value.to, axis number, and number in figure label, unitLabel, goalText, tick text or stamp text must come from a number in brief.facts.
+- Use only the allowed beat kinds from the brief.
+- Every required phrase must appear somewhere on screen, and every banned phrase from the brief must be absent.
+- If the brief hook line is set, the first beat's first on-screen text must equal it exactly.
+- The brief is the creative contract. Do not invent facts, numbers, hook copy, mechanics or close data outside it.
+` : ""}
 - Respond with JSON only, no prose and no markdown.
 `;
 }
@@ -326,6 +377,28 @@ function validateStringArray(violations, values, label, maxItems, itemLimit) {
   values.forEach((value, itemIndex) => addMaxLengthViolation(violations, value, `${label}[${itemIndex}]`, itemLimit));
 }
 
+function beatDurationMax(beat) {
+  const baseMax = DURATION_LIMITS[beat.kind]?.max;
+  if (baseMax === undefined) return undefined;
+  if (beat.kind === "moment") {
+    const hasThought = Array.isArray(beat.thoughts) && beat.thoughts.some(isNonEmptyString);
+    return hasThought ? baseMax : Math.min(baseMax, MOMENT_NO_THOUGHTS_MAX_MS);
+  }
+  if (beat.kind === "verdict") {
+    const lineCount = Array.isArray(beat.lines) && beat.lines.length > 0 ? beat.lines.length : 1;
+    const lastLineMs = VERDICT_FIRST_LINE_MS + VERDICT_LINE_STAGGER_MS * (lineCount - 1);
+    return Math.min(baseMax, lastLineMs + MAX_STATIC_MS);
+  }
+  if (beat.kind === "question") {
+    const lineCount = Array.isArray(beat.lines) && beat.lines.length > 0 ? beat.lines.length : 1;
+    const lastVisualMs = isNonEmptyString(beat.dek)
+      ? QUESTION_DEK_MS
+      : QUESTION_FIRST_LINE_MS + QUESTION_LINE_STAGGER_MS * (lineCount - 1);
+    return Math.min(baseMax, lastVisualMs + MAX_STATIC_MS);
+  }
+  return baseMax;
+}
+
 function validateBeat(beat, index, violations) {
   const label = `beats[${index}]`;
   if (!beat || typeof beat !== "object" || Array.isArray(beat)) {
@@ -340,8 +413,12 @@ function validateBeat(beat, index, violations) {
     violations.push(`${label}.durationMs must be a positive number`);
   } else {
     const duration = DURATION_LIMITS[beat.kind];
-    if (duration && (beat.durationMs < duration.min || beat.durationMs > duration.max)) {
-      violations.push(`${label}.durationMs must be between ${duration.min} and ${duration.max}ms for ${beat.kind} (got ${beat.durationMs})`);
+    const maxDuration = beatDurationMax(beat);
+    if (duration && (beat.durationMs < duration.min || beat.durationMs > maxDuration)) {
+      const fix = beat.kind === "moment" && maxDuration === MOMENT_NO_THOUGHTS_MAX_MS && beat.durationMs > maxDuration
+        ? "; add a thought or shorten"
+        : "";
+      violations.push(`${label}.durationMs must be between ${duration.min} and ${maxDuration}ms for ${beat.kind} (got ${beat.durationMs})${fix}`);
     }
   }
   if (beat.kind === "moment") {
@@ -420,7 +497,65 @@ function allStrings(value) {
   return [];
 }
 
-export function validateScript(script, brandName, workspaceId, notes) {
+function numbersIn(value) {
+  return String(value ?? "").match(/-?\d+(?:\.\d+)?/g)?.map(Number) ?? [];
+}
+
+function firstBeatText(beat) {
+  if (!beat || typeof beat !== "object") return "";
+  if (beat.kind === "moment") return beat.line ?? "";
+  if (beat.kind === "question") return beat.lines?.[0] ?? "";
+  if (beat.kind === "figure") return beat.label ?? "";
+  if (beat.kind === "verdict") return beat.lines?.[0] ?? "";
+  return "";
+}
+
+function screenStrings(script) {
+  const strings = [];
+  for (const beat of script.beats ?? []) {
+    if (beat?.kind === "moment") strings.push(beat.eyebrow, beat.line, ...(beat.thoughts ?? []));
+    if (beat?.kind === "question") strings.push(beat.kicker, ...(beat.lines ?? []), beat.dek);
+    if (beat?.kind === "figure") strings.push(beat.label, beat.unitLabel, beat.goalText, beat.minTick, beat.achievedTick, beat.goalTick, ...(beat.stamps ?? []).map((stamp) => stamp?.text), beat.value?.to);
+    if (beat?.kind === "verdict") strings.push(...(beat.lines ?? []));
+  }
+  strings.push(script.close?.line, script.close?.tagline, script.close?.url);
+  return strings.filter((value) => value !== undefined && value !== null).map(String);
+}
+
+function validateBriefContract(script, brief, violations) {
+  if (!brief) return;
+  if (typeof script.coreMechanic === "string" && script.coreMechanic.trim().toLowerCase() !== String(brief.coreMechanic).trim().toLowerCase()) {
+    violations.push("brief rule: coreMechanic must equal brief.coreMechanic");
+  }
+  if (Array.isArray(brief.beatKinds) && Array.isArray(script.beats)) {
+    const allowed = new Set(brief.beatKinds);
+    script.beats.forEach((beat, index) => {
+      if (beat && !allowed.has(beat.kind)) violations.push(`brief rule: beats[${index}].kind ${beat.kind} is not allowed by brief.beatKinds`);
+    });
+  }
+  const factNumbers = new Set((brief.facts ?? []).flatMap(numbersIn));
+  script.beats?.forEach((beat, index) => {
+    if (beat?.kind !== "figure") return;
+    const numbers = [beat.value?.to, beat.axis?.min, beat.axis?.max, beat.axis?.achieved, beat.axis?.goal].flatMap(numbersIn);
+    for (const field of ["label", "unitLabel", "goalText", "minTick", "achievedTick", "goalTick"]) numbers.push(...numbersIn(beat[field]));
+    for (const stamp of beat.stamps ?? []) numbers.push(...numbersIn(stamp?.text));
+    for (const number of numbers) {
+      if (!factNumbers.has(number)) violations.push(`brief rule: beats[${index}] figure number ${number} is not in brief.facts`);
+    }
+  });
+  const screenText = screenStrings(script).join("\n").toLowerCase();
+  for (const phrase of brief.requiredPhrases ?? []) {
+    if (!screenText.includes(String(phrase).toLowerCase())) violations.push(`brief rule: required phrase missing: ${phrase}`);
+  }
+  for (const phrase of brief.bannedPhrases ?? []) {
+    if (allStrings(script).join("\n").toLowerCase().includes(String(phrase).toLowerCase())) violations.push(`brief rule: banned phrase found: ${phrase}`);
+  }
+  if (brief.hookLine && Array.isArray(script.beats) && script.beats.length > 0 && firstBeatText(script.beats[0]) !== brief.hookLine) {
+    violations.push("brief rule: first beat hook line does not equal brief.hookLine");
+  }
+}
+
+export function validateScript(script, brandName, workspaceId, notes, brief = null) {
   const violations = [];
   if (!script || typeof script !== "object" || Array.isArray(script)) {
     return ["script must be a JSON object"];
@@ -449,10 +584,9 @@ export function validateScript(script, brandName, workspaceId, notes) {
     addMaxLengthViolation(violations, script.close.line, "close.line", COPY_LIMITS.close.line);
     addOptionalStringLimit(violations, script.close.tagline, "close.tagline", COPY_LIMITS.close.tagline);
     if (typeof script.close.showWordmark !== "boolean") violations.push("close.showWordmark must be a boolean");
-    const closeDuration = DURATION_LIMITS.close;
     const variant = CLOSE_VARIANT_LIMITS[closeVariant(script.close)];
-    if (typeof script.close.durationMs !== "number" || !Number.isFinite(script.close.durationMs) || script.close.durationMs < closeDuration.min || script.close.durationMs > variant.max) {
-      violations.push(`close.durationMs must be between ${closeDuration.min} and ${variant.max}ms for ${variant.label} (got ${script.close.durationMs ?? "missing"})`);
+    if (typeof script.close.durationMs !== "number" || !Number.isFinite(script.close.durationMs) || script.close.durationMs < variant.min || script.close.durationMs > variant.max) {
+      violations.push(`close.durationMs must be between ${variant.min} and ${variant.max}ms for ${variant.label} (got ${script.close.durationMs ?? "missing"})`);
     }
   }
   if (typeof script.caption !== "string") violations.push("caption must be a string");
@@ -485,10 +619,11 @@ export function validateScript(script, brandName, workspaceId, notes) {
       violations.push(`banned phrase found: ${phrase}`);
     }
   }
+  validateBriefContract(script, brief, violations);
   return violations;
 }
 
-function applyModules(script, options) {
+function applyModules(script, options, brief) {
   if (Object.prototype.hasOwnProperty.call(script, "modules")) {
     console.log("dropped model-provided modules");
   }
@@ -501,15 +636,19 @@ function applyModules(script, options) {
     console.log("dropped model-provided close.tagline");
     delete script.close.tagline;
   }
-  if (options.url !== undefined && script.close && typeof script.close === "object" && !Array.isArray(script.close)) {
-    script.close.url = options.url;
+  const url = options.url !== undefined ? options.url : brief?.url;
+  const tagline = options.tagline !== undefined ? options.tagline : brief?.tagline;
+  if (url !== undefined && url !== "none" && script.close && typeof script.close === "object" && !Array.isArray(script.close)) {
+    script.close.url = url;
   }
-  if (options.tagline !== undefined && script.close && typeof script.close === "object" && !Array.isArray(script.close)) {
-    script.close.tagline = options.tagline;
+  if (tagline !== undefined && tagline !== "none" && script.close && typeof script.close === "object" && !Array.isArray(script.close)) {
+    script.close.tagline = tagline;
   }
   const modules = {};
-  if (options.vo !== undefined) modules.vo = { voice: options.vo };
-  if (options.music !== undefined) modules.music = { file: options.music };
+  const voice = options.vo !== undefined ? options.vo : brief?.voice;
+  const music = options.music !== undefined ? options.music : brief?.music;
+  if (voice !== undefined && voice !== "none") modules.vo = { voice };
+  if (music !== undefined && music !== "none") modules.music = { file: music };
   if (Object.keys(modules).length > 0) script.modules = modules;
 }
 
@@ -576,9 +715,24 @@ function attemptWorkspace(workspaceDir, script) {
 function run(options) {
   const workspaceDir = resolve(repoRoot, options.workspaceArg);
   const workspaceId = basename(workspaceDir);
-  const brand = readBrand(options.brand);
-  const prompt = buildPrompt(brand, options.topic, options.durationMs);
   mkdirSync(workspaceDir, { recursive: true });
+  const briefPath = join(workspaceDir, "brief.json");
+  let brief = null;
+  if (existsSync(briefPath)) {
+    try {
+      brief = JSON.parse(readFileSync(briefPath, "utf8"));
+    } catch (error) {
+      throw new Error(`could not read or parse ${briefPath}: ${error.message}`);
+    }
+  }
+  const brandName = options.brand ?? brief?.brand;
+  const topic = options.topic ?? brief?.topic;
+  if (!brandName) throw new Error("missing --brand (or brief.brand)");
+  if (!topic) throw new Error("missing --topic (or brief.topic)");
+  if (options.topic && brief?.topic) console.log("--topic overrides brief.topic");
+  const brand = readBrand(brandName);
+  const targetDurationMs = options.durationExplicit ? options.durationMs : brief?.targetDurationMs ?? options.durationMs;
+  const prompt = buildPrompt(brand, topic, targetDurationMs, brief);
 
   if (options.dryRun) {
     const promptPath = join(workspaceDir, "script-prompt.md");
@@ -617,9 +771,9 @@ function run(options) {
     }
 
     if (script) {
-      applyModules(script, options);
+      applyModules(script, options, brief);
       lastParsedScript = script;
-      violations = validateScript(script, options.brand, workspaceId, brand.voice.notes);
+      violations = validateScript(script, brandName, workspaceId, brand.voice.notes, brief);
       if (violations.length === 0) {
         const tempWorkspace = attemptWorkspace(workspaceDir, script);
         try {

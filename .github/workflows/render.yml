@@ -14,6 +14,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+      - name: Install ffmpeg
+        run: sudo apt-get update -q && sudo apt-get install -y -q ffmpeg
       - name: Install engine dependencies
         working-directory: engine
         run: npm ci
@@ -23,14 +25,20 @@ jobs:
       - name: Test
         working-directory: engine
         run: npm test
+      - name: Test bin stages
+        run: node --test bin/tests/
       - name: Render demo
         run: node bin/compose.mjs workspace/demo
       - name: Lint render
         run: node bin/lint.mjs workspace/demo
+      - name: Review sheet
+        run: node bin/review.mjs workspace/demo
       - name: Upload render artifacts
         uses: actions/upload-artifact@v4
         with:
           name: brandreel-demo
           path: |
             workspace/demo/render.mp4
+            workspace/demo/layout.json
             workspace/demo/lint-report.json
+            workspace/demo/review.md

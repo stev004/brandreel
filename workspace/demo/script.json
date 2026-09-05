@@ -40,8 +40,13 @@
   ],
   "close": {
     "line": "you can pick this up\ntomorrow.",
-    "showWordmark": true
+    "showWordmark": true,
+    "durationMs": 3000
   },
   "caption": "a softer landing\nfor tonight.",
-  "hashtags": ["#regulate", "#winddown", "#nervoussystem"]
+  "hashtags": [
+    "#regulate",
+    "#winddown",
+    "#nervoussystem"
+  ]
 }

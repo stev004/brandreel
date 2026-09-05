@@ -109,6 +109,8 @@ export const Close = ({ brand, close }: CloseProps) => {
                 position: "absolute",
                 left: CLOSE_D_LAYOUT.contentX,
                 top: CLOSE_D_LAYOUT.taglineTop,
+                width: CLOSE_LAYOUT.contentWidth,
+                height: CLOSE_D_LAYOUT.taglineFontSize * CLOSE_D_LAYOUT.taglineLineHeight * CLOSE_D_LAYOUT.taglineMaxLines,
                 color: brand.palette.fg,
                 fontFamily: fonts.display,
                 fontSize: CLOSE_D_LAYOUT.taglineFontSize,
@@ -116,6 +118,10 @@ export const Close = ({ brand, close }: CloseProps) => {
                 letterSpacing: CLOSE_D_LAYOUT.taglineLetterSpacing,
                 opacity: sceneFade * rise(CLOSE_D_TIMING.taglineMs),
                 transform: `translateY(${(1 - rise(CLOSE_D_TIMING.taglineMs)) * CLOSE_D_LAYOUT.entranceDrift}px)`,
+                overflow: "hidden",
+                WebkitBoxOrient: "vertical",
+                WebkitLineClamp: CLOSE_D_LAYOUT.taglineMaxLines,
+                display: "-webkit-box",
               }}
             >
               {close.tagline}

@@ -1,0 +1,19 @@
+{
+  "brand": "regulate",
+  "topic": "cannot sleep at 3am",
+  "audience": "People awake in bed at 3am, looking for one gentle next step.",
+  "hookArchetype": "direct-callout",
+  "hookLine": "Still awake?",
+  "coreMechanic": "A quiet visual reset makes the next step visible.",
+  "facts": ["0 to 3 steps", "1 small shift"],
+  "beatKinds": ["moment", "question", "figure", "verdict"],
+  "targetDurationMs": 25000,
+  "voice": "none",
+  "music": "none",
+  "platform": "reels",
+  "url": "https://regulate.example",
+  "tagline": "Make room.",
+  "requiredPhrases": ["Start with less."],
+  "bannedPhrases": ["hustle"],
+  "notes": "Keep the close quiet."
+}

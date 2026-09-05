@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "brand": "regulate",
+  "topic": "Can't meditate? Neither could we.",
+  "audience": "People who downloaded a meditation app, tried to sit still, felt worse, and quit. They are wired after work or awake at night and think calm is something other people can do.",
+  "hookArchetype": "direct-callout",
+  "hookLine": "Can't meditate?",
+  "coreMechanic": "One line of text at a time holds the screen for the length of one slow exhale, so the pacing itself is the regulation.",
+  "facts": [],
+  "beatKinds": [
+    "moment",
+    "question",
+    "verdict"
+  ],
+  "targetDurationMs": 22000,
+  "voice": "none",
+  "music": "none",
+  "platform": "reels",
+  "url": "regulate.app",
+  "tagline": "Not meditation. Regulation.",
+  "requiredPhrases": [],
+  "bannedPhrases": [
+    "journey",
+    "self-care",
+    "inner peace",
+    "cortisol",
+    "cure",
+    "heal",
+    "rewire"
+  ],
+  "notes": "Voice: direct, honest, warm without being soft. Message order: recognition, reframe, difference, invitation. The body, not the mind, is the subject. No wellness cliches. No claims about the brain or hormones.",
+  "createdAt": "2026-09-05T12:55:46.539Z"
+}

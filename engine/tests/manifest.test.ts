@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { BrandKit, Script } from "../src/schema";
 import { buildManifest } from "../src/manifest";
-import { CAPTION_LAYOUT, computeTimeline, FIGURE_LAYOUT, MOMENT_LAYOUT } from "../src/layout";
+import { CAPTION_LAYOUT, computeTimeline, FIGURE_LAYOUT, MOMENT_LAYOUT, QUESTION_LAYOUT } from "../src/layout";
 import { describe, expect, it } from "vitest";
 
 const readJson = (relativePath: string): unknown =>
@@ -106,6 +106,35 @@ describe("layout manifest", () => {
     expect(overlaps(boxes[1], boxes[2])).toBe(false);
   });
 
+  it("fits a two-row close tagline above the close URL", () => {
+    const script = Script.parse({
+      id: "close-tagline-wrap",
+      brand: "regulate",
+      coreMechanic: "A tagline settles into two clear rows.",
+      beats: [],
+      close: {
+        line: "",
+        showWordmark: false,
+        tagline: "Not meditation. Regulation.",
+        url: "example.com",
+      },
+      caption: "",
+      hashtags: [],
+    });
+    const manifest = buildManifest(script, brand);
+    const tagline = manifest.elements.find((element) => element.id === "close-tagline");
+    const url = manifest.elements.find((element) => element.id === "close-url");
+    const intersects = (first: typeof tagline, second: typeof url): boolean => {
+      if (!first || !second) return false;
+      return first.x < second.x + second.w && first.x + first.w > second.x &&
+        first.y < second.y + second.h && first.y + first.h > second.y;
+    };
+
+    expect(tagline?.maxLines).toBe(2);
+    expect(tagline?.estimatedLines).toBeLessThanOrEqual(2);
+    expect(intersects(tagline, url)).toBe(false);
+  });
+
   it("uses the shared frame and safe-zone dimensions", () => {
     const manifest = buildManifest(demo, brand);
 
@@ -113,7 +142,7 @@ describe("layout manifest", () => {
     expect(manifest.height).toBe(1920);
     expect(manifest.fps).toBe(60);
     expect(manifest.safe).toEqual({ top: 150, bottom: 320, left: 60, right: 120 });
-    expect(manifest.totalDurationMs).toBe(4500 + 5000 + 4500 + 1920);
+    expect(manifest.totalDurationMs).toBe(4500 + 5000 + 4500 + 3000);
   });
 
   it("keeps three Moment thoughts clear of the caption block", () => {
@@ -134,14 +163,71 @@ describe("layout manifest", () => {
     const manifest = buildManifest(script, brand);
     const thoughtBoxes = manifest.elements.filter((element) => /^beat-0-thought-/.test(element.id));
     const captionBoxes = manifest.elements.filter((element) => element.id.startsWith("caption-line-"));
-    const overlaps = (first: typeof thoughtBoxes[number], second: typeof captionBoxes[number]): boolean =>
+    const overlaps = (first: typeof thoughtBoxes[number], second: typeof thoughtBoxes[number]): boolean =>
       first.x < second.x + second.w && first.x + first.w > second.x &&
       first.y < second.y + second.h && first.y + first.h > second.y;
     const momentLine = manifest.elements.find((element) => element.id === "beat-0-line");
 
     expect(thoughtBoxes).toHaveLength(3);
     expect(captionBoxes).toHaveLength(CAPTION_LAYOUT.maxLines);
+    expect(thoughtBoxes.every((thought, index) =>
+      thoughtBoxes.slice(index + 1).every((otherThought) => !overlaps(thought, otherThought)),
+    )).toBe(true);
     expect(thoughtBoxes.every((thought) => captionBoxes.every((caption) => !overlaps(thought, caption)))).toBe(true);
-    expect(MOMENT_LAYOUT.thoughtsTop).toBeGreaterThan((momentLine?.y ?? 0) + (momentLine?.h ?? 0));
+    expect(MOMENT_LAYOUT.thoughtStep).toBeGreaterThanOrEqual(thoughtBoxes[0]?.h ?? Infinity);
+    expect(MOMENT_LAYOUT.thoughtsTop).toBeGreaterThanOrEqual((momentLine?.y ?? 0) + (momentLine?.h ?? 0) + 40);
+    expect(thoughtBoxes.every((thought) => thought.driftPx === MOMENT_LAYOUT.thoughtEntranceDrift)).toBe(true);
+  });
+
+  it("derives the Moment thought step from the manifest box height", () => {
+    const script: Script = {
+      id: "moment-thought-step",
+      brand: "regulate",
+      coreMechanic: "Thoughts move in clear rows.",
+      beats: [{
+        kind: "moment",
+        line: "",
+        thoughts: ["one thought", "another thought", "one last thought"],
+        durationMs: 15000,
+      }],
+      close: { line: "", showWordmark: false },
+      caption: "",
+      hashtags: [],
+    };
+    const manifest = buildManifest(script, brand);
+    const thought = manifest.elements.find((element) => element.id === "beat-0-thought-0");
+
+    expect(thought).toBeDefined();
+    if (!thought) return;
+
+    expect(thought?.h).toBe(
+      MOMENT_LAYOUT.thoughtFontSize * MOMENT_LAYOUT.thoughtLineHeight * MOMENT_LAYOUT.thoughtMaxLines +
+      0,
+    );
+    expect(thought?.driftPx).toBe(MOMENT_LAYOUT.thoughtEntranceDrift);
+    expect(MOMENT_LAYOUT.thoughtStep).toBe(thought.h + thought.driftPx + 8);
+  });
+
+  it("keeps stacked question lines clear using resting boxes", () => {
+    const script = Script.parse({
+      id: "question-line-clearance",
+      brand: "regulate",
+      coreMechanic: "Question lines settle into separate rows.",
+      beats: [{
+        kind: "question",
+        lines: ["first line", "second line"],
+        durationMs: 7000,
+      }],
+      close: { line: "", showWordmark: false },
+      caption: "",
+      hashtags: [],
+    });
+    const manifest = buildManifest(script, brand);
+    const lines = manifest.elements.filter((element) => element.id.startsWith("beat-0-question-line-"));
+
+    expect(lines).toHaveLength(2);
+    expect(lines[0]?.h).toBe(QUESTION_LAYOUT.lineFontSize * QUESTION_LAYOUT.lineLineHeight);
+    expect(lines.every((line) => line.driftPx === QUESTION_LAYOUT.lineEntranceDrift)).toBe(true);
+    expect((lines[0]?.y ?? 0) + (lines[0]?.h ?? 0)).toBe(lines[1]?.y);
   });
 });
