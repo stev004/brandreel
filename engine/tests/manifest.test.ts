@@ -106,6 +106,35 @@ describe("layout manifest", () => {
     expect(overlaps(boxes[1], boxes[2])).toBe(false);
   });
 
+  it("fits a two-row close tagline above the close URL", () => {
+    const script = Script.parse({
+      id: "close-tagline-wrap",
+      brand: "regulate",
+      coreMechanic: "A tagline settles into two clear rows.",
+      beats: [],
+      close: {
+        line: "",
+        showWordmark: false,
+        tagline: "Not meditation. Regulation.",
+        url: "example.com",
+      },
+      caption: "",
+      hashtags: [],
+    });
+    const manifest = buildManifest(script, brand);
+    const tagline = manifest.elements.find((element) => element.id === "close-tagline");
+    const url = manifest.elements.find((element) => element.id === "close-url");
+    const intersects = (first: typeof tagline, second: typeof url): boolean => {
+      if (!first || !second) return false;
+      return first.x < second.x + second.w && first.x + first.w > second.x &&
+        first.y < second.y + second.h && first.y + first.h > second.y;
+    };
+
+    expect(tagline?.maxLines).toBe(2);
+    expect(tagline?.estimatedLines).toBeLessThanOrEqual(2);
+    expect(intersects(tagline, url)).toBe(false);
+  });
+
   it("uses the shared frame and safe-zone dimensions", () => {
     const manifest = buildManifest(demo, brand);
 

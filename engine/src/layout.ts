@@ -219,20 +219,33 @@ export const CLOSE_LAYOUT = {
   wordmarkLineHeight: 1.2,
 } as const;
 
-export const CLOSE_D_LAYOUT = {
+const CLOSE_D_TAGLINE_URL_GAP = 24;
+
+const CLOSE_D_LAYOUT_BASE = {
   contentX: SAFE_LEFT,
   logoTop: 620,
   logoSize: 150,
   taglineTop: 830,
   taglineFontSize: 96,
   taglineLineHeight: 1.2,
+  taglineMaxLines: 2,
   taglineLetterSpacing: "-0.02em",
-  urlTop: 986,
   urlFontSize: 34,
   urlLineHeight: 1.2,
   urlLetterSpacing: "0.08em",
   entranceDrift: 34,
   sceneFadeDurationMs: 400,
+} as const;
+
+export const CLOSE_D_LAYOUT = {
+  ...CLOSE_D_LAYOUT_BASE,
+  urlTop:
+    CLOSE_D_LAYOUT_BASE.taglineTop +
+    CLOSE_D_LAYOUT_BASE.taglineMaxLines *
+      CLOSE_D_LAYOUT_BASE.taglineFontSize *
+      CLOSE_D_LAYOUT_BASE.taglineLineHeight +
+    CLOSE_D_TAGLINE_URL_GAP +
+    CLOSE_D_LAYOUT_BASE.entranceDrift,
 } as const;
 
 export const CLOSE_D_TIMING = {
@@ -595,7 +608,7 @@ const metadataForTextBox = (
     return { ...closeOffset(CLOSE_D_TIMING.logoMs), text: "", fontSize: CLOSE_D_LAYOUT.logoSize };
   }
   if (box.id === "close-tagline") {
-    return { ...closeOffset(CLOSE_D_TIMING.taglineMs), text: script.close.tagline ?? "", fontSize: CLOSE_D_LAYOUT.taglineFontSize, lineHeight: CLOSE_D_LAYOUT.taglineLineHeight, letterSpacingEm: -0.02 };
+    return { ...closeOffset(CLOSE_D_TIMING.taglineMs), text: script.close.tagline ?? "", fontSize: CLOSE_D_LAYOUT.taglineFontSize, lineHeight: CLOSE_D_LAYOUT.taglineLineHeight, maxLines: CLOSE_D_LAYOUT.taglineMaxLines, letterSpacingEm: -0.02 };
   }
   if (box.id === "close-url") {
     return { ...closeOffset(CLOSE_D_TIMING.urlMs), role: "mono", text: script.close.url ?? "", fontSize: CLOSE_D_LAYOUT.urlFontSize, lineHeight: CLOSE_D_LAYOUT.urlLineHeight, letterSpacingEm: 0.08 };
@@ -840,7 +853,7 @@ export const computeTextBoxes = (script: Script, brand: BrandKit): LayoutTextBox
         x: CLOSE_D_LAYOUT.contentX,
         y: CLOSE_D_LAYOUT.taglineTop,
         w: CLOSE_LAYOUT.contentWidth,
-        h: lineBoxHeight(CLOSE_D_LAYOUT.taglineFontSize, CLOSE_D_LAYOUT.taglineLineHeight, 1) +
+        h: lineBoxHeight(CLOSE_D_LAYOUT.taglineFontSize, CLOSE_D_LAYOUT.taglineLineHeight, CLOSE_D_LAYOUT.taglineMaxLines) +
           CLOSE_D_LAYOUT.entranceDrift,
       });
     }
