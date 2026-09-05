@@ -5,7 +5,6 @@
   "beats": [
     {
       "kind": "moment",
-      "eyebrow": "HOOK",
       "line": "Can't meditate?",
       "thoughts": [
         "Neither could we."
@@ -15,55 +14,62 @@
     },
     {
       "kind": "moment",
-      "eyebrow": "STILL AWAKE",
-      "line": "Sitting still felt worse.",
+      "eyebrow": "STILL",
+      "line": "That's not a personal failure.",
       "thoughts": [
-        "Racing thoughts didn't quiet."
+        "Sitting still isn't the skill."
       ],
-      "bg": "#0a1812",
-      "durationMs": 4000
+      "durationMs": 3500
     },
     {
       "kind": "question",
-      "kicker": "REFRAME",
+      "kicker": "TRY THIS",
       "lines": [
-        "Not your",
-        "mind."
+        "Just breathe"
       ],
-      "dek": "It's your body.",
+      "dek": "One long exhale is enough.",
       "durationMs": 4500
     },
     {
       "kind": "moment",
-      "eyebrow": "THE SHIFT",
-      "line": "One line. One breath.",
+      "eyebrow": "DIFFERENT",
+      "line": "One line. One breath. Then next.",
       "thoughts": [
-        "Screen holds until you exhale."
+        "The pace does the work."
       ],
-      "bg": "#0a1812",
       "durationMs": 4000
+    },
+    {
+      "kind": "question",
+      "kicker": "NOTICE",
+      "lines": [
+        "Notice your",
+        "feet."
+      ],
+      "dek": "Ground before you begin.",
+      "durationMs": 3500
     },
     {
       "kind": "verdict",
       "lines": [
-        "Start with one line.",
-        "This is regulation."
+        "Start small tonight.",
+        "You can always stop."
       ],
-      "durationMs": 4000
+      "durationMs": 2500
     }
   ],
   "close": {
-    "line": "Try one line tonight.",
+    "line": "Start tonight. One breath at a time.",
     "showWordmark": true,
     "durationMs": 3600,
     "url": "regulate.app",
     "tagline": "Not meditation. Regulation."
   },
-  "caption": "Can't meditate? Neither could we.\nOne line. One breath.",
+  "caption": "Can't meditate? Start with one breath.",
   "hashtags": [
     "#regulate",
+    "#breathe",
     "#stillness",
-    "#nightroutine",
-    "#breathe"
+    "#calm"
   ]
 }
