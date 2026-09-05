@@ -4,7 +4,7 @@ Updated 2026-09-05 (after the hook-validation run; branch names only).
 
 ## Where the project is
 - Frontier: feature/hook-validation (HEAD), worktree /private/tmp/fm-brandreel-state, from main 24e275f (carries everything through the interview stage). One merge gets everything. Remote: https://github.com/stev004/brandreel, CI renders + lints on every push (green).
-- Gates: typecheck 0, engine 32 tests, bin 102 tests, CI green. workspace/regulate-sigh is the first brief-driven video: passes all 11 lint rules.
+- Gates: typecheck 0, engine 32 tests, bin 116 tests, CI green. workspace/regulate-sigh is the first brief-driven video: passes all 11 lint rules.
 - Flow now: interview -> script (brief-enforced, lint-and-retry) -> manifest -> compose -> lint -> review; vo/align/polish only when the brief sets voice/music.
 - Phase 1 (fusion video) still parked on Steven's taste gate.
 

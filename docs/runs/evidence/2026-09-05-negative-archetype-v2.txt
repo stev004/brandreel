@@ -1,0 +1,1 @@
+script: brief validation failed: brief.hookLine "Can't meditate?" does not satisfy hook archetype numbered-promise: has at least 3 words, a digit, number word one to twelve, or ordinal, and a plural payoff noun (ways, steps, reasons, signs, things, mistakes, habits, minutes, seconds, breaths, days, or nights); satisfies direct-callout

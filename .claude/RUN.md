@@ -1,2 +1,2 @@
-# RUN - in flight (hook-validation run reopened 2026-09-05T16:22 for audit fixes)
-In flight: H2 /private/tmp/br-h2-bin (fm/h2-bin) report /private/tmp/claude-501/-Users-stevenmatson-Documents-brandreel/ca1cc81f-f570-49f0-9640-5a37fc3e573f/scratchpad/h2.last.md. H1 merged. Cold start: verify per brief, commit, merge --no-ff, rerun the negative proof and node --test, regen regulate-sigh if the first-text rule changes acceptance (its first beat is a moment with a line and no eyebrow, so it should still pass), close RUN.md, digest addendum.
+# RUN - idle
+No run in flight. Last run 2026-09-05 (hook validation, incl. H2 audit fixes) met its predicate; digest docs/runs/2026-09-05-digest-hook-validation.md.
