@@ -34,7 +34,7 @@ const script = {
   beats: [
     {
       kind: "moment",
-      eyebrow: "3AM",
+      ...(briefMode ? {} : { eyebrow: "3AM" }),
       line: longMoment ? "x".repeat(45) : (banned ? "This journey starts now." : (briefMode ? briefHookLine : "Still awake?")),
       ...(stateBad ? { thoughts: ["Let the room get quieter."] } : {}),
       durationMs: invalid ? 10000 : stateBad ? 4000 : 3000,

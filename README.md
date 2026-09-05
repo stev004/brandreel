@@ -58,6 +58,8 @@ continue directly to downstream stages.
 
 Script generation retries layout lint failures twice by default. Use
 `--retries N`, `--skip-lint`, or `--lint-cmd <command>` to control that loop.
+Each run writes `script-attempts.json` with `attempts`, `retriesUsed`, `retryLimit`,
+`outcome`, and `violationsPerAttempt`.
 
 Use `--vo` and `--music` to opt into those modules. Model-provided modules are ignored. Use `--dry-run` to write `script-prompt.md` without calling the model. The default model command is `claude -p`; override it with `--model-cmd` for another CLI or a fake model.
 
