@@ -134,14 +134,46 @@ describe("layout manifest", () => {
     const manifest = buildManifest(script, brand);
     const thoughtBoxes = manifest.elements.filter((element) => /^beat-0-thought-/.test(element.id));
     const captionBoxes = manifest.elements.filter((element) => element.id.startsWith("caption-line-"));
-    const overlaps = (first: typeof thoughtBoxes[number], second: typeof captionBoxes[number]): boolean =>
+    const overlaps = (first: typeof thoughtBoxes[number], second: typeof thoughtBoxes[number]): boolean =>
       first.x < second.x + second.w && first.x + first.w > second.x &&
       first.y < second.y + second.h && first.y + first.h > second.y;
     const momentLine = manifest.elements.find((element) => element.id === "beat-0-line");
 
     expect(thoughtBoxes).toHaveLength(3);
     expect(captionBoxes).toHaveLength(CAPTION_LAYOUT.maxLines);
+    expect(thoughtBoxes.every((thought, index) =>
+      thoughtBoxes.slice(index + 1).every((otherThought) => !overlaps(thought, otherThought)),
+    )).toBe(true);
     expect(thoughtBoxes.every((thought) => captionBoxes.every((caption) => !overlaps(thought, caption)))).toBe(true);
-    expect(MOMENT_LAYOUT.thoughtsTop).toBeGreaterThan((momentLine?.y ?? 0) + (momentLine?.h ?? 0));
+    expect(MOMENT_LAYOUT.thoughtStep).toBeGreaterThanOrEqual(thoughtBoxes[0]?.h ?? Infinity);
+    expect(MOMENT_LAYOUT.thoughtsTop).toBeGreaterThanOrEqual((momentLine?.y ?? 0) + (momentLine?.h ?? 0) + 40);
+  });
+
+  it("derives the Moment thought step from the manifest box height", () => {
+    const script: Script = {
+      id: "moment-thought-step",
+      brand: "regulate",
+      coreMechanic: "Thoughts move in clear rows.",
+      beats: [{
+        kind: "moment",
+        line: "",
+        thoughts: ["one thought", "another thought", "one last thought"],
+        durationMs: 15000,
+      }],
+      close: { line: "", showWordmark: false },
+      caption: "",
+      hashtags: [],
+    };
+    const manifest = buildManifest(script, brand);
+    const thought = manifest.elements.find((element) => element.id === "beat-0-thought-0");
+
+    expect(thought).toBeDefined();
+    if (!thought) return;
+
+    expect(thought?.h).toBe(
+      MOMENT_LAYOUT.thoughtFontSize * MOMENT_LAYOUT.thoughtLineHeight * MOMENT_LAYOUT.thoughtMaxLines +
+      MOMENT_LAYOUT.thoughtEntranceDrift,
+    );
+    expect(MOMENT_LAYOUT.thoughtStep).toBe(thought.h + 8);
   });
 });
