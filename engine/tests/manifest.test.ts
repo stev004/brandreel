@@ -142,7 +142,7 @@ describe("layout manifest", () => {
     expect(manifest.height).toBe(1920);
     expect(manifest.fps).toBe(60);
     expect(manifest.safe).toEqual({ top: 150, bottom: 320, left: 60, right: 120 });
-    expect(manifest.totalDurationMs).toBe(4500 + 5000 + 4500 + 1920);
+    expect(manifest.totalDurationMs).toBe(4500 + 5000 + 4500 + 3000);
   });
 
   it("keeps three Moment thoughts clear of the caption block", () => {
