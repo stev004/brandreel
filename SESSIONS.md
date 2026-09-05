@@ -1,5 +1,8 @@
 # SESSIONS - append-only log, newest first
 
+## 2026-09-05 (later) - foreman run 5: hook archetype validation
+Steven merged interview (24e275f). One Codex unit landed on feature/hook-validation: HOOK_ARCHETYPE_RULES enforced in script.mjs, figure decimals/stamp checks, script-attempts.json. regulate-sigh regenerated (accepted on attempt 2), passes all lints; a numbered-promise brief with the same hook is rejected. Digest docs/runs/2026-09-05-digest-hook-validation.md. Waiting on Steven: merge, KEEP/TWEAK/KILL.
+
 ## 2026-09-05 - foreman run 4: interview stage + remote
 Steven merged cta-lint (fb3f599), resolved G1 (public remote, created), G3 (CC0 by path), G6 (two rows). Run landed on feature/interview: bin/interview.mjs + brief-enforced script.mjs, two-row tagline, thought/drift geometry model, lint-implying duration limits, CI with ffmpeg. First brief-driven video workspace/regulate-sigh passes all lints on the model's first attempt. Digest docs/runs/2026-09-05-digest-interview.md. Waiting on Steven: merge feature/interview, KEEP/TWEAK/KILL on regulate-sigh.
 

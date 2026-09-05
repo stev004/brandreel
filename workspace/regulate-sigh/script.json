@@ -11,56 +11,59 @@
         "Neither could we."
       ],
       "bg": "#0a1812",
-      "durationMs": 3400
+      "durationMs": 4000
+    },
+    {
+      "kind": "moment",
+      "eyebrow": "STILL AWAKE",
+      "line": "Sitting still felt worse.",
+      "thoughts": [
+        "Racing thoughts didn't quiet."
+      ],
+      "bg": "#0a1812",
+      "durationMs": 4000
     },
     {
       "kind": "question",
-      "kicker": "RECOGNITION",
+      "kicker": "REFRAME",
       "lines": [
-        "Sat still.",
-        "Felt worse."
+        "Not your",
+        "mind."
       ],
-      "dek": "Stillness isn't the goal.",
-      "durationMs": 4200
+      "dek": "It's your body.",
+      "durationMs": 4500
+    },
+    {
+      "kind": "moment",
+      "eyebrow": "THE SHIFT",
+      "line": "One line. One breath.",
+      "thoughts": [
+        "Screen holds until you exhale."
+      ],
+      "bg": "#0a1812",
+      "durationMs": 4000
     },
     {
       "kind": "verdict",
       "lines": [
-        "The body leads.",
-        "Not the mind."
+        "Start with one line.",
+        "This is regulation."
       ],
-      "durationMs": 3600
-    },
-    {
-      "kind": "question",
-      "kicker": "DIFFERENCE",
-      "lines": [
-        "One line.",
-        "One breath."
-      ],
-      "dek": "Timed to one slow exhale.",
-      "durationMs": 4200
-    },
-    {
-      "kind": "verdict",
-      "lines": [
-        "Try one breath."
-      ],
-      "durationMs": 3000
+      "durationMs": 4000
     }
   ],
   "close": {
-    "line": "Begin with one exhale.",
+    "line": "Try one line tonight.",
     "showWordmark": true,
     "durationMs": 3600,
     "url": "regulate.app",
     "tagline": "Not meditation. Regulation."
   },
-  "caption": "Can't meditate? Neither could we.\nOne breath at a time.",
+  "caption": "Can't meditate? Neither could we.\nOne line. One breath.",
   "hashtags": [
     "#regulate",
-    "#breathe",
-    "#nervoussystem",
-    "#noquickfix"
+    "#stillness",
+    "#nightroutine",
+    "#breathe"
   ]
 }
