@@ -149,12 +149,12 @@ test("--tagline sets the close tagline after dropping any model tagline", () => 
   }
 });
 
-test("--tagline rejects values over eighteen characters", () => {
+test("--tagline rejects values over thirty-six characters", () => {
   const dir = workspace();
   try {
-    const result = runScript(dir, ["--dry-run", "--tagline", "1234567890123456789"]);
+    const result = runScript(dir, ["--dry-run", "--tagline", "1234567890123456789012345678901234567"]);
     assert.notEqual(result.status, 0);
-    assert.match(result.stderr, /--tagline must be 18 characters or fewer/);
+    assert.match(result.stderr, /--tagline must be 36 characters or fewer/);
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
