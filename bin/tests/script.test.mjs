@@ -127,7 +127,7 @@ test("model-provided close.url and close.tagline are dropped", () => {
 test("--url sets the close URL after dropping any model URL", () => {
   const dir = workspace();
   try {
-    const result = runScript(dir, ["--url", "https://regulate.example", "--tagline", "Make room.", "--model-cmd", `node ${fakeModel}`]);
+    const result = runScript(dir, ["--url", "https://regulate.example", "--tagline", "Make room.", "--model-cmd", `node ${fakeModel}`], { FAKE_MODEL_CLOSE_DURATION: "3400" });
     assert.equal(result.status, 0, result.stderr);
     const script = JSON.parse(readFileSync(join(dir, "script.json"), "utf8"));
     assert.equal(script.close.url, "https://regulate.example");
@@ -238,8 +238,20 @@ test("dry-run prompt states the copy limits and module rule", () => {
     assert.match(prompt, /Do not emit close\.url/);
     assert.match(prompt, /Do not emit close\.tagline; a curated tagline is supplied only by the --tagline flag/);
     assert.match(prompt, /2500 and 3000ms for a plain close/);
-    assert.match(prompt, /2500 and 3500ms for a tagline-only close/);
-    assert.match(prompt, /2500 and 3800ms for a close with a URL/);
+    assert.match(prompt, /3000 and 3500ms for a tagline-only close/);
+    assert.match(prompt, /3400 and 3800ms for a close with a URL/);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("dry-run prompt puts hook, pacing, and CTA timing in one lint-safe block", () => {
+  const dir = workspace();
+  try {
+    const result = runScript(dir, ["--dry-run"]);
+    assert.equal(result.status, 0, result.stderr);
+    const prompt = readFileSync(join(dir, "script-prompt.md"), "utf8");
+    assert.match(prompt, /Lint-safe timing contract \(hook, pacing, CTA\):.*moment with no thoughts is at most 3000ms.*verdict must end within 3000ms.*question must end within 3000ms.*close duration must be 2500-3000ms plain, 3000-3500ms tagline-only, or 3400-3800ms with a URL/s);
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
@@ -253,6 +265,66 @@ test("plain close duration must be between 2500 and 3000ms", () => {
   const accepted = validationScript();
   accepted.close.durationMs = 3000;
   assert.equal(validateScript(accepted, "regulate", "validation", "").some((violation) => violation.startsWith("close.durationMs")), false);
+});
+
+test("moment without thoughts rejects 4000ms with a hook-safe fix", () => {
+  const script = validationScript();
+  script.beats[0].durationMs = 4000;
+  const violations = validateScript(script, "regulate", "validation", "");
+  assert.ok(violations.some((violation) => violation.includes("beats[0].durationMs") && violation.includes("add a thought or shorten")));
+});
+
+test("moment with a thought accepts 4000ms", () => {
+  const script = validationScript();
+  script.beats[0].thoughts = ["Let the room get quieter."];
+  script.beats[0].durationMs = 4000;
+  assert.equal(validateScript(script, "regulate", "validation", "").some((violation) => violation.startsWith("beats[0].durationMs")), false);
+});
+
+test("tagline-only close rejects 2800ms because CTA dwell is too short", () => {
+  const script = validationScript();
+  script.close.tagline = "Make room.";
+  script.close.durationMs = 2800;
+  const violations = validateScript(script, "regulate", "validation", "");
+  assert.ok(violations.some((violation) => violation.includes("between 3000 and 3500ms for tagline-only close")));
+});
+
+test("plain close accepts its 2500ms CTA minimum", () => {
+  const script = validationScript();
+  script.close.durationMs = 2500;
+  assert.equal(validateScript(script, "regulate", "validation", "").some((violation) => violation.startsWith("close.durationMs")), false);
+});
+
+test("close with a URL rejects 3300ms and accepts 3400ms", () => {
+  const rejected = validationScript();
+  rejected.close.url = "https://regulate.example";
+  rejected.close.durationMs = 3300;
+  assert.ok(validateScript(rejected, "regulate", "validation", "").some((violation) => violation.includes("between 3400 and 3800ms for close with URL")));
+
+  const accepted = validationScript();
+  accepted.close.url = "https://regulate.example";
+  accepted.close.durationMs = 3400;
+  assert.equal(validateScript(accepted, "regulate", "validation", "").some((violation) => violation.startsWith("close.durationMs")), false);
+});
+
+test("one-line verdict rejects 3600ms and accepts 3200ms", () => {
+  const rejected = validationScript();
+  rejected.beats[3].durationMs = 3600;
+  assert.ok(validateScript(rejected, "regulate", "validation", "").some((violation) => violation.includes("beats[3].durationMs") && violation.includes("3200ms")));
+
+  const accepted = validationScript();
+  accepted.beats[3].durationMs = 3200;
+  assert.equal(validateScript(accepted, "regulate", "validation", "").some((violation) => violation.startsWith("beats[3].durationMs")), false);
+});
+
+test("question without a dek rejects 4000ms and accepts 3600ms", () => {
+  const rejected = validationScript();
+  rejected.beats[1].durationMs = 4000;
+  assert.ok(validateScript(rejected, "regulate", "validation", "").some((violation) => violation.includes("beats[1].durationMs") && violation.includes("3600ms")));
+
+  const accepted = validationScript();
+  accepted.beats[1].durationMs = 3600;
+  assert.equal(validateScript(accepted, "regulate", "validation", "").some((violation) => violation.startsWith("beats[1].durationMs")), false);
 });
 
 test("plain close rejects 3800ms because its maximum is 3000ms", () => {

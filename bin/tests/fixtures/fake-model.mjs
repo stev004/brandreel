@@ -13,6 +13,7 @@ const banned = process.env.FAKE_MODEL_BANNED === "1";
 const longMoment = process.env.FAKE_MODEL_LONG_MOMENT === "1";
 const threeLineCaption = process.env.FAKE_MODEL_THREE_LINE_CAPTION === "1";
 const badHashtag = process.env.FAKE_MODEL_BAD_HASHTAG === "1";
+const closeDuration = Number(process.env.FAKE_MODEL_CLOSE_DURATION) || 3000;
 const statePath = process.env.FAKE_MODEL_STATE;
 let state = 0;
 if (statePath) {
@@ -34,6 +35,7 @@ const script = {
       kind: "moment",
       eyebrow: "3AM",
       line: longMoment ? "x".repeat(45) : (banned ? "This journey starts now." : (briefMode ? briefHookLine : "Still awake?")),
+      ...(stateBad ? { thoughts: ["Let the room get quieter."] } : {}),
       durationMs: invalid ? 10000 : stateBad ? 4000 : 3000,
     },
     { kind: "question", kicker: "TRY THIS", lines: [stateBad ? "What rest?" : "Need rest?"], durationMs: invalid ? 10000 : 3000 },
@@ -48,7 +50,7 @@ const script = {
     },
     { kind: "verdict", lines: [briefMode ? briefRequired : "Start with less."], durationMs: invalid ? 10000 : 3000 },
   ],
-  close: { line: "Make room for the next breath.", showWordmark: true, tagline: "Make room.", url: "https://model.example", durationMs: 3000 },
+  close: { line: "Make room for the next breath.", showWordmark: true, tagline: "Make room.", url: "https://model.example", durationMs: closeDuration },
   caption: threeLineCaption ? "one\ntwo\nthree" : "A small shift can change tonight.",
   hashtags: [badHashtag ? "regulation" : "#regulation", "#rest", "#sleep"],
 };
