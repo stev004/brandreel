@@ -35,6 +35,14 @@ test("safe-zone failing fixture reports the right edge", () => {
   assert.match(violations[0], /right edge/);
 });
 
+test("safe-zone includes entrance drift in the bottom edge", () => {
+  const driftedViolations = safeZones(fixture("lint-safe-drift-fail.json"));
+  const restingViolations = safeZones(fixture("lint-safe-drift-pass.json"));
+  assert.equal(driftedViolations.length, 1);
+  assert.match(driftedViolations[0], /bottom edge/);
+  assert.deepEqual(restingViolations, []);
+});
+
 test("text-fit passing fixture fits its line budget", () => {
   assert.deepEqual(textFit(fixture("lint-text-pass.json")), []);
 });
@@ -126,6 +134,10 @@ test("overlap passes when text boxes do not intersect in time", () => {
       { id: "b", text: "B", x: 0, y: 0, w: 100, h: 50, fromMs: 600, toMs: 1000 },
     ],
   }), []);
+});
+
+test("overlap compares resting boxes without entrance drift", () => {
+  assert.deepEqual(overlap(fixture("lint-overlap-drift.json")), []);
 });
 
 test("duration fixture fails without a valid override", () => {

@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { BrandKit, Script } from "../src/schema";
 import { buildManifest } from "../src/manifest";
-import { CAPTION_LAYOUT, computeTimeline, FIGURE_LAYOUT, MOMENT_LAYOUT } from "../src/layout";
+import { CAPTION_LAYOUT, computeTimeline, FIGURE_LAYOUT, MOMENT_LAYOUT, QUESTION_LAYOUT } from "../src/layout";
 import { describe, expect, it } from "vitest";
 
 const readJson = (relativePath: string): unknown =>
@@ -176,6 +176,7 @@ describe("layout manifest", () => {
     expect(thoughtBoxes.every((thought) => captionBoxes.every((caption) => !overlaps(thought, caption)))).toBe(true);
     expect(MOMENT_LAYOUT.thoughtStep).toBeGreaterThanOrEqual(thoughtBoxes[0]?.h ?? Infinity);
     expect(MOMENT_LAYOUT.thoughtsTop).toBeGreaterThanOrEqual((momentLine?.y ?? 0) + (momentLine?.h ?? 0) + 40);
+    expect(thoughtBoxes.every((thought) => thought.driftPx === MOMENT_LAYOUT.thoughtEntranceDrift)).toBe(true);
   });
 
   it("derives the Moment thought step from the manifest box height", () => {
@@ -201,8 +202,32 @@ describe("layout manifest", () => {
 
     expect(thought?.h).toBe(
       MOMENT_LAYOUT.thoughtFontSize * MOMENT_LAYOUT.thoughtLineHeight * MOMENT_LAYOUT.thoughtMaxLines +
-      MOMENT_LAYOUT.thoughtEntranceDrift,
+      0,
     );
-    expect(MOMENT_LAYOUT.thoughtStep).toBe(thought.h + 8);
+    expect(thought?.driftPx).toBe(MOMENT_LAYOUT.thoughtEntranceDrift);
+    expect(MOMENT_LAYOUT.thoughtStep).toBe(thought.h + thought.driftPx + 8);
+  });
+
+  it("keeps stacked question lines clear using resting boxes", () => {
+    const script = Script.parse({
+      id: "question-line-clearance",
+      brand: "regulate",
+      coreMechanic: "Question lines settle into separate rows.",
+      beats: [{
+        kind: "question",
+        lines: ["first line", "second line"],
+        durationMs: 7000,
+      }],
+      close: { line: "", showWordmark: false },
+      caption: "",
+      hashtags: [],
+    });
+    const manifest = buildManifest(script, brand);
+    const lines = manifest.elements.filter((element) => element.id.startsWith("beat-0-question-line-"));
+
+    expect(lines).toHaveLength(2);
+    expect(lines[0]?.h).toBe(QUESTION_LAYOUT.lineFontSize * QUESTION_LAYOUT.lineLineHeight);
+    expect(lines.every((line) => line.driftPx === QUESTION_LAYOUT.lineEntranceDrift)).toBe(true);
+    expect((lines[0]?.y ?? 0) + (lines[0]?.h ?? 0)).toBe(lines[1]?.y);
   });
 });
