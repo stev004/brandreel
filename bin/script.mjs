@@ -13,6 +13,28 @@ export const FIGURE_LAST_EVENT_MS = 5600;
 export const MAX_STATIC_MS = 3000;
 // Mirror engine CLOSE_D_TIMING.taglineMs and urlMs for close pacing validation.
 export const CLOSE_D_TIMING = { taglineMs: 500, urlMs: 900 };
+// Mirror the hook lint's first visual-change deadline.
+export const HOOK_MAX_FIRST_VISUAL_CHANGE_MS = 3000;
+// Mirror the hook and pacing lints for a moment with no thought event.
+export const MOMENT_NO_THOUGHTS_MAX_MS = HOOK_MAX_FIRST_VISUAL_CHANGE_MS;
+// Mirror the pacing lint's verdict first-line timing.
+export const VERDICT_FIRST_LINE_MS = 200;
+// Mirror the pacing lint's verdict line stagger.
+export const VERDICT_LINE_STAGGER_MS = 1200;
+// Mirror the pacing lint's question first-line timing.
+export const QUESTION_FIRST_LINE_MS = 600;
+// Mirror the pacing lint's question line stagger.
+export const QUESTION_LINE_STAGGER_MS = 300;
+// Mirror the pacing lint's question dek timing.
+export const QUESTION_DEK_MS = 2400;
+// Mirror the CTA lint's minimum rendered close-text dwell.
+export const CTA_MIN_DWELL_MS = 2500;
+// Mirror the CTA lint's plain-close dwell floor.
+export const PLAIN_CLOSE_MIN_MS = CTA_MIN_DWELL_MS;
+// Mirror the CTA lint's tagline-only close dwell floor.
+export const TAGLINE_CLOSE_MIN_MS = CTA_MIN_DWELL_MS + CLOSE_D_TIMING.taglineMs;
+// Mirror the CTA lint's URL close dwell floor.
+export const URL_CLOSE_MIN_MS = CTA_MIN_DWELL_MS + CLOSE_D_TIMING.urlMs;
 
 export const COPY_LIMITS = {
   moment: { line: 44, eyebrow: 24, thoughts: 3, thought: 60 },
@@ -42,9 +64,9 @@ export const DURATION_LIMITS = {
 };
 
 const CLOSE_VARIANT_LIMITS = {
-  plain: { label: "plain close", max: MAX_STATIC_MS },
-  "tagline-only": { label: "tagline-only close", max: CLOSE_D_TIMING.taglineMs + MAX_STATIC_MS },
-  "with-url": { label: "close with URL", max: DURATION_LIMITS.close.max },
+  plain: { label: "plain close", min: PLAIN_CLOSE_MIN_MS, max: MAX_STATIC_MS },
+  "tagline-only": { label: "tagline-only close", min: TAGLINE_CLOSE_MIN_MS, max: CLOSE_D_TIMING.taglineMs + MAX_STATIC_MS },
+  "with-url": { label: "close with URL", min: URL_CLOSE_MIN_MS, max: DURATION_LIMITS.close.max },
 };
 
 export function parseArgs(argv) {
@@ -229,6 +251,7 @@ Rules:
 - Use 4 to 8 beats. Every beat has a positive durationMs.
 - Total beat durationMs must be between 15000 and 35000.
 - Beat duration limits: moment ${DURATION_LIMITS.moment.min}-${DURATION_LIMITS.moment.max}ms; question ${DURATION_LIMITS.question.min}-${DURATION_LIMITS.question.max}ms; figure ${DURATION_LIMITS.figure.min}-${DURATION_LIMITS.figure.max}ms; verdict ${DURATION_LIMITS.verdict.min}-${DURATION_LIMITS.verdict.max}ms.
+- Lint-safe timing contract (hook, pacing, CTA): a moment with no thoughts is at most ${MOMENT_NO_THOUGHTS_MAX_MS}ms and must add a thought or shorten; a moment with at least one thought is at most ${DURATION_LIMITS.moment.max}ms; the verdict must end within ${MAX_STATIC_MS}ms after its last line (last line at ${VERDICT_FIRST_LINE_MS}ms + ${VERDICT_LINE_STAGGER_MS}ms per extra line); the question must end within ${MAX_STATIC_MS}ms after its dek at ${QUESTION_DEK_MS}ms, or after its last line at ${QUESTION_FIRST_LINE_MS}ms + ${QUESTION_LINE_STAGGER_MS}ms per extra line when there is no dek; close duration must be ${PLAIN_CLOSE_MIN_MS}-${CLOSE_VARIANT_LIMITS.plain.max}ms plain, ${TAGLINE_CLOSE_MIN_MS}-${CLOSE_VARIANT_LIMITS["tagline-only"].max}ms tagline-only, or ${URL_CLOSE_MIN_MS}-${CLOSE_VARIANT_LIMITS["with-url"].max}ms with a URL. The example above satisfies this contract.
 - Do not emit a modules key. Modules are supplied by the command flags.
 - Copy limits: moment.line <= ${COPY_LIMITS.moment.line} characters; moment.eyebrow <= ${COPY_LIMITS.moment.eyebrow}; moment.thoughts has at most ${COPY_LIMITS.moment.thoughts} entries and each is <= ${COPY_LIMITS.moment.thought} characters.
 - question.lines has 1 to ${COPY_LIMITS.question.lines} entries and each is <= ${COPY_LIMITS.question.line} characters; question.kicker <= ${COPY_LIMITS.question.kicker}; question.dek <= ${COPY_LIMITS.question.dek}.
@@ -237,7 +260,7 @@ Rules:
 - verdict.lines has 1 to ${COPY_LIMITS.verdict.lines} entries and each is <= ${COPY_LIMITS.verdict.line} characters.
 - Do not emit close.url. Do not emit close.tagline; a curated tagline is supplied only by the --tagline flag.
 - close.line <= ${COPY_LIMITS.close.line}; close.tagline <= ${COPY_LIMITS.close.tagline} when supplied by the flag.
-- close.durationMs must be between ${DURATION_LIMITS.close.min} and ${CLOSE_VARIANT_LIMITS.plain.max}ms for a plain close (no tagline or URL), between ${DURATION_LIMITS.close.min} and ${CLOSE_VARIANT_LIMITS["tagline-only"].max}ms for a tagline-only close, or between ${DURATION_LIMITS.close.min} and ${CLOSE_VARIANT_LIMITS["with-url"].max}ms for a close with a URL.
+- close.durationMs must be between ${PLAIN_CLOSE_MIN_MS} and ${CLOSE_VARIANT_LIMITS.plain.max}ms for a plain close (no tagline or URL), between ${TAGLINE_CLOSE_MIN_MS} and ${CLOSE_VARIANT_LIMITS["tagline-only"].max}ms for a tagline-only close, or between ${URL_CLOSE_MIN_MS} and ${CLOSE_VARIANT_LIMITS["with-url"].max}ms for a close with a URL.
 - caption has at most ${COPY_LIMITS.caption.lines} newline-separated lines and each line is <= ${COPY_LIMITS.caption.line} characters.
 - hashtags must contain ${COPY_LIMITS.hashtags.min} to ${COPY_LIMITS.hashtags.max} strings, each starting with # and containing no spaces.
 - Do not use any banned phrases from the brand voice notes, case-insensitively.
@@ -354,6 +377,28 @@ function validateStringArray(violations, values, label, maxItems, itemLimit) {
   values.forEach((value, itemIndex) => addMaxLengthViolation(violations, value, `${label}[${itemIndex}]`, itemLimit));
 }
 
+function beatDurationMax(beat) {
+  const baseMax = DURATION_LIMITS[beat.kind]?.max;
+  if (baseMax === undefined) return undefined;
+  if (beat.kind === "moment") {
+    const hasThought = Array.isArray(beat.thoughts) && beat.thoughts.some(isNonEmptyString);
+    return hasThought ? baseMax : Math.min(baseMax, MOMENT_NO_THOUGHTS_MAX_MS);
+  }
+  if (beat.kind === "verdict") {
+    const lineCount = Array.isArray(beat.lines) && beat.lines.length > 0 ? beat.lines.length : 1;
+    const lastLineMs = VERDICT_FIRST_LINE_MS + VERDICT_LINE_STAGGER_MS * (lineCount - 1);
+    return Math.min(baseMax, lastLineMs + MAX_STATIC_MS);
+  }
+  if (beat.kind === "question") {
+    const lineCount = Array.isArray(beat.lines) && beat.lines.length > 0 ? beat.lines.length : 1;
+    const lastVisualMs = isNonEmptyString(beat.dek)
+      ? QUESTION_DEK_MS
+      : QUESTION_FIRST_LINE_MS + QUESTION_LINE_STAGGER_MS * (lineCount - 1);
+    return Math.min(baseMax, lastVisualMs + MAX_STATIC_MS);
+  }
+  return baseMax;
+}
+
 function validateBeat(beat, index, violations) {
   const label = `beats[${index}]`;
   if (!beat || typeof beat !== "object" || Array.isArray(beat)) {
@@ -368,8 +413,12 @@ function validateBeat(beat, index, violations) {
     violations.push(`${label}.durationMs must be a positive number`);
   } else {
     const duration = DURATION_LIMITS[beat.kind];
-    if (duration && (beat.durationMs < duration.min || beat.durationMs > duration.max)) {
-      violations.push(`${label}.durationMs must be between ${duration.min} and ${duration.max}ms for ${beat.kind} (got ${beat.durationMs})`);
+    const maxDuration = beatDurationMax(beat);
+    if (duration && (beat.durationMs < duration.min || beat.durationMs > maxDuration)) {
+      const fix = beat.kind === "moment" && maxDuration === MOMENT_NO_THOUGHTS_MAX_MS && beat.durationMs > maxDuration
+        ? "; add a thought or shorten"
+        : "";
+      violations.push(`${label}.durationMs must be between ${duration.min} and ${maxDuration}ms for ${beat.kind} (got ${beat.durationMs})${fix}`);
     }
   }
   if (beat.kind === "moment") {
@@ -535,10 +584,9 @@ export function validateScript(script, brandName, workspaceId, notes, brief = nu
     addMaxLengthViolation(violations, script.close.line, "close.line", COPY_LIMITS.close.line);
     addOptionalStringLimit(violations, script.close.tagline, "close.tagline", COPY_LIMITS.close.tagline);
     if (typeof script.close.showWordmark !== "boolean") violations.push("close.showWordmark must be a boolean");
-    const closeDuration = DURATION_LIMITS.close;
     const variant = CLOSE_VARIANT_LIMITS[closeVariant(script.close)];
-    if (typeof script.close.durationMs !== "number" || !Number.isFinite(script.close.durationMs) || script.close.durationMs < closeDuration.min || script.close.durationMs > variant.max) {
-      violations.push(`close.durationMs must be between ${closeDuration.min} and ${variant.max}ms for ${variant.label} (got ${script.close.durationMs ?? "missing"})`);
+    if (typeof script.close.durationMs !== "number" || !Number.isFinite(script.close.durationMs) || script.close.durationMs < variant.min || script.close.durationMs > variant.max) {
+      violations.push(`close.durationMs must be between ${variant.min} and ${variant.max}ms for ${variant.label} (got ${script.close.durationMs ?? "missing"})`);
     }
   }
   if (typeof script.caption !== "string") violations.push("caption must be a string");
