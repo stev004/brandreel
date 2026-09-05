@@ -1,2 +1,5 @@
-# RUN - idle
-No run in flight. Last run 2026-09-04 (CTA lint, incl. audit fixes C4) met its predicate; digest docs/runs/2026-09-04-digest-cta-lint.md. Next candidates in .claude/FRONTIER.md; taste gate G6 (tagline fit) is open.
+# RUN - in flight (interview run, started 2026-09-05T13:37)
+Predicate: run-start row 2026-09-05T13:37. Budget 5 iterations / 6 codex runs; spent: iteration 1, 2 runs.
+State branch feature/interview (worktree /private/tmp/fm-brandreel-state) from main fb3f599. Remote exists now: push the state branch after each write-back (git push -u origin feature/interview).
+In flight: I1 /private/tmp/br-i1-bin (fm/i1-bin) report /private/tmp/claude-501/-Users-stevenmatson-Documents-brandreel/ca1cc81f-f570-49f0-9640-5a37fc3e573f/scratchpad/i1.last.md; I2 /private/tmp/br-i2-engine (fm/i2-engine) report /private/tmp/claude-501/-Users-stevenmatson-Documents-brandreel/ca1cc81f-f570-49f0-9640-5a37fc3e573f/scratchpad/i2.last.md.
+Cold start: read reports; verify per VERIFY; commit; merge I2 then I1; director fills a brief (workspace/regulate-sigh: topic "Can't meditate? Neither could we.", Regulate) via --answers, runs node bin/script.mjs with claude -p, then reel --skip vo,align,polish; lint must pass; file evidence; digest + terra audit; push.
