@@ -12,7 +12,7 @@ Bootstrapped unattended 2026-09-04 from CLAUDE.md, SPEC.md, .claude/DEVTEAM.md. 
 - No secrets, no .env.
 
 ## How we operate here
-- State branch: feature/phase2-machine (git config foreman.branch). No remote exists, so fm.sh log/sync push steps fail: trail rows and state commits are done with plain git in the state worktree. Flag the missing remote in every digest.
+- State branch: whatever git config foreman.branch says (a fresh feature branch per run, forked from main). Remote: https://github.com/stev004/brandreel (public; CI renders + lints on every push). Trail rows and state commits are done with plain git in the state worktree and pushed at every write-back.
 - Implementation units: fresh worktree off the state branch HEAD, node_modules symlinked from a provisioned worktree, gpt-5.6-luna@high. Merge kept units back into the state branch with --no-ff.
 - Director verifies: typecheck, tests, guard greps, and a real render + lint of workspace/demo (Chromium available to the director).
 - Taste decisions (copy, animatic quality, music choice) are gates for Steven, never executor judgment.
@@ -29,3 +29,5 @@ Bootstrapped unattended 2026-09-04 from CLAUDE.md, SPEC.md, .claude/DEVTEAM.md. 
 - 2026-09-04: FRONTIER.md edits via string replace silently missed and left stale claims -> RULE: FRONTIER.md is rewritten whole at every write-back, never patched.
 - 2026-09-04: director's one-line "close max 3800ms" fix only held for the CloseD variant; a plain close at 3800ms is static for 3800ms -> RULE: a limit that depends on which template branch renders is not a one-liner; brief it with the branch table, or leave it to the executor.
 - 2026-09-05: C2 derived thoughtStep from the caption box but never checked step >= box height; CI overlap lint caught thoughts stacking on each other -> RULE: a geometry brief lists every pairwise constraint (element vs element, element vs zone) and the test asserts all of them; one constraint per test is not enough.
+- 2026-09-05: the director wrote "passed on the first attempt" from the absence of script-rejected.json -> RULE: claim only what an artifact shows; stages that retry must print and record the attempt count.
+- 2026-09-05: a brief field (hookArchetype) reached the prompt but not validation, and the digest claimed enforcement -> RULE: for every brief field the brief lists "prompt-only" or "validated", and the acceptance criteria name a rejecting test per validated field.
