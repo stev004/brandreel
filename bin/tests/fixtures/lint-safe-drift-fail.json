@@ -1,0 +1,6 @@
+{
+  "width": 1080,
+  "height": 1920,
+  "safe": { "top": 150, "bottom": 320, "left": 60, "right": 120 },
+  "elements": [{ "id": "drifted", "x": 60, "y": 1490, "w": 900, "h": 100, "driftPx": 34 }]
+}
