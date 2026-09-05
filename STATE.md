@@ -1,6 +1,6 @@
 # STATE - brandreel snapshot
 
-*Updated 2026-09-04 (evening, foreman run). Snapshot of current truth; history in SESSIONS.md and git.*
+*Updated 2026-09-05 (foreman runs 4-5). Snapshot of current truth; history in SESSIONS.md and git.*
 
 ## Where things stand
 - **Branch chain (remote: https://github.com/stev004/brandreel, public, CI renders on push):** `main` <- `feature/m1-engine` <- `feature/howclose-trial` <- `feature/regulate-kit` <- `feature/phase2-machine` (merged to main fce5a38) <- `feature/layout-lints` (merged to main 2fd01a5) <- `feature/cta-lint` (merged to main fb3f599) <- `feature/interview` (merged to main 24e275f) <- **`feature/hook-validation`** (09-05: hook archetype predicates, figure field checks, script-attempts.json). **One merge gets everything:** `git -C ~/Documents/brandreel merge --no-ff feature/hook-validation`. Live worktrees: /tmp/brandreel-reg-wt (reg-kit, provides engine/node_modules), /private/tmp/fm-brandreel-state (hook-validation). fm/* branches are merged and disposable.
@@ -17,7 +17,7 @@
 1. v2 port after gate: new `bars` beat kind (statement zone + IN/OUT bars + shot attempts + zoom + need-bar), 1:1 from `animatics/howclose-fusion-v2.html` rev6. **Scene durations must derive from `vo-timing.json` when modules.vo is on** - measured VO is 33s vs 29s picture; VO timing is authoritative.
 2. Assemble the finished v2 video: compose -> polish (real music track needed - none chosen yet) -> lint -> review sheet.
 3. **First real Regulate video (mockup-first):** script.json from one of the six approved motion concepts (hivemind marketing/motion-drafts.html; "The Sigh" hook "Can't meditate? Neither could we." is the natural first) -> Fable animatic against the Brand Book laws -> KEEP/TWEAK/KILL -> port. Needs a breath-pacing beat kind the engine does not have yet (IN 4 / OUT 8 orb-free pacing per ART_DIRECTION: no floating orb, full-bleed type).
-4. M3 assets (Veo free tier + Pexels + RIFE) when a script needs footage; M4 (script LLM stage, brand extractor, orchestrator, photography kit) after.
+4. M3 assets (Veo free tier + Pexels + RIFE) when a script needs footage; M4 remaining: brand extractor, photography kit (script stage and orchestrator are built).
 
 ## Brand sources (taste step reads these first)
 - **regulate:** Brand Book = source of truth (`~/Documents/regulate-hivemind/marketing/BRAND_BOOK.html`, artifact 2c016ffe-80f4-4378-ab52-18db5187d841). Laws: dot always white · a state colour names a state · emerald is the ground, white is theirs · teal is a supplement. Display Playfair (app's Cormorant is drift). `brands/regulate/brand.json` voice.notes carries the laws + bans.

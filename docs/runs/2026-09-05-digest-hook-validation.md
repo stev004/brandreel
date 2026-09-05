@@ -1,4 +1,4 @@
-# Foreman run digest - 2026-09-05 (second run) - hook archetype validation
+# Foreman run digest - 2026-09-05 (fifth run overall) - hook archetype validation
 
 Predicate: script.mjs validates brief.hookArchetype with structural predicates, checks figure value.decimals against the matching fact and stamp offsets, records script-attempts.json; a brief-driven regen of regulate-sigh passes reel end to end and a mismatched archetype is rejected. **MET.** Codex runs: 1 of 6.
 

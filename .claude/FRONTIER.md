@@ -1,6 +1,6 @@
 # FRONTIER - brandreel
 
-Updated 2026-09-05 (after the interview run; branch names only).
+Updated 2026-09-05 (after the hook-validation run; branch names only).
 
 ## Where the project is
 - Frontier: feature/hook-validation (HEAD), worktree /private/tmp/fm-brandreel-state, from main 24e275f (carries everything through the interview stage). One merge gets everything. Remote: https://github.com/stev004/brandreel, CI renders + lints on every push (green).
