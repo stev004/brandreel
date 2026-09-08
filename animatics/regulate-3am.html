@@ -1,0 +1,236 @@
+<meta charset="utf-8">
+<title>3:04 AM</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;1,500&family=Inter:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<!--
+  brandreel animatic v1 - regulate - "3:04 AM" 15.5s
+  PORTING CONTRACT: 1:1 into Remotion. 1080x1920, ms from t=0, total 15500ms,
+  ease cubic-bezier(0.2,0.7,0.2,1) unless a beat states otherwise. If the port
+  looks worse than this file, it goes back.
+
+  LINEAGE: motion-drafts.html concept 3 (Steven 07-12: "quite good") and the
+  regulate repo port marketing/remotion/src/ThreeAM.tsx (PR #58, 14.5s).
+  Geometry and timings are carried 1:1 from that port; only the brand laws
+  below changed anything.
+
+  CORE MECHANIC: Three intrusive thoughts phase in around the clock, then a
+  single long exhale carries a dot down a column while the same thoughts, in
+  the same places, blur out. The exhale is the only thing that moves them.
+
+  LAWS IN PLAY (Regulate Brand Book, 2026-09-04):
+  - Emerald is the ground: every scene sits on #0a1812. The port's scene A
+    used a darker night #050b08 - dropped, the law has no exception.
+  - Teal is a supplement: the falling dot is the one live thing on the
+    exhale surface, so it is the one teal element. The column track is sage
+    #8F9E8B fading to 25%; ticks are cream at 35%. The port's invented
+    #A9C99E sage is gone.
+  - The dot is always white: the wordmark's full stop is #FFFFFF.
+  - Display is Playfair: "awake again." italic 500 (a felt line), "Exhale"
+    and the wordmark upright 500. Thoughts in Inter, labels in mono.
+  - Glow only on what is alive: the dot glows; nothing else does.
+  - Voice: recognition (3:04, awake again, the three thoughts) -> the move
+    (one exhale) -> invitation. Wordmark only at the end. No claims.
+
+  SCENE TABLE (ms)
+  S1 MOMENT  0-5000     eyebrow "3:04 AM" 150 (700ms rise 50px) · "awake again."
+                        500 · thought 1 1600 · thought 2 2600 · thought 3 3600
+                        (each 1200ms to 0.75 opacity, ease in-out)
+  S2 EXHALE  5000-12000 scene fades in 450ms · dot falls top->bottom of the
+                        track over 7000ms, cubic-bezier(.45,.05,.55,.95) ·
+                        "Exhale" + "Let it all the way out" present from 5000 ·
+                        thoughts dissolve 4600ms starting 5000 / 5900 / 6800
+                        (opacity .75->0, blur 0->5px, translateY 0->-50px)
+  S3 CLOSE   12000-15500 scene fades in 450ms · wordmark 12150 · line 12500 ·
+                        hold to 15500 (the lint floor is 15000ms; the port
+                        ended at 14500)
+
+  GEOMETRY (px on the 1080x1920 stage)
+  S1: centre column, padding 122/94. Eyebrow mono 58px, tracking .4em, muted.
+      "awake again." Playfair italic 500 94px cream, margin-top 65.
+      Thoughts Inter 47px muted, opacity .75 at rest, nowrap:
+        t1 "the email you didn't send"  top 365  left 97
+        t2 "tomorrow. tomorrow."        top 576  left 216
+        t3 "why did you say that"       top 1393 left 130   (bottom 25%)
+      Same coordinates in S2 - they must not move across the cut.
+  S2: column box top 346 right 158 bottom 346 width 144 (x 778-922).
+      Track inset 65 top/bottom, 7px wide, centred (x 850), sage->25%.
+      Ticks 50x4 at track top and bottom, cream 35%.
+      Dot 58px teal, glow 0 0 80px rgba(79,209,197,.8), centre travels
+      track top -> track bottom.
+      Labels mono 36px tracking .22em muted: "IN  4" at box top -14,
+      "OUT  8" at box bottom -14.
+      Phase block: top 44% (845) left 108: "Exhale" Playfair upright 500
+      137px cream; "Let it all the way out" mono 36px .22em muted, margin 29.
+  S3: centred stack: wordmark Playfair upright 500 130px cream, dot #FFFFFF;
+      "For the nights your mind won't stop." Inter 50px muted, margin 50,
+      two lines.
+
+  SAFE ZONES: top 150 / bottom 320 / right 120 / left 60 - all text and the
+  column sit inside (column right edge x922, t3 bottom y1440).
+
+  COPY LIST (the contract - every on-screen string):
+    3:04 AM · awake again. · the email you didn't send · tomorrow. tomorrow. ·
+    why did you say that · IN  4 · OUT  8 · Exhale · Let it all the way out ·
+    regulate. · For the nights your mind won't stop.
+
+  VO SCRIPT (optional; Steven's own voice preferred - lived-experience beat)
+    [0.4s]  Three-oh-four. Awake again.
+    [5.4s]  Breathe out. All the way out.
+    [12.3s] Regulate. For the nights your mind won't stop.
+
+  CAPTION: 3:04 AM. Awake again. One long exhale for the nights your mind
+  won't stop. Not meditation. Regulation.
+  HASHTAGS: #regulate #cantsleep #nervoussystem #3am
+-->
+<style>
+  :root{
+    --bg:#0a1812; --cream:#F2F0E9; --muted:#8F9E8B; --teal:#4FD1C5; --dot:#FFFFFF;
+    --serif:"Playfair Display", Georgia, serif;
+    --sans:Inter, -apple-system, Helvetica, Arial, sans-serif;
+    --mono:"IBM Plex Mono", ui-monospace, Menlo, monospace;
+    --house:cubic-bezier(.2,.7,.2,1);
+    --breath:cubic-bezier(.45,.05,.55,.95);
+    --thought:cubic-bezier(.42,0,.58,1);
+  }
+  *{box-sizing:border-box;margin:0}
+  html,body{height:100%}
+  body{background:#05100b;color:var(--cream);font-family:var(--sans);display:flex;flex-direction:column;align-items:center;gap:14px;padding:18px}
+  .frame{position:relative;width:1080px;height:1920px;transform-origin:top center;background:var(--bg);overflow:hidden;border-radius:40px;box-shadow:0 30px 80px rgba(0,0,0,.6);flex:none}
+  .sc{position:absolute;inset:0;background:var(--bg);opacity:0}
+  .on .s1{animation:hold 5000ms linear 0ms forwards}
+  .on .s2{animation:scenein 450ms linear 5000ms forwards}
+  .on .s3{animation:scenein 450ms linear 12000ms forwards}
+  @keyframes hold{0%{opacity:1}99.9%{opacity:1}100%{opacity:0}}
+  @keyframes scenein{to{opacity:1}}
+
+  /* S1 */
+  .s1 .centre{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:122px 94px}
+  .eyebrow{font-family:var(--mono);font-size:58px;letter-spacing:.4em;color:var(--muted);text-transform:uppercase;white-space:nowrap;opacity:0}
+  .awake{margin-top:65px;font-family:var(--serif);font-style:italic;font-weight:500;font-size:94px;line-height:1;color:var(--cream);white-space:nowrap;opacity:0}
+  .on .eyebrow{animation:rise 700ms var(--house) 150ms forwards}
+  .on .awake{animation:rise 700ms var(--house) 500ms forwards}
+  @keyframes rise{from{opacity:0;transform:translateY(50px)}to{opacity:1;transform:translateY(0)}}
+
+  .th{position:absolute;font-family:var(--sans);font-size:47px;line-height:1;color:var(--muted);white-space:nowrap;opacity:0}
+  .t1{top:365px;left:97px} .t2{top:576px;left:216px} .t3{top:1393px;left:130px}
+  .on .s1 .t1{animation:thoughtin 1200ms var(--thought) 1600ms forwards}
+  .on .s1 .t2{animation:thoughtin 1200ms var(--thought) 2600ms forwards}
+  .on .s1 .t3{animation:thoughtin 1200ms var(--thought) 3600ms forwards}
+  @keyframes thoughtin{to{opacity:.75}}
+
+  /* S2 */
+  .s2 .th{opacity:.75}
+  .on .s2 .t1{animation:dissolve 4600ms var(--thought) 5000ms forwards}
+  .on .s2 .t2{animation:dissolve 4600ms var(--thought) 5900ms forwards}
+  .on .s2 .t3{animation:dissolve 4600ms var(--thought) 6800ms forwards}
+  @keyframes dissolve{from{opacity:.75;filter:blur(0);transform:translateY(0)}to{opacity:0;filter:blur(5px);transform:translateY(-50px)}}
+  .col{position:absolute;top:346px;right:158px;bottom:346px;width:144px}
+  .track{position:absolute;top:65px;bottom:65px;left:0;right:0}
+  .track .line{position:absolute;top:0;bottom:0;left:50%;width:7px;transform:translateX(-50%);border-radius:7px;background:linear-gradient(var(--muted), rgba(143,158,139,.25))}
+  .track .tick{position:absolute;left:50%;width:50px;height:4px;transform:translateX(-50%);background:rgba(242,240,233,.35)}
+  .track .tick.top{top:0} .track .tick.bot{bottom:0}
+  .dot{position:absolute;left:50%;top:0;width:58px;height:58px;border-radius:50%;background:var(--teal);box-shadow:0 0 80px rgba(79,209,197,.8);transform:translate(-50%,-50%)}
+  .on .dot{animation:fall 7000ms var(--breath) 5000ms forwards}
+  @keyframes fall{from{top:0}to{top:100%}}
+  .lab{position:absolute;left:0;right:0;font-family:var(--mono);font-size:36px;line-height:1;letter-spacing:.22em;color:var(--muted);text-align:center;white-space:pre}
+  .lab.in{top:-14px} .lab.out{bottom:-14px}
+  .phase{position:absolute;top:44%;left:108px}
+  .phase .word{font-family:var(--serif);font-weight:500;font-size:137px;line-height:1;color:var(--cream)}
+  .phase .sub{margin-top:29px;font-family:var(--mono);font-size:36px;letter-spacing:.22em;color:var(--muted);white-space:nowrap}
+
+  /* S3 */
+  .s3 .centre{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
+  .wordmark{font-family:var(--serif);font-weight:500;font-size:130px;line-height:1;color:var(--cream);white-space:nowrap;opacity:0}
+  .wordmark .d{color:var(--dot)}
+  .closeline{margin-top:50px;font-family:var(--sans);font-size:50px;line-height:1.2;color:var(--muted);opacity:0}
+  .on .wordmark{animation:rise 700ms var(--house) 12150ms forwards}
+  .on .closeline{animation:rise 700ms var(--house) 12500ms forwards}
+
+  /* chrome */
+  .bar{display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--muted)}
+  .bar .track2{width:320px;height:3px;background:#1a2a22;position:relative}
+  .bar .fill{position:absolute;left:0;top:0;bottom:0;background:var(--teal);width:0}
+  button{font-family:var(--mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--cream);background:none;border:1px solid rgba(242,240,233,.25);border-radius:999px;padding:8px 18px;cursor:pointer}
+  button:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+  @media (prefers-reduced-motion:reduce){.on *{animation-duration:1ms!important;animation-delay:0ms!important}}
+</style>
+
+<div class="frame" id="frame">
+  <div class="film on" id="film">
+    <div class="sc s1">
+      <div class="centre">
+        <div class="eyebrow">3:04 AM</div>
+        <div class="awake">awake again.</div>
+      </div>
+      <div class="th t1">the email you didn't send</div>
+      <div class="th t2">tomorrow. tomorrow.</div>
+      <div class="th t3">why did you say that</div>
+    </div>
+
+    <div class="sc s2">
+      <div class="col">
+        <div class="lab in">IN  4</div>
+        <div class="track">
+          <div class="line"></div>
+          <div class="tick top"></div>
+          <div class="tick bot"></div>
+          <div class="dot"></div>
+        </div>
+        <div class="lab out">OUT  8</div>
+      </div>
+      <div class="phase">
+        <div class="word">Exhale</div>
+        <div class="sub">Let it all the way out</div>
+      </div>
+      <div class="th t1">the email you didn't send</div>
+      <div class="th t2">tomorrow. tomorrow.</div>
+      <div class="th t3">why did you say that</div>
+    </div>
+
+    <div class="sc s3">
+      <div class="centre">
+        <div class="wordmark">regulate<span class="d">.</span></div>
+        <div class="closeline">For the nights your mind<br>won't stop.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="bar">
+  <span id="tc">0.00s</span>
+  <div class="track2"><div class="fill" id="fill"></div></div>
+  <span>15.50s</span>
+  <button id="replay" type="button">Replay</button>
+</div>
+
+<script>
+(function(){
+  var TOTAL = 15500;
+  var frame = document.getElementById('frame');
+  var fill = document.getElementById('fill');
+  var tc = document.getElementById('tc');
+  var start = performance.now();
+
+  function fit(){
+    var scale = Math.min((window.innerHeight - 90) / 1920, (window.innerWidth - 36) / 1080);
+    frame.style.transform = 'scale(' + scale + ')';
+    frame.style.marginBottom = (-(1920 - 1920 * scale)) + 'px';
+  }
+  fit(); window.addEventListener('resize', fit);
+
+  function tick(){
+    var t = Math.min(TOTAL, performance.now() - start);
+    tc.textContent = (t / 1000).toFixed(2) + 's';
+    fill.style.width = (t / TOTAL * 100) + '%';
+    if (t < TOTAL) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  document.getElementById('replay').addEventListener('click', function(){
+    var film = document.getElementById('film');
+    var clone = film.cloneNode(true);
+    film.parentNode.replaceChild(clone, film);
+    start = performance.now();
+    requestAnimationFrame(tick);
+  });
+})();
+</script>

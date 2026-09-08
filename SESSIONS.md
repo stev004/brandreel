@@ -1,5 +1,8 @@
 # SESSIONS - append-only log, newest first
 
+## 2026-09-05 - 3:04 AM animatic v1 (first Regulate video)
+Steven: the 3am mock "was quite good", first video is 3:04 AM, the Sigh second. Fable authored `animatics/regulate-3am.html` (15.5s) from the motion-drafts concept 3 + the regulate repo ThreeAM.tsx port, geometry 1:1, Brand Book laws applied (emerald ground, teal dot as the one live thing, white wordmark dot, Playfair). Browser-verified all three scenes. Published as an artifact for the gate; plan + port notes in `regulate-3am.plan.md`. Branch `feature/regulate-3am` off main (main already carried feature/interview, so Steven's "merge it" was a no-op).
+
 ## 2026-09-05 - foreman run 4: interview stage + remote
 Steven merged cta-lint (fb3f599), resolved G1 (public remote, created), G3 (CC0 by path), G6 (two rows). Run landed on feature/interview: bin/interview.mjs + brief-enforced script.mjs, two-row tagline, thought/drift geometry model, lint-implying duration limits, CI with ffmpeg. First brief-driven video workspace/regulate-sigh passes all lints on the model's first attempt. Digest docs/runs/2026-09-05-digest-interview.md. Waiting on Steven: merge feature/interview, KEEP/TWEAK/KILL on regulate-sigh.
 
