@@ -1,6 +1,6 @@
 # regulate-3am - plan and decisions
 
-**Status:** rev2 at Steven's KEEP/TWEAK/KILL gate (2026-09-05). rev1 was rejected as not 1:1 with the mock (it had transcribed the Remotion port, not the mock) - see SPEC ruling 11, born from that critique. First real Regulate video by Steven's call ("the 3am mock was quite good; that's what the first video needs to be on"). The Sigh is second.
+**Status:** rev3 at Steven's KEEP/TWEAK/KILL gate (2026-09-05). rev3 = motion-drafts.html concept 3 embedded verbatim (style block, section, player) at native 300x640; rev2's scaled values are now only the porting contract in the header. Brand-law deviations are NOT applied in rev3 - listed as TWEAK questions for Steven (ground, dot colour, serif). One change: wordmark dot #FFFFFF (the mock's own stated rule). rev1 was rejected as not 1:1 with the mock (it had transcribed the Remotion port, not the mock) - see SPEC ruling 11, born from that critique. First real Regulate video by Steven's call ("the 3am mock was quite good; that's what the first video needs to be on"). The Sigh is second.
 
 ## Lineage
 - Concept: hivemind `marketing/motion-drafts.html` concept 3 (v4 per Steven 07-12: pulse-ring scene cut, thoughts keep positions across the cut).

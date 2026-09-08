@@ -1,5 +1,8 @@
 # SESSIONS - append-only log, newest first
 
+## 2026-09-05 (latest) - rev3: the mock verbatim
+Steven on rev2: still not exactly the mock, "especially the first 3am part". Verified the mock = motion-drafts.html concept 3, unchanged since its single commit (07-12). rev3 embeds it byte-for-byte (whole style block, concept section, player restricted to c3) at native 300x640; the only edit is the white wordmark dot. Scaled values demoted to the porting contract. SPEC ruling 11 amended: the gate sees the mock itself; scaling happens once, in the port. Browser-verified (fade-in from black, S1, crossfade, exhale).
+
 ## 2026-09-05 (later) - rev2 after Steven's critique; SPEC ruling 11
 Steven on rev1: not 1:1, motion not as smooth, text off-brand, timing off, needs continuity. Root cause: rev1 transcribed the Remotion port (ThreeAM.tsx), not the approved mock. rev2 = scaled transcription of motion-drafts concept 3 (Sx 3.6 / Sy 3.0), crossfades restored, mock easing/blur/travel carried, Playfair 400, JetBrains Mono (kit + fonts.ts registry). Mechanism: SPEC ruling 11 (lineage transcription). Browser-verified 4 points; artifact republished same URL. Gates: tsc, 32 engine + 85 bin tests.
 
