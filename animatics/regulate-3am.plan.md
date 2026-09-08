@@ -1,13 +1,16 @@
 # regulate-3am - plan and decisions
 
-**Status:** v1 animatic at Steven's KEEP/TWEAK/KILL gate (2026-09-05). First real Regulate video by Steven's call ("the 3am mock was quite good; that's what the first video needs to be on"). The Sigh is second.
+**Status:** rev2 at Steven's KEEP/TWEAK/KILL gate (2026-09-05). rev1 was rejected as not 1:1 with the mock (it had transcribed the Remotion port, not the mock) - see SPEC ruling 11, born from that critique. First real Regulate video by Steven's call ("the 3am mock was quite good; that's what the first video needs to be on"). The Sigh is second.
 
 ## Lineage
 - Concept: hivemind `marketing/motion-drafts.html` concept 3 (v4 per Steven 07-12: pulse-ring scene cut, thoughts keep positions across the cut).
 - Port that Steven judged "quite good" 09-01: regulate repo `marketing/remotion/src/ThreeAM.tsx` (PR #58, 14.5s, 60fps).
 - The animatic carries that geometry and timing 1:1 and applies the Brand Book (2026-09-04).
 
-## What the Brand Book changed
+## rev2 - scaled transcription of the mock
+Stage 300x640 -> 1080x1920: sizes and x by 3.6, y offsets by 3.0, percents unchanged. Every CSS value carried times scale (rise 14->50px, crossfade 450ms both ways, thought blur 5->18px, column 44/96/40 -> 158/288/144, track inset 18->54, dot 16->58, glow 22->79). Fonts: Playfair 400 upright / italic (mock: Bodoni 72 on Steven's Mac with Playfair as its own fallback), JetBrains Mono (in the site's declared mono stack and on Google Fonts; kit + engine registry updated). Six deviations, each with its law, listed in the animatic header.
+
+## What the Brand Book changed (vs the mock)
 | Port | Animatic | Law |
 |---|---|---|
 | Scene A ground #050b08 | #0a1812 | emerald is the ground, no exception |

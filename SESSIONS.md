@@ -1,5 +1,8 @@
 # SESSIONS - append-only log, newest first
 
+## 2026-09-05 (later) - rev2 after Steven's critique; SPEC ruling 11
+Steven on rev1: not 1:1, motion not as smooth, text off-brand, timing off, needs continuity. Root cause: rev1 transcribed the Remotion port (ThreeAM.tsx), not the approved mock. rev2 = scaled transcription of motion-drafts concept 3 (Sx 3.6 / Sy 3.0), crossfades restored, mock easing/blur/travel carried, Playfair 400, JetBrains Mono (kit + fonts.ts registry). Mechanism: SPEC ruling 11 (lineage transcription). Browser-verified 4 points; artifact republished same URL. Gates: tsc, 32 engine + 85 bin tests.
+
 ## 2026-09-05 - 3:04 AM animatic v1 (first Regulate video)
 Steven: the 3am mock "was quite good", first video is 3:04 AM, the Sigh second. Fable authored `animatics/regulate-3am.html` (15.5s) from the motion-drafts concept 3 + the regulate repo ThreeAM.tsx port, geometry 1:1, Brand Book laws applied (emerald ground, teal dot as the one live thing, white wordmark dot, Playfair). Browser-verified all three scenes. Published as an artifact for the gate; plan + port notes in `regulate-3am.plan.md`. Branch `feature/regulate-3am` off main (main already carried feature/interview, so Steven's "merge it" was a no-op).
 

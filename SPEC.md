@@ -22,6 +22,8 @@ Not coupled to any product. First three brand kits: Regulate, howclose.to, Matso
    - **9:16 is recomposed, never cropped** (recorded for when 16:9 variants arrive): horizontal moves become vertical ones; stacks, not squeezes.
 10. **Free-first asset mix:** Remotion motion graphics (brand-locked, always available) + stock APIs (Pexels/Pixabay, free) + Google AI Studio Veo free tier for hero image-to-video shots. Local model gen (MLX LTX/Wan) and paid APIs (fal.ai, ElevenLabs) are optional plug-ins behind the same asset interface - never required.
 
+11. **Lineage transcription (2026-09-05, from Steven's rev1 critique of the 3:04 AM animatic: "based on the mock I liked but it isn't 1:1 - motion not as smooth, text doesn't match the brand, timing off, we need continuity").** When an animatic descends from a mock Steven has already approved, it is a scaled transcription of that mock, not a re-authoring: state the scale factors in the header (sizes and x by stage-width ratio, y offsets by stage-height ratio, percents unchanged), carry every CSS value (easing, durations, delays, crossfades, blur, travel) times scale, keep the mock's fonts and copy verbatim, and list every deviation with the brand law that forces it. Nothing else may change. A second source (an earlier port, a template) never overrides the approved mock.
+
 ## Architecture
 
 Eight stages. Each is an independent CLI (`bin/<stage>.mjs` or `.py`) reading/writing files in a per-video workspace directory; a thin orchestrator (`bin/reel.mjs`) chains them. Any stage can be run alone, skipped, or replaced.
