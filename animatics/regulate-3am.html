@@ -1,6 +1,34 @@
 <meta charset="utf-8">
 <title>3:04 AM</title>
 <!--
+  brandreel animatic rev4 - regulate - "3:04 AM" 18.5s - the mock + Steven's three tweaks
+  Steven on rev3 (2026-09-10): "best version so far. still needs tweaking:
+  better transition to the breathing - it kinda snaps into frame; I like the
+  animation of the words/choices, maybe we need some more; ensure the
+  breathing game is identical to what we have."
+
+  REV4 CHANGES (each traced to one of those three; everything else is rev3)
+  T1 Transition into the breathing: the scene still crossfades 450ms, but
+     the instrument now ENTERS the way the app's Regulate Breath screen
+     does (app/breathing.tsx): track fades in 450ms, ticks stagger in 30ms
+     apart (inhale 0-90ms, exhale 120-330ms), the dot fades in 300ms after
+     a 450ms delay, phase text and labels rise on the house curve; the
+     exhale starts at 900ms. S2 is 9.5s (0.9 entrance + 8s exhale + 0.6 hold).
+  T2 Two more thoughts: t4 "why can't I just sleep" (top 60% left 8%) and
+     t5 "did I lock the door" (top 10% left 24%), phasing in at 4500 and
+     5300ms; S1 is 6.5s so the last one lands before the crossfade. They
+     dissolve on the exhale like the others (delays +900 each).
+  T3 The breathing game is the app's instrument: sage #7FA77F (the
+     Balanced state colour) for dot, fill and ticks; cream track at 10%;
+     the fill sits BELOW the dot and drains with it; four inhale ticks on
+     the left, eight exhale ticks on the right; "IN 4" / "OUT 8" to the
+     right of the ticks; "Exhale" with a live seconds count 8s -> 1s, mono,
+     muted; exhale is 8s with the app's Easing.in(ease). This replaces the
+     mock's gradient rail, two ticks and "Let it all the way out". The
+     sage-vs-teal question is answered by the app: sage.
+  Total 18.5s (6.5 + 9.5 + 2.5).
+
+  --- rev3 header follows ---
   brandreel animatic rev3 - regulate - "3:04 AM" 14.5s - THE MOCK, VERBATIM
   Steven on rev2: "still not exactly how it was - the mock was a real smooth
   animation style, especially the first 3am part. find it and ensure the
@@ -47,9 +75,10 @@
     S3 wordmark serif 36 -> 130 (dot #FFFFFF) · line 14 -> 50 ink-dim,
     margin 14 -> 42, max-width 24ch · rises d1/d2 from scene start
 
-  COPY LIST: 3:04 AM · awake again. · the email you didn't send · tomorrow.
-  tomorrow. · why did you say that · IN  4 · OUT  8 · Exhale · Let it all
-  the way out · regulate. · For the nights your mind won't stop.
+  COPY LIST (rev4): 3:04 AM · awake again. · the email you didn't send ·
+  tomorrow. tomorrow. · why did you say that · why can't I just sleep · did I
+  lock the door · IN 4 · OUT 8 · Exhale · 8s 7s 6s 5s 4s 3s 2s 1s ·
+  regulate. · For the nights your mind won't stop.
 -->
 <style>
   /* ============ Review-room tokens (deliberately single-world: a dark
@@ -308,10 +337,54 @@
   }
 </style>
 <style>
-  /* rev3 additions: layout of this single-concept page, and the one brand change */
+  /* rev4: layout of this single-concept page, the white dot, and Steven's three tweaks */
   body{padding:24px 24px 96px;display:flex;justify-content:center}
   .concept{border-bottom:none}
   .wordmark .dot{color:#ffffff}
+
+  /* T2 - two more thoughts, same phase-in language as the mock */
+  .th4{top:60%;left:8%} .th5{top:10%;left:24%}
+  .sc.on .th.p4{animation-delay:4.5s} .sc.on .th.p5{animation-delay:5.3s}
+  .sc.on .th.dissolve.dd4{animation-delay:2.7s} .sc.on .th.dissolve.dd5{animation-delay:3.6s}
+  .sc.on .th.dissolve{animation-delay:.9s} .sc.on .th.dissolve.dd2{animation-delay:1.8s} .sc.on .th.dissolve.dd3{animation-delay:2.7s}
+  .sc.on .th.dissolve.dd4{animation-delay:3.6s} .sc.on .th.dissolve.dd5{animation-delay:4.5s}
+
+  /* T3 - the app's Regulate Breath instrument (app/breathing.tsx), on the mock's column box */
+  :root{--bal:#7FA77F}
+  .colwrap{right:58px}
+  .coltrack{background:rgba(239,233,220,.10);opacity:0}
+  .colfill{position:absolute;left:50%;bottom:18px;width:2px;transform:translateX(-50%);background:var(--bal);border-radius:2px;height:calc(100% - 36px);opacity:0}
+  .coltick{background:var(--bal);width:8px;height:1px;opacity:0}
+  .tick-in{left:calc(50% - 6px);transform:translateX(-100%)}
+  .tick-out{left:calc(50% + 6px);transform:none}
+  .coldot{background:var(--bal);box-shadow:0 0 22px rgba(127,167,127,.8);opacity:0;top:auto;bottom:calc(100% - 18px)}
+  .collab{left:calc(50% + 22px);transform:none;text-align:left}
+  .phaseblock .ps{font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--mono-dim);margin-top:8px;position:relative;height:12px}
+  .phaseblock .ps span{position:absolute;left:0;top:0;opacity:0}
+
+  /* T1 - entrance, app timings: track 450ms, ticks 300ms staggered 30ms, dot 300ms after 450ms, chrome rises */
+  .sc.on .coltrack{animation:fadein .45s cubic-bezier(.2,.7,.2,1) forwards}
+  .sc.on .colfill{animation:fadein .45s cubic-bezier(.2,.7,.2,1) forwards, drain 8s cubic-bezier(.42,0,1,1) .9s forwards}
+  .sc.on .coltick{animation:fadein .3s cubic-bezier(.2,.7,.2,1) forwards}
+  .sc.on .tick-in:nth-of-type(1){animation-delay:0s} .sc.on .tick-in:nth-of-type(2){animation-delay:.03s} .sc.on .tick-in:nth-of-type(3){animation-delay:.06s} .sc.on .tick-in:nth-of-type(4){animation-delay:.09s}
+  .sc.on .tick-out:nth-of-type(1){animation-delay:.12s} .sc.on .tick-out:nth-of-type(2){animation-delay:.15s} .sc.on .tick-out:nth-of-type(3){animation-delay:.18s} .sc.on .tick-out:nth-of-type(4){animation-delay:.21s}
+  .sc.on .tick-out:nth-of-type(5){animation-delay:.24s} .sc.on .tick-out:nth-of-type(6){animation-delay:.27s} .sc.on .tick-out:nth-of-type(7){animation-delay:.30s} .sc.on .tick-out:nth-of-type(8){animation-delay:.33s}
+  .sc.on .coldot{animation:fadein .3s cubic-bezier(.2,.7,.2,1) .45s forwards, exhale 8s cubic-bezier(.42,0,1,1) .9s forwards}
+  .sc.on .coldot.colslow{animation:fadein .3s cubic-bezier(.2,.7,.2,1) .45s forwards, exhale 8s cubic-bezier(.42,0,1,1) .9s forwards}
+  @keyframes fadein{to{opacity:1}}
+  @keyframes exhale{from{bottom:calc(100% - 18px)}to{bottom:18px}}
+  @keyframes drain{from{height:calc(100% - 36px)}to{height:0}}
+  .sc.on .ps span{animation:sec 8s step-end .9s forwards}
+  .sc.on .ps span:nth-child(1){animation-name:s8} .sc.on .ps span:nth-child(2){animation-name:s7} .sc.on .ps span:nth-child(3){animation-name:s6} .sc.on .ps span:nth-child(4){animation-name:s5}
+  .sc.on .ps span:nth-child(5){animation-name:s4} .sc.on .ps span:nth-child(6){animation-name:s3} .sc.on .ps span:nth-child(7){animation-name:s2} .sc.on .ps span:nth-child(8){animation-name:s1}
+  @keyframes s8{0%,12.4%{opacity:1}12.5%,100%{opacity:0}}
+  @keyframes s7{0%,12.4%{opacity:0}12.5%,24.9%{opacity:1}25%,100%{opacity:0}}
+  @keyframes s6{0%,24.9%{opacity:0}25%,37.4%{opacity:1}37.5%,100%{opacity:0}}
+  @keyframes s5{0%,37.4%{opacity:0}37.5%,49.9%{opacity:1}50%,100%{opacity:0}}
+  @keyframes s4{0%,49.9%{opacity:0}50%,62.4%{opacity:1}62.5%,100%{opacity:0}}
+  @keyframes s3{0%,62.4%{opacity:0}62.5%,74.9%{opacity:1}75%,100%{opacity:0}}
+  @keyframes s2{0%,74.9%{opacity:0}75%,87.4%{opacity:1}87.5%,100%{opacity:0}}
+  @keyframes s1{0%,87.4%{opacity:0}87.5%,100%{opacity:1}}
 </style>
 
 <!-- ================= CONCEPT 3 : 3:04 AM ================= -->
@@ -325,24 +398,39 @@
         <div class="th th1 phasein p1">the email you didn’t send</div>
         <div class="th th2 phasein p2">tomorrow. tomorrow.</div>
         <div class="th th3 phasein p3">why did you say that</div>
+        <div class="th th4 phasein p4">why can't I just sleep</div>
+        <div class="th th5 phasein p5">did I lock the door</div>
       </div>
 
       <div class="sc" data-s="2">
         <div class="colwrap">
-          <div class="collab" style="top:-4px">IN&nbsp;&nbsp;4</div>
+          <div class="collab rise d1" style="top:-2px">IN&nbsp;4</div>
           <div class="coltrack"></div>
-          <div class="coltick" style="top:18px"></div>
-          <div class="coltick" style="bottom:18px"></div>
-          <div class="coldot colslow" style="top:18px"></div>
-          <div class="collab" style="bottom:-4px">OUT&nbsp;&nbsp;8</div>
+          <div class="colfill"></div>
+          <div class="coltick tick-in" style="top:18px"></div>
+          <div class="coltick tick-in" style="top:calc(18px + (100% - 36px) * 0.3333)"></div>
+          <div class="coltick tick-in" style="top:calc(18px + (100% - 36px) * 0.6667)"></div>
+          <div class="coltick tick-in" style="bottom:18px"></div>
+          <div class="coltick tick-out" style="top:18px"></div>
+          <div class="coltick tick-out" style="top:calc(18px + (100% - 36px) * 0.1429)"></div>
+          <div class="coltick tick-out" style="top:calc(18px + (100% - 36px) * 0.2857)"></div>
+          <div class="coltick tick-out" style="top:calc(18px + (100% - 36px) * 0.4286)"></div>
+          <div class="coltick tick-out" style="top:calc(18px + (100% - 36px) * 0.5714)"></div>
+          <div class="coltick tick-out" style="top:calc(18px + (100% - 36px) * 0.7143)"></div>
+          <div class="coltick tick-out" style="top:calc(18px + (100% - 36px) * 0.8571)"></div>
+          <div class="coltick tick-out" style="bottom:18px"></div>
+          <div class="coldot colslow"></div>
+          <div class="collab rise d1" style="bottom:-2px">OUT&nbsp;8</div>
         </div>
-        <div class="phaseblock">
+        <div class="phaseblock rise d1">
           <div class="serif pw">Exhale</div>
-          <div class="ps">Let it all the way out</div>
+          <div class="ps"><span>8s</span><span>7s</span><span>6s</span><span>5s</span><span>4s</span><span>3s</span><span>2s</span><span>1s</span></div>
         </div>
         <div class="th th1 dissolve">the email you didn’t send</div>
         <div class="th th2 dissolve dd2">tomorrow. tomorrow.</div>
         <div class="th th3 dissolve dd3">why did you say that</div>
+        <div class="th th4 dissolve dd4">why can't I just sleep</div>
+        <div class="th th5 dissolve dd5">did I lock the door</div>
       </div>
 
       <div class="sc" data-s="3">
@@ -360,9 +448,9 @@
     <span class="angle">Narrative · felt problem</span>
     <p class="why">Meets the viewer in the exact moment they'd search for this app. Racing pulse and intrusive one-liners earn the emotional beat; the app enters as relief, not product. Strongest candidate for lived-experience voiceover in your voice.</p>
     <div class="scenes" data-scenes="c3">
-      <div class="scene-row"><span class="tc">0:00–0:05</span><span class="sd"><b>The moment.</b> “3:04 AM · awake again.” — the three thoughts <b>phase in one by one</b> around it.</span></div>
-      <div class="scene-row"><span class="tc">0:05–0:12</span><span class="sd"><b>The exhale.</b> Straight into the breath column — one long OUT 8; the same thoughts, same positions (clear of the column), <b>dissolve as the dot falls</b>.</span></div>
-      <div class="scene-row"><span class="tc">0:12–0:14</span><span class="sd"><b>Close.</b> “For the nights your mind won’t stop.”</span></div>
+      <div class="scene-row"><span class="tc">0:00–0:06.5</span><span class="sd"><b>The moment.</b> “3:04 AM · awake again.” — the three thoughts <b>phase in one by one</b> around it.</span></div>
+      <div class="scene-row"><span class="tc">0:06.5–0:16</span><span class="sd"><b>The exhale.</b> Straight into the breath column — one long OUT 8; the same thoughts, same positions (clear of the column), <b>dissolve as the dot falls</b>.</span></div>
+      <div class="scene-row"><span class="tc">0:16–0:18.5</span><span class="sd"><b>Close.</b> “For the nights your mind won’t stop.”</span></div>
     </div>
     <p class="direct">v4 per Steven: pulse-ring scene cut — awake-again cuts straight to the exhale; thoughts keep their positions across the cut and sit clear of the column. 14.5s total. Direct me: phase-in pace · thought lines · closing line</p>
   </div>
@@ -377,7 +465,7 @@
 
   // scene durations (seconds) per concept
   const TL = {
-    c3:[5,7,2.5],
+    c3:[6.5,9.5,2.5],
   };
 
   const players = {};

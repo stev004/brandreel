@@ -1,5 +1,8 @@
 # SESSIONS - append-only log, newest first
 
+## 2026-09-10 - rev4: Steven's three tweaks on rev3
+Steven on rev3: best so far; transition to the breathing snaps; wants one or two more thoughts; breathing game must be identical to the app. Read app/breathing.tsx + the App Store 3am frame: sage stateBalanced dot/fill/ticks, cream track 8%, 4+8 ticks, IN 4/OUT 8 rail, Exhale + seconds, track fade 450 / dot 450+300 / ticks 30ms stagger, exhale 8s Easing.in. rev4 = rev3 + T1 entrance, T2 thoughts t4/t5 (S1 6.5s), T3 app instrument (S2 9.5s); 18.5s. Verified with the new `bin/animatic-frames.mjs` after discovering the hidden pane freezes animations (false negatives). Artifact republished, same URL.
+
 ## 2026-09-05 (latest) - rev3: the mock verbatim
 Steven on rev2: still not exactly the mock, "especially the first 3am part". Verified the mock = motion-drafts.html concept 3, unchanged since its single commit (07-12). rev3 embeds it byte-for-byte (whole style block, concept section, player restricted to c3) at native 300x640; the only edit is the white wordmark dot. Scaled values demoted to the porting contract. SPEC ruling 11 amended: the gate sees the mock itself; scaling happens once, in the port. Browser-verified (fade-in from black, S1, crossfade, exhale).
 
