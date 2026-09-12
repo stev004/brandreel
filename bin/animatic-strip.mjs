@@ -13,7 +13,9 @@ async function run(offset){
   const chrome=spawn(CH,['--headless=new','--disable-gpu','--hide-scrollbars','--window-size=420,700',`--remote-debugging-port=${port}`,`--user-data-dir=/tmp/sheet-${port}`,'about:blank'],{stdio:'ignore'});
   const wd=setTimeout(()=>{chrome.kill()},Number(toMs)+30000);
   let targets=[]; for(let i=0;i<40&&!targets.length;i++){try{targets=await (await fetch(`http://127.0.0.1:${port}/json`)).json()}catch{} if(!targets.length) await sleep(250);}
-  const ws=new WebSocket(targets[0].webSocketDebuggerUrl); await new Promise(r=>ws.onopen=r);
+  const page=targets.find(t=>t.type==='page')||targets[0];
+  const ws=new WebSocket(page.webSocketDebuggerUrl);
+  await new Promise((res,rej)=>{ws.onopen=res; ws.onerror=e=>rej(new Error('ws error')); ws.onclose=()=>rej(new Error('ws closed before open'));}).catch(e=>{console.error('devtools connect failed:',e.message); chrome.kill(); process.exit(4);});
   let id=0; const pending=new Map(); ws.onmessage=e=>{const m=JSON.parse(e.data); if(m.id&&pending.has(m.id)){pending.get(m.id)(m.result);pending.delete(m.id);}};
   const send=(m,p={})=>new Promise(r=>{const i=++id;pending.set(i,r);ws.send(JSON.stringify({id:i,method:m,params:p}))});
   await send('Page.enable'); await send('Page.navigate',{url});

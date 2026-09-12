@@ -1,6 +1,16 @@
 <meta charset="utf-8">
 <title>3:04 AM</title>
 <!--
+  brandreel animatic rev5d - regulate - "3:04 AM" 19.6s - rev5c + the dot centred on the ticks
+  Steven on rev5c (2026-09-12): "closest we've ever been; the orb isn't
+  actually at the top." Cause: the dot became bottom-anchored in rev4 (so
+  the fill could drain beneath it) but kept the mock's translateY(-50%),
+  which is right for a top-anchored element and 16px too high for a
+  bottom-anchored one - it started above the top tick and stopped short of
+  the bottom one. Fix: translateY(+50%). The centre now sits on the top
+  tick at the start of the exhale and on the bottom tick at the end.
+
+  --- rev5c header follows ---
   brandreel animatic rev5c - regulate - "3:04 AM" 19.6s - scenes have no ground; the switch is invisible
   Watched rev5b as a strip: the incoming scene's OPAQUE background hid the
   old scene's thoughts as it faded in, then its own copies popped in late -
@@ -410,7 +420,8 @@
   .coltick{background:var(--bal);width:8px;height:1px;opacity:0}
   .tick-in{left:calc(50% - 6px);transform:translateX(-100%)}
   .tick-out{left:calc(50% + 6px);transform:none}
-  .coldot{background:var(--bal);box-shadow:0 0 22px rgba(127,167,127,.8);opacity:0;top:auto;bottom:calc(100% - 18px)}
+  /* bottom-anchored dot: translateY(+50%) so the CENTRE sits on the tick (the mock's -50% was for top-anchoring) */
+  .coldot{background:var(--bal);box-shadow:0 0 22px rgba(127,167,127,.8);opacity:0;top:auto;bottom:calc(100% - 18px);transform:translate(-50%,50%)}
   .collab{left:calc(50% + 22px);transform:none;text-align:left}
   .phaseblock .ps{font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--mono-dim);margin-top:8px;position:relative;height:12px}
   .phaseblock .ps span{position:absolute;left:0;top:0;opacity:0}

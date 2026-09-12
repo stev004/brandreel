@@ -1,5 +1,8 @@
 # SESSIONS - append-only log, newest first
 
+## 2026-09-12 (latest) - rev5d: dot on the ticks
+Steven on rev5c: closest ever, keep once the orb is at the top. The bottom-anchored dot (rev4, so the fill drains beneath it) had kept the mock's top-anchored translateY(-50%): 16px high at both ends. Fixed (+50%), strip-verified at 7.9-8.2s and 15.6-15.9s. Capture tools hardened: pick the 'page' DevTools target, fail loudly on socket errors (the earlier silent one-frame runs were an unsettled top-level await on a dead socket).
+
 ## 2026-09-12 (later) - rev5b/5c: watched as a strip
 Steven on rev5: overlaps, transition still weird, "genuinely watch the video". Built bin/animatic-strip.mjs (dense frames named by the page clock, tiled). The strip showed what stills could not: thoughts pulsing brighter (drawn by both scenes), the wordmark fading in over the column (held crossfade ran S2->S3 too), and the incoming scene's opaque ground hiding the old thoughts. rev5c removed the held-crossfade mechanism entirely: transparent scenes on one phone ground, instant invisible switches, instrument exits at 9.9s, thoughts 4/5 earlier. Strip-verified both handovers. Lesson: verify motion as a strip; never merge two capture runs.
 
