@@ -1,6 +1,36 @@
 <meta charset="utf-8">
 <title>3:04 AM</title>
 <!--
+  brandreel animatic rev5c - regulate - "3:04 AM" 19.6s - scenes have no ground; the switch is invisible
+  Watched rev5b as a strip: the incoming scene's OPAQUE background hid the
+  old scene's thoughts as it faded in, then its own copies popped in late -
+  the thoughts vanished for most of a second. The held crossfade was the
+  wrong mechanism. rev5c removes it: the phone is the only ground
+  (#050b08), every scene is transparent, scene switches are instant and
+  carry nothing visible (the clock line has already risen out; the five
+  thoughts are drawn identically by both scenes so the swap is invisible),
+  and every entrance/exit is the element's own animation. Scene 0 still
+  fades in from black at t=0 (the mock's 450ms).
+
+  --- rev5b header follows ---
+  brandreel animatic rev5b - regulate - "3:04 AM" 19.6s - rev5 with the overlaps removed
+  Steven on rev5 (2026-09-12): "overlapping elements and the transition is
+  still weird". Watched as a sequence, three defects, all mine:
+  1. The five thoughts were drawn by BOTH scenes during the 900ms fade, so
+     they brightened toward 94% and then dropped back to 75% when the old
+     scene was removed - a visible pulse. Fix: the incoming scene's thoughts
+     stay at 0 for the first 920ms and take over at 75% at the instant the
+     outgoing scene drops. Same positions, so the handoff is invisible.
+  2. The held crossfade also ran S2 -> S3, so "regulate." faded in on top
+     of the breathing column. Fix: the instrument and "Exhale" rise out
+     from 9.9s (exhale ends 9.4, 0.5s hold), so S3 fades onto an empty
+     ground; and the player only holds the outgoing scene when moving
+     forward (never on the loop restart). S2 is 10.6s; total 19.6s.
+  3. The fifth thought was still phasing in while the clock line rose out.
+     Fix: thoughts 4 and 5 phase in at 4.0 and 4.5s, so all five have
+     landed before the clock line leaves at 5.7s.
+
+  --- rev5 header follows ---
   brandreel animatic rev5 - regulate - "3:04 AM" 19s - rev4 + a softer way into the breathing
   Steven on rev4 (2026-09-10): "now the best we've genuinely had. the
   transition to the breathing frame is still a bit snappy though."
@@ -409,11 +439,11 @@
   @keyframes s2{0%,74.9%{opacity:0}75%,87.4%{opacity:1}87.5%,100%{opacity:0}}
   @keyframes s1{0%,87.4%{opacity:0}87.5%,100%{opacity:1}}
   /* rev5 - softer handover S1 -> S2 */
-  /* crossfade by animation, not transition: the incoming scene fades in over the outgoing one, which the
-     player keeps .on (fully opaque, thoughts still in place) for the 900ms of the fade, then drops */
-  .sc.on{transition:none;animation:scenein .9s cubic-bezier(.2,.7,.2,1) forwards}
-  @keyframes scenein{from{opacity:0}to{opacity:1}}
-  .sc[data-s="2"]{background:#050b08}
+  /* rev5c: the phone is the ground; scenes are transparent and switch instantly. Only scene 0 fades in from black. */
+  .phone{background:#050b08}
+  .sc{background:transparent!important}
+  .sc.on{transition:none}
+  .sc[data-s="0"].on{transition:opacity .45s}
   .sc.on[data-s="0"] .rise{animation:rise .7s cubic-bezier(.2,.7,.2,1) forwards, riseout .7s cubic-bezier(.2,.7,.2,1) forwards}
   .sc.on[data-s="0"] .d1{animation-delay:.15s,5.7s} .sc.on[data-s="0"] .d2{animation-delay:.5s,5.7s}
   @keyframes riseout{to{opacity:0;transform:translateY(-10px);filter:blur(2px)}}
@@ -427,6 +457,10 @@
   .sc.on[data-s="2"] .ps span{animation-delay:1.4s}
   .sc.on[data-s="2"] .th.dissolve{animation-delay:1.4s} .sc.on[data-s="2"] .th.dissolve.dd2{animation-delay:2.3s} .sc.on[data-s="2"] .th.dissolve.dd3{animation-delay:3.2s}
   .sc.on[data-s="2"] .th.dissolve.dd4{animation-delay:4.1s} .sc.on[data-s="2"] .th.dissolve.dd5{animation-delay:5.0s}
+  /* rev5b - no double-drawn thoughts, S2 exits before S3, thoughts land before the clock line leaves */
+  .sc.on .th.p4{animation-delay:4s} .sc.on .th.p5{animation-delay:4.5s}
+  .sc.on[data-s="2"] .colwrap{animation:riseout .7s cubic-bezier(.2,.7,.2,1) 9.9s forwards}
+  .sc.on[data-s="2"] .phaseblock.rise{animation:rise .7s cubic-bezier(.2,.7,.2,1) .65s forwards, riseout .7s cubic-bezier(.2,.7,.2,1) 9.9s forwards}
 </style>
 
 <!-- ================= CONCEPT 3 : 3:04 AM ================= -->
@@ -491,8 +525,8 @@
     <p class="why">Meets the viewer in the exact moment they'd search for this app. Racing pulse and intrusive one-liners earn the emotional beat; the app enters as relief, not product. Strongest candidate for lived-experience voiceover in your voice.</p>
     <div class="scenes" data-scenes="c3">
       <div class="scene-row"><span class="tc">0:00–0:06.5</span><span class="sd"><b>The moment.</b> “3:04 AM · awake again.” — the three thoughts <b>phase in one by one</b> around it.</span></div>
-      <div class="scene-row"><span class="tc">0:06.5–0:16.5</span><span class="sd"><b>The exhale.</b> Straight into the breath column — one long OUT 8; the same thoughts, same positions (clear of the column), <b>dissolve as the dot falls</b>.</span></div>
-      <div class="scene-row"><span class="tc">0:16.5–0:19</span><span class="sd"><b>Close.</b> “For the nights your mind won’t stop.”</span></div>
+      <div class="scene-row"><span class="tc">0:06.5–0:17.1</span><span class="sd"><b>The exhale.</b> Straight into the breath column — one long OUT 8; the same thoughts, same positions (clear of the column), <b>dissolve as the dot falls</b>.</span></div>
+      <div class="scene-row"><span class="tc">0:17.1–0:19.6</span><span class="sd"><b>Close.</b> “For the nights your mind won’t stop.”</span></div>
     </div>
     <p class="direct">v4 per Steven: pulse-ring scene cut — awake-again cuts straight to the exhale; thoughts keep their positions across the cut and sit clear of the column. 14.5s total. Direct me: phase-in pace · thought lines · closing line</p>
   </div>
@@ -507,7 +541,7 @@
 
   // scene durations (seconds) per concept
   const TL = {
-    c3:[6.5,10,2.5],
+    c3:[6.5,10.6,2.5],
   };
 
   const players = {};
@@ -534,7 +568,7 @@
           sc.classList.remove('on');
           void sc.offsetWidth;           // restart child animations
           sc.classList.add('on');
-        } else if(sc.classList.contains('on')){ const leaving=sc; setTimeout(()=>{ if(cur!==k) leaving.classList.remove('on'); }, 900); }
+        } else sc.classList.remove('on');
       });
       rows.forEach((r,k)=>r.classList.toggle('now',k===i));
       // concept 1 caption sequence

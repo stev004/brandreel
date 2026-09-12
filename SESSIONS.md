@@ -1,5 +1,8 @@
 # SESSIONS - append-only log, newest first
 
+## 2026-09-12 (later) - rev5b/5c: watched as a strip
+Steven on rev5: overlaps, transition still weird, "genuinely watch the video". Built bin/animatic-strip.mjs (dense frames named by the page clock, tiled). The strip showed what stills could not: thoughts pulsing brighter (drawn by both scenes), the wordmark fading in over the column (held crossfade ran S2->S3 too), and the incoming scene's opaque ground hiding the old thoughts. rev5c removed the held-crossfade mechanism entirely: transparent scenes on one phone ground, instant invisible switches, instrument exits at 9.9s, thoughts 4/5 earlier. Strip-verified both handovers. Lesson: verify motion as a strip; never merge two capture runs.
+
 ## 2026-09-12 - rev5: the handover
 Steven on rev4: best yet, transition still snappy. Found the cause with a CDP opacity probe: the mock's `.sc.on{transition}` only fades the incoming scene; the outgoing scene loses `.on` and drops to 0 instantly (and its thoughts with it) - a snap-out under a fade-in. rev5: clock line rises out from 5.7s, incoming scene animates 0->1 over 900ms (house curve) while the player keeps the outgoing scene `.on` for 900ms, both scenes on one ground, instrument entrance +500ms, exhale from 1.4s; 19.0s. bin/animatic-frames.mjs gained a watchdog. Frames verified at 7.0 (thoughts only) and 9.1 (instrument arrived).
 
