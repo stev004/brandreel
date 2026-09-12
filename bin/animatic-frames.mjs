@@ -11,6 +11,9 @@ const CHROME = process.env.CHROME_BIN || '/Applications/Google Chrome.app/Conten
 const [url, outDir, ...rest] = process.argv.slice(2);
 if (!url || !outDir || rest.length === 0) { console.error('usage: animatic-frames.mjs <url> <out-dir> <ms...>'); process.exit(1); }
 const times = rest.map(Number);
+// WATCHDOG: never hang - a stuck Chrome or socket exits non-zero after the frames could have been taken.
+const budget = Math.max(...times) + 25000;
+setTimeout(() => { console.error(`watchdog: exceeded ${budget}ms`); try { chrome.kill(); } catch {} process.exit(3); }, budget).unref();
 const port = 9500 + Math.floor(Math.random() * 400);
 const profile = `/tmp/animatic-frames-${port}`;
 mkdirSync(outDir, { recursive: true });

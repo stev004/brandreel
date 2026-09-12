@@ -1,6 +1,29 @@
 <meta charset="utf-8">
 <title>3:04 AM</title>
 <!--
+  brandreel animatic rev5 - regulate - "3:04 AM" 19s - rev4 + a softer way into the breathing
+  Steven on rev4 (2026-09-10): "now the best we've genuinely had. the
+  transition to the breathing frame is still a bit snappy though."
+
+  REV5 CHANGE (only the S1 -> S2 handover; nothing else moves)
+  - The clock line leaves before the instrument arrives: "3:04 AM" and
+    "awake again." rise out (opacity 1 -> 0, translateY -10px, blur 2px,
+    700ms house) from 5700ms, so by the scene switch at 6500 the centre of
+    the frame is already empty and only the thoughts carry across.
+  - The scene crossfade is 900ms on the house curve [was 450ms linear], and
+    it is a true crossfade: the incoming scene animates 0 -> 1 over the
+    outgoing one, which stays fully drawn for those 900ms (player change: an
+    outgoing scene drops .on 900ms late). The mock's version snapped the old
+    scene to 0 and faded only the new one in - that snap was the snap.
+  - Both scenes sit on the same night ground #050b08 [S2 was the phone's
+    #0c1912], so no luminance step rides under the fade.
+  - The instrument enters 500ms later than rev4, once the fade is mostly
+    through: track 500, ticks 500-830, dot 950, labels and "Exhale" rise
+    from 650; the exhale (dot, drain, count) starts at 1400ms. Thought
+    dissolves shift +500 (1400 / 2300 / 3200 / 4100 / 5000).
+  - S2 is 10.0s (1.4 entrance + 8 exhale + 0.6 hold). Total 19.0s.
+
+  --- rev4 header follows ---
   brandreel animatic rev4 - regulate - "3:04 AM" 18.5s - the mock + Steven's three tweaks
   Steven on rev3 (2026-09-10): "best version so far. still needs tweaking:
   better transition to the breathing - it kinda snaps into frame; I like the
@@ -26,7 +49,7 @@
      muted; exhale is 8s with the app's Easing.in(ease). This replaces the
      mock's gradient rail, two ticks and "Let it all the way out". The
      sage-vs-teal question is answered by the app: sage.
-  Total 18.5s (6.5 + 9.5 + 2.5).
+  Total 18.5s (6.5 + 9.5 + 2.5) [rev5: 19.0s, S2 10.0s].
 
   --- rev3 header follows ---
   brandreel animatic rev3 - regulate - "3:04 AM" 14.5s - THE MOCK, VERBATIM
@@ -385,6 +408,25 @@
   @keyframes s3{0%,62.4%{opacity:0}62.5%,74.9%{opacity:1}75%,100%{opacity:0}}
   @keyframes s2{0%,74.9%{opacity:0}75%,87.4%{opacity:1}87.5%,100%{opacity:0}}
   @keyframes s1{0%,87.4%{opacity:0}87.5%,100%{opacity:1}}
+  /* rev5 - softer handover S1 -> S2 */
+  /* crossfade by animation, not transition: the incoming scene fades in over the outgoing one, which the
+     player keeps .on (fully opaque, thoughts still in place) for the 900ms of the fade, then drops */
+  .sc.on{transition:none;animation:scenein .9s cubic-bezier(.2,.7,.2,1) forwards}
+  @keyframes scenein{from{opacity:0}to{opacity:1}}
+  .sc[data-s="2"]{background:#050b08}
+  .sc.on[data-s="0"] .rise{animation:rise .7s cubic-bezier(.2,.7,.2,1) forwards, riseout .7s cubic-bezier(.2,.7,.2,1) forwards}
+  .sc.on[data-s="0"] .d1{animation-delay:.15s,5.7s} .sc.on[data-s="0"] .d2{animation-delay:.5s,5.7s}
+  @keyframes riseout{to{opacity:0;transform:translateY(-10px);filter:blur(2px)}}
+  .sc.on[data-s="2"] .coltrack{animation-delay:.5s}
+  .sc.on[data-s="2"] .colfill{animation:fadein .45s cubic-bezier(.2,.7,.2,1) .5s forwards, drain 8s cubic-bezier(.42,0,1,1) 1.4s forwards}
+  .sc.on[data-s="2"] .tick-in:nth-of-type(1){animation-delay:.5s} .sc.on[data-s="2"] .tick-in:nth-of-type(2){animation-delay:.53s} .sc.on[data-s="2"] .tick-in:nth-of-type(3){animation-delay:.56s} .sc.on[data-s="2"] .tick-in:nth-of-type(4){animation-delay:.59s}
+  .sc.on[data-s="2"] .tick-out:nth-of-type(1){animation-delay:.62s} .sc.on[data-s="2"] .tick-out:nth-of-type(2){animation-delay:.65s} .sc.on[data-s="2"] .tick-out:nth-of-type(3){animation-delay:.68s} .sc.on[data-s="2"] .tick-out:nth-of-type(4){animation-delay:.71s}
+  .sc.on[data-s="2"] .tick-out:nth-of-type(5){animation-delay:.74s} .sc.on[data-s="2"] .tick-out:nth-of-type(6){animation-delay:.77s} .sc.on[data-s="2"] .tick-out:nth-of-type(7){animation-delay:.80s} .sc.on[data-s="2"] .tick-out:nth-of-type(8){animation-delay:.83s}
+  .sc.on[data-s="2"] .coldot.colslow{animation:fadein .3s cubic-bezier(.2,.7,.2,1) .95s forwards, exhale 8s cubic-bezier(.42,0,1,1) 1.4s forwards}
+  .sc.on[data-s="2"] .d1{animation-delay:.65s}
+  .sc.on[data-s="2"] .ps span{animation-delay:1.4s}
+  .sc.on[data-s="2"] .th.dissolve{animation-delay:1.4s} .sc.on[data-s="2"] .th.dissolve.dd2{animation-delay:2.3s} .sc.on[data-s="2"] .th.dissolve.dd3{animation-delay:3.2s}
+  .sc.on[data-s="2"] .th.dissolve.dd4{animation-delay:4.1s} .sc.on[data-s="2"] .th.dissolve.dd5{animation-delay:5.0s}
 </style>
 
 <!-- ================= CONCEPT 3 : 3:04 AM ================= -->
@@ -449,8 +491,8 @@
     <p class="why">Meets the viewer in the exact moment they'd search for this app. Racing pulse and intrusive one-liners earn the emotional beat; the app enters as relief, not product. Strongest candidate for lived-experience voiceover in your voice.</p>
     <div class="scenes" data-scenes="c3">
       <div class="scene-row"><span class="tc">0:00–0:06.5</span><span class="sd"><b>The moment.</b> “3:04 AM · awake again.” — the three thoughts <b>phase in one by one</b> around it.</span></div>
-      <div class="scene-row"><span class="tc">0:06.5–0:16</span><span class="sd"><b>The exhale.</b> Straight into the breath column — one long OUT 8; the same thoughts, same positions (clear of the column), <b>dissolve as the dot falls</b>.</span></div>
-      <div class="scene-row"><span class="tc">0:16–0:18.5</span><span class="sd"><b>Close.</b> “For the nights your mind won’t stop.”</span></div>
+      <div class="scene-row"><span class="tc">0:06.5–0:16.5</span><span class="sd"><b>The exhale.</b> Straight into the breath column — one long OUT 8; the same thoughts, same positions (clear of the column), <b>dissolve as the dot falls</b>.</span></div>
+      <div class="scene-row"><span class="tc">0:16.5–0:19</span><span class="sd"><b>Close.</b> “For the nights your mind won’t stop.”</span></div>
     </div>
     <p class="direct">v4 per Steven: pulse-ring scene cut — awake-again cuts straight to the exhale; thoughts keep their positions across the cut and sit clear of the column. 14.5s total. Direct me: phase-in pace · thought lines · closing line</p>
   </div>
@@ -465,7 +507,7 @@
 
   // scene durations (seconds) per concept
   const TL = {
-    c3:[6.5,9.5,2.5],
+    c3:[6.5,10,2.5],
   };
 
   const players = {};
@@ -492,7 +534,7 @@
           sc.classList.remove('on');
           void sc.offsetWidth;           // restart child animations
           sc.classList.add('on');
-        } else sc.classList.remove('on');
+        } else if(sc.classList.contains('on')){ const leaving=sc; setTimeout(()=>{ if(cur!==k) leaving.classList.remove('on'); }, 900); }
       });
       rows.forEach((r,k)=>r.classList.toggle('now',k===i));
       // concept 1 caption sequence

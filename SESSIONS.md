@@ -1,5 +1,8 @@
 # SESSIONS - append-only log, newest first
 
+## 2026-09-12 - rev5: the handover
+Steven on rev4: best yet, transition still snappy. Found the cause with a CDP opacity probe: the mock's `.sc.on{transition}` only fades the incoming scene; the outgoing scene loses `.on` and drops to 0 instantly (and its thoughts with it) - a snap-out under a fade-in. rev5: clock line rises out from 5.7s, incoming scene animates 0->1 over 900ms (house curve) while the player keeps the outgoing scene `.on` for 900ms, both scenes on one ground, instrument entrance +500ms, exhale from 1.4s; 19.0s. bin/animatic-frames.mjs gained a watchdog. Frames verified at 7.0 (thoughts only) and 9.1 (instrument arrived).
+
 ## 2026-09-10 - rev4: Steven's three tweaks on rev3
 Steven on rev3: best so far; transition to the breathing snaps; wants one or two more thoughts; breathing game must be identical to the app. Read app/breathing.tsx + the App Store 3am frame: sage stateBalanced dot/fill/ticks, cream track 8%, 4+8 ticks, IN 4/OUT 8 rail, Exhale + seconds, track fade 450 / dot 450+300 / ticks 30ms stagger, exhale 8s Easing.in. rev4 = rev3 + T1 entrance, T2 thoughts t4/t5 (S1 6.5s), T3 app instrument (S2 9.5s); 18.5s. Verified with the new `bin/animatic-frames.mjs` after discovering the hidden pane freezes animations (false negatives). Artifact republished, same URL.
 
