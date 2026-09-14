@@ -1,5 +1,26 @@
 # SESSIONS - append-only log, newest first
 
+## 2026-09-12 (latest) - rev5d: dot on the ticks
+Steven on rev5c: closest ever, keep once the orb is at the top. The bottom-anchored dot (rev4, so the fill drains beneath it) had kept the mock's top-anchored translateY(-50%): 16px high at both ends. Fixed (+50%), strip-verified at 7.9-8.2s and 15.6-15.9s. Capture tools hardened: pick the 'page' DevTools target, fail loudly on socket errors (the earlier silent one-frame runs were an unsettled top-level await on a dead socket).
+
+## 2026-09-12 (later) - rev5b/5c: watched as a strip
+Steven on rev5: overlaps, transition still weird, "genuinely watch the video". Built bin/animatic-strip.mjs (dense frames named by the page clock, tiled). The strip showed what stills could not: thoughts pulsing brighter (drawn by both scenes), the wordmark fading in over the column (held crossfade ran S2->S3 too), and the incoming scene's opaque ground hiding the old thoughts. rev5c removed the held-crossfade mechanism entirely: transparent scenes on one phone ground, instant invisible switches, instrument exits at 9.9s, thoughts 4/5 earlier. Strip-verified both handovers. Lesson: verify motion as a strip; never merge two capture runs.
+
+## 2026-09-12 - rev5: the handover
+Steven on rev4: best yet, transition still snappy. Found the cause with a CDP opacity probe: the mock's `.sc.on{transition}` only fades the incoming scene; the outgoing scene loses `.on` and drops to 0 instantly (and its thoughts with it) - a snap-out under a fade-in. rev5: clock line rises out from 5.7s, incoming scene animates 0->1 over 900ms (house curve) while the player keeps the outgoing scene `.on` for 900ms, both scenes on one ground, instrument entrance +500ms, exhale from 1.4s; 19.0s. bin/animatic-frames.mjs gained a watchdog. Frames verified at 7.0 (thoughts only) and 9.1 (instrument arrived).
+
+## 2026-09-10 - rev4: Steven's three tweaks on rev3
+Steven on rev3: best so far; transition to the breathing snaps; wants one or two more thoughts; breathing game must be identical to the app. Read app/breathing.tsx + the App Store 3am frame: sage stateBalanced dot/fill/ticks, cream track 8%, 4+8 ticks, IN 4/OUT 8 rail, Exhale + seconds, track fade 450 / dot 450+300 / ticks 30ms stagger, exhale 8s Easing.in. rev4 = rev3 + T1 entrance, T2 thoughts t4/t5 (S1 6.5s), T3 app instrument (S2 9.5s); 18.5s. Verified with the new `bin/animatic-frames.mjs` after discovering the hidden pane freezes animations (false negatives). Artifact republished, same URL.
+
+## 2026-09-05 (latest) - rev3: the mock verbatim
+Steven on rev2: still not exactly the mock, "especially the first 3am part". Verified the mock = motion-drafts.html concept 3, unchanged since its single commit (07-12). rev3 embeds it byte-for-byte (whole style block, concept section, player restricted to c3) at native 300x640; the only edit is the white wordmark dot. Scaled values demoted to the porting contract. SPEC ruling 11 amended: the gate sees the mock itself; scaling happens once, in the port. Browser-verified (fade-in from black, S1, crossfade, exhale).
+
+## 2026-09-05 (later) - rev2 after Steven's critique; SPEC ruling 11
+Steven on rev1: not 1:1, motion not as smooth, text off-brand, timing off, needs continuity. Root cause: rev1 transcribed the Remotion port (ThreeAM.tsx), not the approved mock. rev2 = scaled transcription of motion-drafts concept 3 (Sx 3.6 / Sy 3.0), crossfades restored, mock easing/blur/travel carried, Playfair 400, JetBrains Mono (kit + fonts.ts registry). Mechanism: SPEC ruling 11 (lineage transcription). Browser-verified 4 points; artifact republished same URL. Gates: tsc, 32 engine + 85 bin tests.
+
+## 2026-09-05 - 3:04 AM animatic v1 (first Regulate video)
+Steven: the 3am mock "was quite good", first video is 3:04 AM, the Sigh second. Fable authored `animatics/regulate-3am.html` (15.5s) from the motion-drafts concept 3 + the regulate repo ThreeAM.tsx port, geometry 1:1, Brand Book laws applied (emerald ground, teal dot as the one live thing, white wordmark dot, Playfair). Browser-verified all three scenes. Published as an artifact for the gate; plan + port notes in `regulate-3am.plan.md`. Branch `feature/regulate-3am` off main (main already carried feature/interview, so Steven's "merge it" was a no-op).
+
 ## 2026-09-05 - foreman run 4: interview stage + remote
 Steven merged cta-lint (fb3f599), resolved G1 (public remote, created), G3 (CC0 by path), G6 (two rows). Run landed on feature/interview: bin/interview.mjs + brief-enforced script.mjs, two-row tagline, thought/drift geometry model, lint-implying duration limits, CI with ffmpeg. First brief-driven video workspace/regulate-sigh passes all lints on the model's first attempt. Digest docs/runs/2026-09-05-digest-interview.md. Waiting on Steven: merge feature/interview, KEEP/TWEAK/KILL on regulate-sigh.
 

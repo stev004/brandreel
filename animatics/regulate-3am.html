@@ -1,0 +1,618 @@
+<meta charset="utf-8">
+<title>3:04 AM</title>
+<!--
+  brandreel animatic rev5d - regulate - "3:04 AM" 19.6s - rev5c + the dot centred on the ticks
+  Steven on rev5c (2026-09-12): "closest we've ever been; the orb isn't
+  actually at the top." Cause: the dot became bottom-anchored in rev4 (so
+  the fill could drain beneath it) but kept the mock's translateY(-50%),
+  which is right for a top-anchored element and 16px too high for a
+  bottom-anchored one - it started above the top tick and stopped short of
+  the bottom one. Fix: translateY(+50%). The centre now sits on the top
+  tick at the start of the exhale and on the bottom tick at the end.
+
+  --- rev5c header follows ---
+  brandreel animatic rev5c - regulate - "3:04 AM" 19.6s - scenes have no ground; the switch is invisible
+  Watched rev5b as a strip: the incoming scene's OPAQUE background hid the
+  old scene's thoughts as it faded in, then its own copies popped in late -
+  the thoughts vanished for most of a second. The held crossfade was the
+  wrong mechanism. rev5c removes it: the phone is the only ground
+  (#050b08), every scene is transparent, scene switches are instant and
+  carry nothing visible (the clock line has already risen out; the five
+  thoughts are drawn identically by both scenes so the swap is invisible),
+  and every entrance/exit is the element's own animation. Scene 0 still
+  fades in from black at t=0 (the mock's 450ms).
+
+  --- rev5b header follows ---
+  brandreel animatic rev5b - regulate - "3:04 AM" 19.6s - rev5 with the overlaps removed
+  Steven on rev5 (2026-09-12): "overlapping elements and the transition is
+  still weird". Watched as a sequence, three defects, all mine:
+  1. The five thoughts were drawn by BOTH scenes during the 900ms fade, so
+     they brightened toward 94% and then dropped back to 75% when the old
+     scene was removed - a visible pulse. Fix: the incoming scene's thoughts
+     stay at 0 for the first 920ms and take over at 75% at the instant the
+     outgoing scene drops. Same positions, so the handoff is invisible.
+  2. The held crossfade also ran S2 -> S3, so "regulate." faded in on top
+     of the breathing column. Fix: the instrument and "Exhale" rise out
+     from 9.9s (exhale ends 9.4, 0.5s hold), so S3 fades onto an empty
+     ground; and the player only holds the outgoing scene when moving
+     forward (never on the loop restart). S2 is 10.6s; total 19.6s.
+  3. The fifth thought was still phasing in while the clock line rose out.
+     Fix: thoughts 4 and 5 phase in at 4.0 and 4.5s, so all five have
+     landed before the clock line leaves at 5.7s.
+
+  --- rev5 header follows ---
+  brandreel animatic rev5 - regulate - "3:04 AM" 19s - rev4 + a softer way into the breathing
+  Steven on rev4 (2026-09-10): "now the best we've genuinely had. the
+  transition to the breathing frame is still a bit snappy though."
+
+  REV5 CHANGE (only the S1 -> S2 handover; nothing else moves)
+  - The clock line leaves before the instrument arrives: "3:04 AM" and
+    "awake again." rise out (opacity 1 -> 0, translateY -10px, blur 2px,
+    700ms house) from 5700ms, so by the scene switch at 6500 the centre of
+    the frame is already empty and only the thoughts carry across.
+  - The scene crossfade is 900ms on the house curve [was 450ms linear], and
+    it is a true crossfade: the incoming scene animates 0 -> 1 over the
+    outgoing one, which stays fully drawn for those 900ms (player change: an
+    outgoing scene drops .on 900ms late). The mock's version snapped the old
+    scene to 0 and faded only the new one in - that snap was the snap.
+  - Both scenes sit on the same night ground #050b08 [S2 was the phone's
+    #0c1912], so no luminance step rides under the fade.
+  - The instrument enters 500ms later than rev4, once the fade is mostly
+    through: track 500, ticks 500-830, dot 950, labels and "Exhale" rise
+    from 650; the exhale (dot, drain, count) starts at 1400ms. Thought
+    dissolves shift +500 (1400 / 2300 / 3200 / 4100 / 5000).
+  - S2 is 10.0s (1.4 entrance + 8 exhale + 0.6 hold). Total 19.0s.
+
+  --- rev4 header follows ---
+  brandreel animatic rev4 - regulate - "3:04 AM" 18.5s - the mock + Steven's three tweaks
+  Steven on rev3 (2026-09-10): "best version so far. still needs tweaking:
+  better transition to the breathing - it kinda snaps into frame; I like the
+  animation of the words/choices, maybe we need some more; ensure the
+  breathing game is identical to what we have."
+
+  REV4 CHANGES (each traced to one of those three; everything else is rev3)
+  T1 Transition into the breathing: the scene still crossfades 450ms, but
+     the instrument now ENTERS the way the app's Regulate Breath screen
+     does (app/breathing.tsx): track fades in 450ms, ticks stagger in 30ms
+     apart (inhale 0-90ms, exhale 120-330ms), the dot fades in 300ms after
+     a 450ms delay, phase text and labels rise on the house curve; the
+     exhale starts at 900ms. S2 is 9.5s (0.9 entrance + 8s exhale + 0.6 hold).
+  T2 Two more thoughts: t4 "why can't I just sleep" (top 60% left 8%) and
+     t5 "did I lock the door" (top 10% left 24%), phasing in at 4500 and
+     5300ms; S1 is 6.5s so the last one lands before the crossfade. They
+     dissolve on the exhale like the others (delays +900 each).
+  T3 The breathing game is the app's instrument: sage #7FA77F (the
+     Balanced state colour) for dot, fill and ticks; cream track at 10%;
+     the fill sits BELOW the dot and drains with it; four inhale ticks on
+     the left, eight exhale ticks on the right; "IN 4" / "OUT 8" to the
+     right of the ticks; "Exhale" with a live seconds count 8s -> 1s, mono,
+     muted; exhale is 8s with the app's Easing.in(ease). This replaces the
+     mock's gradient rail, two ticks and "Let it all the way out". The
+     sage-vs-teal question is answered by the app: sage.
+  Total 18.5s (6.5 + 9.5 + 2.5) [rev5: 19.0s, S2 10.0s].
+
+  --- rev3 header follows ---
+  brandreel animatic rev3 - regulate - "3:04 AM" 14.5s - THE MOCK, VERBATIM
+  Steven on rev2: "still not exactly how it was - the mock was a real smooth
+  animation style, especially the first 3am part. find it and ensure the
+  video is the same." Found: hivemind marketing/motion-drafts.html, concept 3,
+  single commit ea91a82 (2026-07-12), unchanged since the day it was approved.
+
+  rev3 is that concept copied byte-for-byte from the file (the whole style
+  block, the concept 3 section, the player script) at its native 300x640
+  phone. No re-implementation, no scaling, no re-timing. It is the mock.
+
+  ONE change: the wordmark's full stop is #FFFFFF. The mock's own header
+  states the rule ("regulate." is ALWAYS pure white, dot included, Steven
+  07-12) but set the dot to ink #efe9dc.
+
+  NOT applied - Brand Book laws the mock predates, left for Steven to rule
+  on as TWEAKs rather than imposed (rev1/rev2 imposed them and lost the mock):
+  - Ground: scene 0 is #050b08 and the phone is #0c1912; the book says
+    emerald #0a1812 everywhere.
+  - The falling dot and column are sage #a9c99e (not a theme token); the
+    book says the one live element on a surface is teal #4FD1C5.
+  - Serif resolves to "Bodoni 72" on a Mac, Playfair Display elsewhere; the
+    book names Playfair. Mono is SF Mono / system.
+  Say the word on any of these and it becomes a listed deviation.
+
+  PORTING CONTRACT (1080x1920 @ 60fps, 14500ms; add a 1000ms close hold to
+  clear the 15s lint floor). Stage 300x640 -> Sx 3.6 for sizes and x,
+  Sy 3.0 for y offsets, percents unchanged. [mock px] -> port px:
+    scene padding 34/26 -> 102/94 · rise translateY 14 -> 50, 700ms
+    cubic-bezier(.2,.7,.2,1), delays d1 150 d2 500 · scene crossfade 450ms
+    both directions (.sc.on opacity transition) INCLUDING scene 0 fading in
+    from black at t=0
+    S1 eyebrow mono 16 -> 58, tracking .4em · "awake again." serif italic
+    26 -> 94, margin-top 18 -> 54 · thoughts 13 -> 47, ink-dim, opacity to
+    .75 over 1200ms ease at 1600/2600/3600; t1 top19% left9%, t2 top30%
+    left20%, t3 bottom25% left12%, max-width 62%
+    S2 column right 44 -> 158, top/bottom 96 -> 288, width 40 -> 144 ·
+    track inset 18 -> 54, width 2 -> 7, gradient sage -> sage 25% · ticks
+    14x1 -> 50x3 cream 35% · dot 16 -> 58, glow 22 -> 79, travels top+18 ->
+    bottom-18 over 7000ms cubic-bezier(.45,.05,.55,.95) · labels mono
+    10 -> 36 .22em at top/bottom -4 -> -12 · phase block left 30 -> 108,
+    top 44%: "Exhale" serif 38 -> 137, sub mono 10 -> 36, margin 8 -> 24 ·
+    thoughts dissolve 4600ms ease at 0/900/1800 from scene start: opacity
+    .75 -> 0, blur 0 -> 18 [5], translateY 0 -> -50 [-14]
+    S3 wordmark serif 36 -> 130 (dot #FFFFFF) · line 14 -> 50 ink-dim,
+    margin 14 -> 42, max-width 24ch · rises d1/d2 from scene start
+
+  COPY LIST (rev4): 3:04 AM · awake again. · the email you didn't send ·
+  tomorrow. tomorrow. · why did you say that · why can't I just sleep · did I
+  lock the door · IN 4 · OUT 8 · Exhale · 8s 7s 6s 5s 4s 3s 2s 1s ·
+  regulate. · For the nights your mind won't stop.
+-->
+<style>
+  /* ============ Review-room tokens (deliberately single-world: a dark
+     grading suite — the films are dark; the room stays dark) ============ */
+  :root{
+    --bg:#0b1510;
+    --bg2:#0e1a13;
+    --panel:#101d15;
+    --ink:#efe9dc;
+    --ink-dim:#9db3a5;
+    --mono-dim:#64806f;
+    --teal:#46b5a5;
+    --teal-soft:rgba(70,181,165,.16);
+    --sage:#a9c99e;
+    --hairline:rgba(239,233,220,.13);
+    --phone-bg:#0c1912;
+    --serif:"Bodoni 72",Didot,"Playfair Display",Georgia,serif;
+    --mono:"SF Mono",ui-monospace,Menlo,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{background:var(--bg)}
+  body{
+    background:
+      radial-gradient(1200px 500px at 50% -10%, rgba(70,181,165,.06), transparent 60%),
+      var(--bg);
+    color:var(--ink);
+    font-family:var(--sans);
+    line-height:1.55;
+    padding:0 24px 96px;
+  }
+  a{color:var(--teal)}
+  .wrap{max-width:1060px;margin:0 auto}
+
+  /* ============ Header ============ */
+  header{padding:72px 0 20px;border-bottom:1px solid var(--hairline)}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.28em;color:var(--mono-dim);text-transform:uppercase}
+  h1{font-family:var(--serif);font-weight:400;font-size:clamp(40px,6vw,58px);letter-spacing:.01em;margin-top:14px;text-wrap:balance}
+  h1 .dot{color:var(--ink)} /* brand rule (Steven, 07-12): "regulate." is ALWAYS pure white, dot included */
+  .lede{max-width:62ch;color:var(--ink-dim);margin-top:14px;font-size:15px}
+  .lede strong{color:var(--ink);font-weight:600}
+
+  /* ============ Concept blocks ============ */
+  .concept{display:grid;grid-template-columns:minmax(280px,340px) 1fr;gap:44px;padding:64px 0;border-bottom:1px solid var(--hairline);align-items:start}
+  @media (max-width:760px){.concept{grid-template-columns:1fr}}
+  .meta .k{font-family:var(--mono);font-size:10px;letter-spacing:.26em;color:var(--mono-dim);text-transform:uppercase}
+  .meta h2{font-family:var(--serif);font-weight:400;font-size:34px;margin:10px 0 4px}
+  .angle{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--teal);background:var(--teal-soft);padding:4px 10px;border-radius:99px;margin:8px 0 14px}
+  .why{color:var(--ink-dim);font-size:14px;max-width:52ch}
+  .scenes{margin-top:22px;border-top:1px solid var(--hairline)}
+  .scene-row{display:grid;grid-template-columns:64px 1fr;gap:14px;padding:10px 6px;border-bottom:1px solid var(--hairline);
+    cursor:pointer;border-left:2px solid transparent;transition:background .2s}
+  .scene-row:hover{background:rgba(239,233,220,.03)}
+  .scene-row.now{border-left-color:var(--teal);background:rgba(70,181,165,.05)}
+  .scene-row .tc{font-family:var(--mono);font-size:11px;color:var(--mono-dim);font-variant-numeric:tabular-nums;padding-top:2px}
+  .scene-row .sd{font-size:13.5px;color:var(--ink-dim)}
+  .scene-row .sd b{color:var(--ink);font-weight:600}
+  .direct{margin-top:18px;font-size:12.5px;color:var(--mono-dim);font-style:italic}
+
+  /* ============ Phone ============ */
+  .stage{display:flex;flex-direction:column;align-items:center;gap:14px}
+  .phone{
+    width:300px;height:640px;border-radius:44px;background:var(--phone-bg);
+    border:1px solid rgba(239,233,220,.18);
+    box-shadow:0 0 0 6px #060d09,0 30px 80px rgba(0,0,0,.55), inset 0 0 60px rgba(0,0,0,.35);
+    position:relative;overflow:hidden;flex:none;
+  }
+  .notch{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:96px;height:24px;border-radius:99px;background:#000;z-index:40}
+  .film{position:absolute;inset:0}
+  .sc{position:absolute;inset:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:34px 26px}
+  .sc.on{opacity:1;transition:opacity .45s}
+  .bar{width:260px;display:flex;align-items:center;gap:10px}
+  .track{flex:1;height:2px;background:rgba(239,233,220,.14);border-radius:2px;overflow:hidden}
+  .fill{height:100%;width:0;background:var(--teal)}
+  .tc-live{font-family:var(--mono);font-size:10px;color:var(--mono-dim);font-variant-numeric:tabular-nums;letter-spacing:.08em}
+  .replay{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--mono-dim);
+    background:none;border:1px solid var(--hairline);border-radius:99px;padding:5px 14px;cursor:pointer}
+  .replay:hover{color:var(--ink);border-color:var(--ink-dim)}
+
+  /* ============ In-film shared pieces ============ */
+  .m{font-family:var(--mono);letter-spacing:.24em;text-transform:uppercase;color:var(--mono-dim)}
+  .serif{font-family:var(--serif);font-weight:400;color:var(--ink)}
+  .wordmark{font-family:var(--serif);font-size:44px;color:var(--ink)}
+  .wordmark .dot{color:var(--ink)}
+  .pill{font-family:var(--sans);font-weight:600;font-size:14px;color:#12241a;background:var(--sage);border-radius:99px;padding:12px 26px}
+  .chip{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--teal);border:1px solid rgba(70,181,165,.4);border-radius:99px;padding:4px 12px}
+
+  .rise{opacity:0;transform:translateY(14px)}
+  .sc.on .rise{animation:rise .7s cubic-bezier(.2,.7,.2,1) forwards}
+  .sc.on .d1{animation-delay:.15s}.sc.on .d2{animation-delay:.5s}.sc.on .d3{animation-delay:.9s}.sc.on .d4{animation-delay:1.4s}
+  @keyframes rise{to{opacity:1;transform:none}}
+
+  /* Orb */
+  .orb{width:120px;height:120px;border-radius:50%;background:radial-gradient(circle at 38% 32%, #5cc7b7, var(--teal) 60%, #2e8d80);
+    box-shadow:0 0 60px rgba(70,181,165,.35);flex:none}
+  .sc.on .orb.sigh{animation:sigh 7s cubic-bezier(.4,0,.4,1) forwards}
+  @keyframes sigh{
+    0%{transform:scale(.72)}
+    18%{transform:scale(1.02)}   /* inhale */
+    26%{transform:scale(.98)}
+    40%{transform:scale(1.22)}   /* second sip */
+    46%{transform:scale(1.22)}
+    100%{transform:scale(.58)}   /* long exhale */
+  }
+  .sc.on .orb.glowfade{animation:sigh 7s cubic-bezier(.4,0,.4,1) forwards, glow 7s linear forwards}
+  @keyframes glow{0%,46%{filter:brightness(1)}100%{filter:brightness(.75)}}
+
+  /* Breath column */
+  .colwrap{position:absolute;right:44px;top:96px;bottom:96px;width:40px}
+  .coltrack{position:absolute;left:50%;top:18px;bottom:18px;width:2px;background:linear-gradient(var(--sage),rgba(169,201,158,.25));border-radius:2px}
+  .coltick{position:absolute;left:50%;transform:translateX(-50%);width:14px;height:1px;background:rgba(239,233,220,.35)}
+  .coldot{position:absolute;left:50%;transform:translate(-50%,-50%);width:16px;height:16px;border-radius:50%;background:var(--sage);
+    box-shadow:0 0 22px rgba(169,201,158,.8);top:calc(100% - 18px)}
+  .collab{position:absolute;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--mono-dim);white-space:nowrap}
+  .sc.on .coldot.cyc48{animation:cyc48 12s forwards}
+  @keyframes cyc48{
+    0%{top:calc(100% - 18px);animation-timing-function:cubic-bezier(.45,.05,.55,.95)}
+    33.3%{top:18px;animation-timing-function:cubic-bezier(.45,.05,.55,.95)} /* in 4 — soft turnaround */
+    100%{top:calc(100% - 18px)} /* out 8 — eases into the bottom */
+  }
+  .phaseblock{position:absolute;left:30px;top:44%;text-align:left}
+  .phaseblock .pw{font-size:38px}
+  .phaseblock .ps{font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--mono-dim);margin-top:8px}
+  .sc.on .pw-in{animation:phasein 12s step-end forwards}
+  .sc .pw-in::after{content:"Inhale"}
+  @keyframes phasein{0%,33.2%{opacity:1}33.3%,100%{opacity:0}}
+  .sc.on .pw-out{opacity:0;animation:phaseout 12s step-end forwards}
+  .sc .pw-out::after{content:"Exhale"}
+  @keyframes phaseout{0%,33.2%{opacity:0}33.3%,100%{opacity:1}}
+
+  /* Pulse ring (3:04am) */
+  .pulse{position:relative;width:110px;height:110px}
+  .pulse i{position:absolute;inset:0;border-radius:50%;border:2px solid var(--teal);opacity:0}
+  .sc.on .pulse.fast i{animation:ring 1s ease-out infinite}
+  .sc.on .pulse.slow i{animation:ring 3.4s ease-out infinite}
+  .sc.on .pulse i:nth-child(2){animation-delay:.5s}
+  .sc.on .pulse.slow i:nth-child(2){animation-delay:1.7s}
+  .pulse b{position:absolute;inset:38px;border-radius:50%;background:var(--teal);opacity:.9}
+  @keyframes ring{0%{transform:scale(.45);opacity:.8}100%{transform:scale(1.25);opacity:0}}
+
+  /* intrusive thoughts — SAME coordinates in scenes 0/1/2 so they carry
+     across the cross-fades: phase in on "awake again", hold through the
+     racing pulse, dissolve on the exhale */
+  .th{position:absolute;font-size:13px;color:var(--ink-dim);white-space:nowrap}
+  .th1{top:19%;left:9%}
+  .th2{top:30%;left:20%}
+  .th3{bottom:25%;left:12%}
+  .th{max-width:62%}
+  .sc .th.phasein{opacity:0}
+  .sc.on .th.phasein{animation:thoughtin 1.2s ease forwards}
+  .sc.on .th.p1{animation-delay:1.6s}
+  .sc.on .th.p2{animation-delay:2.6s}
+  .sc.on .th.p3{animation-delay:3.6s}
+  @keyframes thoughtin{to{opacity:.75}}
+  .th.hold{opacity:.75}
+
+  .stack{display:grid}.stack>*{grid-area:1/1}
+
+  /* 3:04 AM back half — one long exhale on the real column while thoughts dissolve */
+  .sc.on .coldot.colslow{animation:colout 7s cubic-bezier(.45,.05,.55,.95) forwards}
+  @keyframes colout{from{top:18px}to{top:calc(100% - 18px)}}
+  .th.dissolve{opacity:.75}
+  .sc.on .th.dissolve{animation:dissolve 4.6s ease forwards}
+  .sc.on .th.dissolve.dd2{animation-delay:.9s}
+  .sc.on .th.dissolve.dd3{animation-delay:1.8s}
+  @keyframes dissolve{0%{opacity:.75;filter:blur(0)}100%{opacity:0;filter:blur(5px);transform:translateY(-14px)}}
+
+  /* Level-up */
+  .crest{position:relative;width:84px;height:84px;margin-bottom:22px}
+  .crest i{position:absolute;border-radius:50%}
+  .crest .r1{inset:0;background:rgba(70,181,165,.12)}
+  .crest .r2{inset:14px;background:rgba(70,181,165,.22)}
+  .crest .r3{inset:28px;background:var(--teal)}
+  .sc.on .crest{opacity:0;animation:crestin .6s ease forwards}
+  @keyframes crestin{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:none}}
+  .numwin{height:110px;overflow:hidden;position:relative;width:120px}
+  .numwin span{position:absolute;left:0;right:0;text-align:center;font-family:var(--serif);font-size:96px;line-height:110px;color:var(--ink)}
+  .sc.on .numold{animation:numup .8s cubic-bezier(.2,.7,.2,1) .7s forwards}
+  .sc.on .numnew{transform:translateY(110px);animation:numin .8s cubic-bezier(.2,.7,.2,1) .7s forwards}
+  @keyframes numup{to{transform:translateY(-110px);opacity:0}}
+  @keyframes numin{to{transform:none}}
+  .rule{width:140px;height:1px;background:var(--hairline);transform:scaleX(0);margin:14px auto}
+  .sc.on .rule{animation:ruledraw .7s ease 1.5s forwards}
+  @keyframes ruledraw{to{transform:scaleX(1)}}
+  .rank{font-family:var(--mono);font-size:12px;letter-spacing:.3em;color:var(--teal);opacity:0}
+  .sc.on .rank{animation:rise .7s ease 2s forwards}
+  .ghost{font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--mono-dim);opacity:0}
+  .sc.on .ghost{animation:rise .7s ease 2.6s forwards}
+  .xp{font-family:var(--serif);font-size:40px;color:var(--teal)}
+
+  /* Pressure Gauge — replica of the GE3 face: 180° arc, redline segment,
+     11 radial ticks, needle rotating about the hub */
+  .gsvg{width:200px;height:125px;overflow:visible}
+  .gsvg .face{fill:none;stroke:rgba(242,240,233,.25);stroke-width:1.8;stroke-linecap:round}
+  .gsvg .redline{fill:none;stroke:#d98c6a;stroke-width:2.6;stroke-linecap:round;opacity:.85}
+  .gsvg .ticks line{stroke:rgba(242,240,233,.3);stroke-width:1.2}
+  .gsvg .needle-g{transform-origin:80px 92px;transform:rotate(72deg)}
+  .gsvg .needle-g line{stroke:var(--ink);stroke-width:2.2;stroke-linecap:round}
+  .gsvg .hub{fill:var(--ink)}
+  .sc.on .gsvg .needle-g{animation:tremble 2.2s linear, exhale 4.4s cubic-bezier(.4,0,.3,1) 2.2s forwards}
+  @keyframes tremble{0%,100%{transform:rotate(72deg)}22%{transform:rotate(68deg)}48%{transform:rotate(74deg)}74%{transform:rotate(69deg)}}
+  @keyframes exhale{from{transform:rotate(72deg)}to{transform:rotate(-70deg)}}
+  .gaugecap{font-family:var(--mono);font-size:10px;letter-spacing:.24em;color:var(--mono-dim);text-transform:uppercase}
+
+  /* words FRACTURE into pieces as the needle falls */
+  .th.shatter i{display:inline-block;font-style:normal}
+  .sc.on .shatter i{animation:shat 1.3s cubic-bezier(.45,0,.85,.6) forwards}
+  .sc.on .shatter.s1 i{animation-delay:2.6s}
+  .sc.on .shatter.s2 i{animation-delay:3.3s}
+  .sc.on .shatter.s3 i{animation-delay:4s}
+  .shatter i:nth-child(1){--dx:-26px;--dy:-14px;--r:-14deg}
+  .shatter i:nth-child(2){--dx:8px;--dy:-26px;--r:9deg}
+  .shatter i:nth-child(3){--dx:24px;--dy:-10px;--r:16deg}
+  .shatter i:nth-child(4){--dx:-12px;--dy:-30px;--r:-8deg}
+  .shatter i:nth-child(5){--dx:30px;--dy:-20px;--r:12deg}
+  @keyframes shat{
+    0%{transform:none;opacity:.75;filter:blur(0)}
+    18%{transform:translate(0,2px);opacity:.75}
+    100%{transform:translate(var(--dx),var(--dy)) rotate(var(--r));opacity:0;filter:blur(3px)}
+  }
+
+  /* Sensory Grounding 5-4-3-2-1 */
+  .ground{display:grid;justify-items:center}
+  .ground>*{grid-area:1/1;opacity:0;display:flex;flex-direction:column;align-items:center;gap:12px}
+  .gnum{font-family:var(--serif);font-size:84px;color:var(--ink);line-height:1}
+  .glab{font-family:var(--mono);font-size:10px;letter-spacing:.24em;color:var(--mono-dim);text-transform:uppercase}
+  .sc.on .g1{animation:gpop 1.5s ease forwards 0s}
+  .sc.on .g2{animation:gpop 1.5s ease forwards 1.4s}
+  .sc.on .g3{animation:gpop 1.5s ease forwards 2.8s}
+  .sc.on .g4{animation:gpop 1.5s ease forwards 4.2s}
+  .sc.on .g5{animation:gpop 1.6s ease forwards 5.6s}
+  @keyframes gpop{0%{opacity:0;transform:scale(.94)}14%{opacity:1;transform:scale(1)}86%{opacity:1}100%{opacity:0}}
+
+  /* Geode crack */
+  .geo{width:120px;height:120px}
+  .geo circle{fill:none;stroke:rgba(239,233,220,.25);stroke-width:1.5}
+  .geo path{fill:none;stroke:var(--teal);stroke-width:1.6;stroke-dasharray:160;stroke-dashoffset:160}
+  .sc.on .geo path{animation:crack 1.6s cubic-bezier(.6,0,.3,1) .3s forwards}
+  @keyframes crack{to{stroke-dashoffset:0}}
+
+  /* Kinetic type (concept 5) */
+  .kin{font-family:var(--serif);font-size:44px;line-height:1.15}
+  .strike{position:relative;display:inline-block}
+  .strike::after{content:"";position:absolute;left:-4%;right:104%;top:54%;height:2px;background:var(--teal)}
+  .sc.on .strike::after{animation:strike .5s ease .9s forwards}
+  @keyframes strike{to{right:-4%}}
+  .microlabel{position:absolute;bottom:56px;left:0;right:0;text-align:center}
+
+  footer{padding-top:48px;color:var(--mono-dim);font-size:13px;max-width:70ch}
+  footer b{color:var(--ink-dim)}
+
+  @media (prefers-reduced-motion: reduce){
+    .sc *{animation:none !important;transition:none !important}
+    .sc .rise,.rank,.ghost,.count,.crest{opacity:1;transform:none}
+  }
+</style>
+<style>
+  /* rev4: layout of this single-concept page, the white dot, and Steven's three tweaks */
+  body{padding:24px 24px 96px;display:flex;justify-content:center}
+  .concept{border-bottom:none}
+  .wordmark .dot{color:#ffffff}
+
+  /* T2 - two more thoughts, same phase-in language as the mock */
+  .th4{top:60%;left:8%} .th5{top:10%;left:24%}
+  .sc.on .th.p4{animation-delay:4.5s} .sc.on .th.p5{animation-delay:5.3s}
+  .sc.on .th.dissolve.dd4{animation-delay:2.7s} .sc.on .th.dissolve.dd5{animation-delay:3.6s}
+  .sc.on .th.dissolve{animation-delay:.9s} .sc.on .th.dissolve.dd2{animation-delay:1.8s} .sc.on .th.dissolve.dd3{animation-delay:2.7s}
+  .sc.on .th.dissolve.dd4{animation-delay:3.6s} .sc.on .th.dissolve.dd5{animation-delay:4.5s}
+
+  /* T3 - the app's Regulate Breath instrument (app/breathing.tsx), on the mock's column box */
+  :root{--bal:#7FA77F}
+  .colwrap{right:58px}
+  .coltrack{background:rgba(239,233,220,.10);opacity:0}
+  .colfill{position:absolute;left:50%;bottom:18px;width:2px;transform:translateX(-50%);background:var(--bal);border-radius:2px;height:calc(100% - 36px);opacity:0}
+  .coltick{background:var(--bal);width:8px;height:1px;opacity:0}
+  .tick-in{left:calc(50% - 6px);transform:translateX(-100%)}
+  .tick-out{left:calc(50% + 6px);transform:none}
+  /* bottom-anchored dot: translateY(+50%) so the CENTRE sits on the tick (the mock's -50% was for top-anchoring) */
+  .coldot{background:var(--bal);box-shadow:0 0 22px rgba(127,167,127,.8);opacity:0;top:auto;bottom:calc(100% - 18px);transform:translate(-50%,50%)}
+  .collab{left:calc(50% + 22px);transform:none;text-align:left}
+  .phaseblock .ps{font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--mono-dim);margin-top:8px;position:relative;height:12px}
+  .phaseblock .ps span{position:absolute;left:0;top:0;opacity:0}
+
+  /* T1 - entrance, app timings: track 450ms, ticks 300ms staggered 30ms, dot 300ms after 450ms, chrome rises */
+  .sc.on .coltrack{animation:fadein .45s cubic-bezier(.2,.7,.2,1) forwards}
+  .sc.on .colfill{animation:fadein .45s cubic-bezier(.2,.7,.2,1) forwards, drain 8s cubic-bezier(.42,0,1,1) .9s forwards}
+  .sc.on .coltick{animation:fadein .3s cubic-bezier(.2,.7,.2,1) forwards}
+  .sc.on .tick-in:nth-of-type(1){animation-delay:0s} .sc.on .tick-in:nth-of-type(2){animation-delay:.03s} .sc.on .tick-in:nth-of-type(3){animation-delay:.06s} .sc.on .tick-in:nth-of-type(4){animation-delay:.09s}
+  .sc.on .tick-out:nth-of-type(1){animation-delay:.12s} .sc.on .tick-out:nth-of-type(2){animation-delay:.15s} .sc.on .tick-out:nth-of-type(3){animation-delay:.18s} .sc.on .tick-out:nth-of-type(4){animation-delay:.21s}
+  .sc.on .tick-out:nth-of-type(5){animation-delay:.24s} .sc.on .tick-out:nth-of-type(6){animation-delay:.27s} .sc.on .tick-out:nth-of-type(7){animation-delay:.30s} .sc.on .tick-out:nth-of-type(8){animation-delay:.33s}
+  .sc.on .coldot{animation:fadein .3s cubic-bezier(.2,.7,.2,1) .45s forwards, exhale 8s cubic-bezier(.42,0,1,1) .9s forwards}
+  .sc.on .coldot.colslow{animation:fadein .3s cubic-bezier(.2,.7,.2,1) .45s forwards, exhale 8s cubic-bezier(.42,0,1,1) .9s forwards}
+  @keyframes fadein{to{opacity:1}}
+  @keyframes exhale{from{bottom:calc(100% - 18px)}to{bottom:18px}}
+  @keyframes drain{from{height:calc(100% - 36px)}to{height:0}}
+  .sc.on .ps span{animation:sec 8s step-end .9s forwards}
+  .sc.on .ps span:nth-child(1){animation-name:s8} .sc.on .ps span:nth-child(2){animation-name:s7} .sc.on .ps span:nth-child(3){animation-name:s6} .sc.on .ps span:nth-child(4){animation-name:s5}
+  .sc.on .ps span:nth-child(5){animation-name:s4} .sc.on .ps span:nth-child(6){animation-name:s3} .sc.on .ps span:nth-child(7){animation-name:s2} .sc.on .ps span:nth-child(8){animation-name:s1}
+  @keyframes s8{0%,12.4%{opacity:1}12.5%,100%{opacity:0}}
+  @keyframes s7{0%,12.4%{opacity:0}12.5%,24.9%{opacity:1}25%,100%{opacity:0}}
+  @keyframes s6{0%,24.9%{opacity:0}25%,37.4%{opacity:1}37.5%,100%{opacity:0}}
+  @keyframes s5{0%,37.4%{opacity:0}37.5%,49.9%{opacity:1}50%,100%{opacity:0}}
+  @keyframes s4{0%,49.9%{opacity:0}50%,62.4%{opacity:1}62.5%,100%{opacity:0}}
+  @keyframes s3{0%,62.4%{opacity:0}62.5%,74.9%{opacity:1}75%,100%{opacity:0}}
+  @keyframes s2{0%,74.9%{opacity:0}75%,87.4%{opacity:1}87.5%,100%{opacity:0}}
+  @keyframes s1{0%,87.4%{opacity:0}87.5%,100%{opacity:1}}
+  /* rev5 - softer handover S1 -> S2 */
+  /* rev5c: the phone is the ground; scenes are transparent and switch instantly. Only scene 0 fades in from black. */
+  .phone{background:#050b08}
+  .sc{background:transparent!important}
+  .sc.on{transition:none}
+  .sc[data-s="0"].on{transition:opacity .45s}
+  .sc.on[data-s="0"] .rise{animation:rise .7s cubic-bezier(.2,.7,.2,1) forwards, riseout .7s cubic-bezier(.2,.7,.2,1) forwards}
+  .sc.on[data-s="0"] .d1{animation-delay:.15s,5.7s} .sc.on[data-s="0"] .d2{animation-delay:.5s,5.7s}
+  @keyframes riseout{to{opacity:0;transform:translateY(-10px);filter:blur(2px)}}
+  .sc.on[data-s="2"] .coltrack{animation-delay:.5s}
+  .sc.on[data-s="2"] .colfill{animation:fadein .45s cubic-bezier(.2,.7,.2,1) .5s forwards, drain 8s cubic-bezier(.42,0,1,1) 1.4s forwards}
+  .sc.on[data-s="2"] .tick-in:nth-of-type(1){animation-delay:.5s} .sc.on[data-s="2"] .tick-in:nth-of-type(2){animation-delay:.53s} .sc.on[data-s="2"] .tick-in:nth-of-type(3){animation-delay:.56s} .sc.on[data-s="2"] .tick-in:nth-of-type(4){animation-delay:.59s}
+  .sc.on[data-s="2"] .tick-out:nth-of-type(1){animation-delay:.62s} .sc.on[data-s="2"] .tick-out:nth-of-type(2){animation-delay:.65s} .sc.on[data-s="2"] .tick-out:nth-of-type(3){animation-delay:.68s} .sc.on[data-s="2"] .tick-out:nth-of-type(4){animation-delay:.71s}
+  .sc.on[data-s="2"] .tick-out:nth-of-type(5){animation-delay:.74s} .sc.on[data-s="2"] .tick-out:nth-of-type(6){animation-delay:.77s} .sc.on[data-s="2"] .tick-out:nth-of-type(7){animation-delay:.80s} .sc.on[data-s="2"] .tick-out:nth-of-type(8){animation-delay:.83s}
+  .sc.on[data-s="2"] .coldot.colslow{animation:fadein .3s cubic-bezier(.2,.7,.2,1) .95s forwards, exhale 8s cubic-bezier(.42,0,1,1) 1.4s forwards}
+  .sc.on[data-s="2"] .d1{animation-delay:.65s}
+  .sc.on[data-s="2"] .ps span{animation-delay:1.4s}
+  .sc.on[data-s="2"] .th.dissolve{animation-delay:1.4s} .sc.on[data-s="2"] .th.dissolve.dd2{animation-delay:2.3s} .sc.on[data-s="2"] .th.dissolve.dd3{animation-delay:3.2s}
+  .sc.on[data-s="2"] .th.dissolve.dd4{animation-delay:4.1s} .sc.on[data-s="2"] .th.dissolve.dd5{animation-delay:5.0s}
+  /* rev5b - no double-drawn thoughts, S2 exits before S3, thoughts land before the clock line leaves */
+  .sc.on .th.p4{animation-delay:4s} .sc.on .th.p5{animation-delay:4.5s}
+  .sc.on[data-s="2"] .colwrap{animation:riseout .7s cubic-bezier(.2,.7,.2,1) 9.9s forwards}
+  .sc.on[data-s="2"] .phaseblock.rise{animation:rise .7s cubic-bezier(.2,.7,.2,1) .65s forwards, riseout .7s cubic-bezier(.2,.7,.2,1) 9.9s forwards}
+</style>
+
+<!-- ================= CONCEPT 3 : 3:04 AM ================= -->
+<section class="concept" id="c3">
+  <div class="stage">
+    <div class="phone"><div class="notch"></div><div class="film" data-player="c3">
+
+      <div class="sc" data-s="0" style="background:#050b08">
+        <div class="m rise d1" style="font-size:16px;letter-spacing:.4em">3:04 AM</div>
+        <div class="serif rise d2" style="font-size:26px;font-style:italic;margin-top:18px">awake again.</div>
+        <div class="th th1 phasein p1">the email you didn’t send</div>
+        <div class="th th2 phasein p2">tomorrow. tomorrow.</div>
+        <div class="th th3 phasein p3">why did you say that</div>
+        <div class="th th4 phasein p4">why can't I just sleep</div>
+        <div class="th th5 phasein p5">did I lock the door</div>
+      </div>
+
+      <div class="sc" data-s="2">
+        <div class="colwrap">
+          <div class="collab rise d1" style="top:-2px">IN&nbsp;4</div>
+          <div class="coltrack"></div>
+          <div class="colfill"></div>
+          <div class="coltick tick-in" style="top:18px"></div>
+          <div class="coltick tick-in" style="top:calc(18px + (100% - 36px) * 0.3333)"></div>
+          <div class="coltick tick-in" style="top:calc(18px + (100% - 36px) * 0.6667)"></div>
+          <div class="coltick tick-in" style="bottom:18px"></div>
+          <div class="coltick tick-out" style="top:18px"></div>
+          <div class="coltick tick-out" style="top:calc(18px + (100% - 36px) * 0.1429)"></div>
+          <div class="coltick tick-out" style="top:calc(18px + (100% - 36px) * 0.2857)"></div>
+          <div class="coltick tick-out" style="top:calc(18px + (100% - 36px) * 0.4286)"></div>
+          <div class="coltick tick-out" style="top:calc(18px + (100% - 36px) * 0.5714)"></div>
+          <div class="coltick tick-out" style="top:calc(18px + (100% - 36px) * 0.7143)"></div>
+          <div class="coltick tick-out" style="top:calc(18px + (100% - 36px) * 0.8571)"></div>
+          <div class="coltick tick-out" style="bottom:18px"></div>
+          <div class="coldot colslow"></div>
+          <div class="collab rise d1" style="bottom:-2px">OUT&nbsp;8</div>
+        </div>
+        <div class="phaseblock rise d1">
+          <div class="serif pw">Exhale</div>
+          <div class="ps"><span>8s</span><span>7s</span><span>6s</span><span>5s</span><span>4s</span><span>3s</span><span>2s</span><span>1s</span></div>
+        </div>
+        <div class="th th1 dissolve">the email you didn’t send</div>
+        <div class="th th2 dissolve dd2">tomorrow. tomorrow.</div>
+        <div class="th th3 dissolve dd3">why did you say that</div>
+        <div class="th th4 dissolve dd4">why can't I just sleep</div>
+        <div class="th th5 dissolve dd5">did I lock the door</div>
+      </div>
+
+      <div class="sc" data-s="3">
+        <div class="wordmark rise d1" style="font-size:36px">regulate<span class="dot">.</span></div>
+        <div class="rise d2" style="color:var(--ink-dim);font-size:14px;margin-top:14px;max-width:24ch">For the nights your mind won’t stop.</div>
+      </div>
+
+    </div></div>
+    <div class="bar"><span class="tc-live" data-tc="c3">0:00</span><div class="track"><div class="fill" data-fill="c3"></div></div><span class="tc-live" data-total="c3"></span></div>
+    <button class="replay" data-replay="c3">↺ Replay</button>
+  </div>
+  <div class="meta">
+    <div class="k">Concept 03</div>
+    <h2>3:04 AM</h2>
+    <span class="angle">Narrative · felt problem</span>
+    <p class="why">Meets the viewer in the exact moment they'd search for this app. Racing pulse and intrusive one-liners earn the emotional beat; the app enters as relief, not product. Strongest candidate for lived-experience voiceover in your voice.</p>
+    <div class="scenes" data-scenes="c3">
+      <div class="scene-row"><span class="tc">0:00–0:06.5</span><span class="sd"><b>The moment.</b> “3:04 AM · awake again.” — the three thoughts <b>phase in one by one</b> around it.</span></div>
+      <div class="scene-row"><span class="tc">0:06.5–0:17.1</span><span class="sd"><b>The exhale.</b> Straight into the breath column — one long OUT 8; the same thoughts, same positions (clear of the column), <b>dissolve as the dot falls</b>.</span></div>
+      <div class="scene-row"><span class="tc">0:17.1–0:19.6</span><span class="sd"><b>Close.</b> “For the nights your mind won’t stop.”</span></div>
+    </div>
+    <p class="direct">v4 per Steven: pulse-ring scene cut — awake-again cuts straight to the exhale; thoughts keep their positions across the cut and sit clear of the column. 14.5s total. Direct me: phase-in pace · thought lines · closing line</p>
+  </div>
+</section>
+
+
+<!-- ================= CONCEPT 04 : THE INBOX (Pressure Gauge) ================= -->
+
+<script>
+(function(){
+  const rm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // scene durations (seconds) per concept
+  const TL = {
+    c3:[6.5,10.6,2.5],
+  };
+
+  const players = {};
+
+  function fmt(t){ const s=Math.floor(t); return '0:'+String(s).padStart(2,'0'); }
+
+  function makePlayer(id){
+    const film = document.querySelector('[data-player="'+id+'"]');
+    const scenes = film.querySelectorAll('.sc');
+    const rows = document.querySelectorAll('[data-scenes="'+id+'"] .scene-row');
+    const fill = document.querySelector('[data-fill="'+id+'"]');
+    const tc = document.querySelector('[data-tc="'+id+'"]');
+    const totalEl = document.querySelector('[data-total="'+id+'"]');
+    const durs = TL[id];
+    const total = durs.reduce((a,b)=>a+b,0);
+    totalEl.textContent = fmt(total);
+
+    let start = performance.now(), raf, cur = -1;
+
+    function setScene(i){
+      cur = i;
+      scenes.forEach((sc,k)=>{
+        if(k===i){
+          sc.classList.remove('on');
+          void sc.offsetWidth;           // restart child animations
+          sc.classList.add('on');
+        } else sc.classList.remove('on');
+      });
+      rows.forEach((r,k)=>r.classList.toggle('now',k===i));
+      // concept 1 caption sequence
+      if(id==='c1' && i===1){
+        const cap = film.querySelector('.sigh-cap');
+        const seq = [[0,'Inhale through the nose'],[1.9,'…sip a little more air'],[3.2,'and a long, slow exhale']];
+        seq.forEach(([at,txt])=>setTimeout(()=>{ if(cur===1) cap.textContent = txt; }, at*1000));
+      }
+    }
+
+    function tick(now){
+      let t = ((now - start)/1000) % total;
+      let acc = 0, idx = 0;
+      for(let k=0;k<durs.length;k++){ if(t < acc + durs[k]){ idx = k; break; } acc += durs[k]; }
+      if(idx !== cur) setScene(idx);
+      fill.style.width = (t/total*100)+'%';
+      tc.textContent = fmt(t);
+      raf = requestAnimationFrame(tick);
+    }
+
+    function jump(i){
+      let acc = 0; for(let k=0;k<i;k++) acc += durs[k];
+      start = performance.now() - acc*1000;
+      setScene(i);
+    }
+
+    rows.forEach((r,k)=>r.addEventListener('click',()=>jump(k)));
+    document.querySelector('[data-replay="'+id+'"]').addEventListener('click',()=>{ start = performance.now(); setScene(0); });
+
+    if(rm){ setScene(0); fill.style.width='0%'; rows.forEach((r,k)=>r.addEventListener('click',()=>setScene(k))); return; }
+    raf = requestAnimationFrame(tick);
+  }
+
+  Object.keys(TL).forEach(makePlayer);
+})();
+</script>

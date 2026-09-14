@@ -1,5 +1,6 @@
 import { loadFont as loadIbmPlexMono } from "@remotion/google-fonts/IBMPlexMono";
 import { loadFont as loadInter } from "@remotion/google-fonts/Inter";
+import { loadFont as loadJetBrainsMono } from "@remotion/google-fonts/JetBrainsMono";
 import { loadFont as loadPlayfairDisplay } from "@remotion/google-fonts/PlayfairDisplay";
 import { loadFont as loadSourceSerif4 } from "@remotion/google-fonts/SourceSerif4";
 import type { BrandKit } from "./schema";
@@ -24,6 +25,12 @@ const loadIbmMono: FontLoader = (italic) =>
     subsets: ["latin"],
   }).fontFamily;
 
+const loadJetBrains: FontLoader = (italic) =>
+  loadJetBrainsMono(italic ? "italic" : "normal", {
+    weights: ["400", "500", "600", "700"],
+    subsets: ["latin"],
+  }).fontFamily;
+
 const loadSourceSerif: FontLoader = (italic) =>
   loadSourceSerif4(italic ? "italic" : "normal", {
     weights: ["400", "600", "700"],
@@ -34,6 +41,7 @@ export const FONT_REGISTRY: Record<string, FontLoader> = {
   "Playfair Display": loadPlayfair,
   Inter: loadInterFamily,
   "IBM Plex Mono": loadIbmMono,
+  "JetBrains Mono": loadJetBrains,
   "Source Serif 4": loadSourceSerif,
 };
 

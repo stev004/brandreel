@@ -1,6 +1,6 @@
 # STATE - brandreel snapshot
 
-*Updated 2026-09-04 (evening, foreman run). Snapshot of current truth; history in SESSIONS.md and git.*
+*Updated 2026-09-05 (Fable session: 3:04 AM animatic). Snapshot of current truth; history in SESSIONS.md and git.*
 
 ## Where things stand
 - **Branch chain (remote: https://github.com/stev004/brandreel, public, CI renders on push):** `main` <- `feature/m1-engine` <- `feature/howclose-trial` <- `feature/regulate-kit` <- `feature/phase2-machine` (merged to main fce5a38) <- `feature/layout-lints` (merged to main 2fd01a5) <- `feature/cta-lint` (merged to main fb3f599) <- **`feature/interview`** (09-05: interview stage -> brief.json, brief-enforced script, two-row tagline, drift model, lint-implying limits; CI on GitHub). **One merge gets everything:** `git -C ~/Documents/brandreel merge --no-ff feature/interview`. Live worktrees: /tmp/brandreel-reg-wt (reg-kit, provides engine/node_modules), /private/tmp/fm-brandreel-state (interview). fm/* branches are merged and disposable.
@@ -8,6 +8,7 @@
 - **Lint coverage now:** ffprobe facts, safe zones + text fit from layout.json (glyph-width estimate), hook, pacing (static > 3s), CTA (rendered close text element per the manifest, on screen >= 2500ms), overlap (no two visible text boxes intersect), pixel bands on sampled frames. Not covered: real glyph measurement (estimate only).vo/music.
 
 ## Waiting on Steven
+-1. ~~KEEP/TWEAK/KILL on `animatics/regulate-3am.html`~~ **KEEP (09-13, rev5d) - animatic frozen; next build step = the port** (see Next build steps 3). Previously rev5d (Steven on rev5c: keep once the dot is at the top - fixed in rev5d, strip-verified; expected KEEP -> port brief next). Previously rev5c (rev5 had a pulse + an overlap; rev5c: transparent scenes, invisible switch, instrument exits before the close; strip-verified). Previously rev5 (rev4 "best we've genuinely had" + a true 900ms crossfade into the breathing; the mock's scene switch was a snap-out, now fixed in the player). Previously rev4 (rev3 "best so far" + Steven's three tweaks: app-style entrance into the breathing, two more thoughts, the breathing game = the app's Regulate Breath instrument; 18.5s). Verified with `bin/animatic-frames.mjs` (real-time headless frames). Previously: rev3 = the approved mock verbatim (rev1 transcribed the port, rev2 re-rendered the mock scaled - both rejected; SPEC ruling 11 + amendment). Three TWEAK questions in its header: emerald ground vs the mock's night black, teal vs sage dot, Playfair vs Bodoni. (branch `feature/regulate-3am`, artifact link in the hivemind STATE). Steven's call 09-05: the 3am video is the first Regulate video; the Sigh is second. Plan + port notes: `animatics/regulate-3am.plan.md`. After KEEP: port needs an `exhale` beat kind (see plan).
 0. **KEEP/TWEAK/KILL on workspace/regulate-sigh** (review.md; render is gitignored, rerun `node bin/reel.mjs workspace/regulate-sigh --skip vo,align,polish` or download the CI artifact). Also merge feature/interview.
 0b. **Regulate demo re-render for a look** (optional): `workspace/demo/render.mp4` in the reg worktree now shows Playfair wordmark + pure white dot. The demo's copy ("let the night be enough", "a softer landing") is placeholder and softer than the Brand Book voice - the first real Regulate script replaces it, not a copy edit.
 1. **Fusion animatic PARKED at rev6** (Steven 09-03: "still not great - save it, iterate later"). Saved into the howclose.to repo at `marketing/animatics/fusion-can-we-bottle-a-star.html` (commit 62abe3f there); working copy stays here. Iteration levers + full arc: ROADMAP.md Phase 1.
@@ -16,7 +17,7 @@
 ## Next build steps (in order)
 1. v2 port after gate: new `bars` beat kind (statement zone + IN/OUT bars + shot attempts + zoom + need-bar), 1:1 from `animatics/howclose-fusion-v2.html` rev6. **Scene durations must derive from `vo-timing.json` when modules.vo is on** - measured VO is 33s vs 29s picture; VO timing is authoritative.
 2. Assemble the finished v2 video: compose -> polish (real music track needed - none chosen yet) -> lint -> review sheet.
-3. **First real Regulate video (mockup-first):** script.json from one of the six approved motion concepts (hivemind marketing/motion-drafts.html; "The Sigh" hook "Can't meditate? Neither could we." is the natural first) -> Fable animatic against the Brand Book laws -> KEEP/TWEAK/KILL -> port. Needs a breath-pacing beat kind the engine does not have yet (IN 4 / OUT 8 orb-free pacing per ART_DIRECTION: no floating orb, full-bleed type).
+3. **First real Regulate video = 3:04 AM - animatic KEPT 09-13 (rev5d, 19.6s).** Port brief next: new `exhale` beat kind (column geometry, 4+8 ticks, fill-below-dot drain, live count, app easings), placed thoughts shared with the preceding moment beat, S1/S2 exits as authored; scene durations 6.5/10.6/2.5; 1:1 against animatics/regulate-3am.html (header = contract). After KEEP: `exhale` beat kind (Codex via /dev-delegate), 1:1 port, compose -> lint -> review. Second video = The Sigh (workspace/regulate-sigh exists as a brief-driven text version; the orb-free breath-paced animatic is still to author).
 4. M3 assets (Veo free tier + Pexels + RIFE) when a script needs footage; M4 (script LLM stage, brand extractor, orchestrator, photography kit) after.
 
 ## Brand sources (taste step reads these first)
@@ -24,6 +25,8 @@
 - **howclose:** brand book artifact a9221676-6c46-4d8d-9edf-2a2af0df1c1e + repo docs.
 
 ## Environment facts (hard-won)
+- **Animatic verification (strip):** `node bin/animatic-strip.mjs <file> <out> <from-ms> <to-ms>` gives ~80ms frames named by the page clock; tile with ffmpeg and READ THE STRIP, not single frames - rev5's pulse and overlap were invisible in stills. One run per strip.
+- **Animatic verification (frames):** the in-app Browser pane freezes CSS animations while hidden (document.visibilityState = hidden, every animation at currentTime 0) and Chrome's --virtual-time-budget stalls rAF players. Use `node bin/animatic-frames.mjs <file> <out-dir> <ms...>` - real-time headless Chrome via DevTools protocol; frames are named by actual capture time (~2s per frame).
 - Audio venv MUST be Python 3.12 (`python3.12 -m venv audio/.venv`) - kokoro has no 3.14 wheels. Setup in `audio/README.md`.
 - Codex sandbox: no Chromium, no network - renders and installs are reviewer-run.
 - Kokoro new API yields Result objects (.audio), not tuples - handled in bin/vo.py.
