@@ -1,0 +1,11 @@
+[
+  'numbered-promise',
+  'curiosity-gap',
+  'contrarian-claim',
+  'direct-callout'
+] object [ 'description', 'predicate' ]
+"No." -> none
+"Why you can't sleep" -> curiosity-gap,direct-callout
+"Three reasons why you can't sleep" -> numbered-promise
+"Can't meditate?" -> direct-callout
+"Not meditation. Regulation." -> contrarian-claim

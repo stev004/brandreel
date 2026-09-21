@@ -5,7 +5,7 @@
     "width": 1080,
     "height": 1920,
     "avgFrameRate": "60/1",
-    "duration": 25.6
+    "duration": 24.1
   },
   "rules": {
     "width": "pass",
@@ -20,7 +20,7 @@
     "overlap": "pass",
     "pixel-bands": "pass"
   },
-  "samples": 52,
+  "samples": 49,
   "closeDwellMs": 3600,
   "ctaDwellMs": 3100,
   "durationOverrideReason": null

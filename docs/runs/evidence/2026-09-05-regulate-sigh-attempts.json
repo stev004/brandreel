@@ -1,0 +1,11 @@
+{
+  "attempts": 2,
+  "retries": 2,
+  "outcome": "accepted",
+  "violationsPerAttempt": [
+    [
+      "close.durationMs must be between 3400 and 3800ms for close with URL (got 2800)"
+    ],
+    []
+  ]
+}

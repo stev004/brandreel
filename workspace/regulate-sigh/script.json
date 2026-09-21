@@ -5,62 +5,71 @@
   "beats": [
     {
       "kind": "moment",
-      "eyebrow": "HOOK",
       "line": "Can't meditate?",
       "thoughts": [
         "Neither could we."
       ],
       "bg": "#0a1812",
-      "durationMs": 3400
+      "durationMs": 4000
+    },
+    {
+      "kind": "moment",
+      "eyebrow": "STILL",
+      "line": "That's not a personal failure.",
+      "thoughts": [
+        "Sitting still isn't the skill."
+      ],
+      "durationMs": 3500
     },
     {
       "kind": "question",
-      "kicker": "RECOGNITION",
+      "kicker": "TRY THIS",
       "lines": [
-        "Sat still.",
-        "Felt worse."
+        "Just breathe"
       ],
-      "dek": "Stillness isn't the goal.",
-      "durationMs": 4200
+      "dek": "One long exhale is enough.",
+      "durationMs": 4500
+    },
+    {
+      "kind": "moment",
+      "eyebrow": "DIFFERENT",
+      "line": "One line. One breath. Then next.",
+      "thoughts": [
+        "The pace does the work."
+      ],
+      "durationMs": 4000
+    },
+    {
+      "kind": "question",
+      "kicker": "NOTICE",
+      "lines": [
+        "Notice your",
+        "feet."
+      ],
+      "dek": "Ground before you begin.",
+      "durationMs": 3500
     },
     {
       "kind": "verdict",
       "lines": [
-        "The body leads.",
-        "Not the mind."
+        "Start small tonight.",
+        "You can always stop."
       ],
-      "durationMs": 3600
-    },
-    {
-      "kind": "question",
-      "kicker": "DIFFERENCE",
-      "lines": [
-        "One line.",
-        "One breath."
-      ],
-      "dek": "Timed to one slow exhale.",
-      "durationMs": 4200
-    },
-    {
-      "kind": "verdict",
-      "lines": [
-        "Try one breath."
-      ],
-      "durationMs": 3000
+      "durationMs": 2500
     }
   ],
   "close": {
-    "line": "Begin with one exhale.",
+    "line": "Start tonight. One breath at a time.",
     "showWordmark": true,
     "durationMs": 3600,
     "url": "regulate.app",
     "tagline": "Not meditation. Regulation."
   },
-  "caption": "Can't meditate? Neither could we.\nOne breath at a time.",
+  "caption": "Can't meditate? Start with one breath.",
   "hashtags": [
     "#regulate",
     "#breathe",
-    "#nervoussystem",
-    "#noquickfix"
+    "#stillness",
+    "#calm"
   ]
 }

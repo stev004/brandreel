@@ -22,7 +22,7 @@ Local setup if `engine/node_modules` is missing: `cd engine && npm ci`. Renders 
 
 ## Goal 0 - merge the last foreman branch
 
-- [ ] **G0** Merge `feature/hook-validation` into `main`.
+- [x] **G0** Merge `feature/hook-validation` into `main` (done 2026-09-22).
   Blocked-on: **Steven** (protected branch).
   Command: `git -C ~/Documents/brandreel merge --no-ff feature/hook-validation`. Expect conflicts in `STATE.md` and `SESSIONS.md` only (docs; keep both sides, main's animatic history plus the branch's hook-validation entry). Code merges clean.
   Done-when: `node --test bin/tests/` reports 116 pass on main; `git branch --merged main | grep hook-validation`.

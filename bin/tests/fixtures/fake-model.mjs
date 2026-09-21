@@ -13,6 +13,7 @@ const banned = process.env.FAKE_MODEL_BANNED === "1";
 const longMoment = process.env.FAKE_MODEL_LONG_MOMENT === "1";
 const threeLineCaption = process.env.FAKE_MODEL_THREE_LINE_CAPTION === "1";
 const badHashtag = process.env.FAKE_MODEL_BAD_HASHTAG === "1";
+const badThenGood = process.env.FAKE_MODEL_BAD_THEN_GOOD === "1";
 const closeDuration = Number(process.env.FAKE_MODEL_CLOSE_DURATION) || 3000;
 const statePath = process.env.FAKE_MODEL_STATE;
 let state = 0;
@@ -29,11 +30,11 @@ const script = {
   id: "model-id-is-overridden",
   brand: "regulate",
   modules: { vo: { voice: "invented-voice" }, music: { file: "invented-music.wav" } },
-  ...(invalid ? {} : { coreMechanic: briefMode ? briefMechanic : "A quiet visual reset makes the next step visible." }),
+  ...(invalid ? {} : { coreMechanic: stateBad && badThenGood ? "Two sentences. Another." : (briefMode ? briefMechanic : "A quiet visual reset makes the next step visible.") }),
   beats: [
     {
       kind: "moment",
-      eyebrow: "3AM",
+      ...(briefMode ? {} : { eyebrow: "3AM" }),
       line: longMoment ? "x".repeat(45) : (banned ? "This journey starts now." : (briefMode ? briefHookLine : "Still awake?")),
       ...(stateBad ? { thoughts: ["Let the room get quieter."] } : {}),
       durationMs: invalid ? 10000 : stateBad ? 4000 : 3000,

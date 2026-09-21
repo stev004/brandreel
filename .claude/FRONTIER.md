@@ -3,8 +3,8 @@
 Updated 2026-09-22 (closeout).
 
 ## Where the project is
-- Frontier: `main` (ff24466 + this closeout). Remote https://github.com/stev004/brandreel, CI green. One unmerged branch: `feature/hook-validation` (ROADMAP G0, Steven merges; docs-only conflicts).
-- Gates on main: typecheck 0, engine 32 tests, bin 85 tests.
+- Frontier: `main` (ff24466 + this closeout). Remote https://github.com/stev004/brandreel, CI green. hook-validation merged 09-22 (G0 done).
+- Gates on main: typecheck 0, engine 32 tests, bin 116 tests.
 - The 3:04 AM animatic is KEPT (2026-09-13, rev5d, 19.6 s). The next engineering unit is the `exhale` beat kind and the 1:1 port (ROADMAP G1a, G1b).
 - The ordered goal ladder with shell-checkable done-conditions is ROADMAP.md; any model works it top down.
 
@@ -19,5 +19,5 @@ SPEC.md > .claude/DEVTEAM.md > .claude/DIRECTOR.md > STATE.md > ROADMAP.md.
 
 ## Branch index
 - main: everything through regulate-3am.
-- feature/hook-validation: unmerged (G0).
+- feature/hook-validation: merged.
 - fm/*: merged unit branches, disposable.
