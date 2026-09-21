@@ -1,5 +1,8 @@
 # SESSIONS - append-only log, newest first
 
+## 2026-09-22 - closeout: roadmap rewritten as a goal ladder
+No engineering this session. Steven wants to point an autonomous model at the repo and run goals until the engine is complete, so ROADMAP.md is now an ordered ladder G0-G9 with a working protocol, Files lines, shell-checkable Done-when lines and explicit Blocked-on: Steven markers (G0 merge hook-validation; G1 exhale beat kind + 3:04 AM port + gate; G2 VO; G3 Sigh animatic; G4 lint accuracy; G5 assets/conform/Broll; G6 extract-brand + photography; G7 CC0 music fetcher; G8 fusion; G9 distribution). Found and fixed: `engine/node_modules` on main was an empty dir (all gates now green locally: 32 engine, 85 bin); `feature/hook-validation` (116 bin tests) is still unmerged and conflicts only in STATE.md and SESSIONS.md; STATE/FRONTIER/RUN/AGENTS/CLOSEOUT carried stale "no remote" and "frontier = feature/interview" lines, corrected. Waiting on Steven: merge hook-validation (G0), then G1a/G1b run.
+
 ## 2026-09-12 (latest) - rev5d: dot on the ticks
 Steven on rev5c: closest ever, keep once the orb is at the top. The bottom-anchored dot (rev4, so the fill drains beneath it) had kept the mock's top-anchored translateY(-50%): 16px high at both ends. Fixed (+50%), strip-verified at 7.9-8.2s and 15.6-15.9s. Capture tools hardened: pick the 'page' DevTools target, fail loudly on socket errors (the earlier silent one-frame runs were an unsettled top-level await on a dead socket).
 

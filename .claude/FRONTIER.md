@@ -1,26 +1,23 @@
 # FRONTIER - brandreel
 
-Updated 2026-09-05 (after the interview run; branch names only).
+Updated 2026-09-22 (closeout).
 
 ## Where the project is
-- Frontier: feature/interview (HEAD), worktree /private/tmp/fm-brandreel-state, from main fb3f599 (carries phase2, layout-lints, cta-lint). One merge gets everything. Remote: https://github.com/stev004/brandreel, CI renders + lints on every push (green).
-- Gates: typecheck 0, engine 32 tests, bin 85 tests, CI green. workspace/regulate-sigh is the first brief-driven video: passes all 11 lint rules.
-- Flow now: interview -> script (brief-enforced, lint-and-retry) -> manifest -> compose -> lint -> review; vo/align/polish only when the brief sets voice/music.
-- Phase 1 (fusion video) still parked on Steven's taste gate.
+- Frontier: `main` (ff24466 + this closeout). Remote https://github.com/stev004/brandreel, CI green. One unmerged branch: `feature/hook-validation` (ROADMAP G0, Steven merges; docs-only conflicts).
+- Gates on main: typecheck 0, engine 32 tests, bin 85 tests.
+- The 3:04 AM animatic is KEPT (2026-09-13, rev5d, 19.6 s). The next engineering unit is the `exhale` beat kind and the 1:1 port (ROADMAP G1a, G1b).
+- The ordered goal ladder with shell-checkable done-conditions is ROADMAP.md; any model works it top down.
 
 ## Known weaknesses
-- text-fit is a glyph-width estimate; pixel-bands ignores uniform blocks; overlap covers text elements only; CTA dwell counts the fade-in frame.
-- Remotion caret ranges warn on every render.
-- No music fetcher; CC0 track must be supplied by path.
+- text-fit is a glyph-width estimate (G4a); overlap covers text elements only (G4b); pixel-bands ignores uniform blocks; CTA dwell counts the fade-in frame; Remotion caret ranges warn on every render (G4c); no music fetcher (G7).
 
-## Next predicate (candidates)
-Steven's KEEP/TWEAK/KILL on regulate-sigh first. Engineering next: script.mjs validates brief.hookArchetype structurally (e.g. numbered-promise needs a number in the hook, curiosity-gap needs a question or withheld answer) and facts-checks figure value.decimals + stamps offsets, and prints the attempt count. Then: real glyph measurement; M3 assets + Broll; CC0 music fetcher; pin Remotion.
+## Next predicate (for a foreman run)
+G1a + G1b: exhale beat kind landed with manifest tests, workspace/regulate-3am renders and passes every lint rule, frame strip matches the animatic at four clock times.
 
 ## Doc authority
 SPEC.md > .claude/DEVTEAM.md > .claude/DIRECTOR.md > STATE.md > ROADMAP.md.
 
 ## Branch index
-- main: through cta-lint (fb3f599).
-- feature/interview: this frontier; Steven merges.
-- feature/regulate-kit: worktree /private/tmp/brandreel-reg-wt (provides engine/node_modules).
+- main: everything through regulate-3am.
+- feature/hook-validation: unmerged (G0).
 - fm/*: merged unit branches, disposable.

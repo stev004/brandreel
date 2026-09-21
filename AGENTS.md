@@ -12,4 +12,7 @@ From `engine/`: `npm run typecheck` and `npm test`. For `bin/`: `node --test bin
 - Plain hyphens in docs and copy; no em/en dashes, no U+2212. No absolute user paths.
 - Executors never commit; the director commits. Taste calls (copy, animatic quality, music) go to Steven.
 
-If you are directing (a `$foreman` run): `.claude/RUN.md` -> `FRONTIER.md` -> `GATES.md` -> `DIRECTOR.md` in full. State branch and the missing-remote caveat are in DIRECTOR.md.
+## Where to start
+`ROADMAP.md` is an ordered goal ladder with shell-checkable done-conditions and a step-by-step protocol; take the first unchecked, unblocked goal. `STATE.md` is current truth. Goals marked Blocked-on: Steven need a human; do not guess.
+
+If you are directing (a `$foreman` run): `.claude/RUN.md` -> `FRONTIER.md` -> `GATES.md` -> `DIRECTOR.md` in full. State branch is `git config foreman.branch`; remote is https://github.com/stev004/brandreel.
