@@ -7,3 +7,4 @@ await import("./overlap.test.mjs");
 await import("./measured-text-fit.test.mjs");
 await import("./manifest-measure.test.mjs");
 await import("./interview.test.mjs");
+await import("./assets.test.mjs");

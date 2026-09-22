@@ -44,8 +44,25 @@ const StagePoint = z.object({
   y: z.number().finite(),
 });
 
+const VisualDirective = z.string().superRefine((directive, context) => {
+  const match = /^(template|stock|gen):([^\r\n]+)$/.exec(directive);
+  if (!match || !match[2]?.trim() || match[2] !== match[2].trim()) {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "visual must be template:<name>, stock:<query>, or gen:<prompt> with a non-empty payload.",
+    });
+  }
+});
+
+// Clip paths are relative to the workspace root and use portable POSIX separators.
+const WorkspaceClipPath = z.string().min(1).refine((path) => {
+  if (path.includes("\\") || /^[A-Za-z]:/.test(path) || path.startsWith("/")) return false;
+  return path.split("/").every((segment) => segment !== "" && segment !== "." && segment !== "..");
+}, "clip must be a workspace-relative path without traversal segments.");
+
 export const MomentBeat = z.object({
   kind: z.literal("moment"),
+  visual: VisualDirective.optional(),
   eyebrow: z.string().optional(),
   line: z.string(),
   thoughts: z.array(z.string()).optional(),
@@ -58,6 +75,7 @@ export const MomentBeat = z.object({
 
 export const ExhaleBeat = z.object({
   kind: z.literal("exhale"),
+  visual: VisualDirective.optional(),
   thoughts: z.array(z.string()).max(5),
   thoughtPositions: z.array(StagePoint).max(5),
   inLabel: z.string().min(1),
@@ -71,6 +89,7 @@ export const ExhaleBeat = z.object({
 
 export const QuestionBeat = z.object({
   kind: z.literal("question"),
+  visual: VisualDirective.optional(),
   kicker: z.string().optional(),
   lines: z.array(z.string()).min(1).max(3),
   dek: z.string().optional(),
@@ -85,6 +104,7 @@ export const FigureStamp = z.object({
 
 export const FigureBeat = z.object({
   kind: z.literal("figure"),
+  visual: VisualDirective.optional(),
   label: z.string(),
   unitLabel: z.string().optional(),
   value: z.object({
@@ -108,7 +128,19 @@ export const FigureBeat = z.object({
 
 export const VerdictBeat = z.object({
   kind: z.literal("verdict"),
+  visual: VisualDirective.optional(),
   lines: z.array(z.string()).min(1).max(3),
+  durationMs: z.number(),
+});
+
+export const BrollBeat = z.object({
+  kind: z.literal("broll"),
+  visual: VisualDirective.optional(),
+  // Omitted only while a stock/gen directive is awaiting stage-4 resolution.
+  clip: WorkspaceClipPath.optional(),
+  overlayText: z.string().optional(),
+  // "words" reads timed words from workspace words.json; captions are never copied into the script.
+  captionSource: z.enum(["words", "none"]),
   durationMs: z.number(),
 });
 
@@ -117,6 +149,7 @@ export type MomentBeatData = z.infer<typeof MomentBeat>;
 export type ExhaleBeatData = z.infer<typeof ExhaleBeat>;
 export type FigureBeatData = z.infer<typeof FigureBeat>;
 export type VerdictBeatData = z.infer<typeof VerdictBeat>;
+export type BrollBeatData = z.infer<typeof BrollBeat>;
 
 export const Beat = z.discriminatedUnion("kind", [
   MomentBeat,
@@ -124,6 +157,7 @@ export const Beat = z.discriminatedUnion("kind", [
   QuestionBeat,
   FigureBeat,
   VerdictBeat,
+  BrollBeat,
 ]);
 type BeatValue = z.infer<typeof Beat>;
 type MomentCompatibleFields = {
@@ -157,6 +191,14 @@ export const Script = z.object({
   hashtags: z.array(z.string()),
 }).superRefine((script, context) => {
   script.beats.forEach((beat, beatIndex) => {
+    if (beat.kind === "broll" && !beat.clip && !/^((stock|gen):)/.test(beat.visual ?? "")) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Broll beats need a clip path unless a stock: or gen: visual is pending asset resolution.",
+        path: ["beats", beatIndex, "clip"],
+      });
+    }
+
     if (beat.kind === "moment" && beat.thoughtPositions &&
       beat.thoughtPositions.length !== (beat.thoughts ?? []).filter((thought) => thought.trim()).length) {
       context.addIssue({

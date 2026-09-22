@@ -21,18 +21,22 @@ export const Stack = ({ brand, script, words }: StackProps) => {
 
   const moments = script.beats.map((beat, index) => {
     const durationInFrames = msToFrames(beat.durationMs);
-    const template =
-      beat.kind === "moment" ? (
-        <Moment brand={brand} beat={beat} />
-      ) : beat.kind === "exhale" ? (
-        <Exhale brand={brand} beat={beat} />
-      ) : beat.kind === "question" ? (
-        <Question brand={brand} beat={beat} />
-      ) : beat.kind === "figure" ? (
-        <Figure brand={brand} beat={beat} />
-      ) : (
-        <Verdict brand={brand} beat={beat} />
-      );
+    const template = (() => {
+      switch (beat.kind) {
+        case "moment": return <Moment brand={brand} beat={beat} />;
+        case "exhale": return <Exhale brand={brand} beat={beat} />;
+        case "question": return <Question brand={brand} beat={beat} />;
+        case "figure": return <Figure brand={brand} beat={beat} />;
+        case "verdict": return <Verdict brand={brand} beat={beat} />;
+        case "broll":
+          // G5a adds the script contract; G5c supplies the actual video template.
+          throw new Error("Broll beats require the G5c renderer and cannot be composed yet.");
+        default: {
+          const exhaustive: never = beat;
+          return exhaustive;
+        }
+      }
+    })();
     const sequence = (
       <Sequence
         key={`${beat.kind}-${index}`}

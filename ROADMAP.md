@@ -66,8 +66,9 @@ Local setup if `engine/node_modules` is missing: `cd engine && npm ci`. Renders 
 
 ## Goal 5 - footage (M3): assets, conform, Broll
 
-- [ ] **G5a** `bin/assets.mjs <workspace>`: resolves each beat's `visual` directive. `template:` needs nothing; `stock:` queries Pexels then Pixabay (free keys from env `PEXELS_API_KEY` / `PIXABAY_API_KEY`, never committed) and downloads the best vertical match; `gen:` writes `assets/veo-manifest.json` (prompt per beat) for manual or later automated fetch. Writes `assets/manifest.json` mapping beat index to file.
-  Files: `bin/assets.mjs`, `engine/src/schema.ts` (optional `visual` on beats and a new `broll` beat kind: clip path, overlay text, caption source), `bin/tests/`, README.
+- [x] **G5a** `bin/assets.mjs <workspace>`: resolves each beat's `visual` directive. `template:` needs nothing; `stock:` queries Pexels then Pixabay (free keys from env `PEXELS_API_KEY` / `PIXABAY_API_KEY`, never committed) and downloads the best vertical match; `gen:` writes `assets/veo-manifest.json` (prompt per beat) for manual or later automated fetch. Writes `assets/manifest.json` mapping beat index to file.
+  Files: `bin/assets.mjs`, `engine/src/schema.ts` (optional `visual` on beats and a new `broll` beat kind: clip path, overlay text, caption source), `bin/tests/`, README. Scope correction: `engine/tests/schema.test.ts` validates the new boundary and `engine/src/Stack.tsx` explicitly rejects unsupported broll rendering until G5c instead of dispatching it as Verdict.
+  Evidence: `docs/runs/2026-09-22-g5a-assets.md`; offline acceptance passed (46 engine, 146 CLI tests).
   Done-when: `node --test bin/tests/` covers a stubbed fetcher (no network in tests); `node bin/assets.mjs <ws> --dry-run` lists what it would fetch; missing keys produce a clear exit 1, not a crash.
 - [ ] **G5b** `bin/conform.mjs <workspace>`: every clip in `assets/` becomes 1080x1920 @ 60 fps mezzanine (ffmpeg scale/crop/pad; clips under 60 fps go through Practical-RIFE 4.25 when `audio/.venv` has it, else ffmpeg minterpolate with a warning). Writes `assets/conformed/`.
   Done-when: ffprobe on every conformed file shows 1080x1920, 60/1; a test uses a generated 2 s colour clip at 30 fps.

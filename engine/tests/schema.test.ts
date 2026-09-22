@@ -1,5 +1,5 @@
 import { readFileSync } from "node:fs";
-import { BrandKit, Script } from "../src/schema";
+import { Beat, BrandKit, Script } from "../src/schema";
 import { describe, expect, it } from "vitest";
 
 const readJson = (relativePath: string): unknown =>
@@ -32,6 +32,75 @@ describe("M1 JSON contracts", () => {
     const script = readJson("../../workspace/demo/script.json") as Record<string, unknown>;
     const { coreMechanic: _coreMechanic, ...withoutCoreMechanic } = script;
     expect(() => Script.parse(withoutCoreMechanic)).toThrow();
+  });
+
+  it("accepts visual directives on the existing beat kinds", () => {
+    const script = readJson("../../workspace/howclose-fusion/script.json") as Record<string, unknown>;
+    const beats = script.beats as Record<string, unknown>[];
+    const withVisuals = {
+      ...script,
+      beats: beats.map((beat) => ({ ...beat, visual: "stock:quiet morning light" })),
+    };
+
+    expect(Script.parse(withVisuals).beats.map((beat) => beat.visual)).toEqual([
+      "stock:quiet morning light",
+      "stock:quiet morning light",
+      "stock:quiet morning light",
+    ]);
+    expect(Beat.parse({
+      kind: "exhale",
+      visual: "template:breath",
+      thoughts: ["Pause"],
+      thoughtPositions: [{ x: 100, y: 100 }],
+      inLabel: "In",
+      outLabel: "Out",
+      phaseLabel: "Breathe",
+      countdown: ["1", "2", "3", "4", "5", "6", "7", "8"],
+      colorKey: "accent",
+      durationMs: 4000,
+    }).visual).toBe("template:breath");
+  });
+
+  it("rejects malformed visual directives", () => {
+    const script = readJson("../../workspace/demo/script.json") as Record<string, unknown>;
+    const beats = script.beats as Record<string, unknown>[];
+
+    for (const visual of ["", "video:mountain", "template:", "stock:   ", "gen: prompt\nextra", "stock: query "]) {
+      const invalid = { ...script, beats: [{ ...beats[0], visual }] };
+      expect(() => Script.parse(invalid), `visual ${JSON.stringify(visual)}`).toThrow();
+    }
+  });
+
+  it("accepts b-roll clip paths and unresolved stock or generated assets", () => {
+    const script = readJson("../../workspace/demo/script.json") as Record<string, unknown>;
+    const broll = (fields: Record<string, unknown>) => Script.parse({
+      ...script,
+      beats: [{ kind: "broll", captionSource: "words", durationMs: 2400, ...fields }],
+    });
+
+    expect(broll({ clip: "assets/quiet-morning.mp4", overlayText: "Take one step" }).beats[0]).toMatchObject({
+      kind: "broll",
+      clip: "assets/quiet-morning.mp4",
+      overlayText: "Take one step",
+      captionSource: "words",
+    });
+    expect(broll({ visual: "stock:quiet morning" }).beats[0].kind).toBe("broll");
+    expect(broll({ visual: "gen:soft sunrise through a window" }).beats[0].kind).toBe("broll");
+  });
+
+  it("requires b-roll clips without stock/gen directives and rejects unsafe paths", () => {
+    const script = readJson("../../workspace/demo/script.json") as Record<string, unknown>;
+    const broll = (fields: Record<string, unknown>) => Script.parse({
+      ...script,
+      beats: [{ kind: "broll", captionSource: "none", durationMs: 2400, ...fields }],
+    });
+
+    expect(() => broll({})).toThrow(/clip path/);
+    expect(() => broll({ visual: "template:Moment" })).toThrow(/clip path/);
+    for (const clip of ["../private.mp4", "assets/../private.mp4", "/tmp/clip.mp4", "C:/clip.mp4", "assets\\clip.mp4"]) {
+      expect(() => broll({ clip }), `clip ${JSON.stringify(clip)}`).toThrow();
+    }
+    expect(() => broll({ clip: "assets/clip.mp4", captionSource: "script" })).toThrow();
   });
 
   it("rejects a bad hex and a missing font", () => {

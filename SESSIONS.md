@@ -1,5 +1,8 @@
 # SESSIONS - append-only log, newest first
 
+## 2026-09-22 - G4c merged; G5a assets
+G4c merged at `a2e1da3`. Two Luna xhigh workers implemented the visual/broll schema contract and assets CLI with provider fallback, bounded downloads, pending generation prompts and attribution. Parent reviewed API contracts, response limits, cleanup of stale metadata, error redaction and partial failure behavior. Independent typecheck, 46 engine tests and 146 CLI tests pass; actual dry-run and missing-key CLI checks meet acceptance. Broll composition deliberately errors until G5c; the dispatch guard is a necessary scope extension for the new beat union. Evidence: `docs/runs/2026-09-22-g5a-assets.md`. Next: G5b.
+
 ## 2026-09-22 - G4b merged; G4c exact versions
 G4b passed CI and merged at `8b9d931`. Luna xhigh pinned Remotion to 4.0.520. Parent version review found that the installed CLI also requires Zod 4.4.3; Luna aligned the existing dependency and retained the schema API with two `zod/v3` imports. Parent verified an offline clean install, typecheck, 42 engine tests and 137 CLI tests. CI at `44f3ad7` rendered and linted the demo; the full compose log contains zero version-mismatch warnings. Evidence: `docs/runs/2026-09-22-g4c-versions.md`. Next: G5a.
 
