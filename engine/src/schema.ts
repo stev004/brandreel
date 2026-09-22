@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v3";
 
 const hex = z.string().regex(/^#[0-9a-fA-F]{6}$/, "Expected a six-digit hex color");
 

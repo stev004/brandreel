@@ -60,7 +60,8 @@ Local setup if `engine/node_modules` is missing: `cd engine && npm ci`. Renders 
 - [x] **G4b** Overlap lint covers non-text elements: the manifest emits boxes for the figure axis, bars, rings, flash dot, the CloseD logo and the exhale column; `overlap()` treats them as opaque.
   Evidence: `docs/runs/2026-09-22-g4b-overlap.md` (42 engine tests, 137 CLI tests, both fresh baseline manifests pass).
   Done-when: a fixture with a text box crossing a bar box fails `[overlap]`; `workspace/regulate-sigh` and `workspace/smoke-3am-v3` still pass.
-- [ ] **G4c** Pin Remotion: replace caret ranges in `engine/package.json` with exact versions (all `@remotion/*` and `remotion` identical), regenerate the lockfile.
+- [x] **G4c** Pin Remotion: replace caret ranges in `engine/package.json` with exact versions (all `@remotion/*` and `remotion` identical), regenerate the lockfile.
+  Evidence: `docs/runs/2026-09-22-g4c-versions.md`. All Remotion packages pinned to 4.0.520; its Zod version check also required direct Zod 4.4.3 with the existing schema API retained through `zod/v3`. Clean offline install, gates and CI compose passed with no mismatch warning.
   Done-when: `node bin/compose.mjs workspace/demo` prints no "version mismatch" warning; CI green.
 
 ## Goal 5 - footage (M3): assets, conform, Broll
