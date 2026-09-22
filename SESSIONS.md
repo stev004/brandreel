@@ -1,5 +1,8 @@
 # SESSIONS - append-only log, newest first
 
+## 2026-09-22 - G4a merged; G4b non-text overlap
+Steven authorized continued verified merges. G4a merged at `a3fe22f`, main CI green. Two Luna xhigh workers implemented G4b geometry and overlap checks; parent reviewed renderer parity, corrected fixed-size goal ring, short-scene entrance timing, shadow scaling, and zero-area handling. Independent typecheck, 42 engine tests and 137 CLI tests pass. Fresh temporary copies of Sigh and smoke-3am-v3 pass all layout rules with no measurement or render; original workspace artifacts unchanged. Evidence: `docs/runs/2026-09-22-g4b-overlap.md`. Next: G4c.
+
 ## 2026-09-22 - G1a merged; G4a real font measurement
 Steven requested the G1a merge and continued milestone work. Parent merged and pushed G1a to main at `4cd74ec`; CI passed. G1b remains blocked on its recorded layout/timing decisions, so the next engineering goal was G4a on `feature/G4a`.
 
