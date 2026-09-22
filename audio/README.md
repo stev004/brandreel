@@ -3,15 +3,19 @@
 These stages are standalone CLIs. They communicate through files in a video
 workspace and do not import the Remotion engine.
 
+Current status (2026-09-22): audio stages are available, but music is supplied
+manually with `polish --music`; the G7 CC0 music fetcher is not built. Whether
+to enable optional VO for the first Regulate video remains undecided.
+
 ## One-time setup
 
 ```sh
-python3 -m venv audio/.venv
+python3.12 -m venv audio/.venv
 audio/.venv/bin/python -m pip install -r audio/requirements.txt
 brew install ffmpeg
 ```
 
-The Python stages use Kokoro and stable-ts on the CPU. The requirements file
+The Python stages require Python 3.12 and use Kokoro and stable-ts on the CPU. The requirements file
 intentionally installs `torch` without a CUDA-specific build. On Apple
 Silicon, use the normal PyTorch wheel and let PyTorch use the CPU or available
 Metal support as appropriate. `ffmpeg` is a system executable from Homebrew,

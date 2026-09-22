@@ -2,7 +2,15 @@
 
 brandreel is a standalone, brand-agnostic 60fps 9:16 short-form video pipeline.
 
-Milestone 1 includes the Remotion engine scaffold, the Moment template, the Stack composition, schema and layout lints, and a Regulate demo.
+The current pipeline includes the Remotion engine, motion templates such as Moment, Exhale, Question, Figure and Verdict, Broll composition, CLI stages for scripts, assets, conforming, rendering, linting and review, plus a Regulate demo.
+
+## Implementation status (2026-09-22)
+
+On main at `298e60d`, the Exhale engine support (G1a), real glyph measurement (G4a), conservative text and shape overlap checks (G4b), and the pinned Remotion 4.0.520 / Zod 4.4.3 v3 API (G4c) are merged. The asset stage handles stock and template visuals and writes pending generation prompts; conform outputs square-pixel 1080x1920 video at exact 60 fps, with ffmpeg fallback proven. Practical-RIFE is optional when its local checkout and model are available, but its real interpolation path has not been verified.
+
+Broll composition supports video, timed-word captions, safe-zone overlays and the brand watermark. `reel` runs asset resolution and conform only for scripts with visual directives, and compose stages only selected clips. The generated-clip fixture is 19 seconds and passed all 11 lints; 20 text elements were measured, and the pixel check recorded 34 frame samples checked with 4 footage frame samples excluded. CI run 35680905872 is green at `298e60d`. The current gates report 51 engine tests and 169 CLI tests.
+
+G5c is still open until a real stock clip is fetched, conformed, rendered and inspected with a provider key. The brand extractor (G6) is not implemented; required motion facts are missing from a source kit and the curated fallback decision is pending. The CC0 music fetcher (G7) is not implemented and its provider licensing has not been verified. The rendered 3:04 AM port and other taste-led video goals also remain pending.
 
 From the repository root, render the demo with:
 

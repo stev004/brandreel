@@ -6,10 +6,10 @@ Updated 2026-09-22. STATE.md = now; this file = the ordered list of goals until 
 
 1. Read `AGENTS.md`, `SPEC.md` (rulings are settled), `STATE.md` (current truth), then this file.
 2. Take the **first goal whose box is unchecked and whose Blocked-on line is empty**. Goals are ordered; do not skip ahead unless the earlier goal is blocked on Steven.
-3. Branch from `main`: `git checkout -b feature/<goal-id>`. Never commit to `main`; Steven merges.
+3. Branch from `main`: `git checkout -b feature/<goal-id>`. Never implement directly on `main`. Steven authorized the director to merge verified work on 2026-09-22; human taste gates remain unchanged. Use Luna xhigh subagents for implementation, with the parent orchestrating and reviewing.
 4. Do only what the goal says. If you find you need more than its Files line allows, stop, write what you found in STATE.md under "Open threads", and pick the next unblocked goal.
 5. A goal is done only when every line of its Done-when passes as a shell command you actually ran. Paste the outputs in your commit message or in `docs/runs/`.
-6. Before you stop: tick the box here, update STATE.md (delete finished items, add the resume point for anything half done), add a dated entry to SESSIONS.md (newest first), commit, push the branch, and tell Steven the exact merge command.
+6. Before you stop: tick only fully accepted goals, update STATE.md with the actual resume point, append a dated SESSIONS.md entry (newest first), commit and push. Under the current merge authorization, merge verified engineering work and report the merge; preserve unchecked acceptance requirements even if their implementation has merged.
 7. Goals marked **Blocked-on: Steven** need a human answer. Leave them, do not guess, do not fake the answer.
 
 Gates that must stay green on every branch (CI runs them on push):
@@ -23,14 +23,13 @@ Local setup if `engine/node_modules` is missing: `cd engine && npm ci`. Renders 
 ## Goal 0 - merge the last foreman branch
 
 - [x] **G0** Merge `feature/hook-validation` into `main` (done 2026-09-22).
-  Blocked-on: **Steven** (protected branch).
-  Command: `git -C ~/Documents/brandreel merge --no-ff feature/hook-validation`. Expect conflicts in `STATE.md` and `SESSIONS.md` only (docs; keep both sides, main's animatic history plus the branch's hook-validation entry). Code merges clean.
-  Done-when: `node --test bin/tests/` reports 116 pass on main; `git branch --merged main | grep hook-validation`.
+  Completed merge: `feature/hook-validation` is in main; no merge action remains.
+  Historical acceptance: CLI suite reported 116 passes at that milestone. Current counts appear in STATE.md and the implementation summary below.
 
 ## Goal 1 - the first real Regulate video (3:04 AM), animatic already KEPT
 
 - [x] **G1a** Add the `exhale` beat kind to the engine, 1:1 with `animatics/regulate-3am.html` (its header comment is the porting contract; `animatics/regulate-3am.plan.md` has the decisions). Engineering acceptance passed 2026-09-22; rendered fidelity remains G1b. Evidence: `docs/runs/2026-09-22-g1a-exhale.md`.
-  Files: `engine/src/schema.ts` (new beat kind), `engine/src/templates/Exhale.tsx` (new), `engine/src/templates/Moment.tsx` (consume placed thoughts), `engine/src/layout.ts` (constants + computeTextBoxes + computeTimeline for the new kind), `engine/src/manifest.ts` (serialize non-text column and dot geometry), `engine/src/Stack.tsx` (dispatch), `engine/tests/*`. The `moment` beat gets optional per-thought `{x, y}` placement so S1 thoughts sit where the animatic puts them (absolute stage coordinates), because the exhale scene shares those positions. Scope corrections 2026-09-22: Moment.tsx is required by the stated placement deliverable; manifest.ts is required by the column/dot geometry acceptance check. Non-text geometry is separate from text elements; non-text overlap remains G4b.
+  Files: `engine/src/schema.ts` (new beat kind), `engine/src/templates/Exhale.tsx` (new), `engine/src/templates/Moment.tsx` (consume placed thoughts), `engine/src/layout.ts` (constants + computeTextBoxes + computeTimeline for the new kind), `engine/src/manifest.ts` (serialize non-text column and dot geometry), `engine/src/Stack.tsx` (dispatch), `engine/tests/*`. The `moment` beat gets optional per-thought `{x, y}` placement so S1 thoughts sit where the animatic puts them (absolute stage coordinates), because the exhale scene shares those positions. Scope corrections 2026-09-22: Moment.tsx is required by the stated placement deliverable; manifest.ts is required by the column/dot geometry acceptance check. Non-text geometry is separate from text elements; G4b subsequently added text/shape overlap checks.
   Done-when: gates green; `engine/tests/` has a test that builds the manifest for a script with an `exhale` beat and asserts the column, dot travel and thought boxes at the header's px values; `node bin/manifest.mjs workspace/regulate-3am` writes layout.json with an `exhale` beat's elements.
 - [ ] **G1b** Author `workspace/regulate-3am/script.json` from the animatic header (copy list verbatim, scene durations 6.5 / 10.6 / 2.5 s, close per the plan; total 19.6 s), render, lint, review.
   Blocked-on: **Steven** (approved label positions exceed safe zones; approved close timing conflicts with CTA dwell). Script/layout/lint draft exists. Close rendering also needs an engine extension beyond this goal's original file list; see STATE.md Open threads and the G1a run note.
@@ -51,6 +50,7 @@ Local setup if `engine/node_modules` is missing: `cd engine && npm ci`. Renders 
   Blocked-on: **taste seat** (Fable authors animatics per SPEC ruling 7; another model may draft, but it goes to Steven's gate either way).
 - [ ] **G3b** Steven gates the animatic. Blocked-on: **Steven**.
 - [ ] **G3c** Port 1:1 (new beat kind only if the header needs one), render, lint, review; Steven gates the render.
+  Blocked-on: G3b approved animatic.
 
 ## Goal 4 - lint accuracy (engineering, no gate needed)
 
@@ -67,14 +67,14 @@ Local setup if `engine/node_modules` is missing: `cd engine && npm ci`. Renders 
 ## Goal 5 - footage (M3): assets, conform, Broll
 
 - [x] **G5a** `bin/assets.mjs <workspace>`: resolves each beat's `visual` directive. `template:` needs nothing; `stock:` queries Pexels then Pixabay (free keys from env `PEXELS_API_KEY` / `PIXABAY_API_KEY`, never committed) and downloads the best vertical match; `gen:` writes `assets/veo-manifest.json` (prompt per beat) for manual or later automated fetch. Writes `assets/manifest.json` mapping beat index to file.
-  Files: `bin/assets.mjs`, `engine/src/schema.ts` (optional `visual` on beats and a new `broll` beat kind: clip path, overlay text, caption source), `bin/tests/`, README. Scope correction: `engine/tests/schema.test.ts` validates the new boundary and `engine/src/Stack.tsx` explicitly rejects unsupported broll rendering until G5c instead of dispatching it as Verdict.
+  Files: `bin/assets.mjs`, `engine/src/schema.ts` (optional `visual` on beats and a new `broll` beat kind: clip path, overlay text, caption source), `bin/tests/`, README. Scope correction at G5a: `engine/tests/schema.test.ts` validated the new boundary and `engine/src/Stack.tsx` rejected unsupported Broll instead of dispatching it as Verdict. G5c has since replaced that guard with the renderer.
   Evidence: `docs/runs/2026-09-22-g5a-assets.md`; offline acceptance passed (46 engine, 146 CLI tests).
   Done-when: `node --test bin/tests/` covers a stubbed fetcher (no network in tests); `node bin/assets.mjs <ws> --dry-run` lists what it would fetch; missing keys produce a clear exit 1, not a crash.
 - [x] **G5b** `bin/conform.mjs <workspace>`: every clip in `assets/` becomes 1080x1920 @ 60 fps mezzanine (ffmpeg scale/crop/pad; clips under 60 fps go through Practical-RIFE 4.25 when `audio/.venv` has it, else ffmpeg minterpolate with a warning). Writes `assets/conformed/`.
   Evidence: `docs/runs/2026-09-22-g5b-conform.md`; real CLI fixture verified 1080x1920, square pixels, 60/1, 120 frames, 2.000 seconds. Gates: 46 engine and 155 CLI tests.
   Done-when: ffprobe on every conformed file shows 1080x1920, 60/1; a test uses a generated 2 s colour clip at 30 fps.
 - [ ] **G5c** `Broll` template in the engine: mezzanine clip + karaoke captions (from `words.json`) + safe-zone text overlay + brand watermark; manifest boxes for the overlay and captions; `bin/reel.mjs` gains `assets` and `conform` stages that run only when a beat has a `visual` directive.
-  Blocked-on: **Steven** (provide a Pexels or Pixabay key through the environment or a local credentials file for the real stock proof). Engineering implementation and generated-clip proof pass; evidence: `docs/runs/2026-09-22-g5c-broll.md`. The goal remains unchecked until the real provider path passes.
+  Blocked-on: **Steven** (provide a Pexels or Pixabay key through the environment or a local credentials file for the real stock proof). Engineering implementation merged at `298e60d`; generated-clip proof and main CI pass; evidence: `docs/runs/2026-09-22-g5c-broll.md`. The goal remains unchecked until the real provider path passes.
   Done-when: gates green; a demo workspace with one `broll` beat over a generated colour clip renders, and lint passes; the `stock:` path is proven once by hand with a real key (evidence frame under `docs/runs/frames/`, key never in the repo).
 
 ## Goal 6 - more brands (M4 remainder)
@@ -94,10 +94,12 @@ Local setup if `engine/node_modules` is missing: `cd engine && npm ci`. Renders 
 
 - [ ] **G8a** Iterate `animatics/howclose-fusion-v2.html` past Steven's gate (parked at rev6, "still not great"; levers in `animatics/howclose-fusion-v2.plan.md`). Blocked-on: **Steven** and the taste seat.
 - [ ] **G8b** Port: new `bars` beat kind (statement zone, IN/OUT bars, shot attempts, zoom, need-bar), scene durations from `vo-timing.json` (measured VO 33 s vs 29 s picture; VO timing wins). Then compose, polish with music, lint, review.
+  Blocked-on: G8a approved animatic.
 
 ## Goal 9 - distribution (after the first KEEP on a rendered video)
 
 - [ ] **G9a** Handoff folder per platform (`final/<platform>.mp4`, caption, first comment, alt text, hashtags from `review.md`) and a documented manual posting routine. Publishing stays human (SPEC ruling 6).
+  Blocked-on: first KEEP on a rendered video.
 - [ ] **G9b** After about four weeks of real posting: a measurement note per video in `docs/runs/`, and any lint or limit the numbers argue for.
   Blocked-on: real posts existing.
 
@@ -105,6 +107,12 @@ Local setup if `engine/node_modules` is missing: `cd engine && npm ci`. Renders 
 
 coreMechanic first · copy list is the contract · style as constraints · motion semantics (records ratchet, events snap, struggles crawl; narrated figure over information graphic; absence rendered as failing effort, never stillness) · mockup gated before any port · human KEEP/TWEAK/KILL always.
 
-## Done so far (for orientation; details in SESSIONS.md and docs/runs/)
+## Current implementation summary
 
-Engine at 60 fps with Moment, Question, Figure, Verdict templates and a two-row close; brand kits regulate and howclose; stages interview, script (brief-enforced, lint-and-retry), manifest, compose, lint (eleven rules), review, reel orchestrator; VO (Kokoro), alignment (stable-ts), polish (loudnorm) verified once; karaoke captions; CI on GitHub renders and lints every push; the 3:04 AM animatic KEPT 2026-09-13.
+Merged to main through `298e60d`: G0, G1a, G4a-c, G5a-b and the G5c implementation. The engine supports Moment, Question, Figure, Verdict, Exhale, Broll and close layouts. File contracts cover authoring, optional voice/alignment, conditional asset resolution/conform, manifest, composition, optional polish, lint and review. Real glyph measurement, conservative text/shape overlap, explicit footage pixel coverage and pinned dependencies are implemented.
+
+Latest verified gates: typecheck, 51 engine tests, 169 CLI tests; main CI run 35680905872 passed. The generated Broll demo renders and passes all 11 lint rules. Real stock proof, actual RIFE model execution and a creative rendered KEEP are not claimed. G5c stays unchecked pending its key-dependent stock proof.
+
+Still unimplemented: G6a source extractor/provenance, G7 CC0 music acquisition/attribution, G8 bars port and G9 platform handoff. Automated generated-video fetching is not implemented; `gen:` currently writes prompts for manual supply. Existing voice, alignment and audio polish modules are implemented, but optional VO for the first Regulate video awaits Steven's choice.
+
+The first currently unblocked engineering goal is G7. Confirm usable CC0 source/license evidence before implementing; provider names in that goal are candidates, not verified integrations. Resolve the earlier recorded human inputs as they arrive. STATE.md carries the concise feature map and exact resume points; docs/runs/ carries acceptance evidence.
