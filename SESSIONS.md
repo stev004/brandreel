@@ -1,5 +1,8 @@
 # SESSIONS - append-only log, newest first
 
+## 2026-09-22 - G4b merged; G4c exact versions
+G4b passed CI and merged at `8b9d931`. Luna xhigh pinned Remotion to 4.0.520. Parent version review found that the installed CLI also requires Zod 4.4.3; Luna aligned the existing dependency and retained the schema API with two `zod/v3` imports. Parent verified an offline clean install, typecheck, 42 engine tests and 137 CLI tests. CI at `44f3ad7` rendered and linted the demo; the full compose log contains zero version-mismatch warnings. Evidence: `docs/runs/2026-09-22-g4c-versions.md`. Next: G5a.
+
 ## 2026-09-22 - G4a merged; G4b non-text overlap
 Steven authorized continued verified merges. G4a merged at `a3fe22f`, main CI green. Two Luna xhigh workers implemented G4b geometry and overlap checks; parent reviewed renderer parity, corrected fixed-size goal ring, short-scene entrance timing, shadow scaling, and zero-area handling. Independent typecheck, 42 engine tests and 137 CLI tests pass. Fresh temporary copies of Sigh and smoke-3am-v3 pass all layout rules with no measurement or render; original workspace artifacts unchanged. Evidence: `docs/runs/2026-09-22-g4b-overlap.md`. Next: G4c.
 
