@@ -39,11 +39,32 @@ export const BrandKit = z.object({
 
 export type BrandKit = z.infer<typeof BrandKit>;
 
+const StagePoint = z.object({
+  x: z.number().finite(),
+  y: z.number().finite(),
+});
+
 export const MomentBeat = z.object({
   kind: z.literal("moment"),
   eyebrow: z.string().optional(),
   line: z.string(),
   thoughts: z.array(z.string()).optional(),
+  // Presence opts into the fixed placed-narrative layout. Omission preserves
+  // the existing stacked Moment layout and its brand-derived timing.
+  thoughtPositions: z.array(StagePoint).max(5).optional(),
+  bg: hex.optional(),
+  durationMs: z.number(),
+});
+
+export const ExhaleBeat = z.object({
+  kind: z.literal("exhale"),
+  thoughts: z.array(z.string()).max(5),
+  thoughtPositions: z.array(StagePoint).max(5),
+  inLabel: z.string().min(1),
+  outLabel: z.string().min(1),
+  phaseLabel: z.string().min(1),
+  countdown: z.array(z.string()).length(8),
+  colorKey: z.string().min(1),
   bg: hex.optional(),
   durationMs: z.number(),
 });
@@ -92,11 +113,14 @@ export const VerdictBeat = z.object({
 });
 
 export type QuestionBeatData = z.infer<typeof QuestionBeat>;
+export type MomentBeatData = z.infer<typeof MomentBeat>;
+export type ExhaleBeatData = z.infer<typeof ExhaleBeat>;
 export type FigureBeatData = z.infer<typeof FigureBeat>;
 export type VerdictBeatData = z.infer<typeof VerdictBeat>;
 
 export const Beat = z.discriminatedUnion("kind", [
   MomentBeat,
+  ExhaleBeat,
   QuestionBeat,
   FigureBeat,
   VerdictBeat,
@@ -106,6 +130,7 @@ type MomentCompatibleFields = {
   eyebrow?: string;
   line: string;
   thoughts?: string[];
+  thoughtPositions?: { x: number; y: number }[];
   bg?: string;
 };
 export type Beat = BeatValue & MomentCompatibleFields;
@@ -130,6 +155,48 @@ export const Script = z.object({
   }),
   caption: z.string(),
   hashtags: z.array(z.string()),
+}).superRefine((script, context) => {
+  script.beats.forEach((beat, beatIndex) => {
+    if (beat.kind === "moment" && beat.thoughtPositions &&
+      beat.thoughtPositions.length !== (beat.thoughts ?? []).filter((thought) => thought.trim()).length) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "thoughtPositions must align with the non-empty thoughts array.",
+        path: ["beats", beatIndex, "thoughtPositions"],
+      });
+    }
+
+    if (beat.kind === "exhale") {
+      if (beat.thoughts.length !== beat.thoughtPositions.length) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "thoughtPositions must align with the thoughts array.",
+          path: ["beats", beatIndex, "thoughtPositions"],
+        });
+      }
+      if (beat.thoughts.some((thought) => !thought.trim())) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Exhale thoughts must be non-empty strings.",
+          path: ["beats", beatIndex, "thoughts"],
+        });
+      }
+      if (beat.countdown.some((value) => !value.trim())) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Exhale countdown values must be non-empty strings.",
+          path: ["beats", beatIndex, "countdown"],
+        });
+      }
+      if (![beat.inLabel, beat.outLabel, beat.phaseLabel, beat.colorKey].every((value) => value.trim())) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Exhale labels and colorKey must be non-empty strings.",
+          path: ["beats", beatIndex],
+        });
+      }
+    }
+  });
 });
 
 export type Script = z.infer<typeof Script>;

@@ -7,6 +7,7 @@ import { Moment } from "./templates/Moment";
 import { Figure } from "./templates/Figure";
 import { Question } from "./templates/Question";
 import { Verdict } from "./templates/Verdict";
+import { Exhale } from "./templates/Exhale";
 import type { BrandKit, Script, Words } from "./schema";
 
 export type StackProps = {
@@ -23,6 +24,8 @@ export const Stack = ({ brand, script, words }: StackProps) => {
     const template =
       beat.kind === "moment" ? (
         <Moment brand={brand} beat={beat} />
+      ) : beat.kind === "exhale" ? (
+        <Exhale brand={brand} beat={beat} />
       ) : beat.kind === "question" ? (
         <Question brand={brand} beat={beat} />
       ) : beat.kind === "figure" ? (
