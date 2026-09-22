@@ -11,7 +11,7 @@ import {
   hook,
   overlap,
   pacing,
-  pixelBands,
+  pixelBandCheck,
   safeZones,
   textFit,
 } from "./lint-rules.mjs";
@@ -187,6 +187,12 @@ if (existsSync(layoutPath)) {
 }
 
 let samples = 0;
+let pixelBandCoverage = {
+  sampledFrames: 0,
+  checkedFrames: 0,
+  excludedFootageFrames: 0,
+  exclusionReason: null,
+};
 if (!noRender && !noPixels) {
   const sampled = sampleFrames(
     Number(stream.width),
@@ -197,10 +203,19 @@ if (!noRender && !noPixels) {
   if (sampled.error) {
     violations.push(sampled.error);
     rules["pixel-bands"] = "fail";
+    pixelBandCoverage = {
+      ...pixelBandCoverage,
+      sampledFrames: sampled.frames.length,
+      exclusionReason: "No frames excluded because pixel sampling failed.",
+    };
   } else {
-    const pixelViolations = pixelBands(sampled.frames, { safe: layout?.safe });
-    violations.push(...pixelViolations);
-    rules["pixel-bands"] = pixelViolations.length === 0 ? "pass" : "fail";
+    pixelBandCoverage = pixelBandCheck(sampled.frames, {
+      durationMs: durationSeconds * 1000,
+      layout,
+      safe: layout?.safe,
+    });
+    violations.push(...pixelBandCoverage.violations);
+    rules["pixel-bands"] = pixelBandCoverage.status;
   }
 }
 
@@ -215,6 +230,12 @@ const report = {
   },
   rules,
   samples,
+  pixelBandCoverage: {
+    sampledFrames: pixelBandCoverage.sampledFrames,
+    checkedFrames: pixelBandCoverage.checkedFrames,
+    excludedFootageFrames: pixelBandCoverage.excludedFootageFrames,
+    exclusionReason: pixelBandCoverage.exclusionReason,
+  },
   closeDwellMs: layout && Number.isFinite(layout.totalDurationMs) && Number.isFinite(layout.closeStartMs)
     ? layout.totalDurationMs - layout.closeStartMs
     : null,

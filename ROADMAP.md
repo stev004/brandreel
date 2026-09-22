@@ -74,6 +74,7 @@ Local setup if `engine/node_modules` is missing: `cd engine && npm ci`. Renders 
   Evidence: `docs/runs/2026-09-22-g5b-conform.md`; real CLI fixture verified 1080x1920, square pixels, 60/1, 120 frames, 2.000 seconds. Gates: 46 engine and 155 CLI tests.
   Done-when: ffprobe on every conformed file shows 1080x1920, 60/1; a test uses a generated 2 s colour clip at 30 fps.
 - [ ] **G5c** `Broll` template in the engine: mezzanine clip + karaoke captions (from `words.json`) + safe-zone text overlay + brand watermark; manifest boxes for the overlay and captions; `bin/reel.mjs` gains `assets` and `conform` stages that run only when a beat has a `visual` directive.
+  Blocked-on: **Steven** (provide a Pexels or Pixabay key through the environment or a local credentials file for the real stock proof). Engineering implementation and generated-clip proof pass; evidence: `docs/runs/2026-09-22-g5c-broll.md`. The goal remains unchecked until the real provider path passes.
   Done-when: gates green; a demo workspace with one `broll` beat over a generated colour clip renders, and lint passes; the `stock:` path is proven once by hand with a real key (evidence frame under `docs/runs/frames/`, key never in the repo).
 
 ## Goal 6 - more brands (M4 remainder)

@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-export const STAGES = ["vo", "align", "manifest", "compose", "polish", "lint", "review"];
+export const STAGES = ["vo", "align", "assets", "conform", "manifest", "compose", "polish", "lint", "review"];
 export const PRE_STAGES = ["interview", "script"];
 
 export function planStages(script, options = {}) {
@@ -33,9 +33,11 @@ export function planStages(script, options = {}) {
 
   const hasVo = Boolean(script?.modules?.vo);
   const hasMusic = Boolean(script?.modules?.music) || Boolean(options.music);
+  const hasVisuals = Boolean(script?.beats?.some((beat) => typeof beat?.visual === "string"));
   return allStages.slice(fromIndex, toIndex + 1).filter((stage) => {
     if (skip.has(stage)) return false;
     if ((stage === "vo" || stage === "align") && !hasVo) return false;
+    if ((stage === "assets" || stage === "conform") && !hasVisuals) return false;
     if (stage === "polish" && !hasVo && !hasMusic) return false;
     return true;
   });
@@ -55,21 +57,21 @@ function parseArgs(argv) {
       options.dryRun = true;
       continue;
     }
-    if (["--from", "--to", "--skip", "--music", "--model-cmd", "--brand", "--topic"].includes(arg)) {
+    if (["--from", "--to", "--skip", "--music", "--model-cmd", "--brand", "--topic", "--browser-executable"].includes(arg)) {
       const value = argv[index + 1];
       if (!value || value.startsWith("--")) throw new Error(`${arg} requires a value`);
       index += 1;
       if (arg === "--skip") options.skip.push(...value.split(",").filter(Boolean));
-      else options[arg.slice(2)] = value;
+      else options[arg === "--browser-executable" ? "browserExecutable" : arg.slice(2)] = value;
       continue;
     }
-    if (["--from=", "--to=", "--skip=", "--music=", "--model-cmd=", "--brand=", "--topic="].some((prefix) => arg.startsWith(prefix))) {
+    if (["--from=", "--to=", "--skip=", "--music=", "--model-cmd=", "--brand=", "--topic=", "--browser-executable="].some((prefix) => arg.startsWith(prefix))) {
       const separator = arg.indexOf("=");
       const name = arg.slice(2, separator);
       const value = arg.slice(separator + 1);
       if (!value) throw new Error(`--${name} requires a value`);
       if (name === "skip") options.skip.push(...value.split(",").filter(Boolean));
-      else options[name] = value;
+      else options[name === "browser-executable" ? "browserExecutable" : name] = value;
       continue;
     }
     throw new Error(`unknown argument ${arg}`);
@@ -96,7 +98,9 @@ function commandFor(stage, workspaceArg, music, options) {
     vo: ["audio/.venv/bin/python", ["bin/vo.py", workspaceArg]],
     align: ["audio/.venv/bin/python", ["bin/align.py", workspaceArg]],
     manifest: ["node", ["bin/manifest.mjs", workspaceArg]],
-    compose: ["node", ["bin/compose.mjs", workspaceArg]],
+    assets: ["node", ["bin/assets.mjs", workspaceArg]],
+    conform: ["node", ["bin/conform.mjs", workspaceArg]],
+    compose: ["node", ["bin/compose.mjs", workspaceArg, ...(options.browserExecutable ? ["--browser-executable", options.browserExecutable] : [])]],
     polish: ["node", ["bin/polish.mjs", workspaceArg]],
     lint: ["node", ["bin/lint.mjs", workspaceArg]],
     review: ["node", ["bin/review.mjs", workspaceArg]],
@@ -115,9 +119,9 @@ function displayCommand(stage, workspaceArg, music, options) {
   return [executable, ...args].map(shellQuote).join(" ");
 }
 
-function runStage(stage, workspaceArg, music, options) {
+function runStage(stage, workspaceArg, music, options, commandRunner = spawnSync) {
   const [executable, args] = commandFor(stage, workspaceArg, music, options);
-  const result = spawnSync(executable, args, { cwd: repoRoot, stdio: "inherit" });
+  const result = commandRunner(executable, args, { cwd: repoRoot, stdio: "inherit" });
   if (result.error) {
     throw new Error(`${stage} failed to start: ${result.error.message}`);
   }
@@ -126,7 +130,7 @@ function runStage(stage, workspaceArg, music, options) {
   }
 }
 
-export function run(argv = process.argv.slice(2)) {
+export function run(argv = process.argv.slice(2), dependencies = {}) {
   const options = parseArgs(argv);
   const workspaceDir = resolve(repoRoot, options.workspaceArg);
   const scriptPath = join(workspaceDir, "script.json");
@@ -142,7 +146,7 @@ export function run(argv = process.argv.slice(2)) {
     },
   };
   const music = options.music ?? script?.modules?.music?.file ?? (brief?.music !== "none" ? brief?.music : undefined);
-  const stages = planStages(planningScript, { ...options, music, includeInterview, includeScript });
+  let stages = planStages(planningScript, { ...options, music, includeInterview, includeScript });
 
   if (options.dryRun) {
     for (const stage of stages) {
@@ -151,7 +155,14 @@ export function run(argv = process.argv.slice(2)) {
     return 0;
   }
 
-  for (const stage of stages) runStage(stage, options.workspaceArg, music, options);
+  for (let index = 0; index < stages.length; index += 1) {
+    const stage = stages[index];
+    runStage(stage, options.workspaceArg, music, options, dependencies.commandRunner ?? spawnSync);
+    if (stage === "script") {
+      const authoredScript = readScript(workspaceDir);
+      stages = planStages(authoredScript, { ...options, music, includeInterview, includeScript });
+    }
+  }
   return 0;
 }
 

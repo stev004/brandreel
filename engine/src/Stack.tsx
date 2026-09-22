@@ -1,13 +1,14 @@
 import { AbsoluteFill, Sequence } from "remotion";
 import { Caption } from "./components/Caption";
 import { Close } from "./components/Close";
-import { msToFrames } from "./config";
+import { FPS, msToFrames } from "./config";
 import { closeDurationMs } from "./layout";
 import { Moment } from "./templates/Moment";
 import { Figure } from "./templates/Figure";
 import { Question } from "./templates/Question";
 import { Verdict } from "./templates/Verdict";
 import { Exhale } from "./templates/Exhale";
+import { Broll } from "./templates/Broll";
 import type { BrandKit, Script, Words } from "./schema";
 
 export type StackProps = {
@@ -18,9 +19,17 @@ export type StackProps = {
 
 export const Stack = ({ brand, script, words }: StackProps) => {
   let fromFrame = 0;
+  const brollIntervals: Array<{ fromMs: number; toMs: number }> = [];
 
   const moments = script.beats.map((beat, index) => {
     const durationInFrames = msToFrames(beat.durationMs);
+    const beatStartMs = fromFrame * 1000 / FPS;
+    if (beat.kind === "broll") {
+      brollIntervals.push({
+        fromMs: beatStartMs,
+        toMs: (fromFrame + durationInFrames) * 1000 / FPS,
+      });
+    }
     const template = (() => {
       switch (beat.kind) {
         case "moment": return <Moment brand={brand} beat={beat} />;
@@ -28,9 +37,7 @@ export const Stack = ({ brand, script, words }: StackProps) => {
         case "question": return <Question brand={brand} beat={beat} />;
         case "figure": return <Figure brand={brand} beat={beat} />;
         case "verdict": return <Verdict brand={brand} beat={beat} />;
-        case "broll":
-          // G5a adds the script contract; G5c supplies the actual video template.
-          throw new Error("Broll beats require the G5c renderer and cannot be composed yet.");
+        case "broll": return <Broll brand={brand} beat={beat} words={words} beatStartMs={beatStartMs} />;
         default: {
           const exhaustive: never = beat;
           return exhaustive;
@@ -64,7 +71,12 @@ export const Stack = ({ brand, script, words }: StackProps) => {
       {close}
       {fromFrame > 0 ? (
         <Sequence from={0} durationInFrames={fromFrame} name="caption">
-          <Caption brand={brand} text={script.caption} words={words} />
+          <Caption
+            brand={brand}
+            text={script.caption}
+            words={words}
+            hiddenIntervals={brollIntervals}
+          />
         </Sequence>
       ) : null}
     </AbsoluteFill>

@@ -1,0 +1,19 @@
+{
+  "words": [
+    {
+      "text": "Video",
+      "startMs": 100,
+      "endMs": 450
+    },
+    {
+      "text": "caption",
+      "startMs": 500,
+      "endMs": 850
+    },
+    {
+      "text": "check",
+      "startMs": 900,
+      "endMs": 1400
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 import { HEIGHT, FPS, SAFE_BOTTOM, SAFE_LEFT, SAFE_RIGHT, SAFE_TOP, WIDTH } from "./config";
 import { computeGeometry, computeTextBoxes, computeTimeline, GLYPH_EM } from "./layout";
 import type { GeometryElement, LayoutTextBox, TextRole } from "./layout";
-import type { BrandKit, Script } from "./schema";
+import type { BrandKit, Script, Words } from "./schema";
 
 export type Element = LayoutTextBox & {
   estimatedLines: number;
@@ -23,6 +23,7 @@ export type LayoutManifest = {
   firstOnScreenTextMs: number | null;
   visualChangeMs: number[];
   closeStartMs: number;
+  footageIntervals: Array<{ fromMs: number; toMs: number }>;
   safe: {
     top: number;
     bottom: number;
@@ -64,9 +65,11 @@ const typographyFor = (box: LayoutTextBox, script: Script, brand: BrandKit): Typ
   const isCloseLine = box.id === "close-line";
   const isCloseWordmark = box.id === "close-wordmark";
   const isCloseTagline = box.id === "close-tagline";
-  const isCaptionLine = box.id.startsWith("caption-line-");
+  const isCaptionLine = box.id.startsWith("caption-line-") || box.id.startsWith("broll-caption-line-");
   const isFigureCounter = beat?.kind === "figure" && beatPart === "counter";
   const isFigureAchievedTick = beat?.kind === "figure" && beatPart === "achieved-tick";
+  const isBrollOverlay = beat?.kind === "broll" && beatPart === "overlay";
+  const isBrollWatermark = beat?.kind === "broll" && beatPart === "watermark";
   const isExhaleCountdown = beat?.kind === "exhale" && beatPart?.startsWith("countdown-");
   const isMomentPlacedThought = isPlacedMoment && beatPart?.startsWith("thought-");
   const isExhaleText = beat?.kind === "exhale";
@@ -79,17 +82,24 @@ const typographyFor = (box: LayoutTextBox, script: Script, brand: BrandKit): Typ
     fontStyle = isPlacedMoment ? "italic" : (brand.fonts.display.italic ? "italic" : "normal");
   } else if (isCloseLine) {
     fontStyle = brand.fonts.display.italic ? "italic" : "normal";
-  } else if (isQuestionDek || isVerdictLine) {
+  } else if (isBrollWatermark) {
+    fontStyle = brand.fonts.body.italic ? "italic" : "normal";
+  } else if (isQuestionDek || isVerdictLine || (isBrollOverlay && brand.fonts.display.italic)) {
     fontStyle = "italic";
   }
 
   let fontWeight = 400;
   if (isFigureCounter || isFigureAchievedTick || isCaptionLine) fontWeight = 600;
+  if (isBrollOverlay || isBrollWatermark) fontWeight = 500;
   if (beat?.kind === "question" && beatPart?.startsWith("question-line-")) fontWeight = 700;
   if (isCloseWordmark) fontWeight = 500;
   if (isCloseTagline) fontWeight = 700;
 
-  const whiteSpace = isExhaleLabel || isExhaleThought || isMomentPlacedThought ? "nowrap" : "normal";
+  const whiteSpace = isBrollOverlay
+    ? "pre-line"
+    : isBrollWatermark || isExhaleLabel || isExhaleThought || isMomentPlacedThought
+      ? "nowrap"
+      : "normal";
   const textTransform = isMomentEyebrow ? "uppercase" : "none";
   const fontVariantNumeric = isFigureCounter || isExhaleCountdown ? "tabular-nums" : "normal";
 
@@ -103,14 +113,14 @@ const typographyFor = (box: LayoutTextBox, script: Script, brand: BrandKit): Typ
   };
 };
 
-export const buildManifest = (script: Script, brand: BrandKit): LayoutManifest => {
-  const elements = computeTextBoxes(script, brand).map((box: LayoutTextBox) => ({
+export const buildManifest = (script: Script, brand: BrandKit, words?: Words): LayoutManifest => {
+  const elements = computeTextBoxes(script, brand, words).map((box: LayoutTextBox) => ({
     ...box,
     ...typographyFor(box, script, brand),
     estimatedLines: estimateLines(box.text, box.fontSize, box.w, box.role, box.letterSpacingEm),
   }));
   const closeStartMs = script.beats.reduce((total, beat) => total + beat.durationMs, 0);
-  const computedTimeline = computeTimeline(script, brand);
+  const computedTimeline = computeTimeline(script, brand, words);
 
   return {
     width: WIDTH,
@@ -120,6 +130,11 @@ export const buildManifest = (script: Script, brand: BrandKit): LayoutManifest =
     firstOnScreenTextMs: computedTimeline.firstOnScreenTextMs,
     visualChangeMs: computedTimeline.visualChangeMs,
     closeStartMs,
+    footageIntervals: computedTimeline.beats.flatMap((span) =>
+      script.beats[span.index]?.kind === "broll"
+        ? [{ fromMs: span.startMs, toMs: span.endMs }]
+        : [],
+    ),
     safe: { top: SAFE_TOP, bottom: SAFE_BOTTOM, left: SAFE_LEFT, right: SAFE_RIGHT },
     elements,
     geometry: computeGeometry(script, brand),

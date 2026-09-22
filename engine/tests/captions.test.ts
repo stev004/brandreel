@@ -1,4 +1,4 @@
-import { captionWindow } from "../src/captions";
+import { captionSlices, captionWindow } from "../src/captions";
 import { describe, expect, it } from "vitest";
 
 const words = [
@@ -87,5 +87,20 @@ describe("captionWindow", () => {
 
   it("returns empty lines after the final grace period", () => {
     expect(captionWindow(words, 4301, opts)).toEqual({ lines: [], activeIndex: null });
+  });
+
+  it("slices visible text from captionWindow when words overlap across a window", () => {
+    const overlappingWords = [
+      { text: "long", startMs: 0, endMs: 3000 },
+      { text: "brief", startMs: 100, endMs: 200 },
+      { text: "next", startMs: 500, endMs: 700 },
+    ];
+    const oneLine = { maxWordsPerLine: 2, maxLines: 1 };
+
+    expect(captionSlices(overlappingWords, 0, 3200, oneLine)).toEqual([
+      { fromMs: 0, toMs: 500, lines: [["long", "brief"]] },
+      { fromMs: 500, toMs: 700, lines: [["next"]] },
+      { fromMs: 700, toMs: 3000, lines: [["long", "brief"]] },
+    ]);
   });
 });

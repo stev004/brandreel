@@ -1,5 +1,8 @@
 # SESSIONS - append-only log, newest first
 
+## 2026-09-22 - G5b merged; G5c Broll engineering
+G5b passed CI and merged at `03f9d3f`. Three Luna xhigh workers implemented Broll rendering/caption geometry, clip staging/pipeline activation, and explicit footage pixel-lint coverage. Parent reviewed and corrected legacy public-directory handling, conformed-path/SAR checks, overlap-aware caption windows and renderer typography metadata. Independent Chromium render of the generated-color fixture succeeds; all 11 lint rules pass, with 34 of 38 pixel samples checked and 4 footage samples explicitly excluded. Typecheck and 51 engine tests pass; CLI and CI results are in the run note. G5c remains unchecked pending a real stock API key. A read-only Luna source audit of G6a found missing house motion facts; no values were invented.
+
 ## 2026-09-22 - G5a merged; G5b clip conform
 G5a passed CI and merged at `e0454f5`. Luna xhigh implemented conform with recursive clip discovery, optional RIFE and explicit ffmpeg fallback, crop/pad modes and source/output mapping. Parent reviewed timing, tail padding, symlink boundaries and RIFE output verification. Independent CLI fixture verified 1080x1920, square pixels, 60/1, 120 frames and 2.000 seconds. Typecheck, 46 engine tests and 155 CLI tests passed. Actual RIFE model execution is unverified locally; fallback and invocation failures are covered. Evidence: `docs/runs/2026-09-22-g5b-conform.md`. Next: G5c.
 
