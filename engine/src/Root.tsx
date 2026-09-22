@@ -3,7 +3,7 @@ import { FPS, HEIGHT, WIDTH, msToFrames } from "./config";
 import { closeDurationMs } from "./layout";
 import { BrandKit, Script, Words } from "./schema";
 import { Stack, type StackProps } from "./Stack";
-import { z } from "zod";
+import { z } from "zod/v3";
 
 export const StackPropsSchema = z.object({
   brand: BrandKit,
