@@ -1,4 +1,5 @@
 import { Easing, interpolate } from "remotion";
+import { captionChangeTimes, captionSlices } from "./captions";
 import {
   HEIGHT,
   MAX_DURATION_MS,
@@ -11,7 +12,7 @@ import {
   SAFE_TOP,
   WIDTH,
 } from "./config";
-import type { Beat, BrandKit, ExhaleBeatData, Script } from "./schema";
+import type { Beat, BrandKit, ExhaleBeatData, Script, Words } from "./schema";
 
 export const CAPTION_LAYOUT = {
   contentX: SAFE_LEFT,
@@ -22,6 +23,29 @@ export const CAPTION_LAYOUT = {
   maxLines: 2,
   bottomOffset: 42,
 } as const;
+
+export const BROLL_LAYOUT = {
+  overlayX: SAFE_LEFT,
+  overlayTop: 830,
+  overlayWidth: WIDTH - SAFE_LEFT - SAFE_RIGHT,
+  overlayFontSize: 72,
+  overlayLineHeight: 1.15,
+  overlayMaxLines: 2,
+  overlayEntranceDrift: 32,
+  watermarkX: SAFE_LEFT,
+  watermarkTop: SAFE_TOP + 30,
+  watermarkFontSize: 32,
+  watermarkLineHeight: 1.2,
+  watermarkOpacity: 0.72,
+} as const;
+
+export const BROLL_TIMING = {
+  overlayStartMs: 300,
+} as const;
+
+const captionLineHeight = CAPTION_LAYOUT.fontSize * CAPTION_LAYOUT.lineHeight;
+export const captionTop = HEIGHT - SAFE_BOTTOM - CAPTION_LAYOUT.bottomOffset -
+  captionLineHeight * CAPTION_LAYOUT.maxLines;
 
 const lineBoxHeight = (fontSize: number, lineHeight: number, maxLines: number): number =>
   fontSize * lineHeight * maxLines;
@@ -415,7 +439,7 @@ export const GLYPH_EM = {
   mono: 0.6,
 } as const;
 
-const textWidthPx = (text: string, fontSize: number, role: TextRole, letterSpacingEm = 0): number => {
+export const textWidthPx = (text: string, fontSize: number, role: TextRole, letterSpacingEm = 0): number => {
   const length = Array.from(text).length;
   return length === 0 ? 0 : Math.ceil(length * fontSize * (GLYPH_EM[role] + letterSpacingEm));
 };
@@ -462,7 +486,7 @@ export type Timeline = {
 
 const hasText = (value: string | undefined): boolean => Boolean(value?.trim());
 
-export const computeTimeline = (script: Script, brand: BrandKit): Timeline => {
+export const computeTimeline = (script: Script, brand: BrandKit, words?: Words): Timeline => {
   let cursorMs = 0;
   let firstOnScreenTextMs: number | null = null;
   const beats: TimelineBeat[] = [];
@@ -625,6 +649,38 @@ export const computeTimeline = (script: Script, brand: BrandKit): Timeline => {
       });
     }
 
+    if (beat.kind === "broll") {
+      // The footage replaces the beat background from its first frame. The
+      // watermark is present at the cut; the optional overlay enters later.
+      addTextTime(startMs, endMs, hasText(brand.wordmark.text));
+      if (hasText(beat.overlayText)) {
+        addTextTime(startMs + BROLL_TIMING.overlayStartMs, endMs, true);
+        addVisualChange(startMs + BROLL_TIMING.overlayStartMs, endMs);
+        addVisualChange(startMs + BROLL_TIMING.overlayStartMs + brand.motion.entranceMs, endMs);
+      }
+      if (beat.captionSource === "words" && words) {
+        const slices = captionSlices(words.words, startMs, endMs, {
+          maxWordsPerLine: CAPTION_LAYOUT.maxWordsPerLine,
+          maxLines: CAPTION_LAYOUT.maxLines,
+        });
+        if (slices.length > 0) addTextTime(slices[0]!.fromMs, endMs, true);
+        captionChangeTimes(words.words, startMs, endMs, {
+          maxWordsPerLine: CAPTION_LAYOUT.maxWordsPerLine,
+          maxLines: CAPTION_LAYOUT.maxLines,
+        }).forEach((timeMs) => addVisualChange(timeMs, endMs));
+      }
+    } else if (words) {
+      const slices = captionSlices(words.words, startMs, endMs, {
+        maxWordsPerLine: CAPTION_LAYOUT.maxWordsPerLine,
+        maxLines: CAPTION_LAYOUT.maxLines,
+      });
+      if (slices.length > 0) addTextTime(slices[0]!.fromMs, endMs, true);
+      captionChangeTimes(words.words, startMs, endMs, {
+        maxWordsPerLine: CAPTION_LAYOUT.maxWordsPerLine,
+        maxLines: CAPTION_LAYOUT.maxLines,
+      }).forEach((timeMs) => addVisualChange(timeMs, endMs));
+    }
+
     cursorMs = endMs;
   });
 
@@ -709,12 +765,87 @@ const metadataForTextBox = (
   script: Script,
   brand: BrandKit,
   timeline: Timeline,
+  words?: Words,
 ): TextBoxMetadata => {
+  const staticCaptionSegmentMatch = /^caption-line-(\d+)-segment-(\d+)$/.exec(box.id);
+  if (staticCaptionSegmentMatch) {
+    const lineIndex = Number(staticCaptionSegmentMatch[1]);
+    const beatIndex = Number(staticCaptionSegmentMatch[2]);
+    const lines = script.caption.split(/\r?\n/).map((line) => line.trim()).filter(Boolean).slice(0, CAPTION_LAYOUT.maxLines);
+    const span = timeline.beats[beatIndex]!;
+    return {
+      beatIndex: null,
+      role: "body",
+      text: lines[lineIndex] ?? "",
+      fontSize: CAPTION_LAYOUT.fontSize,
+      lineHeight: CAPTION_LAYOUT.lineHeight,
+      maxLines: CAPTION_LAYOUT.maxLines,
+      letterSpacingEm: 0,
+      fromMs: span.startMs,
+      toMs: span.endMs,
+    };
+  }
+
+  const timedCaptionMatch = /^caption-line-timed-(\d+)-(\d+)-(\d+)$/.exec(box.id);
+  const brollCaptionMatch = /^broll-caption-line-(\d+)-(\d+)-(\d+)$/.exec(box.id);
+  const timedMatch = timedCaptionMatch ?? brollCaptionMatch;
+  if (timedMatch) {
+    const beatIndex = Number(timedMatch[1]);
+    const sliceIndex = Number(timedMatch[2]);
+    const lineIndex = Number(timedMatch[3]);
+    const span = timeline.beats[beatIndex]!;
+    const slices = captionSlices(words?.words ?? [], span.startMs, span.endMs, {
+      maxWordsPerLine: CAPTION_LAYOUT.maxWordsPerLine,
+      maxLines: CAPTION_LAYOUT.maxLines,
+    });
+    const slice = slices[sliceIndex];
+    return {
+      beatIndex: brollCaptionMatch ? beatIndex : null,
+      role: "body",
+      text: slice?.lines[lineIndex]?.join(" ") ?? "",
+      fontSize: CAPTION_LAYOUT.fontSize,
+      lineHeight: CAPTION_LAYOUT.lineHeight,
+      maxLines: CAPTION_LAYOUT.maxLines,
+      letterSpacingEm: 0,
+      fromMs: slice?.fromMs ?? span.startMs,
+      toMs: slice?.toMs ?? span.endMs,
+    };
+  }
+
   const beatMatch = /^beat-(\d+)-(.+)$/.exec(box.id);
   if (beatMatch) {
     const beatIndex = Number(beatMatch[1]);
     const part = beatMatch[2];
     const beat = script.beats[beatIndex];
+
+    if (beat.kind === "broll" && part === "overlay") {
+      return beatMetadata(
+        timeline,
+        beatIndex,
+        brand,
+        beat.overlayText ?? "",
+        "display",
+        BROLL_LAYOUT.overlayFontSize,
+        BROLL_LAYOUT.overlayLineHeight,
+        BROLL_LAYOUT.overlayMaxLines,
+        0,
+        BROLL_TIMING.overlayStartMs,
+      );
+    }
+
+    if (beat.kind === "broll" && part === "watermark") {
+      return beatMetadata(
+        timeline,
+        beatIndex,
+        brand,
+        brand.wordmark.text,
+        "body",
+        BROLL_LAYOUT.watermarkFontSize,
+        BROLL_LAYOUT.watermarkLineHeight,
+        1,
+        0,
+      );
+    }
 
     if (beat.kind === "moment") {
       if (part === "eyebrow") {
@@ -935,10 +1066,38 @@ const metadataForTextBox = (
   throw new Error(`No manifest metadata for text box ${box.id}`);
 };
 
-export const computeTextBoxes = (script: Script, brand: BrandKit): LayoutTextBox[] => {
+export const computeTextBoxes = (script: Script, brand: BrandKit, words?: Words): LayoutTextBox[] => {
   const boxes: TextBox[] = [];
+  const timeline = computeTimeline(script, brand, words);
+
+  if (script.beats.some((beat) => beat.kind === "broll" && beat.captionSource === "words") && !words) {
+    throw new Error("Broll beats with captionSource 'words' require a valid words.json input.");
+  }
 
   script.beats.forEach((beat, index) => {
+    if (beat.kind === "broll") {
+      if (hasText(beat.overlayText)) {
+        boxes.push({
+          id: `beat-${index}-overlay`,
+          x: BROLL_LAYOUT.overlayX,
+          y: BROLL_LAYOUT.overlayTop,
+          w: BROLL_LAYOUT.overlayWidth,
+          h: lineBoxHeight(BROLL_LAYOUT.overlayFontSize, BROLL_LAYOUT.overlayLineHeight, BROLL_LAYOUT.overlayMaxLines),
+          driftPx: BROLL_LAYOUT.overlayEntranceDrift,
+        });
+      }
+      if (hasText(brand.wordmark.text)) {
+        boxes.push({
+          id: `beat-${index}-watermark`,
+          x: BROLL_LAYOUT.watermarkX,
+          y: BROLL_LAYOUT.watermarkTop,
+          w: textWidthPx(brand.wordmark.text, BROLL_LAYOUT.watermarkFontSize, "body"),
+          h: lineBoxHeight(BROLL_LAYOUT.watermarkFontSize, BROLL_LAYOUT.watermarkLineHeight, 1),
+          driftPx: 0,
+        });
+      }
+    }
+
     if (beat.kind === "moment") {
       const placed = Boolean(beat.thoughtPositions);
       if (hasText(beat.eyebrow)) {
@@ -1242,7 +1401,7 @@ export const computeTextBoxes = (script: Script, brand: BrandKit): LayoutTextBox
     }
   }
 
-  if (hasText(script.caption)) {
+  if (hasText(script.caption) && !words && script.beats.every((beat) => beat.kind !== "broll")) {
     const lines = script.caption
       .split(/\r?\n/)
       .map((line) => line.trim())
@@ -1261,10 +1420,55 @@ export const computeTextBoxes = (script: Script, brand: BrandKit): LayoutTextBox
     });
   }
 
-  const timeline = computeTimeline(script, brand);
+  if (words) {
+    script.beats.forEach((beat, beatIndex) => {
+      const span = timeline.beats[beatIndex]!;
+      const isBroll = beat.kind === "broll";
+      if (isBroll && beat.captionSource !== "words") return;
+      if (!isBroll && words.words.length === 0) return;
+      const slices = captionSlices(words.words, span.startMs, span.endMs, {
+        maxWordsPerLine: CAPTION_LAYOUT.maxWordsPerLine,
+        maxLines: CAPTION_LAYOUT.maxLines,
+      });
+      slices.forEach((slice, sliceIndex) => {
+        slice.lines.forEach((line, lineIndex) => {
+          boxes.push({
+            id: isBroll
+              ? `broll-caption-line-${beatIndex}-${sliceIndex}-${lineIndex}`
+              : `caption-line-timed-${beatIndex}-${sliceIndex}-${lineIndex}`,
+            x: CAPTION_LAYOUT.contentX,
+            y: captionTop + captionLineHeight * lineIndex,
+            w: CAPTION_LAYOUT.contentWidth,
+            h: captionLineHeight,
+            driftPx: 0,
+          });
+        });
+      });
+    });
+  } else if (hasText(script.caption) && script.beats.some((beat) => beat.kind === "broll")) {
+    const lines = script.caption
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .filter(Boolean)
+      .slice(0, CAPTION_LAYOUT.maxLines);
+    script.beats.forEach((beat, beatIndex) => {
+      if (beat.kind === "broll") return;
+      lines.forEach((_, lineIndex) => {
+        boxes.push({
+          id: `caption-line-${lineIndex}-segment-${beatIndex}`,
+          x: CAPTION_LAYOUT.contentX,
+          y: captionTop + captionLineHeight * lineIndex,
+          w: CAPTION_LAYOUT.contentWidth,
+          h: captionLineHeight,
+          driftPx: 0,
+        });
+      });
+    });
+  }
+
   return boxes.map((box) => ({
     ...box,
-    ...metadataForTextBox(box, script, brand, timeline),
+    ...metadataForTextBox(box, script, brand, timeline, words),
   }));
 };
 

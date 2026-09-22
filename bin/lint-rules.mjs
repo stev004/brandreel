@@ -435,3 +435,82 @@ export function pixelBands(frames, opts = {}) {
 
   return violations;
 }
+
+function validateFootageIntervals(intervals, durationMs) {
+  if (!Array.isArray(intervals)) {
+    return "must be an array";
+  }
+  if (intervals.length === 0) return null;
+  if (!isNumber(durationMs) || durationMs < 0) {
+    return "render duration must be a non-negative finite number";
+  }
+
+  let previousToMs = 0;
+  for (let index = 0; index < intervals.length; index += 1) {
+    const interval = intervals[index];
+    if (!interval || typeof interval !== "object" || Array.isArray(interval)) {
+      return `entry ${index} must be an object with fromMs and toMs`;
+    }
+    const { fromMs, toMs } = interval;
+    if (!isNumber(fromMs) || !isNumber(toMs)) {
+      return `entry ${index} fromMs and toMs must be finite numbers`;
+    }
+    if (fromMs < 0 || toMs > durationMs || fromMs >= toMs) {
+      return `entry ${index} must satisfy 0 <= fromMs < toMs <= ${durationMs}`;
+    }
+    if (index > 0 && fromMs < previousToMs) {
+      return `entry ${index} overlaps or is out of order`;
+    }
+    previousToMs = toMs;
+  }
+
+  return null;
+}
+
+export function pixelBandCheck(frames, opts = {}) {
+  const sampled = Array.isArray(frames) ? frames : [];
+  const layout = opts.layout;
+  let footageIntervals = [];
+  let intervalError = null;
+  const hasFootageIntervals = layout && Object.hasOwn(layout, "footageIntervals");
+
+  if (hasFootageIntervals) {
+    intervalError = validateFootageIntervals(layout.footageIntervals, opts.durationMs);
+    if (intervalError) {
+      // Invalid metadata must fail closed: inspect every sampled frame rather than
+      // trusting malformed ranges to exempt footage coverage.
+      intervalError = `[pixel-bands] invalid layout.footageIntervals: ${intervalError}`;
+    } else {
+      footageIntervals = layout.footageIntervals;
+    }
+  }
+
+  const isFootageFrame = (frame) => footageIntervals.some(
+    (interval) => frame?.timeMs >= interval.fromMs && frame?.timeMs < interval.toMs,
+  );
+  const excluded = hasFootageIntervals && !intervalError ? sampled.filter(isFootageFrame) : [];
+  const checked = excluded.length > 0 ? sampled.filter((frame) => !isFootageFrame(frame)) : sampled;
+  const violations = [];
+  if (intervalError) violations.push(intervalError);
+  violations.push(...pixelBands(checked, { safe: opts.safe }));
+
+  const allFramesExcluded = sampled.length > 0 && checked.length === 0 && excluded.length === sampled.length;
+  const status = violations.length > 0 ? "fail" : allFramesExcluded ? "skipped" : "pass";
+  let exclusionReason = null;
+  if (hasFootageIntervals && intervalError) {
+    exclusionReason = "No frames excluded because footage interval metadata is invalid.";
+  } else if (footageIntervals.length > 0 && excluded.length > 0) {
+    exclusionReason = "No pixel-band check is performed on samples in half-open footage intervals because full-bleed video can vary inside unsafe bands.";
+  } else if (footageIntervals.length > 0) {
+    exclusionReason = "No sampled frames fell inside the footage intervals, so no frames were excluded.";
+  }
+
+  return {
+    violations,
+    status,
+    sampledFrames: sampled.length,
+    checkedFrames: checked.length,
+    excludedFootageFrames: excluded.length,
+    exclusionReason,
+  };
+}

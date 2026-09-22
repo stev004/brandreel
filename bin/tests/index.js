@@ -9,3 +9,5 @@ await import("./manifest-measure.test.mjs");
 await import("./interview.test.mjs");
 await import("./assets.test.mjs");
 await import("./conform.test.mjs");
+await import("./broll-compose.test.mjs");
+await import("./footage-lint.test.mjs");

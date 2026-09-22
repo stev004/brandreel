@@ -73,9 +73,18 @@ as CC0. See the [Pexels API documentation](https://www.pexels.com/api/documentat
 and [Pixabay API documentation](https://pixabay.com/api/docs/).
 
 Generation directives write pending prompts to `assets/veo-manifest.json` for
-manual or later automated fetching. This stage resolves and records assets;
-Remotion Broll rendering and reel-stage wiring are still pending G5c, so a
-successful asset run does not yet make `compose` consume stock clips.
+manual or later automated fetching. To use a generated clip, copy it under
+`assets/`, set that broll beat's `clip` to the workspace-relative source path,
+then run `reel` (or run `conform` and `compose` directly). `assets` leaves the
+generation entry pending, while the explicit `clip` path selects the supplied
+file.
+
+`reel` runs `assets` and `conform` after script authoring only when a beat has a
+`visual` directive. The script is reloaded after authoring so directives added
+by the model activate those stages in the same pipeline run. `compose` matches
+each stock or generated beat against both version 1 manifests using its beat
+index and current directive, then uses the conformed output path. Stale or
+pending entries fail with a clear error.
 
 When a script includes a `broll` beat, its data shape is:
 
@@ -90,8 +99,20 @@ When a script includes a `broll` beat, its data shape is:
 ```
 
 After assets resolve, the workspace-relative `clip` path is available in
-`assets/manifest.json`. An existing broll beat with a `clip` and no `visual`
-directive is left alone by the assets stage.
+`assets/manifest.json`. `compose` reads the asset and conformed manifests rather
+than editing `script.json`. A broll beat may also set `clip` to a source path
+present in `assets/conformed/manifest.json`, or to a
+verified conformed output path. Paths must stay inside the workspace and cannot
+contain symlinks. Clips must be square-pixel 1080x1920 at 60/1 fps and at least
+as long as the beat.
+
+The optional `overlayText` is a script-owned safe-zone overlay. Set
+`captionSource` to `words` to require `words.json` with word timings, or `none`
+for a footage beat without karaoke captions. `compose` stages only the selected
+clips in a temporary Remotion public directory, preserving paths relative to
+the workspace, and removes that directory and its props file after success or
+failure. On systems where Chromium is not auto-detected, pass its executable to
+`compose` or `reel` with `--browser-executable <path>`.
 
 Conform downloaded or supplied video clips before composition:
 

@@ -9,10 +9,16 @@ export type CaptionProps = {
   brand: BrandKit;
   text: string;
   words?: Words;
+  timeOffsetMs?: number;
+  hiddenIntervals?: Array<{ fromMs: number; toMs: number }>;
 };
 
-export const Caption = ({ brand, text, words }: CaptionProps) => {
+export const Caption = ({ brand, text, words, timeOffsetMs = 0, hiddenIntervals = [] }: CaptionProps) => {
   const frame = useCurrentFrame();
+  const timeMs = (frame / FPS) * MS_PER_SECOND + timeOffsetMs;
+  if (hiddenIntervals.some(({ fromMs, toMs }) => fromMs <= timeMs && timeMs < toMs)) {
+    return null;
+  }
   const fonts = resolveFonts(brand);
   const lines = text
     .split(/\r?\n/)
@@ -22,7 +28,7 @@ export const Caption = ({ brand, text, words }: CaptionProps) => {
   const height = CAPTION_LAYOUT.fontSize * CAPTION_LAYOUT.lineHeight * CAPTION_LAYOUT.maxLines;
 
   if (words) {
-    const timedCaption = captionWindow(words.words, (frame / FPS) * MS_PER_SECOND, {
+    const timedCaption = captionWindow(words.words, timeMs, {
       maxWordsPerLine: CAPTION_LAYOUT.maxWordsPerLine,
       maxLines: CAPTION_LAYOUT.maxLines,
     });

@@ -5,7 +5,7 @@ import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { spawnSync } from "node:child_process";
 
-import { planStages } from "../reel.mjs";
+import { planStages, run as runReel } from "../reel.mjs";
 import { buildReview, writeReview } from "../review.mjs";
 
 const baseScript = {
@@ -20,6 +20,13 @@ const baseScript = {
 
 test("planStages skips voice stages when modules.vo is absent", () => {
   assert.deepEqual(planStages(baseScript), ["manifest", "compose", "lint", "review"]);
+});
+
+test("planStages adds assets and conform only for beats with visual directives", () => {
+  assert.deepEqual(planStages({ ...baseScript, beats: [{ kind: "moment" }] }), ["manifest", "compose", "lint", "review"]);
+  assert.deepEqual(planStages({ ...baseScript, beats: [{ kind: "broll", visual: "stock:quiet forest" }] }), [
+    "assets", "conform", "manifest", "compose", "lint", "review",
+  ]);
 });
 
 test("planStages includes vo and align when modules.vo is set", () => {
@@ -64,6 +71,31 @@ test("reel dry-run prints manifest before compose and lint", () => {
     });
     assert.equal(result.status, 0, result.stderr);
     assert.deepEqual(result.stdout.trim().split("\n").map((line) => line.split(":")[0]), ["manifest", "compose", "lint", "review"]);
+  } finally {
+    rmSync(workspace, { recursive: true, force: true });
+  }
+});
+
+test("reel reloads script planning after authoring and activates footage stages dynamically", () => {
+  const workspace = mkdtempSync(join(tmpdir(), "brandreel-reel-dynamic-assets-test-"));
+  writeFileSync(join(workspace, "brief.json"), JSON.stringify({ topic: "quiet forest", voice: "none", music: "none" }));
+  const authoredScript = {
+    ...baseScript,
+    beats: [{ kind: "broll", visual: "gen:slow clouds" }],
+  };
+  const calls = [];
+  try {
+    assert.equal(runReel([workspace], {
+      commandRunner(executable, args) {
+        calls.push(args[0] ?? executable);
+        if (args[0] === "bin/script.mjs") {
+          writeFileSync(join(workspace, "script.json"), JSON.stringify(authoredScript));
+        }
+        return { status: 0 };
+      },
+    }), 0);
+    const stageNames = calls.map((name) => name.replace("bin/", "").replace(".mjs", ""));
+    assert.deepEqual(stageNames, ["script", "assets", "conform", "manifest", "compose", "lint", "review"]);
   } finally {
     rmSync(workspace, { recursive: true, force: true });
   }

@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "assets": [
+    {
+      "beatIndex": 0,
+      "directive": "template:broll",
+      "kind": "template",
+      "status": "ready"
+    }
+  ]
+}

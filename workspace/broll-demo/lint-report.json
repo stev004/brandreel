@@ -1,0 +1,33 @@
+{
+  "ok": true,
+  "violations": [],
+  "stream": {
+    "width": 1080,
+    "height": 1920,
+    "avgFrameRate": "60/1",
+    "duration": 19
+  },
+  "rules": {
+    "width": "pass",
+    "height": "pass",
+    "fps": "pass",
+    "duration": "pass",
+    "safe-zone": "pass",
+    "text-fit": "pass",
+    "hook": "pass",
+    "pacing": "pass",
+    "cta": "pass",
+    "overlap": "pass",
+    "pixel-bands": "pass"
+  },
+  "samples": 38,
+  "pixelBandCoverage": {
+    "sampledFrames": 38,
+    "checkedFrames": 34,
+    "excludedFootageFrames": 4,
+    "exclusionReason": "No pixel-band check is performed on samples in half-open footage intervals because full-bleed video can vary inside unsafe bands."
+  },
+  "closeDwellMs": 3000,
+  "ctaDwellMs": 3000,
+  "durationOverrideReason": null
+}

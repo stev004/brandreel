@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "assets": [
+    {
+      "source": "assets/colour.mp4",
+      "file": "assets/conformed/colour-28126c6d.mp4",
+      "input": {
+        "width": 160,
+        "height": 284,
+        "sampleAspectRatio": "1:1",
+        "frameRate": "30/1",
+        "durationSeconds": 2,
+        "frames": 60
+      },
+      "output": {
+        "width": 1080,
+        "height": 1920,
+        "frameRate": "60/1",
+        "durationSeconds": 2,
+        "frames": 120
+      },
+      "interpolation": "minterpolate",
+      "fit": "crop"
+    }
+  ]
+}
