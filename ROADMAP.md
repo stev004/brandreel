@@ -80,6 +80,7 @@ Local setup if `engine/node_modules` is missing: `cd engine && npm ci`. Renders 
 ## Goal 6 - more brands (M4 remainder)
 
 - [ ] **G6a** `bin/extract-brand.mjs <source-folder> <out brand.json>`: scans CSS custom properties, tailwind config, TS token files, font files, logo SVGs, and prose docs; emits a schema-valid `brand.json` with `voice` filled by a model call (`--model-cmd`, default `claude -p`) and every colour/font traceable to a source file (write a `provenance` sidecar). Never invents values: anything not found is left for a human with a `TODO` marker that the schema rejects until filled.
+  Blocked-on: **Steven** (source audit found missing house motion facts; choose an explicit curated-kit fallback source or manual TODO completion before acceptance). See STATE.md.
   Done-when: pointed at `~/Documents/howclose.to`, the output validates against `engine/src/schema.ts` and its palette matches `brands/howclose/brand.json` (the curated kit) except where the sidecar names a newer source.
 - [ ] **G6b** `brands/photography/brand.json` (Matson Studios) curated by Steven or extracted with G6a, then one silent music-only video through the pipeline (no VO module).
   Blocked-on: **Steven** (brand facts are curated, never invented).
