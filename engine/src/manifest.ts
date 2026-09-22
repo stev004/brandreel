@@ -5,6 +5,14 @@ import type { BrandKit, Script } from "./schema";
 
 export type Element = LayoutTextBox & {
   estimatedLines: number;
+  fontFamily: string;
+  fontStyle: "normal" | "italic";
+  fontWeight: number;
+  whiteSpace: "normal" | "nowrap" | "pre-line";
+  textTransform: "none" | "uppercase";
+  fontVariantNumeric: "normal" | "tabular-nums";
+  measuredLines?: number;
+  measuredWidthPx?: number;
 };
 
 export type LayoutManifest = {
@@ -39,9 +47,66 @@ export const estimateLines = (text: string, fontSize: number, width: number, rol
   );
 };
 
+type TypographyMetadata = Pick<
+  Element,
+  "fontFamily" | "fontStyle" | "fontWeight" | "whiteSpace" | "textTransform" | "fontVariantNumeric"
+>;
+
+const typographyFor = (box: LayoutTextBox, script: Script, brand: BrandKit): TypographyMetadata => {
+  const beat = box.beatIndex === null ? undefined : script.beats[box.beatIndex];
+  const beatPart = /^beat-\d+-(.+)$/.exec(box.id)?.[1];
+  const isMoment = beat?.kind === "moment";
+  const isPlacedMoment = isMoment && Boolean(beat.thoughtPositions);
+  const isMomentEyebrow = isMoment && beatPart === "eyebrow";
+  const isMomentLine = isMoment && beatPart === "line";
+  const isQuestionDek = beat?.kind === "question" && beatPart === "dek";
+  const isVerdictLine = beat?.kind === "verdict" && beatPart?.startsWith("verdict-line-");
+  const isCloseLine = box.id === "close-line";
+  const isCloseWordmark = box.id === "close-wordmark";
+  const isCloseTagline = box.id === "close-tagline";
+  const isCaptionLine = box.id.startsWith("caption-line-");
+  const isFigureCounter = beat?.kind === "figure" && beatPart === "counter";
+  const isFigureAchievedTick = beat?.kind === "figure" && beatPart === "achieved-tick";
+  const isExhaleCountdown = beat?.kind === "exhale" && beatPart?.startsWith("countdown-");
+  const isMomentPlacedThought = isPlacedMoment && beatPart?.startsWith("thought-");
+  const isExhaleText = beat?.kind === "exhale";
+  const isExhaleLabel = isExhaleText && (beatPart === "in-label" || beatPart === "out-label");
+  const isExhaleThought = isExhaleText && beatPart?.startsWith("thought-");
+
+  let fontStyle: TypographyMetadata["fontStyle"] = "normal";
+  if (isMomentLine) {
+    // The placed Moment explicitly uses the display italic face. Legacy Moment follows the kit setting.
+    fontStyle = isPlacedMoment ? "italic" : (brand.fonts.display.italic ? "italic" : "normal");
+  } else if (isCloseLine) {
+    fontStyle = brand.fonts.display.italic ? "italic" : "normal";
+  } else if (isQuestionDek || isVerdictLine) {
+    fontStyle = "italic";
+  }
+
+  let fontWeight = 400;
+  if (isFigureCounter || isFigureAchievedTick || isCaptionLine) fontWeight = 600;
+  if (beat?.kind === "question" && beatPart?.startsWith("question-line-")) fontWeight = 700;
+  if (isCloseWordmark) fontWeight = 500;
+  if (isCloseTagline) fontWeight = 700;
+
+  const whiteSpace = isExhaleLabel || isExhaleThought || isMomentPlacedThought ? "nowrap" : "normal";
+  const textTransform = isMomentEyebrow ? "uppercase" : "none";
+  const fontVariantNumeric = isFigureCounter || isExhaleCountdown ? "tabular-nums" : "normal";
+
+  return {
+    fontFamily: brand.fonts[box.role].family,
+    fontStyle,
+    fontWeight,
+    whiteSpace,
+    textTransform,
+    fontVariantNumeric,
+  };
+};
+
 export const buildManifest = (script: Script, brand: BrandKit): LayoutManifest => {
   const elements = computeTextBoxes(script, brand).map((box: LayoutTextBox) => ({
     ...box,
+    ...typographyFor(box, script, brand),
     estimatedLines: estimateLines(box.text, box.fontSize, box.w, box.role, box.letterSpacingEm),
   }));
   const closeStartMs = script.beats.reduce((total, beat) => total + beat.durationMs, 0);

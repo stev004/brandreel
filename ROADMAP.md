@@ -54,8 +54,8 @@ Local setup if `engine/node_modules` is missing: `cd engine && npm ci`. Renders 
 
 ## Goal 4 - lint accuracy (engineering, no gate needed)
 
-- [ ] **G4a** Real glyph measurement replaces the 0.52 / 0.55 / 0.60 em estimate in `engine/src/manifest.ts`: a `Measure` composition (or a headless script under `bin/`) renders each manifest element's text in its real font and writes `measuredLines` and `measuredWidthPx` into `layout.json`; `bin/lint-rules.mjs` text-fit prefers measured values when present.
-  Files: `engine/src/manifest.ts`, `engine/src/layout.ts` (GLYPH_EM stays as the fallback), `bin/manifest.mjs`, `bin/lint-rules.mjs`, tests, fixtures.
+- [x] **G4a** Real glyph measurement replaces the 0.52 / 0.55 / 0.60 em estimate in `engine/src/manifest.ts`: a `Measure` composition (or a headless script under `bin/`) renders each manifest element's text in its real font and writes `measuredLines` and `measuredWidthPx` into `layout.json`; `bin/lint-rules.mjs` text-fit prefers measured values when present. Done 2026-09-22 on `feature/G4a`; real Chromium fixture and both Sigh measurement/fallback paths verified. Evidence: `docs/runs/2026-09-22-g4a-measurement.md`.
+  Files: `engine/src/manifest.ts`, `engine/src/layout.ts` (GLYPH_EM stays as the fallback), `bin/manifest.mjs`, `bin/measure-text.mjs` (same-stage headless helper), `bin/lint-rules.mjs`, tests, fixtures. The helper is the headless-script option named in this goal; it is not a new pipeline stage.
   Done-when: gates green; a fixture with a 44-char Playfair line in a 900 px box reports measuredLines from real metrics; `node bin/lint.mjs workspace/regulate-sigh --no-render` still passes; the estimate path still works when Chromium is absent (`--no-measure`).
 - [ ] **G4b** Overlap lint covers non-text elements: the manifest emits boxes for the figure axis, bars, rings, flash dot, the CloseD logo and the exhale column; `overlap()` treats them as opaque.
   Done-when: a fixture with a text box crossing a bar box fails `[overlap]`; `workspace/regulate-sigh` and `workspace/smoke-3am-v3` still pass.

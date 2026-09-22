@@ -4,6 +4,7 @@ import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
+import { addMeasuredMetrics, measureLayoutElements } from "./measure-text.mjs";
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const engineDir = join(repoRoot, "engine");
@@ -16,7 +17,7 @@ function readJson(path) {
   }
 }
 
-export function run(workspaceArg) {
+export async function run(workspaceArg, options = {}) {
   if (!workspaceArg) throw new Error("usage: node bin/manifest.mjs <workspace-dir>");
 
   const workspaceDir = resolve(repoRoot, workspaceArg);
@@ -51,23 +52,39 @@ export function run(workspaceArg) {
       return manifestBuild.status ?? 1;
     }
 
+    const layoutPath = join(workspaceDir, "layout.json");
     const manifestWrite = spawnSync(
       process.execPath,
-      [join(engineDir, "out", "manifest", "manifest-cli.js"), propsPath, join(workspaceDir, "layout.json")],
+      [join(engineDir, "out", "manifest", "manifest-cli.js"), propsPath, layoutPath],
       { cwd: engineDir, stdio: "inherit" },
     );
     if (manifestWrite.error || manifestWrite.status !== 0) {
       return manifestWrite.status ?? 1;
     }
+
+    if (options.noMeasure || process.env.BRANDREEL_NO_MEASURE === "1") {
+      console.error("manifest: glyph measurement disabled; retained estimatedLines");
+      return 0;
+    }
+
+    const layout = readJson(layoutPath);
+    const { metrics, warnings } = await measureLayoutElements(layout.elements);
+    if (Object.keys(metrics).length > 0) {
+      writeFileSync(layoutPath, `${JSON.stringify(addMeasuredMetrics(layout, metrics), null, 2)}\n`);
+    }
+    for (const warning of warnings) console.error(`manifest: ${warning}`);
     return 0;
   } finally {
     rmSync(tempDir, { recursive: true, force: true });
   }
 }
 
-function main() {
+async function main() {
   try {
-    process.exitCode = run(process.argv[2]);
+    const args = process.argv.slice(2);
+    const noMeasure = args.includes("--no-measure");
+    const workspaceArg = args.find((arg) => !arg.startsWith("--"));
+    process.exitCode = await run(workspaceArg, { noMeasure });
   } catch (error) {
     console.error(`manifest: ${error.message}`);
     process.exitCode = 1;

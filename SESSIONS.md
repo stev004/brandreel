@@ -1,5 +1,10 @@
 # SESSIONS - append-only log, newest first
 
+## 2026-09-22 - G1a merged; G4a real font measurement
+Steven requested the G1a merge and continued milestone work. Parent merged and pushed G1a to main at `4cd74ec`; CI passed. G1b remains blocked on its recorded layout/timing decisions, so the next engineering goal was G4a on `feature/G4a`.
+
+Two Luna xhigh workers implemented per-element typography metadata, browser measurement with renderer fonts, measured text-fit checks, and deterministic offline unit tests. Parent reviewed font style/weight selection, bounded browser failures, transformed glyph coverage, and Source Serif's renderer family alias and loaded-weight matching. No dependencies added. Final gates: typecheck, 39 engine tests, 130 CLI tests. Real Chromium measured the 44-character Playfair fixture as two lines (779.53125px longest line in a 900px box), matched Source Serif CSS500 to its loaded400 face, and measured all 20 Sigh text elements. Sigh layout lint passed with measurements and with `--no-measure`; baseline generated files were restored after verification. Evidence: `docs/runs/2026-09-22-g4a-measurement.md`. Next unblocked goal: G4b non-text overlap.
+
 ## 2026-09-22 - G1a exhale engine and G1b draft
 Two Luna xhigh workers implemented the exhale template, optional placed Moment thoughts, schema validation, shared deterministic geometry/timing, separate non-text manifest geometry, and five acceptance tests. Parent acted as orchestrator/reviewer, correcting explicit port px values, duplicate label exits, tick visibility lifetime, title visibility end times, and inconsistent text-width estimates. No dependencies added; legacy Moment behavior preserved. G1a's file list was corrected to include Moment.tsx and manifest.ts because its stated acceptance requires them.
 
