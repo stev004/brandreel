@@ -24,6 +24,12 @@ Not coupled to any product. First three brand kits: Regulate, howclose.to, Matso
 
 11. **Lineage transcription (2026-09-05, from Steven's rev1 critique of the 3:04 AM animatic: "based on the mock I liked but it isn't 1:1 - motion not as smooth, text doesn't match the brand, timing off, we need continuity").** When an animatic descends from a mock Steven has already approved, it is a scaled transcription of that mock, not a re-authoring: state the scale factors in the header (sizes and x by stage-width ratio, y offsets by stage-height ratio, percents unchanged), carry every CSS value (easing, durations, delays, crossfades, blur, travel) times scale, keep the mock's fonts and copy verbatim, and list every deviation with the brand law that forces it. Nothing else may change. A second source (an earlier port, a template) never overrides the approved mock. Amendment (same day, after rev2 was still "not exactly how it was"): the animatic that goes to the gate IS the mock - its style block, markup and player embedded verbatim at native size - and the scaled values live only in the header as the porting contract. Re-rendering a mock at a new size before the gate is the anti-pattern; scaling happens once, in the port, against the contract.
 
+## Current implementation status (2026-09-22)
+
+The architecture and stage descriptions below are target contracts; this section records what is implemented. On main at `298e60d`, G1a Exhale support, G4a real glyph measurement, G4b conservative text and shape overlap checks, and G4c's pinned Remotion 4.0.520 / Zod 4.4.3 v3 API are merged. G5a resolves stock and template visuals and writes pending generation prompts. G5b conforms to square-pixel 1080x1920 at exact 60 fps; ffmpeg fallback is proven, while actual Practical-RIFE interpolation remains unverified. G5c Broll supports video, overlays, watermark and timed words, conditionally activates assets/conform, stages selected clips, and explicitly excludes designated footage frame samples from the pixel-band check. Its 19-second generated-clip fixture passed all 11 lints with 20 measured text elements, 34 frame samples checked and 4 footage frame samples excluded. Real-stock proof is pending, so G5c is not complete. CI run 35680905872 is green at `298e60d`; the gates report 51 engine tests and 169 CLI tests.
+
+G6 brand extraction is unimplemented while a source kit's required motion facts and the curated fallback decision remain unresolved. G7 CC0 music fetching is unimplemented and provider licensing is unverified. The rendered 3:04 AM port and the other taste-led video goals remain pending. Original milestones below are historical planning, not a progress report.
+
 ## Architecture
 
 Eight stages. Each is an independent CLI (`bin/<stage>.mjs` or `.py`) reading/writing files in a per-video workspace directory; a thin orchestrator (`bin/reel.mjs`) chains them. Any stage can be run alone, skipped, or replaced.
@@ -42,7 +48,7 @@ workspace/<video-id>/
 ```
 
 ### Stage 0 - brand-kit extractor (`bin/extract-brand`)
-Input: a path to a brand source folder or repo. Scans for colors (CSS custom properties, TS token files, tailwind config), fonts (woff2/ttf, google-font names), logo/wordmark files, voice/tone prose docs, example posts. Emits `brand.json` conforming to `schema/brand.ts` (Zod):
+Input: a path to a brand source folder or repo. Scans for colors (CSS custom properties, TS token files, tailwind config), fonts (woff2/ttf, google-font names), logo/wordmark files, voice/tone prose docs, example posts. Emits `brand.json` conforming to the Zod schema in `engine/src/schema.ts`:
 
 - `name`, `palette` (bg, fg, accent, muted, plus named extras), `fonts` (display/body/mono: family + source), `logo` (path, clear-space rule, dot/accent color rule), `motion` (easeBezier, entranceMs, holdMs), `voice` (tone descriptors, banned phrases, example lines), `pillars` (content themes), `cta` (levels/ladder), `handles` (per-platform).
 
@@ -65,7 +71,7 @@ Resolves each beat's visual directive:
 All clips land in `assets/` with a manifest mapping beat -> file.
 
 ### Stage 4b - conform (`bin/conform`)
-Any clip below 60fps goes through Practical-RIFE (v4.25) interpolation; everything is transcoded to a mezzanine format (ProRes or high-bitrate H.264, 1080x1920, 60fps) so stage 5 composits uniformly.
+Target: interpolate clips below 60fps with Practical-RIFE (v4.25), then transcode everything to a mezzanine format (ProRes or high-bitrate H.264, 1080x1920, 60fps) so stage 5 composites uniformly. The current implementation uses RIFE when its local checkout and model are usable; otherwise it warns and falls back to ffmpeg `minterpolate`. The RIFE path has not yet been verified with a real run.
 
 ### Stage 5 - compose (Remotion project in `engine/`)
 One Remotion project, 1080x1920 @ 60. Core deliverables:
@@ -74,7 +80,7 @@ One Remotion project, 1080x1920 @ 60. Core deliverables:
 - **`Broll` template** - video beats: mezzanine clip + karaoke word-timed captions (from words.json) + safe-zone-constrained text overlays + subtle brand watermark.
 - **`Stack` composition** - sequences Moment/Broll scenes per script.json beats, handles music track + ducking envelope under VO.
 - Caption component: 1-2 short lines, high contrast, active-word highlight, positioned inside safe zones.
-Headless render: `npx remotion render` wrapped by `bin/compose`; must work in GitHub Actions (Chromium available there - solves the local-sandbox-can't-launch-Chromium constraint structurally).
+Headless render: `npx remotion render` wrapped by `bin/compose.mjs`; must work in GitHub Actions (Chromium available there - solves the local-sandbox-can't-launch-Chromium constraint structurally).
 
 ### Stage 6 - polish (`bin/polish`)
 ffmpeg: optional film grain + LUT (per brand kit), two-pass loudnorm to -14 LUFS integrated / true peak <= -1.0 dBTP, per-platform encodes (TikTok/Reels/Shorts H.264 profiles).
@@ -92,9 +98,9 @@ Fails non-zero on violation; emits `lint-report.json`:
 ### Stage 8 - review + handoff (`bin/review`)
 Emits `review.md`: embedded caption/first-comment/alt-text/CTA level, per-post KEEP/TWEAK/KILL checkboxes, lint summary, file paths. Publishing in v1 = human posts from the handoff folder (or a rented scheduler). First-party posting APIs are a documented v2 option, not built.
 
-## Milestones
+## Milestones (original plan)
 
-- **M1 (delegate first):** repo scaffold, `schema/` (brand + script + words Zod), `brands/regulate/brand.json` hand-curated from known tokens, `engine/` Remotion project at 60fps with `Moment` template + `Stack` + caption component, `bin/compose`, `bin/lint` (fps/duration/safe-zone/hook checks), GitHub Actions render workflow, a demo `script.json` that renders a complete Regulate-styled video end to end.
+- **M1 (delegate first):** repo scaffold, brand + script + words Zod schemas in `engine/src/schema.ts`, `brands/regulate/brand.json` hand-curated from known tokens, `engine/` Remotion project at 60fps with `Moment` template + `Stack` + caption component, `bin/compose.mjs`, `bin/lint.mjs` (fps/duration/safe-zone/hook checks), GitHub Actions render workflow, a demo `script.json` that renders a complete Regulate-styled video end to end.
 - **M2:** `bin/vo` (Kokoro) + `bin/align` (stable-ts) + karaoke captions wired into `Broll`; audio lints.
 - **M3:** `bin/assets` (Pexels/Pixabay + Veo prompt manifest) + `bin/conform` (RIFE); `Broll` template complete.
 - **M4:** `bin/script` (LLM stage), `bin/extract-brand`, `bin/reel` orchestrator, `bin/polish`, `bin/review`; onboard howclose.to + photography kits.

@@ -1,5 +1,8 @@
 # SESSIONS - append-only log, newest first
 
+## 2026-09-22 - progress documentation reconciled after G5c merge
+G5c engineering merged to main at `298e60d`; main CI run 35680905872 passed. Current gates are 51 engine tests and 169 CLI tests. Updated current architecture/features, acceptance status, remaining implementations and human decisions across project docs. Removed stale pending-merge and next-build claims while retaining historical run evidence and frozen animatic decisions. G5c remains unchecked for real stock proof; G6a is unimplemented pending missing-fact policy; G7 remains unimplemented and is the first unblocked engineering goal. No code behavior changed. Luna xhigh updated feature/spec/animatic documentation while the parent reconciled state, roadmap, history and evidence, then reviewed the combined edits.
+
 ## 2026-09-22 - G5b merged; G5c Broll engineering
 G5b passed CI and merged at `03f9d3f`. Three Luna xhigh workers implemented Broll rendering/caption geometry, clip staging/pipeline activation, and explicit footage pixel-lint coverage. Parent reviewed and corrected legacy public-directory handling, conformed-path/SAR checks, overlap-aware caption windows and renderer typography metadata. Independent Chromium render of the generated-color fixture succeeds; all 11 lint rules pass, with 34 of 38 pixel samples checked and 4 footage samples explicitly excluded. Typecheck and 51 engine tests pass; 169 CLI tests and CI run 35680664116 pass. G5c remains unchecked pending a real stock API key. A read-only Luna source audit of G6a found missing house motion facts; no values were invented.
 
