@@ -1,5 +1,8 @@
 # SESSIONS - append-only log, newest first
 
+## 2026-09-22 - G5a merged; G5b clip conform
+G5a passed CI and merged at `e0454f5`. Luna xhigh implemented conform with recursive clip discovery, optional RIFE and explicit ffmpeg fallback, crop/pad modes and source/output mapping. Parent reviewed timing, tail padding, symlink boundaries and RIFE output verification. Independent CLI fixture verified 1080x1920, square pixels, 60/1, 120 frames and 2.000 seconds. Typecheck, 46 engine tests and 155 CLI tests passed. Actual RIFE model execution is unverified locally; fallback and invocation failures are covered. Evidence: `docs/runs/2026-09-22-g5b-conform.md`. Next: G5c.
+
 ## 2026-09-22 - G4c merged; G5a assets
 G4c merged at `a2e1da3`. Two Luna xhigh workers implemented the visual/broll schema contract and assets CLI with provider fallback, bounded downloads, pending generation prompts and attribution. Parent reviewed API contracts, response limits, cleanup of stale metadata, error redaction and partial failure behavior. Independent typecheck, 46 engine tests and 146 CLI tests pass; actual dry-run and missing-key CLI checks meet acceptance. Broll composition deliberately errors until G5c; the dispatch guard is a necessary scope extension for the new beat union. Evidence: `docs/runs/2026-09-22-g5a-assets.md`. Next: G5b.
 

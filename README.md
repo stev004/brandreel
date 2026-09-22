@@ -93,6 +93,34 @@ After assets resolve, the workspace-relative `clip` path is available in
 `assets/manifest.json`. An existing broll beat with a `clip` and no `visual`
 directive is left alone by the assets stage.
 
+Conform downloaded or supplied video clips before composition:
+
+```sh
+node bin/conform.mjs workspace/demo
+node bin/conform.mjs workspace/demo --fit pad
+```
+
+The conform stage scans regular video files under `assets/` recursively and
+skips its own `assets/conformed/` output and temporary staging directories.
+The default `--fit crop` scales to fill 1080x1920 and center-crops. Use
+`--fit pad` to preserve the full frame with black bars where needed. Outputs
+are square-pixel 1080x1920 H.264 at constant 60 fps, with the source duration
+preserved to within one 60 fps frame. Source audio is retained as AAC. The
+stage writes `assets/conformed/manifest.json` with `version: 1` and an `assets`
+array. Each entry maps a workspace-relative `source` path to a workspace-relative
+conformed `file` path and records source/output probe facts, interpolation
+method and fit mode.
+
+Clips below 60 fps use Practical-RIFE 4.25 when the local checkout, model and
+`audio/.venv/bin/python` are usable. The default checkout is
+`audio/rife-v4.25/` and must contain `inference_video.py` and
+`train_log/flownet.pkl`. Set `BRANDREEL_RIFE_DIR` to use a checkout elsewhere,
+or `BRANDREEL_RIFE_PYTHON` to select the Python executable. RIFE's multiplier
+is the ceiling of 60 divided by the source frame rate; ffmpeg then converts
+that intermediate rate to 60 fps. If the checkout, Python dependencies or
+inference are unavailable or produce the wrong rate/duration, the stage warns
+and uses ffmpeg `minterpolate`. No dependencies are installed by the stage.
+
 Script generation retries layout lint failures twice by default. Use
 `--retries N`, `--skip-lint`, or `--lint-cmd <command>` to control that loop.
 Each run writes `script-attempts.json` with `attempts`, `retriesUsed`, `retryLimit`,

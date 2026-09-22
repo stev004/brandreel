@@ -11,5 +11,6 @@ workspace/**/final/
 workspace/**/audio-report.json
 engine/out/
 audio/.venv/
+audio/rife-v4.25/
 __pycache__/
 workspace/**/review.md
