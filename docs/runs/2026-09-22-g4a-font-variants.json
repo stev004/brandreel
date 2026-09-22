@@ -1,0 +1,81 @@
+{
+  "elements": [
+    {
+      "id": "measure-playfair-44",
+      "x": 60,
+      "y": 200,
+      "w": 900,
+      "h": 180,
+      "driftPx": 0,
+      "text": "The quiet gives me room to start again today",
+      "fontFamily": "Playfair Display",
+      "fontStyle": "normal",
+      "fontWeight": 400,
+      "fontSize": 64,
+      "lineHeight": 1.2,
+      "maxLines": 2,
+      "letterSpacingEm": 0,
+      "whiteSpace": "normal",
+      "textTransform": "none",
+      "fontVariantNumeric": "normal",
+      "estimatedLines": 2
+    },
+    {
+      "id": "source-serif-500",
+      "x": 60,
+      "y": 200,
+      "w": 900,
+      "h": 180,
+      "driftPx": 0,
+      "text": "The quiet gives me room to start again today",
+      "fontFamily": "Source Serif 4",
+      "fontStyle": "normal",
+      "fontWeight": 500,
+      "fontSize": 64,
+      "lineHeight": 1.2,
+      "maxLines": 2,
+      "letterSpacingEm": 0,
+      "whiteSpace": "normal",
+      "textTransform": "none",
+      "fontVariantNumeric": "normal",
+      "estimatedLines": 2
+    },
+    {
+      "id": "source-serif-400",
+      "x": 60,
+      "y": 200,
+      "w": 900,
+      "h": 180,
+      "driftPx": 0,
+      "text": "The quiet gives me room to start again today",
+      "fontFamily": "Source Serif 4",
+      "fontStyle": "normal",
+      "fontWeight": 400,
+      "fontSize": 64,
+      "lineHeight": 1.2,
+      "maxLines": 2,
+      "letterSpacingEm": 0,
+      "whiteSpace": "normal",
+      "textTransform": "none",
+      "fontVariantNumeric": "normal",
+      "estimatedLines": 2
+    }
+  ],
+  "result": {
+    "metrics": {
+      "measure-playfair-44": {
+        "measuredLines": 2,
+        "measuredWidthPx": 779.53125
+      },
+      "source-serif-500": {
+        "measuredLines": 2,
+        "measuredWidthPx": 822.21875
+      },
+      "source-serif-400": {
+        "measuredLines": 2,
+        "measuredWidthPx": 822.21875
+      }
+    },
+    "warnings": []
+  }
+}

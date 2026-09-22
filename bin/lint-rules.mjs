@@ -53,11 +53,44 @@ export function safeZones(manifest) {
 
 export function textFit(manifest) {
   return elementsOf(manifest).flatMap((element, index) => {
-    if (!isNumber(element?.estimatedLines) || !isNumber(element?.maxLines)) {
-      return [`[text-fit] ${elementName(element, index)}: estimatedLines and maxLines are required`];
+    const name = elementName(element, index);
+    const hasMeasuredLines = Object.hasOwn(element ?? {}, "measuredLines");
+    const hasMeasuredWidth = Object.hasOwn(element ?? {}, "measuredWidthPx");
+    const hasMeasurements = hasMeasuredLines || hasMeasuredWidth;
+
+    if (!isNumber(element?.maxLines)) {
+      return [`[text-fit] ${name}: maxLines is required`];
+    }
+
+    if (hasMeasurements) {
+      if (!hasMeasuredLines || !hasMeasuredWidth) {
+        return [`[text-fit] ${name}: measuredLines and measuredWidthPx must be provided together`];
+      }
+      if (!Number.isInteger(element.measuredLines) || element.measuredLines < 0 || !isNumber(element.measuredWidthPx) || element.measuredWidthPx < 0) {
+        return [`[text-fit] ${name}: measuredLines must be a non-negative integer and measuredWidthPx must be a non-negative finite number`];
+      }
+      if (typeof element.text === "string" && element.text.length > 0 && element.measuredLines === 0) {
+        return [`[text-fit] ${name}: non-empty text cannot have zero measured lines`];
+      }
+      if (!isNumber(element.w) || element.w < 0) {
+        return [`[text-fit] ${name}: a non-negative box width is required for measured text`];
+      }
+
+      const violations = [];
+      if (element.measuredLines > element.maxLines) {
+        violations.push(`[text-fit] ${name}: ${element.measuredLines} measured lines exceeds maxLines ${element.maxLines}`);
+      }
+      if (element.measuredWidthPx > element.w) {
+        violations.push(`[text-fit] ${name}: measured width ${element.measuredWidthPx}px exceeds box width ${element.w}px`);
+      }
+      return violations;
+    }
+
+    if (!isNumber(element?.estimatedLines)) {
+      return [`[text-fit] ${name}: estimatedLines is required when measured text is unavailable`];
     }
     if (element.estimatedLines > element.maxLines) {
-      return [`[text-fit] ${elementName(element, index)}: ${element.estimatedLines} lines exceeds maxLines ${element.maxLines}`];
+      return [`[text-fit] ${name}: ${element.estimatedLines} lines exceeds maxLines ${element.maxLines}`];
     }
     return [];
   });
