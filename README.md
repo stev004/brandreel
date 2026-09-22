@@ -56,6 +56,43 @@ Explicit script flags override the matching brief values. A reel with neither
 `brief.json` nor `script.json` runs interview before script; existing scripts
 continue directly to downstream stages.
 
+Resolve visual directives with the stage 4 asset CLI:
+
+```sh
+node bin/assets.mjs workspace/demo --dry-run
+PEXELS_API_KEY=your_key PIXABAY_API_KEY=your_key node bin/assets.mjs workspace/demo
+```
+
+Each beat may have a `visual` string such as `template:moment`,
+`stock:quiet forest at dawn`, or `gen:slow clouds over a dark lake`. Template
+beats need no fetch. Stock beats try Pexels first, then Pixabay, and save a
+portrait MP4 plus source URL and contributor details in
+`assets/manifest.json`. Keep provider keys in environment variables. Stock
+clips follow the provider's license and attribution terms; they are not treated
+as CC0. See the [Pexels API documentation](https://www.pexels.com/api/documentation/)
+and [Pixabay API documentation](https://pixabay.com/api/docs/).
+
+Generation directives write pending prompts to `assets/veo-manifest.json` for
+manual or later automated fetching. This stage resolves and records assets;
+Remotion Broll rendering and reel-stage wiring are still pending G5c, so a
+successful asset run does not yet make `compose` consume stock clips.
+
+When a script includes a `broll` beat, its data shape is:
+
+```json
+{
+  "kind": "broll",
+  "visual": "stock:quiet forest at dawn",
+  "overlayText": "A slower morning",
+  "captionSource": "words",
+  "durationMs": 4000
+}
+```
+
+After assets resolve, the workspace-relative `clip` path is available in
+`assets/manifest.json`. An existing broll beat with a `clip` and no `visual`
+directive is left alone by the assets stage.
+
 Script generation retries layout lint failures twice by default. Use
 `--retries N`, `--skip-lint`, or `--lint-cmd <command>` to control that loop.
 Each run writes `script-attempts.json` with `attempts`, `retriesUsed`, `retryLimit`,
