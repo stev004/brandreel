@@ -1285,7 +1285,7 @@ export type GeometryMotion = {
 
 export type GeometryElement = GeometryBox & {
   id: string;
-  beatIndex: number;
+  beatIndex: number | null;
   kind: "shape";
   fromMs: number;
   toMs: number;
@@ -1296,10 +1296,130 @@ export const computeGeometry = (script: Script, brand: BrandKit): GeometryElemen
   const timeline = computeTimeline(script, brand);
   const geometry: GeometryElement[] = [];
 
+  const addShape = (
+    id: string,
+    beatIndex: number | null,
+    box: GeometryBox,
+    fromMs: number,
+    toMs: number,
+    motion?: GeometryMotion,
+  ) => geometry.push({ id, beatIndex, kind: "shape", ...box, fromMs, toMs, motion });
+
   script.beats.forEach((beat, beatIndex) => {
+    const span = timeline.beats[beatIndex]!;
+
+    if (beat.kind === "figure") {
+      const figureStartMs = span.startMs;
+      const figureEndMs = span.endMs;
+      const pointX = FIGURE_LAYOUT.axisX + FIGURE_LAYOUT.axisWidth *
+        ((beat.axis.achieved - beat.axis.min) / (beat.axis.max - beat.axis.min));
+      const axis = {
+        x: FIGURE_LAYOUT.axisX,
+        y: FIGURE_LAYOUT.axisY,
+        w: FIGURE_LAYOUT.axisWidth,
+        h: FIGURE_LAYOUT.axisHeight,
+      };
+      const solidStartMs = figureStartMs + FIGURE_TIMING.solidStartMs;
+      const solidEndMs = solidStartMs + FIGURE_TIMING.drawDurationMs;
+      const solid = {
+        x: FIGURE_LAYOUT.axisX,
+        y: FIGURE_LAYOUT.solidTop,
+        w: pointX - FIGURE_LAYOUT.axisX,
+        h: FIGURE_LAYOUT.solidHeight,
+      };
+      const solidFrom = { ...solid, w: 0 };
+      const dashedStartMs = figureStartMs + FIGURE_TIMING.dashedStartMs;
+      const dashedEndMs = dashedStartMs + FIGURE_TIMING.dashedDurationMs;
+      const dashed = {
+        x: pointX,
+        y: FIGURE_LAYOUT.dashedTop,
+        w: FIGURE_LAYOUT.axisX + FIGURE_LAYOUT.axisWidth - pointX,
+        h: FIGURE_LAYOUT.dashedHeight,
+      };
+      const dashedFrom = { ...dashed, w: 0 };
+      const goalStartMs = figureStartMs + FIGURE_TIMING.goalMs;
+      const goalRing = {
+        x: FIGURE_LAYOUT.goalRingLeft,
+        y: FIGURE_LAYOUT.goalRingTop,
+        w: FIGURE_LAYOUT.goalRingSize,
+        h: FIGURE_LAYOUT.goalRingSize,
+      };
+
+      addShape(`beat-${beatIndex}-figure-axis`, beatIndex, axis, figureStartMs, figureEndMs);
+      addShape(`beat-${beatIndex}-figure-solid-bar`, beatIndex, solid, solidStartMs, figureEndMs, {
+        startMs: solidStartMs,
+        endMs: solidEndMs,
+        from: solidFrom,
+        to: solid,
+        bezier: brand.motion.bezier,
+      });
+      addShape(`beat-${beatIndex}-figure-dashed-bar`, beatIndex, dashed, dashedStartMs, figureEndMs, {
+        startMs: dashedStartMs,
+        endMs: dashedEndMs,
+        from: dashedFrom,
+        to: dashed,
+        bezier: brand.motion.bezier,
+      });
+      // The ring fades in at a fixed size; only its visibility time belongs here.
+      addShape(`beat-${beatIndex}-figure-goal-ring`, beatIndex, goalRing, goalStartMs, figureEndMs);
+
+      if (beat.flash) {
+        const flashStartMs = figureStartMs + FIGURE_TIMING.flashMs;
+        const flashPeakMs = flashStartMs + FIGURE_TIMING.flashPeakMs;
+        const dotSizeAtPeak = FIGURE_LAYOUT.flashDotSize * FIGURE_LAYOUT.flashPeakScale;
+        const dot = {
+          x: pointX - dotSizeAtPeak / 2,
+          y: FIGURE_LAYOUT.flashDotTop + FIGURE_LAYOUT.flashDotSize / 2 - dotSizeAtPeak / 2,
+          w: dotSizeAtPeak,
+          h: dotSizeAtPeak,
+        };
+        const dotAtStartSize = FIGURE_LAYOUT.flashDotSize * FIGURE_LAYOUT.flashInitialScale;
+        const dotFrom = {
+          x: pointX - dotAtStartSize / 2,
+          y: FIGURE_LAYOUT.flashDotTop + FIGURE_LAYOUT.flashDotSize / 2 - dotAtStartSize / 2,
+          w: dotAtStartSize,
+          h: dotAtStartSize,
+        };
+        // The colored shadow expands as it fades during the 385ms rise. Keep its
+        // outer envelope separate from the filled dot so the conservative box
+        // ends when the shadow has fully faded at peak.
+        // CSS transform scales the box shadow too: the maximum radius is the
+        // scaled dot radius plus the scaled 48px spread. The envelope's linear
+        // motion overestimates the quadratic intermediate sizes conservatively.
+        const flashRingSpread = FIGURE_LAYOUT.flashRingSpread * FIGURE_LAYOUT.flashPeakScale;
+        const flashRing = {
+          x: pointX - (dotSizeAtPeak / 2 + flashRingSpread),
+          y: FIGURE_LAYOUT.flashDotTop + FIGURE_LAYOUT.flashDotSize / 2 - dotSizeAtPeak / 2 - flashRingSpread,
+          w: dotSizeAtPeak + flashRingSpread * 2,
+          h: dotSizeAtPeak + flashRingSpread * 2,
+        };
+        const flashRingFrom = {
+          x: pointX - dotAtStartSize / 2,
+          y: FIGURE_LAYOUT.flashDotTop + FIGURE_LAYOUT.flashDotSize / 2 - dotAtStartSize / 2,
+          w: dotAtStartSize,
+          h: dotAtStartSize,
+        };
+
+        addShape(`beat-${beatIndex}-figure-flash-dot`, beatIndex, dot, flashStartMs, figureEndMs, {
+          startMs: flashStartMs,
+          endMs: flashPeakMs,
+          from: dotFrom,
+          to: dot,
+          bezier: brand.motion.bezier,
+        });
+        addShape(`beat-${beatIndex}-figure-flash-ring`, beatIndex, flashRing, flashStartMs, flashPeakMs, {
+          startMs: flashStartMs,
+          endMs: flashPeakMs,
+          from: flashRingFrom,
+          to: flashRing,
+          bezier: brand.motion.bezier,
+        });
+      }
+      return;
+    }
+
     if (beat.kind !== "exhale") return;
     resolveExhaleColor(brand, beat);
-    const span = timeline.beats[beatIndex]!;
     const column = {
       x: EXHALE_LAYOUT.columnX,
       y: EXHALE_LAYOUT.columnTop,
@@ -1336,7 +1456,7 @@ export const computeGeometry = (script: Script, brand: BrandKit): GeometryElemen
       fromMs = span.startMs,
       toMs = span.endMs,
       motion?: GeometryMotion,
-    ) => geometry.push({ id: `beat-${beatIndex}-exhale-${id}`, beatIndex, kind: "shape", ...box, fromMs, toMs, motion });
+    ) => addShape(`beat-${beatIndex}-exhale-${id}`, beatIndex, box, fromMs, toMs, motion);
 
     add("column", column);
     add("track", track, span.startMs + EXHALE_TIMING.trackStartMs);
@@ -1376,6 +1496,28 @@ export const computeGeometry = (script: Script, brand: BrandKit): GeometryElemen
       ), tickStartMs, span.endMs);
     });
   });
+
+  const closeStartMs = timeline.beats.at(-1)?.endMs ?? 0;
+  const closeLogoMotionStartMs = closeStartMs + CLOSE_D_TIMING.logoMs;
+  const closeLogoVisibleStartMs = Math.min(timeline.totalDurationMs, closeLogoMotionStartMs);
+  const hasCloseD = Boolean(
+    script.close.tagline?.trim() || script.close.url?.trim() || brand.wordmark.logoSvg?.trim(),
+  );
+  if (hasCloseD && brand.wordmark.logoSvg?.trim()) {
+    const logo = {
+      x: CLOSE_D_LAYOUT.contentX,
+      y: CLOSE_D_LAYOUT.logoTop,
+      w: CLOSE_D_LAYOUT.logoSize,
+      h: CLOSE_D_LAYOUT.logoSize,
+    };
+    addShape("close-logo", null, logo, closeLogoVisibleStartMs, timeline.totalDurationMs, {
+      startMs: closeLogoMotionStartMs,
+      endMs: closeLogoMotionStartMs + brand.motion.entranceMs,
+      from: { ...logo, y: logo.y + CLOSE_D_LAYOUT.entranceDrift },
+      to: logo,
+      bezier: brand.motion.bezier,
+    });
+  }
 
   return geometry;
 };

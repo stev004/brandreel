@@ -1,0 +1,8 @@
+{
+  "elements": [
+    { "id": "bar-label", "text": "The measure", "x": 100, "y": 100, "w": 160, "h": 48, "fromMs": 500, "toMs": 1500 }
+  ],
+  "geometry": [
+    { "id": "figure-bar", "kind": "shape", "x": 90, "y": 90, "w": 220, "h": 70, "fromMs": 0, "toMs": 2000 }
+  ]
+}

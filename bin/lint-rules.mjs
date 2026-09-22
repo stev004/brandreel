@@ -174,10 +174,148 @@ function boxesIntersect(a, b) {
   return a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
 }
 
+function isBox(box) {
+  return [box?.x, box?.y, box?.w, box?.h].every(isNumber) && box.w >= 0 && box.h >= 0;
+}
+
+function hasArea(box) {
+  return box.w > 0 && box.h > 0;
+}
+
+function cubicBezierCoordinate(t, firstControl, secondControl) {
+  const inverse = 1 - t;
+  return 3 * inverse * inverse * t * firstControl
+    + 3 * inverse * t * t * secondControl
+    + t * t * t;
+}
+
+function parameterAtBezierX(x, controlX1, controlX2) {
+  // For control points inside [0, 1], the cubic x curve is monotone. Curves
+  // outside that range use the full control hull below instead.
+  let low = 0;
+  let high = 1;
+  for (let iteration = 0; iteration < 60; iteration += 1) {
+    const middle = (low + high) / 2;
+    if (cubicBezierCoordinate(middle, controlX1, controlX2) < x) low = middle;
+    else high = middle;
+  }
+  return (low + high) / 2;
+}
+
+function bezierYRange(controlY1, controlY2, startParameter, endParameter) {
+  const a = 1 - 3 * controlY2 + 3 * controlY1;
+  const b = 3 * controlY2 - 6 * controlY1;
+  const c = 3 * controlY1;
+  const candidates = [startParameter, endParameter];
+  const quadratic = 3 * a;
+  const linear = 2 * b;
+
+  if (Math.abs(quadratic) < 1e-12) {
+    if (Math.abs(linear) >= 1e-12) {
+      const root = -c / linear;
+      if (root > startParameter && root < endParameter) candidates.push(root);
+    }
+  } else {
+    const discriminant = linear * linear - 4 * quadratic * c;
+    if (discriminant >= 0) {
+      const rootDistance = Math.sqrt(discriminant);
+      for (const root of [
+        (-linear - rootDistance) / (2 * quadratic),
+        (-linear + rootDistance) / (2 * quadratic),
+      ]) {
+        if (root > startParameter && root < endParameter) candidates.push(root);
+      }
+    }
+  }
+
+  const values = candidates.map((parameter) => cubicBezierCoordinate(parameter, controlY1, controlY2));
+  return { min: Math.min(...values), max: Math.max(...values) };
+}
+
+function interpolateBounds(from, to, progress) {
+  return {
+    x: from.x + (to.x - from.x) * progress,
+    y: from.y + (to.y - from.y) * progress,
+    w: from.w + (to.w - from.w) * progress,
+    h: from.h + (to.h - from.h) * progress,
+  };
+}
+
+function sweptBox(from, to, progressRange) {
+  // The enclosing axis-aligned box is deliberately conservative; a diagonal
+  // shape path can be reported even when the exact path misses the text.
+  const first = interpolateBounds(from, to, progressRange.min);
+  const last = interpolateBounds(from, to, progressRange.max);
+  const left = Math.min(first.x, last.x);
+  const top = Math.min(first.y, last.y);
+  const right = Math.max(first.x + first.w, last.x + last.w);
+  const bottom = Math.max(first.y + first.h, last.y + last.h);
+  return { x: left, y: top, w: right - left, h: bottom - top };
+}
+
+function motionProgressRange(motion, fromMs, toMs) {
+  const duration = motion.endMs - motion.startMs;
+  if (duration <= 0) return { min: 0, max: 1 };
+
+  const control = motion.bezier;
+  const progressStart = Math.max(0, Math.min(1, (fromMs - motion.startMs) / duration));
+  const progressEnd = Math.max(0, Math.min(1, (toMs - motion.startMs) / duration));
+  if (control[0] < 0 || control[0] > 1 || control[2] < 0 || control[2] > 1) {
+    return {
+      min: Math.min(0, control[1], control[3], 1),
+      max: Math.max(0, control[1], control[3], 1),
+    };
+  }
+
+  const startParameter = parameterAtBezierX(progressStart, control[0], control[2]);
+  const endParameter = parameterAtBezierX(progressEnd, control[0], control[2]);
+  return bezierYRange(control[1], control[3], startParameter, endParameter);
+}
+
+function validMotion(motion) {
+  return isNumber(motion?.startMs)
+    && isNumber(motion?.endMs)
+    && motion.endMs >= motion.startMs
+    && isBox(motion?.from)
+    && isBox(motion?.to)
+    && Array.isArray(motion?.bezier)
+    && motion.bezier.length === 4
+    && motion.bezier.every(isNumber);
+}
+
+function geometryCandidatesDuring(geometry, fromMs, toMs) {
+  const motion = geometry.motion;
+  if (!validMotion(motion)) return [{ box: geometry, fromMs, toMs }];
+
+  const candidates = [];
+  const add = (box, start, end) => {
+    if (start < end) candidates.push({ box, fromMs: start, toMs: end });
+  };
+
+  const movingStart = Math.max(fromMs, motion.startMs);
+  const movingEnd = Math.min(toMs, motion.endMs);
+  add(motion.from, fromMs, Math.min(toMs, motion.startMs));
+
+  if (movingStart < movingEnd) {
+    add(sweptBox(motion.from, motion.to, motionProgressRange(motion, movingStart, movingEnd)), movingStart, movingEnd);
+  }
+
+  add(motion.to, Math.max(fromMs, motion.endMs), toMs);
+  return candidates;
+}
+
+function overlapViolation(first, second, firstIndex, secondIndex, fromMs, toMs, firstBox, secondBox) {
+  if (!boxesIntersect(firstBox, secondBox)) return null;
+  const x = Math.max(firstBox.x, secondBox.x);
+  const y = Math.max(firstBox.y, secondBox.y);
+  return `[overlap] ${elementName(first, firstIndex)} and ${elementName(second, secondIndex)} intersect at ${x},${y} during ${fromMs}-${toMs}ms`;
+}
+
 export function overlap(manifest) {
   const textElements = elementsOf(manifest).filter((element) => (
     typeof element?.text === "string" && element.text.trim() !== ""
   ));
+  const geometryElements = Array.isArray(manifest?.geometry) ? manifest.geometry : [];
   const violations = [];
 
   for (let firstIndex = 0; firstIndex < textElements.length; firstIndex += 1) {
@@ -188,10 +326,30 @@ export function overlap(manifest) {
       if (![second.x, second.y, second.w, second.h, second.fromMs, second.toMs].every(isNumber)) continue;
       const fromMs = Math.max(first.fromMs, second.fromMs);
       const toMs = Math.min(first.toMs, second.toMs);
-      if (fromMs >= toMs || !boxesIntersect(first, second)) continue;
+      if (fromMs >= toMs) continue;
+      if (!boxesIntersect(first, second)) continue;
       const x = Math.max(first.x, second.x);
       const y = Math.max(first.y, second.y);
       violations.push(`[overlap] ${first.id} and ${second.id} intersect at ${x},${y} during ${fromMs}-${toMs}ms`);
+    }
+
+    if (![first.x, first.y, first.w, first.h, first.fromMs, first.toMs].every(isNumber)) continue;
+    for (let geometryIndex = 0; geometryIndex < geometryElements.length; geometryIndex += 1) {
+      const geometry = geometryElements[geometryIndex];
+      if (!isBox(geometry) || ![geometry.fromMs, geometry.toMs].every(isNumber)) continue;
+      const fromMs = Math.max(first.fromMs, geometry.fromMs);
+      const toMs = Math.min(first.toMs, geometry.toMs);
+      if (fromMs >= toMs) continue;
+
+      const candidates = geometryCandidatesDuring(geometry, fromMs, toMs);
+      for (const candidate of candidates) {
+        if (!hasArea(candidate.box)) continue;
+        const violation = overlapViolation(first, geometry, firstIndex, geometryIndex, candidate.fromMs, candidate.toMs, first, candidate.box);
+        if (violation) {
+          violations.push(violation);
+          break;
+        }
+      }
     }
   }
   return violations;
