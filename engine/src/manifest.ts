@@ -1,6 +1,6 @@
 import { HEIGHT, FPS, SAFE_BOTTOM, SAFE_LEFT, SAFE_RIGHT, SAFE_TOP, WIDTH } from "./config";
-import { computeTextBoxes, computeTimeline, GLYPH_EM } from "./layout";
-import type { LayoutTextBox, TextRole } from "./layout";
+import { computeGeometry, computeTextBoxes, computeTimeline, GLYPH_EM } from "./layout";
+import type { GeometryElement, LayoutTextBox, TextRole } from "./layout";
 import type { BrandKit, Script } from "./schema";
 
 export type Element = LayoutTextBox & {
@@ -22,6 +22,7 @@ export type LayoutManifest = {
     right: number;
   };
   elements: Element[];
+  geometry: GeometryElement[];
 };
 
 const lineWidthPx = (line: string, fontSize: number, role: TextRole, letterSpacingEm: number): number =>
@@ -56,5 +57,6 @@ export const buildManifest = (script: Script, brand: BrandKit): LayoutManifest =
     closeStartMs,
     safe: { top: SAFE_TOP, bottom: SAFE_BOTTOM, left: SAFE_LEFT, right: SAFE_RIGHT },
     elements,
+    geometry: computeGeometry(script, brand),
   };
 };

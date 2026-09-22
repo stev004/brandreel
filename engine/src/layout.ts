@@ -1,3 +1,4 @@
+import { Easing, interpolate } from "remotion";
 import {
   HEIGHT,
   MAX_DURATION_MS,
@@ -10,7 +11,7 @@ import {
   SAFE_TOP,
   WIDTH,
 } from "./config";
-import type { Beat, BrandKit, Script } from "./schema";
+import type { Beat, BrandKit, ExhaleBeatData, Script } from "./schema";
 
 export const CAPTION_LAYOUT = {
   contentX: SAFE_LEFT,
@@ -47,6 +48,156 @@ export const MOMENT_LAYOUT = {
   thoughtMaxLines: 2,
   thoughtStep: 0,
   thoughtEntranceDrift: 24,
+};
+
+const PORT_SCALE_X = WIDTH / 300;
+const PORT_SCALE_Y = HEIGHT / 640;
+export const CSS_EASE_BEZIER = [0.25, 0.1, 0.25, 1] as const;
+
+export const MOMENT_PLACED_LAYOUT = {
+  contentX: 26 * PORT_SCALE_X,
+  contentWidth: WIDTH - 2 * 26 * PORT_SCALE_X,
+  eyebrowFontSize: 58,
+  eyebrowLineHeight: 1.55,
+  eyebrowLetterSpacingEm: 0.4,
+  lineFontSize: 94,
+  lineLineHeight: 1.55,
+  lineGap: 54,
+  thoughtFontSize: 47,
+  thoughtLineHeight: 1.55,
+  thoughtMaxWidth: WIDTH * 0.62,
+  sceneFadeMs: 450,
+  eyebrowStartMs: 150,
+  lineStartMs: 500,
+  entranceDurationMs: 700,
+  textExitStartMs: 5700,
+  textExitDurationMs: 700,
+  thoughtStartsMs: [1600, 2600, 3600, 4000, 4500] as readonly number[],
+  thoughtDurationMs: 1200,
+  entranceDrift: 50,
+  exitDrift: -10 * PORT_SCALE_Y,
+  exitBlurPx: 2 * PORT_SCALE_X,
+  thoughtDissolveDrift: 50,
+  thoughtDissolveBlurPx: 18,
+} as const;
+
+const placedMomentTextHeight =
+  MOMENT_PLACED_LAYOUT.eyebrowFontSize * MOMENT_PLACED_LAYOUT.eyebrowLineHeight +
+  MOMENT_PLACED_LAYOUT.lineGap +
+  MOMENT_PLACED_LAYOUT.lineFontSize * MOMENT_PLACED_LAYOUT.lineLineHeight;
+
+export const MOMENT_PLACED_TEXT_TOP = (HEIGHT - placedMomentTextHeight) / 2;
+export const MOMENT_PLACED_LINE_TOP = MOMENT_PLACED_TEXT_TOP +
+  MOMENT_PLACED_LAYOUT.eyebrowFontSize * MOMENT_PLACED_LAYOUT.eyebrowLineHeight +
+  MOMENT_PLACED_LAYOUT.lineGap;
+
+export const EXHALE_LAYOUT = {
+  columnRight: 58 * PORT_SCALE_X,
+  columnTop: 96 * PORT_SCALE_Y,
+  columnBottom: 96 * PORT_SCALE_Y,
+  columnWidth: 40 * PORT_SCALE_X,
+  columnX: WIDTH - 58 * PORT_SCALE_X - 40 * PORT_SCALE_X,
+  columnHeight: HEIGHT - 2 * 96 * PORT_SCALE_Y,
+  innerInset: 18 * PORT_SCALE_Y,
+  innerTop: 96 * PORT_SCALE_Y + 18 * PORT_SCALE_Y,
+  innerHeight: HEIGHT - 2 * (96 * PORT_SCALE_Y + 18 * PORT_SCALE_Y),
+  trackWidth: 7,
+  tickWidth: 8 * PORT_SCALE_X,
+  tickHeight: 1 * PORT_SCALE_Y,
+  tickOffsetFromCenter: 6 * PORT_SCALE_X,
+  dotSize: 58,
+  dotGlow: 79,
+  dotGlowAlpha: 0.8,
+  labelX: WIDTH - 58 * PORT_SCALE_X - 40 * PORT_SCALE_X / 2 + 22 * PORT_SCALE_X,
+  labelFontSize: 10 * PORT_SCALE_X,
+  labelLineHeight: 1.55,
+  labelLetterSpacingEm: 0.22,
+  labelInsetX: 22 * PORT_SCALE_X,
+  labelInsetY: 2 * PORT_SCALE_Y,
+  labelTop: 96 * PORT_SCALE_Y - 2 * PORT_SCALE_Y,
+  labelBottom: 96 * PORT_SCALE_Y + HEIGHT - 2 * 96 * PORT_SCALE_Y + 2 * PORT_SCALE_Y,
+  phaseX: 30 * PORT_SCALE_X,
+  phaseTop: 0.44 * HEIGHT,
+  phaseFontSize: 137,
+  phaseLineHeight: 1.55,
+  countFontSize: 10 * PORT_SCALE_X,
+  countLineHeight: 1.55,
+  phaseCountGap: 24,
+  countContainerHeight: 12 * PORT_SCALE_Y,
+  entranceDrift: 50,
+  exitDrift: -30,
+  exitBlurPx: 6,
+  thoughtFontSize: 47,
+  thoughtLineHeight: 1.55,
+  thoughtMaxWidth: WIDTH * 0.62,
+  thoughtDissolveDrift: 50,
+  thoughtDissolveBlurPx: 18,
+  thoughtDissolveStartMs: 1400,
+  thoughtDissolveStaggerMs: 900,
+  thoughtDissolveDurationMs: 4600,
+} as const;
+
+export const EXHALE_TIMING = {
+  trackStartMs: 500,
+  trackFadeMs: 450,
+  tickStartMs: 500,
+  tickStaggerMs: 30,
+  tickFadeMs: 300,
+  dotFadeStartMs: 950,
+  dotFadeMs: 300,
+  travelStartMs: 1400,
+  travelDurationMs: 8000,
+  travelCurve: [0.42, 0, 1, 1] as const,
+  phaseStartMs: 650,
+  entranceDurationMs: 700,
+  exitStartMs: 9900,
+  exitDurationMs: 700,
+  countdownStartMs: 1400,
+  countdownStepMs: 1000,
+  countdownDurationMs: 8000,
+} as const;
+
+export const easeProgressAtMs = (
+  timeMs: number,
+  startMs: number,
+  durationMs: number,
+  bezier: readonly [number, number, number, number],
+): number => {
+  if (durationMs <= 0) return timeMs < startMs ? 0 : 1;
+  return interpolate(timeMs, [startMs, startMs + durationMs], [0, 1], {
+    easing: Easing.bezier(bezier[0], bezier[1], bezier[2], bezier[3]),
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+};
+
+export const exhaleDotYAtMs = (timeMs: number): number => {
+  const progress = easeProgressAtMs(
+    timeMs,
+    EXHALE_TIMING.travelStartMs,
+    EXHALE_TIMING.travelDurationMs,
+    EXHALE_TIMING.travelCurve,
+  );
+  return EXHALE_LAYOUT.innerTop + EXHALE_LAYOUT.innerHeight * progress;
+};
+
+export const exhaleCountdownIndexAtMs = (timeMs: number): number => {
+  if (timeMs < EXHALE_TIMING.countdownStartMs) return -1;
+  return Math.min(
+    7,
+    Math.floor((timeMs - EXHALE_TIMING.countdownStartMs) / EXHALE_TIMING.countdownStepMs),
+  );
+};
+
+export const exhaleThoughtDissolveStartMs = (thoughtIndex: number): number =>
+  EXHALE_LAYOUT.thoughtDissolveStartMs + thoughtIndex * EXHALE_LAYOUT.thoughtDissolveStaggerMs;
+
+export const resolveExhaleColor = (brand: BrandKit, beat: ExhaleBeatData): string => {
+  const color = brand.palette.extras[beat.colorKey];
+  if (!color) {
+    throw new Error(`Exhale colorKey "${beat.colorKey}" was not found in brand.palette.extras.`);
+  }
+  return color;
 };
 
 export const momentThoughtBoxHeight = (): number => lineBoxHeight(
@@ -264,6 +415,11 @@ export const GLYPH_EM = {
   mono: 0.6,
 } as const;
 
+const textWidthPx = (text: string, fontSize: number, role: TextRole, letterSpacingEm = 0): number => {
+  const length = Array.from(text).length;
+  return length === 0 ? 0 : Math.ceil(length * fontSize * (GLYPH_EM[role] + letterSpacingEm));
+};
+
 export const thoughtPhaseInStartMs = (brand: BrandKit, beat: Beat): number =>
   Math.min(brand.motion.entranceMs, Math.round(beat.durationMs * 0.12));
 
@@ -338,30 +494,81 @@ export const computeTimeline = (script: Script, brand: BrandKit): Timeline => {
 
     if (beat.kind === "moment") {
       const thoughts = (beat.thoughts ?? []).filter(hasText);
-      const textTimes = [
-        ...(hasText(beat.eyebrow) || hasText(beat.line) ? [startMs] : []),
-        ...thoughts.map(
-          (_, thoughtIndex) =>
-            startMs + thoughtPhaseInStartMs(brand, beat) + thoughtIndex * thoughtStaggerMs(brand),
-        ),
-      ].filter((time) => time < endMs);
-      if (firstOnScreenTextMs === null && textTimes.length > 0) {
-        firstOnScreenTextMs = Math.min(...textTimes);
-      }
+      if (beat.thoughtPositions) {
+        addTextTime(startMs + MOMENT_PLACED_LAYOUT.eyebrowStartMs, endMs, hasText(beat.eyebrow));
+        addTextTime(startMs + MOMENT_PLACED_LAYOUT.lineStartMs, endMs, hasText(beat.line));
+        if (hasText(beat.eyebrow) || hasText(beat.line)) {
+          addVisualChange(startMs + MOMENT_PLACED_LAYOUT.sceneFadeMs, endMs);
+        }
+        thoughts.forEach((thought, thoughtIndex) => {
+          addTextTime(
+            startMs + MOMENT_PLACED_LAYOUT.thoughtStartsMs[thoughtIndex]!,
+            endMs,
+            hasText(thought),
+          );
+        });
+        addVisualChange(startMs + MOMENT_PLACED_LAYOUT.textExitStartMs, endMs);
+        addVisualChange(startMs + MOMENT_PLACED_LAYOUT.textExitStartMs + MOMENT_PLACED_LAYOUT.textExitDurationMs, endMs);
+      } else {
+        const textTimes = [
+          ...(hasText(beat.eyebrow) || hasText(beat.line) ? [startMs] : []),
+          ...thoughts.map(
+            (_, thoughtIndex) =>
+              startMs + thoughtPhaseInStartMs(brand, beat) + thoughtIndex * thoughtStaggerMs(brand),
+          ),
+        ].filter((time) => time < endMs);
+        if (firstOnScreenTextMs === null && textTimes.length > 0) {
+          firstOnScreenTextMs = Math.min(...textTimes);
+        }
 
-      if (hasText(beat.eyebrow) || hasText(beat.line)) {
-        addVisualChange(startMs, endMs);
-      }
+        if (hasText(beat.eyebrow) || hasText(beat.line)) {
+          addVisualChange(startMs, endMs);
+        }
 
-      thoughts.forEach((_, thoughtIndex) => {
-        const phaseInMs =
-          startMs + thoughtPhaseInStartMs(brand, beat) + thoughtIndex * thoughtStaggerMs(brand);
-        addVisualChange(phaseInMs, endMs);
-        addVisualChange(
-          startMs + thoughtDissolveStartMs(brand, beat, thoughts.length, thoughtIndex),
+        thoughts.forEach((_, thoughtIndex) => {
+          const phaseInMs =
+            startMs + thoughtPhaseInStartMs(brand, beat) + thoughtIndex * thoughtStaggerMs(brand);
+          addVisualChange(phaseInMs, endMs);
+          addVisualChange(
+            startMs + thoughtDissolveStartMs(brand, beat, thoughts.length, thoughtIndex),
+            endMs,
+          );
+        });
+      }
+    }
+
+    if (beat.kind === "exhale") {
+      resolveExhaleColor(brand, beat);
+      // The thought layer remains at its held opacity as it hands off from Moment,
+      // then each line dissolves at the animatic's staggered start time.
+      beat.thoughts.forEach((thought, thoughtIndex) => {
+        addTextTime(startMs, endMs, hasText(thought));
+        const dissolveStart = startMs + exhaleThoughtDissolveStartMs(thoughtIndex);
+        addVisualChange(dissolveStart, endMs);
+        addVisualChange(dissolveStart + EXHALE_LAYOUT.thoughtDissolveDurationMs, endMs);
+      });
+      addTextTime(startMs + EXHALE_TIMING.phaseStartMs, endMs, hasText(beat.inLabel) || hasText(beat.outLabel) || hasText(beat.phaseLabel));
+      beat.countdown.forEach((value, countIndex) => {
+        addTextTime(
+          startMs + EXHALE_TIMING.countdownStartMs + countIndex * EXHALE_TIMING.countdownStepMs,
           endMs,
+          hasText(value),
         );
       });
+      addVisualChange(startMs + EXHALE_TIMING.trackStartMs, endMs);
+      addVisualChange(startMs + EXHALE_TIMING.trackStartMs + EXHALE_TIMING.trackFadeMs, endMs);
+      const tickCount = 12;
+      for (let tickIndex = 0; tickIndex < tickCount; tickIndex += 1) {
+        const tickStart = startMs + EXHALE_TIMING.tickStartMs + tickIndex * EXHALE_TIMING.tickStaggerMs;
+        addVisualChange(tickStart, endMs);
+        addVisualChange(tickStart + EXHALE_TIMING.tickFadeMs, endMs);
+      }
+      addVisualChange(startMs + EXHALE_TIMING.dotFadeStartMs, endMs);
+      addVisualChange(startMs + EXHALE_TIMING.dotFadeStartMs + EXHALE_TIMING.dotFadeMs, endMs);
+      addVisualChange(startMs + EXHALE_TIMING.travelStartMs, endMs);
+      addVisualChange(startMs + EXHALE_TIMING.travelStartMs + EXHALE_TIMING.travelDurationMs, endMs);
+      addVisualChange(startMs + EXHALE_TIMING.exitStartMs, endMs);
+      addVisualChange(startMs + EXHALE_TIMING.exitStartMs + EXHALE_TIMING.exitDurationMs, endMs);
     }
 
     if (beat.kind === "question") {
@@ -511,26 +718,115 @@ const metadataForTextBox = (
 
     if (beat.kind === "moment") {
       if (part === "eyebrow") {
-        return beatMetadata(timeline, beatIndex, brand, beat.eyebrow ?? "", "mono", MOMENT_LAYOUT.eyebrowFontSize, MOMENT_LAYOUT.eyebrowLineHeight, 1, 0.4);
+        const placed = Boolean(beat.thoughtPositions);
+        const metadata = beatMetadata(
+          timeline,
+          beatIndex,
+          brand,
+          beat.eyebrow ?? "",
+          "mono",
+          placed ? MOMENT_PLACED_LAYOUT.eyebrowFontSize : MOMENT_LAYOUT.eyebrowFontSize,
+          placed ? MOMENT_PLACED_LAYOUT.eyebrowLineHeight : MOMENT_LAYOUT.eyebrowLineHeight,
+          1,
+          placed ? MOMENT_PLACED_LAYOUT.eyebrowLetterSpacingEm : 0.4,
+          placed ? MOMENT_PLACED_LAYOUT.eyebrowStartMs : 0,
+        );
+        return placed
+          ? { ...metadata, toMs: Math.min(timeline.beats[beatIndex]!.endMs, timeline.beats[beatIndex]!.startMs + MOMENT_PLACED_LAYOUT.textExitStartMs + MOMENT_PLACED_LAYOUT.textExitDurationMs) }
+          : metadata;
       }
       if (part === "line") {
-        return beatMetadata(timeline, beatIndex, brand, beat.line, "display", MOMENT_LAYOUT.momentLineFontSize, MOMENT_LAYOUT.momentLineHeight, MOMENT_LAYOUT.momentLineMaxLines, 0);
+        const placed = Boolean(beat.thoughtPositions);
+        const metadata = beatMetadata(
+          timeline,
+          beatIndex,
+          brand,
+          beat.line,
+          "display",
+          placed ? MOMENT_PLACED_LAYOUT.lineFontSize : MOMENT_LAYOUT.momentLineFontSize,
+          placed ? MOMENT_PLACED_LAYOUT.lineLineHeight : MOMENT_LAYOUT.momentLineHeight,
+          placed ? 1 : MOMENT_LAYOUT.momentLineMaxLines,
+          0,
+          placed ? MOMENT_PLACED_LAYOUT.lineStartMs : 0,
+        );
+        return placed
+          ? { ...metadata, toMs: Math.min(timeline.beats[beatIndex]!.endMs, timeline.beats[beatIndex]!.startMs + MOMENT_PLACED_LAYOUT.textExitStartMs + MOMENT_PLACED_LAYOUT.textExitDurationMs) }
+          : metadata;
       }
       const thoughtMatch = /^thought-(\d+)$/.exec(part);
       if (thoughtMatch) {
         const thoughtIndex = Number(thoughtMatch[1]);
-        return beatMetadata(
+        const placed = Boolean(beat.thoughtPositions);
+        const metadata = beatMetadata(
           timeline,
           beatIndex,
           brand,
           beat.thoughts?.filter(hasText)[thoughtIndex] ?? "",
           "body",
-          MOMENT_LAYOUT.thoughtFontSize,
-          MOMENT_LAYOUT.thoughtLineHeight,
-          MOMENT_LAYOUT.thoughtMaxLines,
+          placed ? MOMENT_PLACED_LAYOUT.thoughtFontSize : MOMENT_LAYOUT.thoughtFontSize,
+          placed ? MOMENT_PLACED_LAYOUT.thoughtLineHeight : MOMENT_LAYOUT.thoughtLineHeight,
+          placed ? 1 : MOMENT_LAYOUT.thoughtMaxLines,
           0,
-          thoughtPhaseInStartMs(brand, beat) + thoughtIndex * thoughtStaggerMs(brand),
+          placed
+            ? MOMENT_PLACED_LAYOUT.thoughtStartsMs[thoughtIndex] ?? MOMENT_PLACED_LAYOUT.thoughtStartsMs.at(-1)!
+            : thoughtPhaseInStartMs(brand, beat) + thoughtIndex * thoughtStaggerMs(brand),
         );
+        return metadata;
+      }
+    }
+
+    if (beat.kind === "exhale") {
+      const thoughtMatch = /^thought-(\d+)$/.exec(part);
+      if (thoughtMatch) {
+        const thoughtIndex = Number(thoughtMatch[1]);
+        const dissolveEndMs = exhaleThoughtDissolveStartMs(thoughtIndex) + EXHALE_LAYOUT.thoughtDissolveDurationMs;
+        return {
+          ...beatMetadata(
+            timeline,
+            beatIndex,
+            brand,
+            beat.thoughts[thoughtIndex] ?? "",
+            "body",
+            EXHALE_LAYOUT.thoughtFontSize,
+            EXHALE_LAYOUT.thoughtLineHeight,
+            1,
+            0,
+          ),
+          toMs: Math.min(timeline.beats[beatIndex]!.endMs, timeline.beats[beatIndex]!.startMs + dissolveEndMs),
+        };
+      }
+
+      const labelMetadata: Record<string, TextBoxMetadata> = {
+        "in-label": beatMetadata(timeline, beatIndex, brand, beat.inLabel, "mono", EXHALE_LAYOUT.labelFontSize, EXHALE_LAYOUT.labelLineHeight, 1, EXHALE_LAYOUT.labelLetterSpacingEm, EXHALE_TIMING.phaseStartMs),
+        "out-label": beatMetadata(timeline, beatIndex, brand, beat.outLabel, "mono", EXHALE_LAYOUT.labelFontSize, EXHALE_LAYOUT.labelLineHeight, 1, EXHALE_LAYOUT.labelLetterSpacingEm, EXHALE_TIMING.phaseStartMs),
+        "phase-label": beatMetadata(timeline, beatIndex, brand, beat.phaseLabel, "display", EXHALE_LAYOUT.phaseFontSize, EXHALE_LAYOUT.phaseLineHeight, 1, 0, EXHALE_TIMING.phaseStartMs),
+      };
+      if (labelMetadata[part]) return labelMetadata[part];
+
+      const countdownMatch = /^countdown-(\d+)$/.exec(part);
+      if (countdownMatch) {
+        const countIndex = Number(countdownMatch[1]);
+        const fromOffsetMs = EXHALE_TIMING.countdownStartMs + countIndex * EXHALE_TIMING.countdownStepMs;
+        return {
+          ...beatMetadata(
+            timeline,
+            beatIndex,
+            brand,
+            beat.countdown[countIndex] ?? "",
+            "mono",
+            EXHALE_LAYOUT.countFontSize,
+            EXHALE_LAYOUT.countLineHeight,
+            1,
+            EXHALE_LAYOUT.labelLetterSpacingEm,
+            fromOffsetMs,
+          ),
+          toMs: countIndex === beat.countdown.length - 1
+            ? timeline.beats[beatIndex]!.endMs
+            : Math.min(
+              timeline.beats[beatIndex]!.endMs,
+              timeline.beats[beatIndex]!.startMs + fromOffsetMs + EXHALE_TIMING.countdownStepMs,
+            ),
+        };
       }
     }
 
@@ -644,40 +940,104 @@ export const computeTextBoxes = (script: Script, brand: BrandKit): LayoutTextBox
 
   script.beats.forEach((beat, index) => {
     if (beat.kind === "moment") {
+      const placed = Boolean(beat.thoughtPositions);
       if (hasText(beat.eyebrow)) {
+        const eyebrowWidth = placed
+          ? Math.min(MOMENT_PLACED_LAYOUT.contentWidth, textWidthPx(
+            beat.eyebrow ?? "",
+            MOMENT_PLACED_LAYOUT.eyebrowFontSize,
+            "mono",
+            MOMENT_PLACED_LAYOUT.eyebrowLetterSpacingEm,
+          ))
+          : MOMENT_LAYOUT.contentWidth;
         boxes.push({
           id: `beat-${index}-eyebrow`,
-          x: MOMENT_LAYOUT.contentX,
-          y: MOMENT_LAYOUT.eyebrowTop,
-          w: MOMENT_LAYOUT.contentWidth,
-          h: lineBoxHeight(MOMENT_LAYOUT.eyebrowFontSize, MOMENT_LAYOUT.eyebrowLineHeight, 1),
-          driftPx: 0,
+          x: placed ? (WIDTH - eyebrowWidth) / 2 : MOMENT_LAYOUT.contentX,
+          y: placed ? MOMENT_PLACED_TEXT_TOP : MOMENT_LAYOUT.eyebrowTop,
+          w: eyebrowWidth,
+          h: placed
+            ? lineBoxHeight(MOMENT_PLACED_LAYOUT.eyebrowFontSize, MOMENT_PLACED_LAYOUT.eyebrowLineHeight, 1)
+            : lineBoxHeight(MOMENT_LAYOUT.eyebrowFontSize, MOMENT_LAYOUT.eyebrowLineHeight, 1),
+          driftPx: placed ? MOMENT_PLACED_LAYOUT.entranceDrift : 0,
         });
       }
 
       if (hasText(beat.line)) {
+        const lineWidth = placed
+          ? Math.min(MOMENT_PLACED_LAYOUT.contentWidth, textWidthPx(beat.line, MOMENT_PLACED_LAYOUT.lineFontSize, "display"))
+          : MOMENT_LAYOUT.contentWidth;
         boxes.push({
           id: `beat-${index}-line`,
-          x: MOMENT_LAYOUT.contentX,
-          y: MOMENT_LAYOUT.momentLineTop,
-          w: MOMENT_LAYOUT.contentWidth,
-          h: lineBoxHeight(
-            MOMENT_LAYOUT.momentLineFontSize,
-            MOMENT_LAYOUT.momentLineHeight,
-            MOMENT_LAYOUT.momentLineMaxLines,
-          ),
-          driftPx: MOMENT_LAYOUT.momentLineEntranceDrift,
+          x: placed ? (WIDTH - lineWidth) / 2 : MOMENT_LAYOUT.contentX,
+          y: placed ? MOMENT_PLACED_LINE_TOP : MOMENT_LAYOUT.momentLineTop,
+          w: lineWidth,
+          h: placed
+            ? lineBoxHeight(MOMENT_PLACED_LAYOUT.lineFontSize, MOMENT_PLACED_LAYOUT.lineLineHeight, 1)
+            : lineBoxHeight(MOMENT_LAYOUT.momentLineFontSize, MOMENT_LAYOUT.momentLineHeight, MOMENT_LAYOUT.momentLineMaxLines),
+          driftPx: placed ? MOMENT_PLACED_LAYOUT.entranceDrift : MOMENT_LAYOUT.momentLineEntranceDrift,
         });
       }
 
       (beat.thoughts ?? []).filter(hasText).forEach((thought, thoughtIndex) => {
+        const position = beat.thoughtPositions?.[thoughtIndex];
         boxes.push({
           id: `beat-${index}-thought-${thoughtIndex}`,
-          x: MOMENT_LAYOUT.contentX,
-          y: MOMENT_LAYOUT.thoughtsTop + thoughtIndex * MOMENT_LAYOUT.thoughtStep,
-          w: MOMENT_LAYOUT.contentWidth,
-          h: momentThoughtBoxHeight(),
-          driftPx: MOMENT_LAYOUT.thoughtEntranceDrift,
+          x: position?.x ?? MOMENT_LAYOUT.contentX,
+          y: position?.y ?? MOMENT_LAYOUT.thoughtsTop + thoughtIndex * MOMENT_LAYOUT.thoughtStep,
+          w: placed ? MOMENT_PLACED_LAYOUT.thoughtMaxWidth : MOMENT_LAYOUT.contentWidth,
+          h: placed
+            ? lineBoxHeight(MOMENT_PLACED_LAYOUT.thoughtFontSize, MOMENT_PLACED_LAYOUT.thoughtLineHeight, 1)
+            : momentThoughtBoxHeight(),
+          driftPx: placed ? 0 : MOMENT_LAYOUT.thoughtEntranceDrift,
+        });
+      });
+    }
+
+    if (beat.kind === "exhale") {
+      beat.thoughts.forEach((thought, thoughtIndex) => {
+        const position = beat.thoughtPositions[thoughtIndex]!;
+        boxes.push({
+          id: `beat-${index}-thought-${thoughtIndex}`,
+          x: position.x,
+          y: position.y,
+          w: EXHALE_LAYOUT.thoughtMaxWidth,
+          h: lineBoxHeight(EXHALE_LAYOUT.thoughtFontSize, EXHALE_LAYOUT.thoughtLineHeight, 1),
+          driftPx: 0,
+        });
+      });
+
+      boxes.push({
+        id: `beat-${index}-in-label`,
+        x: EXHALE_LAYOUT.labelX,
+        y: EXHALE_LAYOUT.labelTop,
+        w: textWidthPx(beat.inLabel, EXHALE_LAYOUT.labelFontSize, "mono", EXHALE_LAYOUT.labelLetterSpacingEm),
+        h: lineBoxHeight(EXHALE_LAYOUT.labelFontSize, EXHALE_LAYOUT.labelLineHeight, 1),
+        driftPx: EXHALE_LAYOUT.entranceDrift,
+      });
+      boxes.push({
+        id: `beat-${index}-out-label`,
+        x: EXHALE_LAYOUT.labelX,
+        y: EXHALE_LAYOUT.labelBottom - lineBoxHeight(EXHALE_LAYOUT.labelFontSize, EXHALE_LAYOUT.labelLineHeight, 1),
+        w: textWidthPx(beat.outLabel, EXHALE_LAYOUT.labelFontSize, "mono", EXHALE_LAYOUT.labelLetterSpacingEm),
+        h: lineBoxHeight(EXHALE_LAYOUT.labelFontSize, EXHALE_LAYOUT.labelLineHeight, 1),
+        driftPx: EXHALE_LAYOUT.entranceDrift,
+      });
+      boxes.push({
+        id: `beat-${index}-phase-label`,
+        x: EXHALE_LAYOUT.phaseX,
+        y: EXHALE_LAYOUT.phaseTop,
+        w: textWidthPx(beat.phaseLabel, EXHALE_LAYOUT.phaseFontSize, "display"),
+        h: lineBoxHeight(EXHALE_LAYOUT.phaseFontSize, EXHALE_LAYOUT.phaseLineHeight, 1),
+        driftPx: EXHALE_LAYOUT.entranceDrift,
+      });
+      beat.countdown.forEach((count, countIndex) => {
+        boxes.push({
+          id: `beat-${index}-countdown-${countIndex}`,
+          x: EXHALE_LAYOUT.phaseX,
+          y: EXHALE_LAYOUT.phaseTop + lineBoxHeight(EXHALE_LAYOUT.phaseFontSize, EXHALE_LAYOUT.phaseLineHeight, 1) + EXHALE_LAYOUT.phaseCountGap,
+          w: textWidthPx(count, EXHALE_LAYOUT.countFontSize, "mono", EXHALE_LAYOUT.labelLetterSpacingEm),
+          h: lineBoxHeight(EXHALE_LAYOUT.countFontSize, EXHALE_LAYOUT.countLineHeight, 1),
+          driftPx: 0,
         });
       });
     }
@@ -906,6 +1266,118 @@ export const computeTextBoxes = (script: Script, brand: BrandKit): LayoutTextBox
     ...box,
     ...metadataForTextBox(box, script, brand, timeline),
   }));
+};
+
+export type GeometryBox = {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+};
+
+export type GeometryMotion = {
+  startMs: number;
+  endMs: number;
+  from: GeometryBox;
+  to: GeometryBox;
+  bezier: readonly [number, number, number, number];
+};
+
+export type GeometryElement = GeometryBox & {
+  id: string;
+  beatIndex: number;
+  kind: "shape";
+  fromMs: number;
+  toMs: number;
+  motion?: GeometryMotion;
+};
+
+export const computeGeometry = (script: Script, brand: BrandKit): GeometryElement[] => {
+  const timeline = computeTimeline(script, brand);
+  const geometry: GeometryElement[] = [];
+
+  script.beats.forEach((beat, beatIndex) => {
+    if (beat.kind !== "exhale") return;
+    resolveExhaleColor(brand, beat);
+    const span = timeline.beats[beatIndex]!;
+    const column = {
+      x: EXHALE_LAYOUT.columnX,
+      y: EXHALE_LAYOUT.columnTop,
+      w: EXHALE_LAYOUT.columnWidth,
+      h: EXHALE_LAYOUT.columnHeight,
+    };
+    const track = {
+      x: EXHALE_LAYOUT.columnX + EXHALE_LAYOUT.columnWidth / 2,
+      y: EXHALE_LAYOUT.innerTop,
+      w: EXHALE_LAYOUT.trackWidth,
+      h: EXHALE_LAYOUT.innerHeight,
+    };
+    const fill = {
+      ...track,
+      x: track.x - EXHALE_LAYOUT.trackWidth / 2,
+    };
+    const dotSize = EXHALE_LAYOUT.dotSize;
+    const dotX = EXHALE_LAYOUT.columnX + EXHALE_LAYOUT.columnWidth / 2 - dotSize / 2;
+    const dotFrom = {
+      x: dotX,
+      y: EXHALE_LAYOUT.innerTop - dotSize / 2,
+      w: dotSize,
+      h: dotSize,
+    };
+    const dotTo = {
+      x: dotX,
+      y: EXHALE_LAYOUT.innerTop + EXHALE_LAYOUT.innerHeight - dotSize / 2,
+      w: dotSize,
+      h: dotSize,
+    };
+    const add = (
+      id: string,
+      box: GeometryBox,
+      fromMs = span.startMs,
+      toMs = span.endMs,
+      motion?: GeometryMotion,
+    ) => geometry.push({ id: `beat-${beatIndex}-exhale-${id}`, beatIndex, kind: "shape", ...box, fromMs, toMs, motion });
+
+    add("column", column);
+    add("track", track, span.startMs + EXHALE_TIMING.trackStartMs);
+    add("fill", fill, span.startMs + EXHALE_TIMING.trackStartMs, span.endMs, {
+      startMs: span.startMs + EXHALE_TIMING.travelStartMs,
+      endMs: span.startMs + EXHALE_TIMING.travelStartMs + EXHALE_TIMING.travelDurationMs,
+      from: { ...fill },
+      to: { ...fill, y: EXHALE_LAYOUT.innerTop + EXHALE_LAYOUT.innerHeight, h: 0 },
+      bezier: EXHALE_TIMING.travelCurve,
+    });
+    add("dot", dotFrom, span.startMs + EXHALE_TIMING.dotFadeStartMs, span.endMs, {
+      startMs: span.startMs + EXHALE_TIMING.travelStartMs,
+      endMs: span.startMs + EXHALE_TIMING.travelStartMs + EXHALE_TIMING.travelDurationMs,
+      from: dotFrom,
+      to: dotTo,
+      bezier: EXHALE_TIMING.travelCurve,
+    });
+
+    const tickBox = (fraction: number, x: number): GeometryBox => ({
+      x,
+      y: EXHALE_LAYOUT.innerTop + EXHALE_LAYOUT.innerHeight * fraction - EXHALE_LAYOUT.tickHeight / 2,
+      w: EXHALE_LAYOUT.tickWidth,
+      h: EXHALE_LAYOUT.tickHeight,
+    });
+    [0, 1 / 3, 2 / 3, 1].forEach((fraction, tickIndex) => {
+      const tickStartMs = span.startMs + EXHALE_TIMING.tickStartMs + tickIndex * EXHALE_TIMING.tickStaggerMs;
+      add(`tick-in-${tickIndex}`, tickBox(
+        fraction,
+        EXHALE_LAYOUT.columnX + EXHALE_LAYOUT.columnWidth / 2 - EXHALE_LAYOUT.tickOffsetFromCenter - EXHALE_LAYOUT.tickWidth,
+      ), tickStartMs, span.endMs);
+    });
+    Array.from({ length: 8 }, (_, tickIndex) => tickIndex / 7).forEach((fraction, tickIndex) => {
+      const tickStartMs = span.startMs + EXHALE_TIMING.tickStartMs + (4 + tickIndex) * EXHALE_TIMING.tickStaggerMs;
+      add(`tick-out-${tickIndex}`, tickBox(
+        fraction,
+        EXHALE_LAYOUT.columnX + EXHALE_LAYOUT.columnWidth / 2 + EXHALE_LAYOUT.tickOffsetFromCenter,
+      ), tickStartMs, span.endMs);
+    });
+  });
+
+  return geometry;
 };
 
 export type LintResult = {

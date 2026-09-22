@@ -1,0 +1,31 @@
+{
+  "ok": false,
+  "violations": [
+    "[safe-zone] beat-1-in-label: box right edge 997.4000000000001 exceeds 960",
+    "[safe-zone] beat-1-out-label: box right edge 1026.4 exceeds 960",
+    "[safe-zone] beat-1-out-label: box bottom edge 1688 exceeds 1600"
+  ],
+  "stream": {
+    "width": null,
+    "height": null,
+    "avgFrameRate": null,
+    "duration": null
+  },
+  "rules": {
+    "width": "skipped",
+    "height": "skipped",
+    "fps": "skipped",
+    "duration": "skipped",
+    "safe-zone": "fail",
+    "text-fit": "pass",
+    "hook": "pass",
+    "pacing": "pass",
+    "cta": "pass",
+    "overlap": "pass",
+    "pixel-bands": "skipped"
+  },
+  "samples": 0,
+  "closeDwellMs": 2500,
+  "ctaDwellMs": 2500,
+  "durationOverrideReason": null
+}

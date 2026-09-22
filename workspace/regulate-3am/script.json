@@ -1,0 +1,59 @@
+{
+  "id": "regulate-3am",
+  "brand": "regulate",
+  "coreMechanic": "Five intrusive thoughts hold in place as one long exhale drains a vertical breath column and dissolves each thought in turn.",
+  "beats": [
+    {
+      "kind": "moment",
+      "eyebrow": "3:04 AM",
+      "line": "awake again.",
+      "thoughts": [
+        "the email you didn't send",
+        "tomorrow. tomorrow.",
+        "why did you say that",
+        "why can't I just sleep",
+        "did I lock the door"
+      ],
+      "thoughtPositions": [
+        { "x": 97.2, "y": 364.8 },
+        { "x": 216, "y": 576 },
+        { "x": 129.6, "y": 1367.15 },
+        { "x": 86.4, "y": 1152 },
+        { "x": 259.2, "y": 192 }
+      ],
+      "bg": "#050b08",
+      "durationMs": 6500
+    },
+    {
+      "kind": "exhale",
+      "thoughts": [
+        "the email you didn't send",
+        "tomorrow. tomorrow.",
+        "why did you say that",
+        "why can't I just sleep",
+        "did I lock the door"
+      ],
+      "thoughtPositions": [
+        { "x": 97.2, "y": 364.8 },
+        { "x": 216, "y": 576 },
+        { "x": 129.6, "y": 1367.15 },
+        { "x": 86.4, "y": 1152 },
+        { "x": 259.2, "y": 192 }
+      ],
+      "inLabel": "IN 4",
+      "outLabel": "OUT 8",
+      "phaseLabel": "Exhale",
+      "countdown": ["8s", "7s", "6s", "5s", "4s", "3s", "2s", "1s"],
+      "colorKey": "stateBalanced",
+      "bg": "#050b08",
+      "durationMs": 10600
+    }
+  ],
+  "close": {
+    "line": "For the nights your mind won't stop.",
+    "showWordmark": true,
+    "durationMs": 2500
+  },
+  "caption": "",
+  "hashtags": []
+}
