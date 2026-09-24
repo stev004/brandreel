@@ -1,0 +1,622 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Regulate Showreel</title>
+<!--
+  brandreel animatic rev1 - regulate - "Showreel" 18.0s - one unbroken take
+  Brief (Steven 2026-09-24): "a dynamic 15-20 second motion graphics video that
+  shows what an incredible motion designer you are for this brand. Like a
+  showreel for a resume. Go all out. Entirely grounded in the brand."
+
+  CORE MECHANIC: the response that never finished, finished - one white point
+  carries the body's unfinished stress response through the tools in a single
+  unbroken take, every scene a re-spacing of the last one's geometry, the
+  event density falling from activated to regulated until the point comes to
+  rest as the white full stop in "regulate."
+
+  Taste seat (Fable 5.1 consult, 2026-09-24) rulings adopted: no cuts at all;
+  the point is the only pure-white thing and is never scaled or recoloured;
+  state colour lives only on the state's own instrument part and its label
+  word; teal only on the kicker (and the tagline once the kicker is gone);
+  no timecode HUD; no citation beside an illustrative trace; Angry never
+  appears (the line never visits it); the close's point never moves - the
+  type arrives around it.
+
+  LAWS IN PLAY (Regulate Brand Book, 2026-09-04; brand.json voice.notes):
+  - The dot is always white. The point IS the full stop: its diameter is the
+    measured diameter of Playfair's "." at the wordmark size (see WORDMARK).
+  - A state colour names a state: one per surface, only on the thing that is
+    that state. Gauge: Anxious amber on the redline + label word. Pendulum:
+    Freeze slate on the guide arc, hit ring + label word. Breath: Balanced
+    sage on ticks, fill + label word.
+  - Emerald #0a1812 is the ground, flat, whole take. No orb, no gradient,
+    no cards. Teal #4FD1C5 is a supplement - the kicker, then the tagline.
+  - Playfair Display 500 (+ italic 500 for emphasis, as the site's <em>),
+    JetBrains Mono caps kickers/labels .22-.3em, Inter unused on screen.
+  - Hook first (point at 0.06s, spike 1.0s, headline 1.35s); wordmark only
+    at the end; the tagline closes. Plain hyphens only.
+  - Motion: house cubic-bezier(.2,.7,.2,1); settle (.22,1,.36,1) for draws
+    and the gauge fall; breath turnarounds (.45,.05,.55,.95) - also the
+    exhale here: the app's 8s Easing.ease (.42,0,1,1) compressed to 2s
+    stalls visibly at the top, so the 3:04 AM travel curve stands in (listed
+    deviation). No springs. Events snap
+    (spike 240ms, pendulum hit ring 90ms), struggles crawl (the baseline is
+    a linear 300px/s crawl), records never redraw (every trace is a
+    function of x, fixed once drawn).
+  - Instruments are the app's (regulate main, 2026-09-24): Pressure Gauge
+    face = half arc, 11 ticks every 18deg at r 101-116/110, redline last
+    20% amber, needle 95/110 of the arc, hub; Pendulum = arm from a top
+    pivot, guide arc +-5.2deg at 433/443 of the arm, hit ring; Regulate
+    Breath = column track cream .08-.10, sage fill rising from the bottom
+    with the dot riding it, 4 inhale ticks left (.5) + 8 exhale ticks right
+    (.35), "IN 4"/"OUT 8" cream .3, entrance track -> ticks 30ms apart.
+    Deviation (taste seat): the app's coloured dots/bob are the white point.
+
+  SCENE TABLE (ms)                                   words
+  A     0-4000  hook + window: point crawls baseline;  "The response that never finished."
+                spike snaps 1000-1240 (+ one impact ring); ghost "completed" path draws 1150-2050 on
+                settle while the real line stays stuck + jitters; pull back
+                2800-3700 (zoom 1 -> .6) and the window band draws beneath.
+                labels THREAT / STUCK - Where most of us live / HYPER / WINDOW / HYPO
+  B  3950-5550  Pressure Gauge: upper band hairline bends into the arc; the
+                point becomes the needle tip, trembles at the redline, falls
+                on settle to horizontal-left and comes to rest.  ANXIOUS · PRESSURE GAUGE
+  C  5550-7650  Pendulum: the needle is now the arm, released from rest at
+                90deg; pivot rises 1080 -> 360, arm 330 -> 780; period 1200ms
+                constant, amplitude decays 90 -> 33 -> 19 -> 16deg, caught
+                at centre.                                   FREEZE · PENDULUM
+  D  7650-10950 Regulate Breath: the arm is the column; inhale 1000ms, exhale
+                2000ms (the app's 1:2).  "Stillness is a destination, not a starting point."
+                                                             BALANCED · REGULATE BREATH
+  E 10950-13900 Release: the point turns out of the column into a trace -
+                jagged, then sine, then damped flat onto the dashed
+                "completed" line (the hook's ghost, called back); pen
+                decelerates to a stop.  "Your body already knows."  COMPLETED · ILLUSTRATIVE
+  F 13900-18000 Close: trail retracts into the point (14050-14750); the point never
+                moves; "regulate" rises around it (14850, letters 40ms apart,
+                700ms); tagline 15650; hold to 18000.  "regulate." · NOT MEDITATION. REGULATION.
+  Kicker (site grammar "{ 02 } - The problem"): 01 THE PROBLEM · 02 THE WINDOW ·
+  03 THE TOOLKIT · 04 THE DIFFERENCE · 05 THE CYCLE, off at 14100.
+
+  COPY LIST (every on-screen string): { 01 } - THE PROBLEM · { 02 } - THE WINDOW ·
+  { 03 } - THE TOOLKIT · { 04 } - THE DIFFERENCE · { 05 } - THE CYCLE · THREAT ·
+  STUCK · Where most of us live · HYPERAROUSAL · THE WINDOW · HYPOAROUSAL ·
+  The response that never finished. · PRESSURE · ANXIOUS · PRESSURE GAUGE ·
+  FREEZE · PENDULUM · IN 4 · OUT 8 · Stillness is a destination, not a starting
+  point. · BALANCED · REGULATE BREATH · Your body already knows. · COMPLETED ·
+  ILLUSTRATIVE · regulate. · NOT MEDITATION. REGULATION.
+
+  The point carries a 180-degree-shutter motion-blur smear (8.3ms of its own
+  path) so fast moves read as filmed, not stepped (ART_DIRECTION lever).
+
+  CONTRACT: window.__seek(ms) draws that frame synchronously; window.__durationMs.
+  Rendered by bin/animatic-render.mjs (frame-exact 60fps). Sound: regulate-showreel.sound.mjs.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,500;1,500&display=block" rel="stylesheet">
+<style>
+  :root{
+    --ground:#0a1812; --cream:#F2F0E9; --sage:#8F9E8B; --teal:#4FD1C5;
+    --anx:#D4A574; --frz:#7E9AA6; --bal:#7FA77F; --dot:#FFFFFF;
+    --serif:"Playfair Display", Georgia, serif;
+    --mono:"JetBrains Mono", ui-monospace, Menlo, monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;background:#050d09;overflow:hidden;color:var(--cream)}
+  #wrap{position:absolute;left:50%;top:0;transform-origin:50% 0}
+  #stage{position:relative;width:1080px;height:1920px;background:var(--ground);overflow:hidden}
+  #g{position:absolute;left:0;top:0;width:1080px;height:1920px;overflow:visible}
+  .t{position:absolute;left:0;top:0;will-change:transform,opacity,filter;visibility:hidden}
+  .head{font-family:var(--serif);font-weight:500;font-size:88px;line-height:1.06;letter-spacing:-.01em;color:var(--cream);width:864px;text-wrap:balance}
+  .head em{font-style:italic}
+  .head .w{display:inline-block;will-change:transform,opacity,filter}
+  .italic{font-style:italic}
+  .mono{font-family:var(--mono);font-weight:500;font-size:22px;letter-spacing:.24em;text-transform:uppercase;color:var(--sage);white-space:nowrap;line-height:1}
+  .mono .g{display:block;text-transform:none;letter-spacing:.06em;font-size:19px;font-weight:400;opacity:.62;margin-top:10px}
+  .kick{font-family:var(--mono);font-weight:500;font-size:24px;letter-spacing:.28em;text-transform:uppercase;color:var(--teal);white-space:nowrap;line-height:1}
+  .kick b{font-weight:inherit;opacity:.45}
+  .tool{font-family:var(--mono);font-weight:500;font-size:26px;letter-spacing:.26em;text-transform:uppercase;color:var(--cream);white-space:nowrap;line-height:1;opacity:.9}
+  .tool i{font-style:normal}
+  .wm{font-family:var(--serif);font-weight:500;color:var(--cream);white-space:pre;line-height:1}
+  .tag{font-family:var(--mono);font-weight:500;font-size:28px;letter-spacing:.3em;text-transform:uppercase;color:var(--teal);white-space:nowrap;line-height:1}
+  /* viewer chrome - hidden in capture */
+  #bar{position:fixed;left:0;right:0;bottom:0;height:52px;display:flex;align-items:center;gap:14px;padding:0 18px;background:#050d09;border-top:1px solid #16241d;font-family:var(--mono);font-size:12px;letter-spacing:.14em;color:var(--sage)}
+  #bar button{background:none;border:1px solid #2a3a31;color:var(--cream);font:inherit;letter-spacing:.14em;text-transform:uppercase;padding:7px 14px;border-radius:99px;cursor:pointer}
+  #bar button:hover{border-color:var(--sage)}
+  #scrub{flex:1;accent-color:var(--teal)}
+  #tc{min-width:92px;text-align:right;font-variant-numeric:tabular-nums}
+  body.capture #bar{display:none}
+  body.capture{background:var(--ground)}
+</style>
+<body>
+<div id="wrap"><div id="stage">
+  <svg id="g" viewBox="0 0 1080 1920" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <filter id="glow" x="-200%" y="-200%" width="500%" height="500%"><feGaussianBlur stdDeviation="9"/></filter>
+    </defs>
+  </svg>
+
+  <div class="t kick" id="k1"><b>{</b> 01 <b>}</b> - The problem</div>
+  <div class="t kick" id="k2"><b>{</b> 02 <b>}</b> - The window</div>
+  <div class="t kick" id="k3"><b>{</b> 03 <b>}</b> - The toolkit</div>
+  <div class="t kick" id="k4"><b>{</b> 04 <b>}</b> - The difference</div>
+  <div class="t kick" id="k5"><b>{</b> 05 <b>}</b> - The cycle</div>
+
+  <div class="t mono" id="lThreat">Threat</div>
+  <div class="t mono" id="lStuck" style="color:var(--cream)">Stuck<span class="g" style="color:var(--sage);opacity:.8">Where most of us live</span></div>
+  <div class="t mono" id="lHyper">&#9650;&ensp;Hyperarousal</div>
+  <div class="t mono" id="lWin">&#9632;&ensp;The window</div>
+  <div class="t mono" id="lHypo">&#9660;&ensp;Hypoarousal</div>
+  <div class="t head" id="hA">The response that never <em>finished.</em></div>
+
+  <div class="t mono" id="lPress" style="font-size:20px;opacity:.5">Pressure</div>
+  <div class="t tool" id="tA"><i style="color:var(--anx)">Anxious</i> &middot; Pressure Gauge</div>
+  <div class="t tool" id="tF"><i style="color:var(--frz)">Freeze</i> &middot; Pendulum</div>
+  <div class="t mono" id="lIn" style="color:var(--cream);opacity:.3">In 4</div>
+  <div class="t mono" id="lOut" style="color:var(--cream);opacity:.3">Out 8</div>
+  <div class="t head italic" id="hD" style="font-size:74px">Stillness is a destination,<br>not a starting point.</div>
+  <div class="t tool" id="tB"><i style="color:var(--bal)">Balanced</i> &middot; Regulate Breath</div>
+
+  <div class="t head" id="hE">Your body <em>already</em> knows.</div>
+  <div class="t mono" id="lDone">Completed</div>
+  <div class="t mono" id="lIllus" style="font-size:19px;opacity:.55">Illustrative</div>
+
+  <div id="wm"></div>
+  <div class="t tag" id="tag">Not meditation. Regulation.</div>
+</div></div>
+<div id="bar"><button id="play">Play</button><span id="tc">0.00s</span><input id="scrub" type="range" min="0" max="18000" step="1" value="0"><span>regulate &middot; showreel &middot; 1080&times;1920 &middot; 60fps</span></div>
+
+<script>
+// ---------- deterministic motion kit (no springs, no CSS animation) ----------
+function cubicBezier(x1, y1, x2, y2) {
+  const cx = 3 * x1, bx = 3 * (x2 - x1) - cx, ax = 1 - cx - bx;
+  const cy = 3 * y1, by = 3 * (y2 - y1) - cy, ay = 1 - cy - by;
+  const sx = (t) => ((ax * t + bx) * t + cx) * t, sy = (t) => ((ay * t + by) * t + cy) * t;
+  const dx = (t) => (3 * ax * t + 2 * bx) * t + cx;
+  return (x) => {
+    if (x <= 0) return 0; if (x >= 1) return 1;
+    let t = x;
+    for (let i = 0; i < 8; i++) { const e = sx(t) - x; if (Math.abs(e) < 1e-7) return sy(t); const d = dx(t); if (Math.abs(d) < 1e-6) break; t -= e / d; }
+    let lo = 0, hi = 1; t = x;
+    for (let i = 0; i < 40; i++) { const v = sx(t); if (Math.abs(v - x) < 1e-7) break; if (x > v) lo = t; else hi = t; t = (lo + hi) / 2; }
+    return sy(t);
+  };
+}
+const HOUSE = cubicBezier(0.2, 0.7, 0.2, 1);      // site EASE / app HOUSE_EASE
+const SETTLE = cubicBezier(0.22, 1, 0.36, 1);     // draws, the gauge fall
+const INOUT = cubicBezier(0.45, 0.05, 0.55, 0.95);// breath turnarounds
+const EASE_IN = cubicBezier(0.42, 0, 1, 1);       // RN Easing.ease: the app's exhale drain
+const RISE = cubicBezier(0.3, 0.2, 0.4, 1);       // the app's inhale: slowing near the top
+const SNAP = cubicBezier(0.3, 0, 0, 1);           // events snap
+const clamp = (x, a = 0, b = 1) => (x < a ? a : x > b ? b : x);
+const lerp = (a, b, p) => a + (b - a) * p;
+const P = (t, a, d) => clamp((t - a) / d);
+const smooth = (x) => { x = clamp(x); return x * x * (3 - 2 * x); };
+function kf(t, keys) {
+  if (t <= keys[0][0]) return keys[0][1];
+  for (let i = 1; i < keys.length; i++) {
+    const [t1, v1, e = HOUSE] = keys[i], [t0, v0] = keys[i - 1];
+    if (t <= t1) return lerp(v0, v1, e((t - t0) / (t1 - t0)));
+  }
+  return keys[keys.length - 1][1];
+}
+function hash(n) { n |= 0; n = (n << 13) ^ n; return 1 - ((Math.imul(n, (Math.imul(Math.imul(n, n), 15731) + 789221) | 0) + 1376312589) & 0x7fffffff) / 1073741824; } // 32-bit: doubles lose the low bits
+function vnoise(x, seed) { const i = Math.floor(x), f = x - i, u = f * f * (3 - 2 * f); return lerp(hash(i + seed * 1013), hash(i + 1 + seed * 1013), u); }
+function fbm(x, seed) { return vnoise(x, seed) * 0.6 + vnoise(x * 2.3, seed + 7) * 0.28 + vnoise(x * 5.1, seed + 13) * 0.12; }
+const softplus = (u, k = 70) => (u > 20 * k ? u : k * Math.log1p(Math.exp(u / k)));
+const D2R = Math.PI / 180;
+
+// ---------- DOM ----------
+const $ = (id) => document.getElementById(id);
+const NS = 'http://www.w3.org/2000/svg';
+const svg = $('g');
+function S(tag, attrs, parent = svg) { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent.appendChild(e); return e; }
+function A(e, attrs) { for (const k in attrs) e.setAttribute(k, attrs[k]); }
+function show(e, o) { e.style.visibility = o > 0.002 ? 'visible' : 'hidden'; e.style.opacity = o > 0.002 ? o.toFixed(4) : 0; }
+function place(e, x, y, o, { dy = 0, blur = 0, ax = 0 } = {}) {
+  show(e, o);
+  if (o <= 0.002) return;
+  e.style.transform = `translate(${x}px,${y + dy}px)` + (ax ? ` translateX(${-ax * 100}%)` : '');
+  e.style.filter = blur > 0.05 ? `blur(${blur.toFixed(2)}px)` : 'none';
+}
+// the house entrance/exit as a pure function of t: rise 42px (14pt at x3), blur to sharp
+function riseV(t, at, outAt = Infinity, { dur = 620, dy = 42, blur = 10, outDur = 520, outDy = -28, outBlur = 8 } = {}) {
+  const pin = HOUSE(P(t, at, dur)), pout = HOUSE(P(t, outAt, outDur));
+  return { o: pin * (1 - pout), dy: lerp(dy, 0, pin) + outDy * pout, blur: blur * (1 - pin) + outBlur * pout };
+}
+function rise(e, t, x, y, at, outAt, opts = {}) { const r = riseV(t, at, outAt, opts); place(e, x, y, r.o * (opts.max ?? 1), { dy: r.dy, blur: r.blur, ax: opts.ax || 0 }); }
+// per-word stagger for headlines (records wrap once, words keep their line)
+function splitWords(el) {
+  const out = [];
+  const walk = (node) => {
+    for (const ch of [...node.childNodes]) {
+      if (ch.nodeType === 3) {
+        const frag = document.createDocumentFragment();
+        for (const p of ch.textContent.split(/(\s+)/)) {
+          if (!p) continue;
+          if (/^\s+$/.test(p)) { frag.appendChild(document.createTextNode(' ')); continue; }
+          const s = document.createElement('span'); s.className = 'w'; s.textContent = p; frag.appendChild(s); out.push(s);
+        }
+        node.replaceChild(frag, ch);
+      } else if (ch.nodeType === 1) walk(ch);
+    }
+  };
+  walk(el);
+  return out;
+}
+function headline(el, words, t, x, y, at, outAt, stagger = 70) {
+  el.style.visibility = 'visible'; el.style.opacity = 1;
+  el.style.transform = `translate(${x}px,${y}px)`;
+  let any = false;
+  words.forEach((w, i) => {
+    const r = riseV(t, at + i * stagger, outAt + i * 35, { dur: 620, dy: 42, blur: 12 });
+    any = any || r.o > 0.002;
+    w.style.opacity = r.o.toFixed(4);
+    w.style.transform = `translateY(${r.dy.toFixed(2)}px)`;
+    w.style.filter = r.blur > 0.05 ? `blur(${r.blur.toFixed(2)}px)` : 'none';
+  });
+  if (!any) el.style.visibility = 'hidden';
+}
+const path = (pts) => { if (!pts.length) return ''; let d = `M${pts[0][0].toFixed(2)} ${pts[0][1].toFixed(2)}`; for (let i = 1; i < pts.length; i++) d += `L${pts[i][0].toFixed(2)} ${pts[i][1].toFixed(2)}`; return d; };
+
+const C = { cream: '#F2F0E9', sage: '#8F9E8B', teal: '#4FD1C5', anx: '#D4A574', frz: '#7E9AA6', bal: '#7FA77F', white: '#FFFFFF' };
+const DUR = 18000;
+
+// ---------- SVG layers (back to front) ----------
+const band = {
+  u: S('path', { fill: 'none', stroke: C.cream, 'stroke-width': 2.5, 'stroke-linecap': 'round' }),
+  l: S('path', { fill: 'none', stroke: C.cream, 'stroke-width': 2.5, 'stroke-linecap': 'round' }),
+};
+const ghostA = S('path', { fill: 'none', stroke: C.sage, 'stroke-width': 3, 'stroke-dasharray': '14 12', 'stroke-linecap': 'round' });
+const trailA = S('path', { fill: 'none', stroke: C.cream, 'stroke-width': 4, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' });
+const gTicks = Array.from({ length: 11 }, () => S('line', { stroke: C.cream, 'stroke-width': 3, 'stroke-linecap': 'round' }));
+const redline = S('path', { fill: 'none', stroke: C.anx, 'stroke-width': 6, 'stroke-linecap': 'round' });
+const guide = S('path', { fill: 'none', stroke: C.frz, 'stroke-width': 7, 'stroke-linecap': 'round' });
+const fill = S('line', { stroke: C.bal, 'stroke-width': 12, 'stroke-linecap': 'butt' });
+const bTicks = Array.from({ length: 12 }, () => S('line', { stroke: C.bal, 'stroke-width': 4, 'stroke-linecap': 'butt' }));
+const arm = S('line', { stroke: C.cream, 'stroke-linecap': 'round' });   // needle -> arm -> column track
+const hub = S('circle', { fill: C.cream });                                // hub -> pivot
+const ghostE = S('path', { fill: 'none', stroke: C.sage, 'stroke-width': 3, 'stroke-dasharray': '14 12', 'stroke-linecap': 'round' });
+const trailE = S('path', { fill: 'none', stroke: C.cream, 'stroke-width': 4, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' });
+const ring = S('circle', { fill: 'none', stroke: C.frz, 'stroke-width': 4 });
+const impact = S('circle', { fill: 'none', stroke: C.cream, 'stroke-width': 3 });
+const smear = S('path', { fill: 'none', stroke: C.white, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' });
+const glow = S('circle', { fill: C.white, filter: 'url(#glow)' });
+const pt = S('circle', { fill: C.white });
+
+// ---------- text ----------
+const T = {};
+for (const id of ['k1', 'k2', 'k3', 'k4', 'k5', 'lThreat', 'lStuck', 'lHyper', 'lWin', 'lHypo', 'hA', 'lPress', 'tA', 'tF', 'lIn', 'lOut', 'hD', 'tB', 'hE', 'lDone', 'lIllus', 'tag']) T[id] = $(id);
+const W_A = splitWords(T.hA), W_D = splitWords(T.hD), W_E = splitWords(T.hE);
+
+// ---------- wordmark: the point IS Playfair's full stop ----------
+let PR = 11, WM = null; // point radius, wordmark geometry
+function measureWordmark() {
+  const cv = document.createElement('canvas').getContext('2d');
+  const f = (px) => `500 ${px}px "Playfair Display"`;
+  cv.font = f(200);
+  const dm = cv.measureText('.');
+  const d200 = dm.actualBoundingBoxLeft + dm.actualBoundingBoxRight;
+  const FS = Math.round((200 * 22) / d200);           // size at which "." is 22px across
+  cv.font = f(FS);
+  const full = cv.measureText('regulate.').width;
+  const dot = cv.measureText('.');
+  const pre = full - dot.width;                          // kerning-aware start of "."
+  const dotCx = (dot.actualBoundingBoxRight - dot.actualBoundingBoxLeft) / 2;
+  const dotCyFromBase = (dot.actualBoundingBoxDescent - dot.actualBoundingBoxAscent) / 2;
+  const dia = dot.actualBoundingBoxLeft + dot.actualBoundingBoxRight;
+  const fm = cv.measureText('regulate');
+  const x0 = 540 - full / 2, yF = 960;
+  const baseY = yF - dotCyFromBase;
+  const letters = [];
+  const word = 'regulate';
+  for (let i = 0; i < word.length; i++) letters.push({ ch: word[i], x: x0 + cv.measureText(word.slice(0, i)).width });
+  // box top so the baseline lands on baseY: line-height = FS, baseline at (FS - (a+d))/2 + a
+  const a = fm.fontBoundingBoxAscent, d = fm.fontBoundingBoxDescent;
+  const top = baseY - ((FS - (a + d)) / 2 + a);
+  WM = { FS, full, xF: x0 + pre + dotCx, yF, letters, top, x0, baseY };
+  PR = dia / 2;
+  const host = $('wm'); host.innerHTML = '';
+  WM.els = letters.map((L) => { const s = document.createElement('div'); s.className = 't wm'; s.style.fontSize = FS + 'px'; s.textContent = L.ch; host.appendChild(s); return s; });
+  window.__wm = { FS, dotDiameter: dia, xF: WM.xF, yF, width: full };
+}
+
+// =====================================================================
+// SCENE A - hook + window (world coords, camera maps world -> screen)
+// =====================================================================
+const penXA = (t) => 150 + 0.3 * Math.max(0, t - 250);          // crawl: linear 300px/s
+const T_SPIKE = 1000, T_APEX = 1240;
+const X_APEX = penXA(T_APEX);
+function sigA(t) {                                                 // the body's signal, y in world px
+  let y = t < T_SPIKE ? 1000 + 1.4 * Math.sin(t / 240) : kf(t, [[T_SPIKE, 1000], [T_APEX, 548, SNAP], [T_APEX + 360, 580, HOUSE]]);
+  const j = smooth(P(t, T_APEX, 520));
+  return y + j * (5.5 * fbm(t / 24, 3) + 2.2 * fbm(t / 7, 9));
+}
+const tOfX = (x) => 250 + (x - 150) / 0.3;
+function camA(t) {
+  const e = HOUSE(P(t, 2800, 900));
+  const fxPre = 540 + softplus(penXA(t) - 700);
+  return { z: lerp(1, 0.6, e), fx: lerp(fxPre, 700, e) };
+}
+const scrA = (c, wx, wy) => [540 + (wx - c.fx) * c.z, 960 + (wy - 960) * c.z];
+function ghostPts(xEnd) {                                           // "completed": back to baseline
+  const p0 = [X_APEX, 548], p1 = [X_APEX + 170, 548], p2 = [X_APEX + 230, 1000], p3 = [X_APEX + 400, 1000];
+  const pts = [];
+  for (let i = 0; i <= 60; i++) {
+    const u = i / 60, v = 1 - u;
+    const x = v * v * v * p0[0] + 3 * v * v * u * p1[0] + 3 * v * u * u * p2[0] + u * u * u * p3[0];
+    const y = v * v * v * p0[1] + 3 * v * v * u * p1[1] + 3 * v * u * u * p2[1] + u * u * u * p3[1];
+    if (x > xEnd) { pts.push([xEnd, y]); return pts; }
+    pts.push([x, y]);
+  }
+  if (xEnd > p3[0]) pts.push([xEnd, 1000]);
+  return pts;
+}
+function pointA(t) { const c = camA(t); return scrA(c, penXA(t), sigA(t)); }
+
+// =====================================================================
+// SCENE B - Pressure Gauge
+// =====================================================================
+const HUB0 = [540, 1150], R_ARC = 430, NL = 372;
+const jolt = (t) => (t < 4100 || t > 5000 ? 0 : 6 * fbm(t / 22, 31) * smooth(P(t, 4100, 300)) * (1 - smooth(P(t, 4880, 120))));
+const hubAt = (t) => [HUB0[0] + jolt(t), HUB0[1]];
+let HUB = HUB0;
+const tipAt = (deg, hub = HUB0, len = NL) => [hub[0] + len * Math.sin(deg * D2R), hub[1] - len * Math.cos(deg * D2R)];
+const tremble = (t) => 3.2 * fbm(t / 30, 21) + 1.1 * Math.sin(t / 17);
+function thetaB(t) {
+  if (t < 4900) return 72 + tremble(t) * smooth(P(t, 4100, 400));
+  return lerp(72 + tremble(4900), -90, SETTLE(P(t, 4900, 650)));
+}
+function pointB(t) { const b = HOUSE(P(t, 3950, 650)); const a = pointA(t), g = tipAt(thetaB(t), hubAt(t)); return [lerp(a[0], g[0], b), lerp(a[1], g[1], b)]; }
+
+// =====================================================================
+// SCENE C - Pendulum (released from rest at 90deg, period constant)
+// =====================================================================
+const T_C = 5550, PERIOD = 1200;
+const pivotC = (t) => [540, kf(t, [[T_C, HUB0[1]], [T_C + 800, 360, HOUSE]])];
+const lenC = (t) => kf(t, [[T_C, NL], [T_C + 800, 780, HOUSE]]);
+const ampC = (t) => (15 + 75 * Math.exp(-(t - T_C) / 420)) * (1 - smooth(P(t, 7350, 300)));
+const psiC = (t) => ampC(t) * Math.cos((2 * Math.PI * (t - T_C)) / PERIOD);      // + = left
+function bobC(t) { const p = pivotC(t), L = lenC(t), s = psiC(t) * D2R; return [p[0] - L * Math.sin(s), p[1] + L * Math.cos(s)]; }
+
+// =====================================================================
+// SCENE D - Regulate Breath (column top 360, bottom 1140, x 540)
+// =====================================================================
+const COL = { x: 540, top: 360, bot: 1140 };
+const T_IN = 7950, T_EX = 8950, T_EX_END = 10950;
+function pointD(t) {
+  if (t < T_IN) return [COL.x, COL.bot];
+  if (t < T_EX) return [COL.x, lerp(COL.bot, COL.top, RISE(P(t, T_IN, 1000)))];
+  return [COL.x, lerp(COL.top, COL.bot, INOUT(P(t, T_EX, 2000)))];
+}
+
+// =====================================================================
+// SCENE E - release trace (world: X along, Y down from baseline 0)
+// =====================================================================
+const T_E = T_EX_END, DUR_E = 2950, XTOT = 900;
+const eE = (t) => 1 - Math.pow(1 - P(t, T_E, DUR_E), 1.5);
+const penXE = (t) => XTOT * eE(t);
+function waveY(X) {
+  const jag = clamp(1.9 * fbm(X / 13, 11) + 0.55 * Math.sin(X / 6.1) * vnoise(X / 37, 4), -1, 1);
+  const sine = Math.sin((2 * Math.PI * X) / 165);
+  const wj = 1 - smooth((X - 230) / 220);
+  const amp = 120 * (1 - smooth((X - 430) / 360));
+  return amp * smooth(X / 60) * (wj * jag + (1 - wj) * sine);
+}
+const baseYE = (t) => lerp(1140, 960, HOUSE(P(t, 11100, 2500)));
+const screenXE = (t) => lerp(540, WM ? WM.xF : 800, eE(t));
+// the corner out of the column: blend the fall's momentum into the trace
+function cornerE(t) { return 0; } // the exhale lands at rest (INOUT): no momentum to carry into the turn
+function worldE(t) { return [penXE(t), waveY(penXE(t)) + cornerE(t)]; }
+const offE = (t) => [screenXE(t) - penXE(t), baseYE(t)];
+function pointE(t) { const w = worldE(t), o = offE(t); return [w[0] + o[0], w[1] + o[1]]; }
+
+// =====================================================================
+// the point: one continuous path through every scene
+// =====================================================================
+function pointAt(t) {
+  if (t < 3950) return pointA(t);
+  if (t < T_C) return pointB(t);
+  if (t < 7650) return bobC(t);
+  if (t < T_E) return pointD(t);
+  if (t < T_E + DUR_E) return pointE(t);
+  return [WM.xF, WM.yF];
+}
+
+// =====================================================================
+// RENDER
+// =====================================================================
+function kicker(t) {
+  const ks = [[T.k1, 600, 2900], [T.k2, 3050, 4150], [T.k3, 4300, 7650], [T.k4, 7800, 11050], [T.k5, 11200, 14100]];
+  for (const [e, a, b] of ks) rise(e, t, 96, 170, a, b, { dy: 16, blur: 6, dur: 520, outDy: -12, outDur: 420 });
+}
+function toolLabel(e, t, a, b) { rise(e, t, 540, 1540, a, b, { dy: 20, blur: 8, ax: 0.5 }); }
+
+function render(t) {
+  t = clamp(t, 0, DUR);
+  const p = pointAt(t);
+  kicker(t);
+
+  // ---------------- A ----------------
+  const cA = camA(Math.min(t, 4000));
+  const exitA = 1 - HOUSE(P(t, 3900, 500));
+  {
+    const xPen = penXA(Math.min(t, 3950)); const pts = [];
+    if (t > 250 && exitA > 0) {
+      for (let x = 150; x < xPen; x += 3) pts.push(scrA(cA, x, sigA(tOfX(x))));
+      pts.push(scrA(cA, xPen, sigA(Math.min(t, 3950))));
+    }
+    A(trailA, { d: path(pts), 'stroke-opacity': 0.92 * exitA, 'stroke-width': 4 * lerp(1, 0.8, 1 - cA.z) });
+    const gx = X_APEX + 700 * SETTLE(P(t, 1150, 900)) + 0.3 * Math.max(0, t - 2050);
+    A(ghostA, { d: t > 1150 && exitA > 0 ? path(ghostPts(gx).map(([x, y]) => scrA(cA, x, y))) : '', 'stroke-opacity': 0.75 * exitA });
+    // window band: two hairlines drawn left to right; the upper one becomes the gauge arc
+    const bx = lerp(-500, 2200, SETTLE(P(t, 3000, 900)));
+    const bandOp = 0.2 * smooth(P(t, 3000, 300));
+    A(band.l, { d: t > 3000 ? path([scrA(cA, -500, 1140), scrA(cA, bx, 1140)]) : '', 'stroke-opacity': bandOp * exitA });
+    const m = HOUSE(P(t, 3950, 650));
+    const up = [];
+    if (t > 3000) {
+      const N = 72;
+      for (let i = 0; i <= N; i++) {
+        const u = i / N;
+        const wx = lerp(-500, 2200, u);
+        if (wx > bx) break;
+        const L = scrA(cA, wx, 860);
+        const G = tipAt(lerp(-90, 90, u), hubAt(t), R_ARC);
+        up.push([lerp(L[0], G[0], m), lerp(L[1], G[1], m)]);
+      }
+    }
+    const arcExit = 1 - HOUSE(P(t, 5450, 450));
+    A(band.u, { d: path(up), 'stroke-opacity': lerp(bandOp, 0.24, m) * arcExit });
+    // labels
+    const ap = scrA(cA, X_APEX - 26, 548 - 44);
+    const snap = SNAP(P(t, 1120, 200));
+    place(T.lThreat, ap[0], ap[1], snap * exitA, { ax: 1, dy: 8 * (1 - snap) });
+    const sp = scrA(cA, X_APEX + 64, 580 - 104);
+    const rs = riseV(t, 1950, 3900, { dy: 18, blur: 8 });
+    place(T.lStuck, sp[0], sp[1], rs.o, { dy: rs.dy, blur: rs.blur });
+    const u860 = scrA(cA, 0, 860)[1], u1140 = scrA(cA, 0, 1140)[1];
+    rise(T.lHyper, t, 96, u860 - 40, 3250, 3900, { dy: 16, blur: 8 });
+    rise(T.lWin, t, 96, u860 + 16, 3350, 3920, { dy: 16, blur: 8 });
+    rise(T.lHypo, t, 96, u1140 + 18, 3450, 3940, { dy: 16, blur: 8 });
+    headline(T.hA, W_A, t, 96, 1210, 1350, 3880);
+    // the threat lands: one ring from the apex, snapped
+    const k = t - T_APEX, ap2 = scrA(cA, X_APEX, 548);
+    A(impact, { cx: ap2[0], cy: ap2[1], r: lerp(PR, 96, SETTLE(clamp(k / 700))), 'stroke-opacity': k < 0 ? 0 : (k < 60 ? k / 60 : 1 - HOUSE(clamp((k - 60) / 640))) * 0.4 });
+  }
+
+  // ---------------- B : gauge ----------------
+  {
+    const gIn = (k) => smooth(P(t, 4150 + k * 30, 250));
+    const gOut = 1 - HOUSE(P(t, 5450, 450));
+    gTicks.forEach((ln, k) => {
+      const a = (-90 + 18 * k), p1 = tipAt(a, hubAt(t), R_ARC * 101 / 110), p2 = tipAt(a, hubAt(t), R_ARC * 116 / 110);
+      A(ln, { x1: p1[0], y1: p1[1], x2: p2[0], y2: p2[1], 'stroke-opacity': 0.3 * gIn(k) * gOut });
+    });
+    const rl = []; for (let a = 54; a <= 90.01; a += 2) rl.push(tipAt(a, hubAt(t), R_ARC));
+    A(redline, { d: path(rl), 'stroke-opacity': 0.85 * smooth(P(t, 4300, 300)) * gOut });
+    const r = riseV(t, 4450, 5450, { dy: 12, blur: 6 });
+    place(T.lPress, 540 + jolt(t), HUB0[1] + 40, r.o * 0.5, { dy: r.dy, blur: r.blur, ax: 0.5 });
+    toolLabel(T.tA, t, 4450, 5500);
+  }
+
+  // ---------------- needle -> arm -> track ; hub -> pivot ----------------
+  {
+    let a1, w, o, hubO, hubR = 7;
+    if (t < T_C) { a1 = hubAt(t); w = 3; o = 0.9 * smooth(P(t, 4250, 350)); hubO = smooth(P(t, 4200, 300)); }
+    else if (t < 7650) { a1 = pivotC(t); w = 3; o = lerp(0.9, 0.24, HOUSE(P(t, T_C, 600))); hubO = lerp(1, 0.55, HOUSE(P(t, T_C, 600))); hubR = 6; }
+    else { a1 = [COL.x, COL.top]; w = lerp(3, 12, HOUSE(P(t, 7650, 400))); o = lerp(0.24, 0.1, HOUSE(P(t, 7650, 400))); hubO = 0.55 * (1 - HOUSE(P(t, 7650, 300))); hubR = 6; }
+    const trackOut = 1 - HOUSE(P(t, 10950, 500));
+    const b = t < 7650 ? p : [COL.x, COL.bot];
+    A(arm, { x1: a1[0], y1: a1[1], x2: b[0], y2: b[1], 'stroke-width': w, 'stroke-opacity': o * (t < 7650 ? 1 : trackOut) });
+    A(hub, { cx: a1[0], cy: a1[1], r: hubR, 'fill-opacity': t < 4200 ? 0 : hubO });
+  }
+
+  // ---------------- C : pendulum guides + hit ring ----------------
+  {
+    const ext = [T_C + 600, T_C + 1200, T_C + 1800];          // arrivals R, L, R
+    let go = 0, gd = '';
+    const pv = pivotC(t), L = lenC(t) * (433 / 443);
+    for (let i = 0; i < ext.length; i++) {
+      const e = ext[i], side = i % 2 === 0 ? -1 : 1;             // -1 = right (psi negative)
+      const o = smooth(P(t, e - 300, 250)) * (1 - smooth(P(t, e + 120, 300)));
+      if (o > go) {
+        go = o; const c = side * ampC(e); const pts = [];
+        for (let a = c - 5.2; a <= c + 5.21; a += 0.8) pts.push([pv[0] - L * Math.sin(a * D2R), pv[1] + L * Math.cos(a * D2R)]);
+        gd = path(pts);
+      }
+    }
+    A(guide, { d: gd, 'stroke-opacity': 0.55 * go });
+    let ro = 0, rr = 0;
+    for (const e of ext) { if (t >= e && t < e + 520) { const k = t - e; ro = k < 90 ? SNAP(k / 90) : 1 - HOUSE((k - 90) / 430); rr = lerp(PR + 6, PR + 26, SETTLE(P(t, e, 520))); } }
+    A(ring, { cx: p[0], cy: p[1], r: Math.max(0.1, rr), 'stroke-opacity': ro * 0.9 });
+    toolLabel(T.tF, t, 5800, 7550);
+  }
+
+  // ---------------- D : breath ----------------
+  {
+    const out = 1 - HOUSE(P(t, 10950, 450));
+    const fillTop = t < T_IN ? COL.bot : p[1];
+    const fo = smooth(P(t, 7700, 300)) * (t < T_E ? 1 : out);
+    A(fill, { x1: COL.x, y1: Math.min(fillTop + PR * 0.2, COL.bot), x2: COL.x, y2: COL.bot, 'stroke-opacity': t < T_E ? fo * 0.9 : 0 });
+    const H = COL.bot - COL.top;
+    bTicks.forEach((ln, k) => {
+      const inh = k < 4, i = inh ? k : k - 4, n = inh ? 4 : 8;
+      const y = COL.bot - ((i + 0.5) / n) * H;
+      const x1 = inh ? COL.x - 26 - 40 : COL.x + 26, x2 = x1 + 40;
+      const tin = smooth(P(t, 7700 + (inh ? i : 4 + i) * 30, 250));
+      const tout = 1 - smooth(P(t, 10950 + k * 25, 300));
+      A(ln, { x1, y1: y, x2, y2: y, 'stroke-opacity': (inh ? 0.5 : 0.35) * tin * tout });
+    });
+    rise(T.lIn, t, COL.x + 26 + 40 + 26, COL.top - 11, 7900, 10950, { dy: 12, blur: 6, max: 0.3 });
+    rise(T.lOut, t, COL.x + 26 + 40 + 26, COL.bot - 11, 7960, 10950, { dy: 12, blur: 6, max: 0.3 });
+    headline(T.hD, W_D, t, 96, 1262, 8150, 10650, 60);
+    toolLabel(T.tB, t, 7850, 10950);
+  }
+
+  // ---------------- E : release trace ----------------
+  {
+    const o = offE(Math.min(t, T_E + DUR_E));
+    const retract = t < 14050 ? 0 : XTOT * HOUSE(P(t, 14050, 700));
+    const pts = [];
+    if (t >= T_E) {
+      const tEnd = Math.min(t, T_E + DUR_E);
+      for (let tau = T_E; tau <= tEnd; tau += 1000 / 120) { const w = worldE(tau); if (w[0] >= retract) pts.push([w[0] + o[0], w[1] + o[1]]); }
+      const w = worldE(tEnd); pts.push([Math.max(w[0], retract) + o[0], w[1] + o[1]]);
+    }
+    A(trailE, { d: t >= T_E && retract < XTOT - 0.5 ? path(pts) : '', 'stroke-opacity': 0.92 });
+    const gRev = lerp(620, XTOT, SETTLE(P(t, 11650, 600)));
+    const gOp = 0.75 * smooth(P(t, 11650, 200)) * (1 - smooth(P(t, 13800, 300)));
+    A(ghostE, { d: t > 11650 ? path([[620 + o[0], o[1]], [gRev + o[0], o[1]]]) : '', 'stroke-opacity': gOp });
+    const dn = riseV(t, 12100, 13750, { dy: 12, blur: 6 });
+    place(T.lDone, XTOT + o[0], o[1] + 34, dn.o, { dy: dn.dy, blur: dn.blur, ax: 1 });
+    rise(T.lIllus, t, 96, baseYE(t) + 190, 11700, 13700, { dy: 12, blur: 6, max: 0.55 });
+    headline(T.hE, W_E, t, 96, 560, 11350, 13650, 70);
+  }
+
+  // ---------------- the point ----------------
+  { const sm = []; for (let k = 0; k <= 6; k++) sm.push(pointAt(Math.max(0, t - (k * 8.3) / 6)));
+    A(smear, { d: path(sm), 'stroke-width': PR * 2, 'stroke-opacity': t < 80 || t > T_E + DUR_E ? 0 : 0.55 }); }
+  const glowO = 0.34 * smooth(P(t, 60, 260)) * (1 - HOUSE(P(t, 14050, 600)));
+  A(glow, { cx: p[0], cy: p[1], r: PR * 1.9, 'fill-opacity': glowO });
+  A(pt, { cx: p[0], cy: p[1], r: PR, 'fill-opacity': smooth(P(t, 60, 200)) });
+
+  // ---------------- F : the wordmark arrives around the point ----------------
+  WM.els.forEach((el, i) => {
+    const r = riseV(t, 14850 + i * 40, Infinity, { dur: 700, dy: 26, blur: 12 });
+    place(el, WM.letters[i].x, WM.top, r.o, { dy: r.dy, blur: r.blur });
+  });
+  rise(T.tag, t, 540, WM.yF + 118, 15650, Infinity, { dy: 18, blur: 8, ax: 0.5 });
+}
+
+// ---------- clock: seekable for capture, rAF for viewing ----------
+let playing = false, t0 = 0, cur = 0, raf = 0;
+const scrub = $('scrub'), tc = $('tc'), btn = $('play');
+function draw(ms) { cur = ms; render(ms); scrub.value = ms; tc.textContent = (ms / 1000).toFixed(2) + 's'; }
+function loop(now) { if (!playing) return; let ms = now - t0; if (ms >= DUR) { t0 = now; ms = 0; } draw(ms); raf = requestAnimationFrame(loop); }
+function play() { playing = true; btn.textContent = 'Pause'; t0 = performance.now() - cur; raf = requestAnimationFrame(loop); }
+function pause() { playing = false; btn.textContent = 'Play'; cancelAnimationFrame(raf); }
+btn.onclick = () => (playing ? pause() : play());
+scrub.oninput = () => { pause(); draw(+scrub.value); };
+addEventListener('keydown', (e) => { if (e.code === 'Space') { e.preventDefault(); playing ? pause() : play(); } });
+function fit() {
+  const cap = window.__capture === true;
+  document.body.classList.toggle('capture', cap);
+  const wrap = $('wrap');
+  if (cap) { wrap.style.transform = 'none'; wrap.style.left = '0'; return; }
+  const s = Math.min((innerHeight - 64) / 1920, (innerWidth - 24) / 1080);
+  wrap.style.left = '50%'; wrap.style.top = '6px';
+  wrap.style.transform = `translateX(-50%) scale(${s})`;
+}
+addEventListener('resize', fit);
+window.__durationMs = DUR;
+window.__seek = (ms) => { if (playing) pause(); if (!WM) measureWordmark(); if (window.__capture && !document.body.classList.contains('capture')) fit(); draw(ms); };
+window.__ready = Promise.all([
+  document.fonts.load('500 200px "Playfair Display"'), document.fonts.load('italic 500 88px "Playfair Display"'),
+  document.fonts.load('500 22px "JetBrains Mono"'),
+]).then(() => document.fonts.ready).then(() => { measureWordmark(); fit(); draw(0); if (!window.__capture) play(); return true; });
+</script>
+</body>
+</html>
