@@ -1,0 +1,8 @@
+/* Isolates the phone film of a motion-drafts-style review page for capture.
+   Viewport 300x533.333@3.6 = 1080x1920: sizes and x at the contract's 3.6 (x scale),
+   percentages unchanged. No chrome, no notch, no corner radius. */
+html, body { margin: 0 !important; padding: 0 !important; background: #050b08 !important; overflow: hidden !important; display: block !important; }
+header, .meta, .bar, .replay, footer, .notch { display: none !important; }
+.wrap, .concept, .stage { display: block !important; padding: 0 !important; margin: 0 !important; border: 0 !important; max-width: none !important; }
+.phone { position: fixed !important; left: 0 !important; top: 0 !important; width: 300px !important; height: 533.3333px !important;
+  border-radius: 0 !important; border: 0 !important; box-shadow: none !important; }

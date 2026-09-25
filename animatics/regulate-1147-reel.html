@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>11:47 AM Reel</title>
+<!--
+  brandreel animatic rev1 - regulate - "11:47 AM" social reel, 15.5s, 1080x1920 @ 60
+  Lineage: motion-drafts concept 04 "11:47 AM" (Pressure Gauge, approved 2026-07-12). Kept:
+  the timecode + serif italic moment, the pings phasing in around it, the gauge's needle at
+  the redline then one long breath out, the pings fracturing word by word as it falls, the
+  close line "For the days that don't stop." Remade (Steven 2026-09-25, brand-ready reels):
+  - The gauge is the app's (app/pressure-gauge.tsx): half arc r110, 11 ticks every 18deg
+    at r101-116, redline = last 20% in Anxious amber, needle 95/110 of the arc, hub,
+    PRESSURE under the hub. The fill is driven the way the game drives it: pressure
+    ratchets up tap by tap (each tap snaps +12% and nudges the whole gauge 6pt), holds at
+    the redline 400ms, then the needle falls fast-then-slow; release copy is the app's own:
+    "Let it out slow." over LONG BREATH OUT (amber).
+  - The needle tip is the white point, which becomes the full stop in "regulate."
+  - Two more pings (Steven asked for more thoughts on 3:04 AM rev3; same density here).
+    Pings SNAP in (a notification is an event: 300ms), where the 3:04 AM thoughts fade.
+  - "just following up-" em dash replaced ("just following up..."): plain punctuation only.
+  Laws: emerald ground; Anxious amber only on the redline, LONG BREATH OUT and the label
+  word; teal only on the tagline; hook text on screen at frame 0; wordmark only at the end.
+
+  SCENE TABLE (ms)
+  0-4900     THE MOMENT: "11:47 AM" (frame 0) / "everything is urgent." 400; pings snap in
+             1300 1900 2500 3000 3500; the clock line rises out 4300
+  4600-11900 THE RELEASE: arc draws 4600-5300, ticks 4800+30k, redline 5100, needle 5000;
+             8 taps 5300-6700 ratchet pressure 0 -> .96; tremble at the redline 6700-7100,
+             hold 7100-7500; fall 7500-11500; "Let it out slow." 7500; pings shatter
+             7800 8300 8800 9300 9800; label ANXIOUS · PRESSURE GAUGE
+  11400-15500 CLOSE: gauge out 11400; point glides to the full stop 11900-12700 (tick);
+             "regulate" 12700; "For the days that don't stop." 13300; CTA 13900; hold.
+
+  COPY LIST: 11:47 AM · everything is urgent. · re: re: re: · just following up... ·
+  can you jump on a call? · per my last email · quick question · PRESSURE ·
+  ANXIOUS · PRESSURE GAUGE · Let it out slow. · LONG BREATH OUT · regulate. ·
+  For the days that don't stop. · 4 TOOLS FREE ON THE APP STORE
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,500;1,500&display=block" rel="stylesheet">
+<link rel="stylesheet" href="lib/reel.css">
+<style>.ping{font-family:var(--sans);font-size:40px;color:#b9c6bb;white-space:nowrap;line-height:1} .ping .w{display:inline-block}</style>
+<body>
+<div id="wrap"><div id="stage">
+  <svg id="g" viewBox="0 0 1080 1920"><defs><filter id="glow" x="-200%" y="-200%" width="500%" height="500%"><feGaussianBlur stdDeviation="9"/></filter></defs></svg>
+  <div class="t mono" id="clock" style="font-size:58px;letter-spacing:.4em;color:var(--cream)">11:47 AM</div>
+  <div class="t head italic" id="moment" style="font-size:96px;white-space:nowrap">everything is urgent.</div>
+  <div class="t ping" id="p0">re: re: re:</div>
+  <div class="t ping" id="p1">just following up...</div>
+  <div class="t ping" id="p2">can you jump on a call?</div>
+  <div class="t ping" id="p3">per my last email</div>
+  <div class="t ping" id="p4">quick question</div>
+  <div class="t mono" id="press" style="font-size:20px;opacity:.35;color:var(--cream)">Pressure</div>
+  <div class="t head" id="slow" style="font-size:86px;white-space:nowrap">Let it out slow.</div>
+  <div class="t mono" id="lbo" style="color:var(--anx);font-size:26px;letter-spacing:.3em">Long breath out</div>
+  <div class="t tool" id="tool"><i style="color:var(--anx)">Anxious</i> &middot; Pressure Gauge</div>
+  <div id="wm"></div>
+  <div class="t head italic" id="close" style="font-size:58px;white-space:nowrap;opacity:.9">For the days that don't stop.</div>
+  <div class="t cta" id="cta">4 tools free on the App Store</div>
+</div></div>
+<div id="bar"><button id="play">Play</button><span id="tc">0.00s</span><input id="scrub" type="range" min="0" step="1" value="0"><span>regulate &middot; 11:47 am &middot; 1080&times;1920 &middot; 60fps</span></div>
+<audio id="snd" preload="auto"></audio>
+<script src="lib/reel-kit.js"></script>
+<script>
+const { E, clamp, lerp, P, smooth, fbm, $, S, A, place, riseV, rise, splitWords, headline, path, wordmark } = Reel;
+const C = { cream: '#F2F0E9', anx: '#D4A574', white: '#FFFFFF' };
+const DUR = 15500, D2R = Math.PI / 180;
+
+// ---- pings: positions in the band above the gauge (all right edges < 960) ----
+const PINGS = [[96, 210, 1300], [330, 330, 1900], [140, 450, 2500], [420, 570, 3000], [180, 690, 3500]];
+const SHATTER_AT = [7800, 8300, 8800, 9300, 9800];
+const FRAG = [[-80, -42, -14], [24, -78, 9], [72, -30, 16], [-36, -90, -8], [90, -60, 12]]; // motion-drafts x3
+
+// ---- the app's gauge ----
+const HUB0 = [540, 1200], RA = 400, NL = RA * 95 / 110;
+const TAPS = Array.from({ length: 8 }, (_, i) => 5300 + i * 200);
+function pressure(t) { // records ratchet: each tap snaps up, nothing drifts back until release
+  let p = 0; for (const tp of TAPS) p += 0.12 * E.SNAP(P(t, tp, 90));
+  if (t < 7500) return p;
+  return lerp(TAPS.length * 0.12, 0, E.SETTLE(P(t, 7500, 4000)));
+}
+function jolt(t) {
+  let j = 0; for (const tp of TAPS) { const k = t - tp; if (k >= 0 && k < 135) j += (k < 45 ? 6 : k < 90 ? -6 : 0) * pressure(t); }
+  if (t >= 6700 && t < 7150) j += 5 * fbm(t / 22, 31) * (1 - smooth(P(t, 7050, 100)));
+  return j;
+}
+const hubAt = (t) => [HUB0[0] + jolt(t), HUB0[1]];
+const theta = (t) => -90 + 180 * pressure(t) + (t > 6700 && t < 7150 ? 2.6 * fbm(t / 30, 21) : 0);
+const tip = (deg, hub, len) => [hub[0] + len * Math.sin(deg * D2R), hub[1] - len * Math.cos(deg * D2R)];
+
+const arc = S('path', { fill: 'none', stroke: C.cream, 'stroke-width': 3, 'stroke-linecap': 'round' });
+const ticks = Array.from({ length: 11 }, () => S('line', { stroke: C.cream, 'stroke-width': 3, 'stroke-linecap': 'round' }));
+const red = S('path', { fill: 'none', stroke: C.anx, 'stroke-width': 6, 'stroke-linecap': 'round' });
+const needle = S('line', { stroke: C.cream, 'stroke-width': 4, 'stroke-linecap': 'round' });
+const hub = S('circle', { fill: C.cream, r: 9 });
+const smear = S('path', { fill: 'none', stroke: C.white, 'stroke-linecap': 'round' });
+const glow = S('circle', { fill: C.white, filter: 'url(#glow)' });
+const pt = S('circle', { fill: C.white });
+
+let WM, R = 11, W_M, W_SLOW, PW = [];
+function init() {
+  WM = wordmark($('wm'), { dotPx: 22, yDot: 960 }); R = WM.R;
+  W_M = splitWords($('moment')); W_SLOW = splitWords($('slow'));
+  PW = PINGS.map((_, i) => splitWords($('p' + i)));
+}
+
+function pointAt(t) {
+  if (t < 11900) return tip(theta(t), hubAt(t), NL);
+  const a = tip(-90, HUB0, NL), u = E.HOUSE(P(t, 11900, 800));
+  return [lerp(a[0], WM.xF, u), lerp(a[1], WM.yF, u) - Math.sin(Math.PI * u) * 90];
+}
+
+function render(t) {
+  // the moment
+  const out = E.HOUSE(P(t, 4300, 700));
+  place($('clock'), 540, 840, 0.7 * (1 - out), { ax: 0.5, dy: -10 * out, blur: 2 * out });
+  headline($('moment'), W_M, t, 540, 930, 400, 4300, 80, { ax: 0.5 });
+  // pings: snap in, hold, fracture word by word as the needle falls
+  PINGS.forEach(([x, y, at], i) => {
+    const el = $('p' + i); el.style.visibility = 'visible'; el.style.opacity = 1; el.style.transform = `translate(${x}px,${y}px)`;
+    const sin = E.SNAP(P(t, at, 300));
+    PW[i].forEach((w, k) => {
+      const s0 = SHATTER_AT[i] + k * 60, u = P(t, s0, 1300), e = E.SHATTER(u), [fx, fy, fr] = FRAG[(k + i) % 5];
+      const pre = u < 0.18 ? 2 * (u / 0.18) : 2;
+      const dx = u <= 0.18 ? 0 : fx * E.SHATTER((u - 0.18) / 0.82), dy = u <= 0.18 ? pre * 3 : pre * 3 + fy * E.SHATTER((u - 0.18) / 0.82);
+      const o = 0.75 * sin * (u <= 0.18 ? 1 : 1 - e);
+      w.style.opacity = o.toFixed(4);
+      w.style.transform = `translate(${(dx + 28 * (1 - sin)).toFixed(2)}px,${dy.toFixed(2)}px) rotate(${(u <= 0.18 ? 0 : fr * E.SHATTER((u - 0.18) / 0.82)).toFixed(2)}deg)`;
+      w.style.filter = u > 0.18 ? `blur(${(3 * 3 * e).toFixed(2)}px)` : 'none';
+    });
+  });
+
+  // the gauge
+  const h = hubAt(t), gOut = 1 - E.HOUSE(P(t, 11400, 500));
+  const ad = E.SETTLE(P(t, 4600, 700)), ap = [];
+  for (let a = -90; a <= -90 + 180 * ad + 0.01; a += 3) ap.push(tip(Math.min(a, -90 + 180 * ad), h, RA));
+  A(arc, { d: t > 4600 ? path(ap) : '', 'stroke-opacity': 0.22 * gOut });
+  ticks.forEach((ln, k) => { const a = -90 + 18 * k, p1 = tip(a, h, RA * 101 / 110), p2 = tip(a, h, RA * 116 / 110); A(ln, { x1: p1[0], y1: p1[1], x2: p2[0], y2: p2[1], 'stroke-opacity': 0.3 * smooth(P(t, 4800 + k * 30, 250)) * gOut }); });
+  const rl = []; for (let a = 54; a <= 90.01; a += 2) rl.push(tip(a, h, RA));
+  A(red, { d: path(rl), 'stroke-opacity': 0.85 * smooth(P(t, 5100, 300)) * gOut });
+  const p = pointAt(t), nIn = smooth(P(t, 5000, 300));
+  A(needle, { x1: h[0], y1: h[1], x2: p[0], y2: p[1], 'stroke-opacity': t < 11900 ? 0.9 * nIn * gOut : 0 });
+  A(hub, { cx: h[0], cy: h[1], 'fill-opacity': smooth(P(t, 4700, 300)) * gOut });
+  rise($('press'), t, 540 + jolt(t), HUB0[1] + 40, 5000, 11400, { dy: 12, blur: 6, ax: 0.5, max: 0.35 });
+  headline($('slow'), W_SLOW, t, 540, 1290, 7500, 11300, 70, { ax: 0.5 });
+  rise($('lbo'), t, 540, 1415, 7800, 11300, { dy: 16, blur: 6, ax: 0.5 });
+  rise($('tool'), t, 540, 1540, 5000, 11500, { dy: 20, blur: 8, ax: 0.5 });
+
+  // the point
+  const sm = []; for (let k = 0; k <= 6; k++) sm.push(pointAt(Math.max(0, t - (k * 8.3) / 6)));
+  A(smear, { d: path(sm), 'stroke-width': R * 2, 'stroke-opacity': t < 5000 || t > 12700 ? 0 : 0.55 });
+  A(glow, { cx: p[0], cy: p[1], r: R * 1.9, 'fill-opacity': 0.34 * nIn * (1 - E.HOUSE(P(t, 12700, 600))) });
+  A(pt, { cx: p[0], cy: p[1], r: R, 'fill-opacity': nIn });
+
+  // close
+  WM.draw(t, 12700);
+  rise($('close'), t, 540, WM.yF + 100, 13300, Infinity, { dy: 18, blur: 8, ax: 0.5, max: 0.9 });
+  rise($('cta'), t, 540, WM.yF + 210, 13900, Infinity, { dy: 18, blur: 8, ax: 0.5, max: 0.9 });
+}
+
+Reel.start({ duration: DUR, render, init, fonts: ['500 200px "Playfair Display"', 'italic 500 96px "Playfair Display"', '500 24px "JetBrains Mono"', '400 40px Inter'] });
+</script>
+</body>
+</html>

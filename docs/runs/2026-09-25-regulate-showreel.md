@@ -43,3 +43,13 @@ node bin/animatic-render.mjs animatics/regulate-showreel.html workspace/regulate
 ## Porting note
 
 The Remotion engine has no beat kinds for a continuous-camera graph, gauge, pendulum or trace, so a 1:1 port would be a new engineering goal. The capture path renders the animatic itself frame-exactly at 60fps, so the MP4 here is already the animatic at full quality. Port only if Steven wants the reel parameterised in the engine.
+
+## Batch 1 social reels (same day, Steven: "i quite like it tbf ... remake some of our existing marketing videos ... brand ready reels")
+
+Showreel verdict recorded as KEEP ("i quite like it tbf. nice animation and noises").
+
+- New shared kit: `animatics/lib/reel-kit.js` + `lib/reel.css` (motion, type, player, and the wordmark whose full stop is the white point), `bin/lib/sfx.mjs` (sound motifs; `fullStop()` is the sonic signature that ends every reel), `bin/render-reel.sh <id>` (score, master to -14 LUFS / TP <= -1.5, render, probe).
+- `bin/animatic-render.mjs --virtual`: a clock injected before page scripts virtualizes performance.now, Date, rAF and timers, and drives every CSS animation/transition through currentTime. CSS-animated mocks now render frame-exact. `--css` and `--viewport WxH@S` isolate the phone film (`animatics/capture/phone-only.css`, 300x533.33@3.6 = the contract's x scale).
+- Reels: 01 3:04 AM (the KEPT rev5d file untouched, 19.6s, new score `regulate-3am.sound.mjs`); 02 The Sigh (`regulate-sigh-reel.html`, 16.5s: concept 01 on the app's sigh instrument, orb removed, the fastest-claim cut); 03 11:47 AM (`regulate-1147-reel.html`, 15.5s: concept 04 on the app's Pressure Gauge, taps ratchet, pings shatter).
+- Verified: all three h264 1080x1920 at 60/1 (1176 / 990 / 930 frames), integrated -13.6 / -13.7 / -13.7 LUFS, TP -1.4 / -1.4 / -1.5 dBTP; full-length 3fps strips reviewed; spectrograms checked (the room-tone bed was cut 10 dB after the first pass).
+- Handoff with captions, first comments, alt text and claims preflight: hivemind `marketing/reels-2026-09/README.md`.

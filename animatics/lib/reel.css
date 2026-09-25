@@ -1,0 +1,30 @@
+/* reel.css - shared tokens + viewer chrome for seekable 1080x1920 brand reels. Brand Book laws:
+   emerald ground, cream type, teal one live thing, state colour names a state, dot white. */
+:root{
+  --ground:#0a1812; --cream:#F2F0E9; --sage:#8F9E8B; --teal:#4FD1C5; --dot:#FFFFFF;
+  --anx:#D4A574; --frz:#7E9AA6; --ang:#C06C4D; --bal:#7FA77F;
+  --serif:"Playfair Display", Georgia, serif; --sans:Inter, -apple-system, sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, Menlo, monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#050d09;overflow:hidden;color:var(--cream)}
+#wrap{position:absolute;left:50%;top:0;transform-origin:50% 0}
+#stage{position:relative;width:1080px;height:1920px;background:var(--ground);overflow:hidden}
+#g{position:absolute;left:0;top:0;width:1080px;height:1920px;overflow:visible}
+.t{position:absolute;left:0;top:0;will-change:transform,opacity,filter;visibility:hidden}
+.head{font-family:var(--serif);font-weight:500;font-size:88px;line-height:1.06;letter-spacing:-.01em;color:var(--cream);text-wrap:balance}
+.head em,.italic{font-style:italic}
+.head .w{display:inline-block;will-change:transform,opacity,filter}
+.mono{font-family:var(--mono);font-weight:500;font-size:24px;letter-spacing:.24em;text-transform:uppercase;color:var(--sage);white-space:nowrap;line-height:1}
+.tool{font-family:var(--mono);font-weight:500;font-size:26px;letter-spacing:.26em;text-transform:uppercase;color:var(--cream);white-space:nowrap;line-height:1;opacity:.9}
+.tool i{font-style:normal}
+.body{font-family:var(--sans);font-weight:400;font-size:42px;color:var(--cream);white-space:nowrap;line-height:1.2}
+.wm{font-family:var(--serif);font-weight:500;color:var(--cream);white-space:pre;line-height:1}
+.tag{font-family:var(--mono);font-weight:500;font-size:28px;letter-spacing:.3em;text-transform:uppercase;color:var(--teal);white-space:nowrap;line-height:1}
+.cta{font-family:var(--mono);font-weight:500;font-size:24px;letter-spacing:.24em;text-transform:uppercase;color:var(--sage);white-space:nowrap;line-height:1}
+#bar{position:fixed;left:0;right:0;bottom:0;height:52px;display:flex;align-items:center;gap:14px;padding:0 18px;background:#050d09;border-top:1px solid #16241d;font-family:var(--mono);font-size:12px;letter-spacing:.14em;color:var(--sage)}
+#bar button{background:none;border:1px solid #2a3a31;color:var(--cream);font:inherit;letter-spacing:.14em;text-transform:uppercase;padding:7px 14px;border-radius:99px;cursor:pointer}
+#scrub{flex:1;accent-color:var(--teal)}
+#tc{min-width:92px;text-align:right;font-variant-numeric:tabular-nums}
+body.capture #bar{display:none}
+body.capture{background:var(--ground)}
