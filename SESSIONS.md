@@ -1,5 +1,8 @@
 # SESSIONS - append-only log, newest first
 
+## 2026-09-25 - Reel verdicts (session close)
+Showreel KEEP. Batch 1 v2: 11:47 AM KEEP, 3:04 AM "decent", The Sigh no verdict. Batch 2 (regulate-ad, regulate-teaser, regulate-chaos) KILLED by Steven; the sources stay in animatics/ as reference and the tooling (virtual-clock capture, timing-kit, sfx, render-reel.sh, deterministic physics pattern) stays reusable. Branch feature/regulate-showreel is unmerged, awaiting Steven.
+
 ## 2026-09-25 - Reels batch 1 + virtual-clock capture
 Steven KEPT the showreel ("i quite like it tbf. nice animation and noises") and asked for brand-ready reels remade from existing marketing videos. Built a shared reel kit (animatics/lib), a sound kit (bin/lib/sfx.mjs, fullStop signature), bin/render-reel.sh, and `--virtual` capture so CSS-animated mocks render frame-exact. Rendered 01 3:04 AM (KEPT rev5d untouched + score), 02 The Sigh, 03 11:47 AM: all 1080x1920 60/1, about -13.7 LUFS. CLI tests 169/169. Awaiting per-reel KEEP/TWEAK/KILL. Next batch: 9:58 AM, 6:12 PM, IN 4 OUT 8.
 
