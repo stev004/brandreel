@@ -1,5 +1,8 @@
 # SESSIONS - append-only log, newest first
 
+## 2026-09-25 - Reels batch 1 + virtual-clock capture
+Steven KEPT the showreel ("i quite like it tbf. nice animation and noises") and asked for brand-ready reels remade from existing marketing videos. Built a shared reel kit (animatics/lib), a sound kit (bin/lib/sfx.mjs, fullStop signature), bin/render-reel.sh, and `--virtual` capture so CSS-animated mocks render frame-exact. Rendered 01 3:04 AM (KEPT rev5d untouched + score), 02 The Sigh, 03 11:47 AM: all 1080x1920 60/1, about -13.7 LUFS. CLI tests 169/169. Awaiting per-reel KEEP/TWEAK/KILL. Next batch: 9:58 AM, 6:12 PM, IN 4 OUT 8.
+
 ## 2026-09-25 - Regulate showreel animatic + frame-exact render path
 Steven asked for an 18-20s Regulate motion showreel ("go all out, entirely grounded in the brand"). The taste step read the Brand Book, BRAND.md, motion-drafts, the 3:04 AM animatic, the site's figures and the app's instruments from code (Explore agent). A Fable 5.1 consult shaped the concept: one unbroken take, the white point never recoloured, no timecode HUD, no citation, and a close where the point never moves. Authored `animatics/regulate-showreel.html` (seekable, 18.0s) and `animatics/regulate-showreel.sound.mjs` (synthesized, deterministic). New tools: `bin/animatic-render.mjs` (frame-exact 60fps capture of any seekable animatic, plus `--stills`) and `bin/lib/dsp.mjs`. Final: 1080x1920, 60/1, 1080 frames, -13.9 LUFS / -1.4 dBTP. The 169 CLI tests pass. Branch `feature/regulate-showreel`, not merged. Awaiting Steven's KEEP/TWEAK/KILL. Evidence: `docs/runs/2026-09-25-regulate-showreel.md`.
 
