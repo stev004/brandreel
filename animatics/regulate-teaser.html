@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Regulate Teaser</title>
+<!--
+  brandreel animatic rev1 - regulate - "Teaser" reel, 9.6s, 1080x1920 @ 60
+  Steven 2026-09-25: "a teaser reel ... appeal to customers and entice them in ... highest
+  professional quality ... push the boat out."
+  CORE MECHANIC: the point never moves - the world does. The app's own question ("How are you,
+  really?") hangs over a white point locked at the centre; on an accelerating heartbeat the four
+  states whip past it, each drawn as its real instrument with the point as its moving part:
+  Anxious - the Pressure Gauge's needle tip (the gauge rotates around the point as pressure
+  ratchets into the redline); Freeze - the Pendulum's bob (the pivot swings, not the bob);
+  Angry - Chaos Release (the particles burst out of the point); Balanced - Regulate Breath (the
+  column slides up past the point, so the point falls through one exhale). Then silence, the
+  site's line "Different states need different tools.", and the point's only move: a few
+  pixels into place as the full stop.
+  Laws: emerald ground; each state colour only on its own instrument part and its label word,
+  one state per moment; the dot white; teal only on the tagline; hook text at frame 0; wordmark
+  only at the end.
+
+  COPY LIST: How are you, really? · ANXIOUS · PRESSURE GAUGE · FREEZE · PENDULUM · ANGRY ·
+  CHAOS RELEASE · BALANCED · REGULATE BREATH · IN 4 · OUT 8 · Different states need different
+  tools. · regulate. · NOT MEDITATION. REGULATION. · 4 TOOLS FREE ON THE APP STORE
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,500;1,500&display=block" rel="stylesheet">
+<link rel="stylesheet" href="lib/reel.css">
+<style>.tl{font-size:34px!important} .st{font-family:var(--mono);font-weight:500;font-size:64px;letter-spacing:.4em;text-transform:uppercase;white-space:nowrap;line-height:1}</style>
+<body>
+<div id="wrap"><div id="stage">
+  <svg id="g" viewBox="0 0 1080 1920"><defs><filter id="glow" x="-200%" y="-200%" width="500%" height="500%"><feGaussianBlur stdDeviation="9"/></filter></defs></svg>
+  <div class="t head" id="q" style="font-size:118px;text-align:center;width:1000px">How are you,<br>really?</div>
+  <div class="t st" id="s0" style="color:var(--anx)">Anxious</div><div class="t mono" id="u0" style="color:var(--cream);font-size:34px">Pressure Gauge</div>
+  <div class="t st" id="s1" style="color:var(--frz)">Freeze</div><div class="t mono" id="u1" style="color:var(--cream);font-size:34px">Pendulum</div>
+  <div class="t st" id="s2" style="color:var(--ang)">Angry</div><div class="t mono" id="u2" style="color:var(--cream);font-size:34px">Chaos Release</div>
+  <div class="t st" id="s3" style="color:var(--bal)">Balanced</div><div class="t mono" id="u3" style="color:var(--cream);font-size:34px">Regulate Breath</div>
+  <div class="t mono" id="lIn" style="font-size:20px;color:var(--cream)">In 4</div>
+  <div class="t mono" id="lOut" style="font-size:20px;color:var(--cream)">Out 8</div>
+  <div class="t head italic" id="line" style="font-size:84px;text-align:center;width:960px">Different states need different tools.</div>
+  <div id="wm"></div>
+  <div class="t tag" id="tag">Not meditation. Regulation.</div>
+  <div class="t cta" id="cta">4 tools free on the App Store</div>
+</div></div>
+<div id="bar"><button id="play">Play</button><span id="tc">0.00s</span><input id="scrub" type="range" min="0" step="1" value="0"><span>regulate &middot; teaser &middot; 1080&times;1920 &middot; 60fps</span></div>
+<audio id="snd" preload="auto"></audio>
+<script src="lib/timing-kit.js"></script>
+<script src="regulate-teaser.timing.js"></script>
+<script src="lib/reel-kit.js"></script>
+<script>
+const { E, clamp, lerp, P, smooth, kf, fbm, $, S, A, place, riseV, rise, splitWords, headline, path, wordmark } = Reel;
+const T = TIMING, P0 = T.P0, D2R = Math.PI / 180, W = T.whip;
+const C = { cream: '#F2F0E9', anx: '#D4A574', frz: '#7E9AA6', ang: '#C06C4D', ang2: '#B54B32', bal: '#7FA77F', white: '#FFFFFF' };
+const G = (id) => { const g = document.createElementNS('http://www.w3.org/2000/svg', 'g'); g.id = id; $('g').appendChild(g); return g; };
+const gA = G('gA'), gF = G('gF'), gX = G('gX'), gB = G('gB');
+// gauge
+const RA = 470, NL = RA * 95 / 110;
+const aArc = S('path', { fill: 'none', stroke: C.cream, 'stroke-width': 4 }, gA), aRed = S('path', { fill: 'none', stroke: C.anx, 'stroke-width': 11, 'stroke-linecap': 'round' }, gA);
+const aTicks = Array.from({ length: 11 }, () => S('line', { stroke: C.cream, 'stroke-width': 4 }, gA));
+const aNeedle = S('line', { stroke: C.cream, 'stroke-width': 6, 'stroke-linecap': 'round' }, gA), aHub = S('circle', { fill: C.cream, r: 9 }, gA);
+// pendulum
+const L = 440;
+const fGuide = S('path', { fill: 'none', stroke: C.frz, 'stroke-width': 8, 'stroke-linecap': 'round' }, gF);
+const fArm = S('line', { stroke: C.cream, 'stroke-width': 5 }, gF), fPivot = S('circle', { fill: C.cream, r: 7 }, gF), fRing = S('circle', { fill: 'none', stroke: C.frz, 'stroke-width': 4 }, gF);
+// chaos
+const xBalls = Array.from({ length: T.chaos.n }, (_, i) => S('circle', { fill: i % 2 ? C.ang2 : C.ang }, gX));
+// breath
+const bTrack = S('line', { stroke: C.cream, 'stroke-width': 16, 'stroke-linecap': 'round' }, gB), bFill = S('line', { stroke: C.bal, 'stroke-width': 16 }, gB);
+const bTicks = Array.from({ length: 12 }, () => S('line', { stroke: C.bal, 'stroke-width': 4 }, gB));
+const smear = S('path', { fill: 'none', stroke: C.white, 'stroke-linecap': 'round' });
+const glow = S('circle', { fill: C.white, filter: 'url(#glow)' }), pt = S('circle', { fill: C.white });
+
+let WM, R = 11, W_L;
+function init() { WM = wordmark($('wm'), { dotPx: 22, yDot: 960 }); R = WM.R; W_L = splitWords($('line')); }
+const tip = (deg, hub, len) => [hub[0] + len * Math.sin(deg * D2R), hub[1] - len * Math.cos(deg * D2R)];
+// whip: in from the right, out to the left, with blur - the camera does not cut, it pans hard
+function whip(g, t, a, b) {
+  const i = a <= 0 ? 1 : E.HOUSE(P(t, a, W)), o = E.HOUSE(P(t, b - W * 0.4, W));   // the first state is already on screen at frame 0
+  const o2 = i * (1 - o); g.style.opacity = o2; g.style.visibility = o2 > 0.002 ? 'visible' : 'hidden';
+  g.style.transform = `translateX(${(1 - i) * 220 - o * 220}px)`; g.style.filter = (1 - i) + o > 0.02 ? `blur(${((1 - i) + o) * 16}px)` : 'none';
+  return o2;
+}
+const beatKick = (t) => { let b = -1e9; for (const x of T.beats) { if (x <= t) b = x; else break; } return Math.exp(-(t - b) / 160); };
+
+function pointAt(t) { if (t < T.glide[0]) return P0; const u = E.HOUSE(P(t, T.glide[0], T.glide[1] - T.glide[0])); return [lerp(P0[0], WM.xF, u), lerp(P0[1], WM.yF, u)]; }
+
+function render(t) {
+  // hook: the app's question, at frame 0
+  const qo = 1 - E.HOUSE(P(t, T.silence, 500));
+  place($('q'), 540, 250, qo, { ax: 0.5, dy: -24 * (1 - qo), blur: 8 * (1 - qo) });
+
+  // ANXIOUS: the gauge turns around the point as pressure ratchets into the redline
+  { const [a, b] = T.seg[0]; if (whip(gA, t, a, b) > 0) {
+    let th = 12; for (let k = 0; k < 4; k++) th += 16 * E.SNAP(P(t, a + 150 + k * 190, 110));
+    th += (t > a + 900 ? 2.4 * fbm(t / 26, 21) : 0);
+    const H = [P0[0] - NL * Math.sin(th * D2R), P0[1] + NL * Math.cos(th * D2R)];
+    const ad = a <= 0 ? 1 : E.SETTLE(P(t, a, 450)), ap = []; for (let x = -90; x <= -90 + 180 * ad + 0.01; x += 3) ap.push(tip(Math.min(x, -90 + 180 * ad), H, RA));
+    A(aArc, { d: path(ap), 'stroke-opacity': 0.3 }); const rl = []; for (let x = 54; x <= 90.01; x += 2) rl.push(tip(x, H, RA));
+    A(aRed, { d: path(rl), 'stroke-opacity': Math.min(1, 0.85 + 0.15 * beatKick(t)) });
+    aTicks.forEach((ln, k) => { const x = -90 + 18 * k, p1 = tip(x, H, RA * 101 / 110), p2 = tip(x, H, RA * 116 / 110); A(ln, { x1: p1[0], y1: p1[1], x2: p2[0], y2: p2[1], 'stroke-opacity': 0.34 * (a <= 0 ? 1 : smooth(P(t, a + 100 + k * 25, 200))) }); });
+    A(aNeedle, { x1: H[0], y1: H[1], x2: P0[0], y2: P0[1], 'stroke-opacity': 0.9 }); A(aHub, { cx: H[0], cy: H[1] });
+  } }
+  // FREEZE: the pivot swings, the bob (the point) stays
+  { const [a, b] = T.seg[1]; if (whip(gF, t, a, b) > 0) {
+    const ph = (2 * Math.PI * (t - a)) / 1100, psi = 24 * Math.cos(ph);
+    const piv = [P0[0] + L * Math.sin(psi * D2R), P0[1] - L * Math.cos(psi * D2R)];
+    A(fArm, { x1: piv[0], y1: piv[1], x2: P0[0], y2: P0[1], 'stroke-opacity': 0.4 }); A(fPivot, { cx: piv[0], cy: piv[1], 'fill-opacity': 0.6 });
+    const next = Math.cos(ph) > 0 ? -1 : 1, ga = next * 24, gp = [];
+    for (let x = ga - 5.2; x <= ga + 5.21; x += 0.8) gp.push([piv[0] - (L - 14) * Math.sin(x * D2R), piv[1] + (L - 14) * Math.cos(x * D2R)]);
+    A(fGuide, { d: '', 'stroke-opacity': 0 }); // the app's guide arcs mark where the bob will land; with the camera locked on the bob that place is the point itself, so the hit ring carries it
+    const k = ((t - a) % 550) / 550, ext = Math.abs(Math.cos(ph)) > 0.985;
+    A(fRing, { cx: P0[0], cy: P0[1], r: R + 8 + 24 * k, 'stroke-opacity': t - a > 300 ? 0.7 * (1 - k) : 0 });
+  } }
+  // ANGRY: the swarm bursts out of the point
+  { const [a, b] = T.seg[2]; if (whip(gX, t, a, b) > 0) {
+    xBalls.forEach((c, i) => { const p = T.chaos.pos(i, t), g = E.SNAP(P(t, a, 160)); A(c, { cx: lerp(P0[0], p[0], g), cy: lerp(P0[1], p[1], g), r: T.chaos.r[i] * 1.35 * g, 'fill-opacity': 0.9 }); });
+  } }
+  // BALANCED: the column slides up past the point, so the point falls through one exhale
+  { const [a, b] = T.seg[3]; const o = whip(gB, t, a, b); if (o > 0) {
+    const Lc = 440, top = P0[1] - Lc * E.INOUT(P(t, a + 150, 1150)), bot = top + Lc;
+    A(bTrack, { x1: 540, y1: top, x2: 540, y2: bot, 'stroke-opacity': 0.1 }); A(bFill, { x1: 540, y1: P0[1], x2: 540, y2: bot, 'stroke-opacity': 0.9 });
+    bTicks.forEach((ln, k) => { const inh = k < 4, i = inh ? k : k - 4, n = inh ? 4 : 8, y = bot - ((i + 0.5) / n) * Lc, x1 = inh ? 540 - 66 : 566; A(ln, { x1, y1: y, x2: x1 + 40, y2: y, 'stroke-opacity': inh ? 0.5 : 0.35 }); });
+    place($('lIn'), 632, top - 10, 0.3 * o); place($('lOut'), 632, bot - 10, 0.3 * o);
+  } else { place($('lIn'), 0, 0, 0); place($('lOut'), 0, 0, 0); } }
+  // the state word for each moment
+  T.seg.forEach(([a, b], i) => {
+    const pin = a <= 0 ? 1 : E.SNAP(P(t, a, 200)), pout = E.HOUSE(P(t, b - 120, 180)), o = pin * (1 - pout);
+    place($('s' + i), 540, 1470, o, { ax: 0.5, dy: 14 * (1 - pin), blur: 8 * (1 - pin) + 8 * pout });
+    place($('u' + i), 540, 1556, 0.7 * o, { ax: 0.5, dy: 10 * (1 - pin) });
+  });
+
+  // after the silence
+  headline($('line'), W_L, t, 540, 300, T.line, T.glide[0] - 100, 70, { ax: 0.5 });
+
+  // the point: locked at the centre until its one move
+  const p = pointAt(t), kick = t < T.silence ? 1 + 0.18 * beatKick(t) : 1;
+  const sm = []; for (let k = 0; k <= 6; k++) sm.push(pointAt(Math.max(0, t - (k * 8.3) / 6)));
+  A(smear, { d: path(sm), 'stroke-width': R * 2, 'stroke-opacity': t > T.glide[0] && t < T.glide[1] ? 0.5 : 0 });
+  A(glow, { cx: p[0], cy: p[1], r: R * 1.9 * kick, 'fill-opacity': 0.34 * (1 - E.HOUSE(P(t, T.glide[1], 600))) });
+  A(pt, { cx: p[0], cy: p[1], r: R });
+
+  WM.draw(t, T.wordmark);
+  rise($('tag'), t, 540, WM.yF + 118, T.tag, Infinity, { dy: 18, blur: 8, ax: 0.5 });
+  rise($('cta'), t, 540, WM.yF + 190, T.cta, Infinity, { dy: 18, blur: 8, ax: 0.5, max: 0.9 });
+}
+
+Reel.start({ duration: T.dur, render, init, fonts: ['500 200px "Playfair Display"', 'italic 500 84px "Playfair Display"', '500 24px "JetBrains Mono"'] });
+</script>
+</body>
+</html>

@@ -67,3 +67,29 @@ Showreel verdict recorded as KEEP ("i quite like it tbf. nice animation and nois
   - 11:47 restructured so the inbox kicks the needle, with a 1-frame flash as each word breaks and the gauge leaving as soon as it settles.
   - Some of Fable's measurements from the thumbnails were wrong (claimed x/y positions); those were checked against the source and not applied.
 - Final: 3:04 v2 15.4s (924 frames) -13.7 LUFS / -1.5 dBTP; Sigh v2 16.0s (960) -13.6 / -1.5; 11:47 v2 11.8s (708) -13.9 / -1.5. All h264 1080x1920 60/1. 11:47 is under the 15s lint floor by design (social pacing).
+
+## Batch 2: ad, teaser, Chaos Release (Steven: "push the boat out")
+
+Steven's verdicts on batch 1 v2: 11:47 AM KEEP ("actually really cool"); 3:04 AM "decent" (soft KEEP); no verdict on The Sigh.
+
+- `regulate-chaos.html` (15.5s)
+  - An 80-particle deterministic 240Hz physics simulation in the timing file, with a 1.5s pre-roll so frame 0 is alive. The same simulation drives the score: the ~4,000 logged collisions become panned clicks.
+  - Hook: "Rage isn't a character flaw." Shakes drain the charge 100 to 0 (slow, then a cascade). The survivor cools to white and moves along the app's "Where did you land?" scale.
+- `regulate-teaser.html` (9.6s)
+  - The point never moves. Four state instruments whip around it on an accelerating heartbeat, starting mid-motion at frame 0. Then silence, "Different states need different tools." and the full stop.
+- `regulate-ad.html` (17.0s)
+  - Brand Book message order: "Meditation asks you to sit still." over a trembling point with heartbeat rings; the app home rebuilt in vector, each state resolving to "→ its free tool"; the loop steps (pick / use with a shake-driven drain / rate); the invitation.
+- Fable critique of the first renders, applied:
+  - hooks start in motion;
+  - dead hangs trimmed;
+  - shake is the cause of every drain;
+  - instruments and labels scaled up;
+  - "Different states need different tools." given its own frame;
+  - loop steps shown one at a time at display size;
+  - "4 tools free" wording, so no promise reads as fully free;
+  - the Chaos drain made to climax.
+- Finals, all h264 1080x1920 60/1:
+  - ad: 17.0s (1020 frames), -14.3 LUFS / -1.3 dBTP
+  - teaser: 9.6s (576 frames), -13.9 / -1.5
+  - chaos: 15.5s (930 frames), -13.7 / -1.3
+- The teaser is under the 15s lint floor by design (a teaser).

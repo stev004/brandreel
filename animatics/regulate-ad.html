@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Regulate Ad</title>
+<!--
+  brandreel animatic rev1 - regulate - general advertisement reel, 17.0s (rev2 after Fable critique), 1080x1920 @ 60
+  Steven 2026-09-25: "a general advertisement reel ... suited to appeal to customers and entice
+  them in ... highest professional quality ... push the boat out."
+  Message order (Brand Book voice.notes): recognition, reframe, difference, demonstration,
+  (proof = the demonstrated loop), invitation. One take; the white point is the viewer's attention.
+  1 RECOGNITION  0-3.1   "Meditation asks you to sit still." (Brand Book promise, verbatim) over a
+                         white point that sits still - and ripples on every heartbeat anyway.
+  2 REFRAME      3.1-5.6 "Your nervous system might need something else." (the same promise, part 2)
+  3 DIFFERENCE   5.6-10.9 The app's home, rebuilt in vector to the Brand Book's home grammar: the
+                         day line, "How are you, really?", four state rows (the app's own names,
+                         subtitles and state colours - the home surface is the one place the four
+                         state colours legitimately share a frame). The point taps each row and its
+                         subtitle becomes the free tool for that state (MenuData / CLAUDE.md: Sigh,
+                         Pendulum, Chaos Release, Regulate Breath). Then the site's line
+                         "Different states need different tools."
+  4 DEMONSTRATION 10.9-16.6 The loop, as the Brand Book states it ("Pick how you feel, use the tool
+                         for one to three minutes, rate how you feel after"): 01 PICK (tap Angry),
+                         02 USE (a Chaos Release burst: the charge drains 100 -> 0 as the particles
+                         pop), 03 RATE (the app's "Where did you land?" scale; the point slides
+                         toward REGULATED - illustrative, one run). The active step is the one teal
+                         thing on screen.
+  5 INVITATION   16.6-21 The point becomes the full stop; tagline; "4 tools free on the App Store".
+  Laws: emerald ground; state colours only on their own rows/instrument; teal one live thing; the
+  dot white; hook text at frame 0; wordmark only at the end; tagline closes; plain hyphens.
+
+  COPY LIST: Meditation asks you to sit still. · Your nervous system might need something else. ·
+  THURSDAY EVENING · How are you, really? · Anxious / Panic · Overthinking, stressed, worried ·
+  Numb / Freeze · Shut down, disconnected, heavy · Angry / Frustrated · Irritated, on edge, heated ·
+  Balanced / Flow · Calm, present, grounded · Physiological Sigh · Pendulum · Chaos Release ·
+  Regulate Breath · Different states need different tools. · 01 · PICK HOW YOU FEEL · 02 · USE A
+  TOOL FOR ONE TO THREE MINUTES · 03 · RATE HOW YOU FEEL AFTER · NN · PERCENT CHARGED · Where did
+  you land? · DYSREGULATED · REGULATED · regulate. · NOT MEDITATION. REGULATION. · 4 TOOLS FREE ON
+  THE APP STORE
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,500;1,500&display=block" rel="stylesheet">
+<link rel="stylesheet" href="lib/reel.css">
+<style>
+  .rt{font-family:var(--sans);font-weight:600;font-size:50px;color:var(--cream);white-space:nowrap;line-height:1}
+  .rs{font-family:var(--sans);font-weight:400;font-size:36px;color:var(--sage);white-space:nowrap;line-height:1}
+  .rtool{font-family:var(--sans);font-weight:500;font-size:38px;color:var(--cream);white-space:nowrap;line-height:1}
+  .chev{font-family:var(--sans);font-size:48px;color:var(--sage);line-height:1}
+  #num{font-family:var(--serif);font-weight:500;font-size:300px;line-height:1;color:var(--cream);font-variant-numeric:lining-nums tabular-nums;white-space:nowrap}
+  .step{font-family:var(--mono);font-weight:500;font-size:31px;color:var(--teal);letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;line-height:1}
+</style>
+<body>
+<div id="wrap"><div id="stage"><div id="cam" style="position:absolute;left:0;top:0;width:1080px;height:1920px">
+  <svg id="g" viewBox="0 0 1080 1920"><defs>
+    <filter id="glow" x="-200%" y="-200%" width="500%" height="500%"><feGaussianBlur stdDeviation="9"/></filter>
+    <filter id="halo" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="14"/></filter>
+  </defs></svg>
+  <div class="t head" id="h1" style="width:900px;text-align:center;font-size:96px">Meditation asks you to sit still.</div>
+  <div class="t head italic" id="h2" style="width:920px;text-align:center;font-size:84px">Your nervous system might need something else.</div>
+  <div class="t mono" id="day" style="font-size:24px;letter-spacing:.3em">Thursday evening</div>
+  <div class="t head" id="q" style="font-size:92px;white-space:nowrap">How are you, really?</div>
+  <div id="rows"></div>
+  <div class="t head italic" id="line" style="font-size:80px;width:888px">Different states need different tools.</div>
+  <div class="t step" id="st0">01 &middot; Pick how you feel</div>
+  <div class="t step" id="st1">02 &middot; Use a tool for one to three minutes</div>
+  <div class="t step" id="st2">03 &middot; Rate how you feel after</div>
+  <div class="t" id="num">100</div>
+  <div class="t mono" id="numL" style="font-size:24px">Percent charged</div>
+  <div class="t head" id="rQ" style="font-size:88px;white-space:nowrap">Where did you land?</div>
+  <div class="t mono" id="rL" style="font-size:22px">Dysregulated</div>
+  <div class="t mono" id="rR" style="font-size:22px;color:var(--cream)">Regulated</div>
+</div>
+  <div id="wm"></div>
+  <div class="t tag" id="tag">Not meditation. Regulation.</div>
+  <div class="t cta" id="cta" style="font-size:38px;color:var(--cream)">4 tools free on the App Store</div>
+</div></div>
+<div id="bar"><button id="play">Play</button><span id="tc">0.00s</span><input id="scrub" type="range" min="0" step="1" value="0"><span>regulate &middot; ad &middot; 1080&times;1920 &middot; 60fps</span></div>
+<audio id="snd" preload="auto"></audio>
+<script src="lib/timing-kit.js"></script>
+<script src="regulate-ad.timing.js"></script>
+<script src="lib/reel-kit.js"></script>
+<script>
+const { E, clamp, lerp, P, smooth, kf, fbm, $, S, A, place, riseV, rise, splitWords, headline, path, wordmark } = Reel;
+const T = TIMING, P0 = T.P0, C = { cream: '#F2F0E9', ang: '#C06C4D', ang2: '#B54B32', white: '#FFFFFF', teal: '#4FD1C5', sage: '#8F9E8B' };
+const SCALE = { x0: 150, x1: 930, y: 1040 }, CHIP = 112, RX = 96, ROWH = 205;
+
+// rings: the heartbeat keeps moving out of a point that is "sitting still"
+const rings = Array.from({ length: 10 }, () => S('circle', { fill: 'none', stroke: C.cream, 'stroke-width': 3.5 }));
+// home rows
+const hair = Array.from({ length: 5 }, () => S('line', { stroke: C.cream, 'stroke-width': 2 }));
+const halos = T.rows.map((r) => S('rect', { width: CHIP, height: CHIP, rx: 30, fill: r.c, filter: 'url(#halo)' }));
+const chips = T.rows.map((r) => S('rect', { width: CHIP, height: CHIP, rx: 30, fill: r.c }));
+const tapRing = S('circle', { fill: 'none', stroke: C.white, 'stroke-width': 3 });
+// demo
+const balls = Array.from({ length: T.chaos.n }, (_, i) => S('circle', { fill: i % 2 ? C.ang2 : C.ang }));
+const pops = Array.from({ length: T.chaos.n }, () => S('circle', { fill: 'none', stroke: C.ang, 'stroke-width': 3 }));
+const scaleLn = S('line', { stroke: C.cream, 'stroke-width': 3 }), scaleTicks = Array.from({ length: 5 }, () => S('line', { stroke: C.cream, 'stroke-width': 3 }));
+const smear = S('path', { fill: 'none', stroke: C.white, 'stroke-linecap': 'round' });
+const glow = S('circle', { fill: C.white, filter: 'url(#glow)' }), pt = S('circle', { fill: C.white });
+
+let WM, R = 11, W1, W2, WQ, WL, WRQ, ROWS = [];
+function init() {
+  WM = wordmark($('wm'), { dotPx: 22, yDot: 960 }); R = WM.R;
+  W1 = splitWords($('h1')); W2 = splitWords($('h2')); WQ = splitWords($('q')); WL = splitWords($('line')); WRQ = splitWords($('rQ'));
+  const host = $('rows');
+  ROWS = T.rows.map((r) => { const mk = (cls, txt) => { const d = document.createElement('div'); d.className = 't ' + cls; d.textContent = txt; host.appendChild(d); return d; }; return { t: mk('rt', r.name), s: mk('rs', r.sub), u: mk('rtool', '\u2192  ' + r.tool), c: mk('chev', '›') }; });
+}
+const chipC = (k) => [RX + CHIP / 2, T.rowY[k] + 46 + CHIP / 2];
+const beatAt = (t) => { let b = -1e9; for (const x of T.beats) { if (x <= t) b = x; else break; } return b; };
+
+function pointAt(t) {
+  if (t < T.homeIn + 300) { const a = 8 * smooth(P(t, 250, 1300)) * (1 - smooth(P(t, T.homeIn, 300))); return [P0[0] + a * fbm(t / 21, 3), P0[1] + a * fbm(t / 21, 9)]; }   // it cannot sit still
+  if (t < T.taps[0]) { const u = E.HOUSE(P(t, T.homeIn + 300, T.taps[0] - 350 - T.homeIn - 300)); const c = chipC(0); return [lerp(P0[0], c[0], u), lerp(P0[1], c[1], u) - Math.sin(Math.PI * u) * 80]; }
+  for (let k = 1; k < 4; k++) if (t < T.taps[k]) { const u = E.HOUSE(P(t, T.taps[k] - 350, 300)); const a = chipC(k - 1), b = chipC(k); return [lerp(a[0], b[0], u), lerp(a[1], b[1], u)]; }
+  if (t < T.pick) { const u = E.HOUSE(P(t, T.demo, 400)); const a = chipC(3), b = chipC(2); return [lerp(a[0], b[0], u), lerp(a[1], b[1], u)]; }
+  if (t < T.use[1]) { const u = E.HOUSE(P(t, T.pick + 250, 350)); const a = chipC(2); return [lerp(a[0], P0[0], u), lerp(a[1], P0[1], u) - Math.sin(Math.PI * u) * 60]; }
+  const L = [SCALE.x0 + 140, SCALE.y], Rt = [SCALE.x1 - 60, SCALE.y];
+  if (t < T.slide[0]) { const u = E.HOUSE(P(t, T.rate[0], 450)); return [lerp(P0[0], L[0], u), lerp(P0[1], L[1], u)]; }
+  if (t < T.closeGlide[0]) { const u = E.SETTLE(P(t, T.slide[0], T.slide[1] - T.slide[0])); return [lerp(L[0], Rt[0], u), SCALE.y]; }
+  const u = E.HOUSE(P(t, T.closeGlide[0], T.closeGlide[1] - T.closeGlide[0]));
+  return [lerp(Rt[0], WM.xF, u), lerp(SCALE.y, WM.yF, u) - Math.sin(Math.PI * u) * 80];
+}
+const tapDip = (t) => { let d = 0; for (const tp of [...T.taps, T.pick]) { const k = t - tp; if (k >= 0 && k < 260) d = Math.max(d, Math.sin(Math.PI * k / 260)); } return d; };
+
+function render(t) {
+  let sh = 0; for (const [bt] of T.charges) if (t >= bt && t < bt + 600) sh += 26 * Math.exp(-(t - bt) / 150);
+  $('cam').style.transform = sh > 0.05 ? `translate(${sh * fbm(t / 16, 3)}px,${sh * fbm(t / 16, 9)}px) rotate(${sh * 0.02 * fbm(t / 22, 5)}deg)` : 'none';
+  // 1-2: the promise, over a point that cannot sit still
+  headline($('h1'), W1, t, 540, 330, -1e9, T.swap, 60, { ax: 0.5 });
+  headline($('h2'), W2, t, 540, 330, T.swap + 150, T.homeIn - 150, 60, { ax: 0.5 });
+  const ringBeats = T.beats.filter((b) => b < T.homeIn);
+  rings.forEach((c, k) => {
+    let b = -1e9; const past = ringBeats.filter((x) => x <= t); if (past.length > k) b = past[past.length - 1 - k];
+    const u = P(t, b, 1500), live = b > 0 && u < 1;
+    A(c, { cx: P0[0], cy: P0[1], r: lerp(R + 4, 300, E.SETTLE(u)), 'stroke-opacity': live ? 0.45 * (1 - u) * (1 - E.HOUSE(P(t, T.homeIn - 400, 400))) : 0 });
+  });
+
+  // 3: the app's home, state -> tool
+  const homeOut = E.HOUSE(P(t, T.demo, 450));
+  rise($('day'), t, RX, 380, T.homeIn, T.demo, { dy: 14, blur: 6 });
+  headline($('q'), WQ, t, RX, 430, T.homeIn + 100, T.line, 60);
+  hair.forEach((ln, k) => { const y = T.rowY[0] + k * ROWH, d = E.SETTLE(P(t, T.homeIn + 250 + k * 90, 600)); A(ln, { x1: RX, y1: y, x2: lerp(RX, 984, d), y2: y, 'stroke-opacity': 0.1 * (1 - homeOut) }); });
+  T.rows.forEach((r, k) => {
+    const keep = k === 2 ? 1 - E.HOUSE(P(t, T.use[0] - 100, 400)) : 1 - homeOut;
+    const inn = riseV(t, T.homeIn + 300 + k * 90, Infinity, { dy: 30, blur: 10 }), o = inn.o * keep, y = T.rowY[k];
+    const tapped = t >= T.taps[k], press = 1 - 0.04 * (tapDip(t) * (Math.abs(t - T.taps[k]) < 260 || (k === 2 && Math.abs(t - T.pick) < 260) ? 1 : 0));
+    const cx = RX + CHIP / 2, cy = y + 46 + CHIP / 2 + inn.dy;
+    A(chips[k], { x: cx - (CHIP / 2) * press, y: cy - (CHIP / 2) * press, width: CHIP * press, height: CHIP * press, 'fill-opacity': o });
+    const live = (k === 2 && t > T.demo) ? 1 : 0.35 * smooth(P(t, T.homeIn + 600 + k * 90, 500));
+    A(halos[k], { x: cx - CHIP / 2, y: cy - CHIP / 2, 'fill-opacity': live * o });
+    place(ROWS[k].t, 250, y + 56, o, { dy: inn.dy, blur: inn.blur });
+    const sw = E.HOUSE(P(t, T.taps[k] + 60, 300));
+    place(ROWS[k].s, 250, y + 124, o * (1 - sw), { dy: inn.dy - 18 * sw, blur: inn.blur + 8 * sw });
+    place(ROWS[k].u, 250, y + 122, o * sw, { dy: 18 * (1 - sw), blur: 8 * (1 - sw) });
+    place(ROWS[k].c, 944, y + 76, o * 0.8, { dy: inn.dy });
+  });
+  headline($('line'), WL, t, RX, 400, T.line + 150, T.demo, 60);
+  let tr = 0, tp = T.taps[0]; for (const x of [...T.taps, T.pick]) if (t >= x) tp = x;
+  const tk = t - tp; tr = tk >= 0 && tk < 450 ? 1 - tk / 450 : 0;
+  const pp = pointAt(t);
+  A(tapRing, { cx: pp[0], cy: pp[1], r: R + 10 + 50 * (1 - tr), 'stroke-opacity': t > T.taps[0] - 10 && t < T.pick + 460 ? 0.55 * tr : 0 });
+
+  // 4: the loop - the active step is the one teal thing on screen
+  const steps = [[T.demo, T.use[0]], [T.use[0], T.rate[0]], [T.rate[0], T.closeGlide[0]]];
+  steps.forEach(([a, b], i) => { rise($('st' + i), t, 540, 1500, a + 50, b, { dy: 18, blur: 8, ax: 0.5 }); });
+  const ch = T.charge(t), nr = riseV(t, T.use[0] + 100, T.use[1] - 100, { dy: 30, blur: 12 });
+  $('num').textContent = String(ch); place($('num'), 540, 540, nr.o, { dy: nr.dy, blur: nr.blur, ax: 0.5 });
+  rise($('numL'), t, 540, 860, T.use[0] + 200, T.use[1] - 100, { dy: 12, blur: 6, ax: 0.5 });
+  balls.forEach((c, i) => {
+    const rm = T.removedAt[i];
+    if (t < T.use[0] || t > T.use[1]) { A(c, { 'fill-opacity': 0 }); A(pops[i], { 'stroke-opacity': 0 }); return; }
+    const p = T.chaos.pos(i, Math.min(t, rm)), g = E.SNAP(P(t, T.use[0], 160));
+    if (t < rm) { A(c, { cx: lerp(P0[0], p[0], g), cy: lerp(P0[1], p[1], g), r: T.chaos.r[i] * g, 'fill-opacity': 0.88 }); A(pops[i], { 'stroke-opacity': 0 }); }
+    else { const u = P(t, rm, 260); A(c, { cx: p[0], cy: p[1], r: Math.max(0.01, T.chaos.r[i] * (1 - E.SNAP(u))), 'fill-opacity': 0.88 * (1 - u) }); A(pops[i], { cx: p[0], cy: p[1], r: T.chaos.r[i] * lerp(1, 2.6, E.SETTLE(u)), 'stroke-opacity': u < 1 ? 0.6 * (1 - u) : 0 }); }
+  });
+  const so = E.HOUSE(P(t, T.rate[0] + 100, 450)) * (1 - E.HOUSE(P(t, T.closeGlide[0] - 250, 350)));
+  A(scaleLn, { x1: SCALE.x0, y1: SCALE.y, x2: lerp(SCALE.x0, SCALE.x1, E.SETTLE(P(t, T.rate[0] + 100, 600))), y2: SCALE.y, 'stroke-opacity': 0.25 * so });
+  scaleTicks.forEach((ln, k) => { const x = lerp(SCALE.x0, SCALE.x1, k / 4); A(ln, { x1: x, y1: SCALE.y - 12, x2: x, y2: SCALE.y + 12, 'stroke-opacity': 0.3 * so }); });
+  headline($('rQ'), WRQ, t, 540, 640, T.rate[0] + 100, T.closeGlide[0] - 250, 60, { ax: 0.5 });
+  rise($('rL'), t, SCALE.x0, SCALE.y + 44, T.rate[0] + 300, T.closeGlide[0] - 250, { dy: 12, blur: 6 });
+  rise($('rR'), t, SCALE.x1, SCALE.y + 44, T.rate[0] + 350, T.closeGlide[0] - 250, { dy: 12, blur: 6, ax: 1, max: lerp(0.45, 1, E.HOUSE(P(t, T.slide[1] - 150, 300))) });
+
+  // the point
+  const kick = t < T.homeIn ? 1 + 0.15 * Math.exp(-(t - beatAt(t)) / 160) : 1, rr = R * (1 - 0.35 * tapDip(t));
+  const sm = []; for (let k = 0; k <= 6; k++) sm.push(pointAt(Math.max(0, t - (k * 8.3) / 6)));
+  A(smear, { d: path(sm), 'stroke-width': rr * 2, 'stroke-opacity': t < T.closeGlide[1] ? 0.55 : 0 });
+  A(glow, { cx: pp[0], cy: pp[1], r: R * 1.9 * kick, 'fill-opacity': 0.34 * (1 - E.HOUSE(P(t, T.closeGlide[1], 600))) });
+  A(pt, { cx: pp[0], cy: pp[1], r: rr });
+
+  // 5: the invitation
+  WM.draw(t, T.wordmark);
+  rise($('tag'), t, 540, WM.yF + 118, T.tag, Infinity, { dy: 18, blur: 8, ax: 0.5 });
+  rise($('cta'), t, 540, WM.yF + 190, T.cta, Infinity, { dy: 18, blur: 8, ax: 0.5, max: 0.9 });
+}
+
+Reel.start({ duration: T.dur, render, init, fonts: ['500 300px "Playfair Display"', 'italic 500 84px "Playfair Display"', '500 24px "JetBrains Mono"', '600 44px Inter', '400 32px Inter', '500 34px Inter'] });
+</script>
+</body>
+</html>

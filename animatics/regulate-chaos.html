@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chaos Release Reel</title>
+<!--
+  brandreel animatic rev1 - regulate - "Chaos Release" game reel, 15.5s, 1080x1920 @ 60
+  Steven 2026-09-25: "one for chaos release - the game ... suited to appeal to customers and
+  entice them in ... highest professional quality ... really push the boat out."
+  CORE MECHANIC: the anger is 80 particles; shaking discharges them until one calm point is left,
+  which you rate on the app's own "Where did you land?" scale and which becomes the full stop.
+  - Hook (frame 0): the Brand Book per-state line "Rage isn't a character flaw." over a box of
+    particles already pressurised - the walls close in while the heartbeat climbs; then the
+    BRAND.md YES line "Your body is stuck in fight mode."; then "Shake it out."
+  - The game is the app's (components/ShakeGame.tsx): 80 balls 10-18pt in #C06C4D / #B54B32 at
+    .85 that bounce off walls and each other and never fully slow; a shake kicks every ball in a
+    random direction; the charge starts at 100 and drains while you shake, and the swarm thins
+    with it; HUD "ANGRY · CHAOS RELEASE" + NN% + a bar that fills as charge drains; the charge in
+    serif with PERCENT CHARGED; KEEP SHAKING. Deviation: the app's HUD says ANGER; ANGRY matches
+    the home row "Angry / Frustrated". Serif is Playfair (Brand Book), not the app's Cormorant.
+  - Physics is a deterministic 240Hz simulation in regulate-chaos.timing.js; the same run drives
+    the score, so every rattle you hear is a real collision in the picture.
+  - The phone shake is shown as camera shake (the viewer's phone); the app screen itself does not
+    shake. Removed particles pop with a small ring. The survivor cools from burnt orange to white.
+  - The loop: the app's finish screen, "CHAOS RELEASE · COMPLETE / Where did you land?" and a
+    DYSREGULATED -> REGULATED scale; the point slides toward REGULATED (illustrative, one run).
+  - CTA is true: Chaos Release is one of the four free tools.
+  Laws: emerald ground; angry colour only on the particles, HUD accents and the label word; the
+  dot white; teal only on the tagline; hook on screen at frame 0; wordmark only at the end.
+
+  COPY LIST: Rage isn't a character flaw. · Your body is stuck in fight mode. · Shake it out. ·
+  ANGRY · CHAOS RELEASE · NN% · NN · PERCENT CHARGED · KEEP SHAKING · CHAOS RELEASE · COMPLETE ·
+  Where did you land? · DYSREGULATED · REGULATED · regulate. · NOT MEDITATION. REGULATION. ·
+  CHAOS RELEASE IS FREE ON THE APP STORE
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,500;1,500&display=block" rel="stylesheet">
+<link rel="stylesheet" href="lib/reel.css">
+<style>
+  #cam{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:540px 960px}
+  #num{font-family:var(--serif);font-weight:500;font-size:400px;line-height:1;color:var(--cream);font-variant-numeric:lining-nums tabular-nums;white-space:nowrap}
+</style>
+<body>
+<div id="wrap"><div id="stage"><div id="cam">
+  <svg id="g" viewBox="0 0 1080 1920"><defs><filter id="glow" x="-200%" y="-200%" width="500%" height="500%"><feGaussianBlur stdDeviation="9"/></filter></defs></svg>
+  <div class="t head" id="h1" style="width:900px;text-align:center;font-size:100px">Rage isn't a character flaw.</div>
+  <div class="t head" id="h2" style="width:900px;text-align:center;font-size:88px">Your body is stuck in fight mode.</div>
+  <div class="t head italic" id="h3" style="font-size:140px;white-space:nowrap">Shake it out.</div>
+  <div class="t mono" id="hudL" style="font-size:24px;color:var(--cream)"><span style="color:var(--ang)">Angry</span> &middot; Chaos Release</div>
+  <div class="t mono" id="hudR" style="font-size:24px;color:var(--ang)">100%</div>
+  <div class="t" id="num">100</div>
+  <div class="t mono" id="numL" style="font-size:24px">Percent charged</div>
+  <div class="t mono" id="keep" style="font-size:40px;color:var(--ang);letter-spacing:.34em">Keep shaking</div>
+  <div class="t mono" id="rK" style="font-size:24px">Chaos Release &middot; Complete</div>
+  <div class="t head" id="rQ" style="font-size:96px;white-space:nowrap">Where did you land?</div>
+  <div class="t mono" id="rL" style="font-size:22px">Dysregulated</div>
+  <div class="t mono" id="rR" style="font-size:22px;color:var(--cream)">Regulated</div>
+</div>
+  <div id="wm"></div>
+  <div class="t tag" id="tag">Not meditation. Regulation.</div>
+  <div class="t cta" id="cta">Chaos Release is free on the App Store</div>
+</div></div>
+<div id="bar"><button id="play">Play</button><span id="tc">0.00s</span><input id="scrub" type="range" min="0" step="1" value="0"><span>regulate &middot; chaos release &middot; 1080&times;1920 &middot; 60fps</span></div>
+<audio id="snd" preload="auto"></audio>
+<script src="lib/timing-kit.js"></script>
+<script src="regulate-chaos.timing.js"></script>
+<script src="lib/reel-kit.js"></script>
+<script>
+const { E, clamp, lerp, P, smooth, kf, fbm, $, S, A, place, riseV, rise, splitWords, headline, path, wordmark } = Reel;
+const T = TIMING, N = T.N, COLS = ['#C06C4D', '#B54B32'];
+const SCALE = { x0: 150, x1: 930, y: 1040 };
+
+const barBg = S('line', { x1: 96, y1: 236, x2: 984, y2: 236, stroke: '#F2F0E9', 'stroke-width': 3 });
+const barFg = S('line', { x1: 96, y1: 236, y2: 236, stroke: COLS[0], 'stroke-width': 3 });
+const scaleLn = S('line', { stroke: '#F2F0E9', 'stroke-width': 3, 'stroke-linecap': 'round' });
+const scaleTicks = Array.from({ length: 5 }, () => S('line', { stroke: '#F2F0E9', 'stroke-width': 3 }));
+const rings = [], smears = [], balls = [];
+for (let i = 0; i < N; i++) { rings.push(S('circle', { fill: 'none', 'stroke-width': 3 })); }
+for (let i = 0; i < N; i++) { smears.push(S('line', { 'stroke-linecap': 'round' })); balls.push(S('circle', {})); }
+const glow = S('circle', { fill: '#FFFFFF', filter: 'url(#glow)' });
+
+let WM, R = 11, W1, W2, W3, WQ;
+function init() { WM = wordmark($('wm'), { dotPx: 22, yDot: 960 }); R = WM.R; W1 = splitWords($('h1')); W2 = splitWords($('h2')); W3 = splitWords($('h3')); WQ = splitWords($('rQ')); }
+
+const mix = (a, b, u) => { const pa = [1, 3, 5].map((k) => parseInt(a.slice(k, k + 2), 16)), pb = [1, 3, 5].map((k) => parseInt(b.slice(k, k + 2), 16)); return '#' + pa.map((v, k) => Math.round(lerp(v, pb[k], u)).toString(16).padStart(2, '0')).join(''); };
+function shake(t) {
+  let a = 0; for (const b of T.bursts) if (t >= b && t < b + 600) a += 30 * Math.exp(-(t - b) / 150);
+  const pressure = t > 2200 && t < T.bursts[0] ? 2.5 * smooth(P(t, 2200, T.bursts[0] - 2200)) : 0;
+  return [(a + pressure) * fbm(t / 16, 3), (a + pressure) * fbm(t / 16, 9), a * 0.02 * fbm(t / 22, 5)];
+}
+// the survivor: simulated until it calms, then carried to the scale, along it, and to the full stop
+function survivorAt(t) {
+  const s = T.survivor, simEnd = T.calm[1];
+  if (t <= simEnd) return T.posAt(s, t);
+  const a = T.posAt(s, simEnd), L = [SCALE.x0 + 140, SCALE.y], Rt = [SCALE.x1 - 60, SCALE.y];
+  if (t < T.rate.onScale) { const u = E.HOUSE(P(t, simEnd, T.rate.onScale - simEnd)); return [lerp(a[0], L[0], u), lerp(a[1], L[1], u) - Math.sin(Math.PI * u) * 140]; }
+  if (t < T.closeGlide[0]) { const u = E.SETTLE(P(t, T.rate.slide[0], T.rate.slide[1] - T.rate.slide[0])); return [lerp(L[0], Rt[0], u), SCALE.y]; }
+  const u = E.HOUSE(P(t, T.closeGlide[0], T.closeGlide[1] - T.closeGlide[0]));
+  return [lerp(Rt[0], WM.xF, u), lerp(SCALE.y, WM.yF, u) - Math.sin(Math.PI * u) * 80];
+}
+
+function render(t) {
+  const [sx, sy, sr] = shake(t);
+  $('cam').style.transform = `translate(${sx}px,${sy}px) rotate(${sr}deg)`;
+
+  // words
+  headline($('h1'), W1, t, 540, 250, -1e9, T.hookSwap, 60, { ax: 0.5 });
+  headline($('h2'), W2, t, 540, 260, T.hookSwap + 150, T.shakeText - 250, 60, { ax: 0.5 });
+  headline($('h3'), W3, t, 540, 330, T.shakeText + 150, T.bursts[0] + 60, 90, { ax: 0.5 });
+
+  // particles
+  const surv = T.survivor, calmU = E.HOUSE(P(t, T.calm[0], T.calm[1] - T.calm[0]));
+  for (let i = 0; i < N; i++) {
+    const b = balls[i], sm = smears[i], rg = rings[i], rem = T.removedAt[i];
+    if (i === surv) {
+      const p = survivorAt(t), q = survivorAt(Math.max(0, t - 8.3)), c = mix(T.col[i] ? COLS[1] : COLS[0], '#FFFFFF', calmU), rr = lerp(T.r[i], R, calmU);
+      A(b, { cx: p[0], cy: p[1], r: rr, fill: c, 'fill-opacity': lerp(0.9, 1, calmU) });
+      A(sm, { x1: q[0], y1: q[1], x2: p[0], y2: p[1], stroke: c, 'stroke-width': rr * 2, 'stroke-opacity': t < T.closeGlide[1] ? 0.5 : 0 });
+      A(glow, { cx: p[0], cy: p[1], r: R * 1.9, 'fill-opacity': 0.34 * calmU * (1 - E.HOUSE(P(t, T.closeGlide[1], 600))) });
+      A(rg, { 'stroke-opacity': 0 });
+      continue;
+    }
+    if (t < rem) {
+      const p = T.posAt(i, t), q = T.posAt(i, Math.max(0, t - 16.7)), mx = (p[0] + q[0]) / 2, my = (p[1] + q[1]) / 2;
+      A(b, { cx: p[0], cy: p[1], r: T.r[i], fill: COLS[T.col[i]], 'fill-opacity': 0.88 });
+      A(sm, { x1: mx, y1: my, x2: p[0], y2: p[1], stroke: COLS[T.col[i]], 'stroke-width': T.r[i] * 2, 'stroke-opacity': 0.4 });
+      A(rg, { 'stroke-opacity': 0 });
+    } else {
+      const u = P(t, rem, 260), p = T.posAt(i, rem);
+      A(b, { cx: p[0], cy: p[1], r: Math.max(0.01, T.r[i] * (1 - E.SNAP(u))), fill: COLS[T.col[i]], 'fill-opacity': 0.88 * (1 - u) });
+      A(sm, { 'stroke-opacity': 0 });
+      A(rg, { cx: p[0], cy: p[1], r: T.r[i] * lerp(1, 2.8, E.SETTLE(u)), stroke: COLS[T.col[i]], 'stroke-opacity': u < 1 ? 0.6 * (1 - u) : 0 });
+    }
+  }
+
+  // HUD (the app's game screen)
+  const hud = riseV(t, T.hud, T.hudOut, { dy: 16, blur: 6 });
+  const ch = T.charge(t);
+  place($('hudL'), 96, 180, hud.o * 0.8, { dy: hud.dy, blur: hud.blur });
+  $('hudR').textContent = Math.round(ch) + '%';
+  place($('hudR'), 984, 180, hud.o, { dy: hud.dy, blur: hud.blur, ax: 1 });
+  A(barBg, { 'stroke-opacity': 0.14 * hud.o });
+  A(barFg, { x2: 96 + 888 * (1 - ch / 100), 'stroke-opacity': hud.o });
+  const nr = riseV(t, T.hud + 100, T.hudOut + 100, { dy: 40, blur: 14, dur: 700 });
+  $('num').textContent = String(Math.round(ch));
+  const kick = T.bursts.reduce((a, b) => a + (t >= b && t < b + 300 ? 0.035 * Math.exp(-(t - b) / 90) : 0), 0);
+  place($('num'), 540, 640, nr.o, { dy: nr.dy, blur: nr.blur, ax: 0.5 }); $('num').style.transform += ` scale(${1 + kick})`;
+  rise($('numL'), t, 540, 1070, T.hud + 250, T.hudOut + 100, { dy: 12, blur: 6, ax: 0.5 });
+  const kp = T.bursts.reduce((a, b) => a + (t >= b ? Math.exp(-(t - b) / 200) : 0), 0);
+  rise($('keep'), t, 540, 1540, T.hud + 200, T.hudOut, { dy: 12, blur: 6, ax: 0.5, max: clamp(0.65 + 0.35 * kp) });
+  $('keep').style.transform += ` scale(${1 + 0.08 * T.bursts.reduce((a, b) => a + (t >= b && t < b + 400 ? Math.exp(-(t - b) / 120) : 0), 0)})`;
+
+  // the loop: rate how you feel
+  const so = E.HOUSE(P(t, T.rate.in + 150, 500)) * (1 - E.HOUSE(P(t, T.rate.out, 450)));
+  A(scaleLn, { x1: SCALE.x0, y1: SCALE.y, x2: lerp(SCALE.x0, SCALE.x1, E.SETTLE(P(t, T.rate.in + 150, 700))), y2: SCALE.y, 'stroke-opacity': 0.25 * so });
+  scaleTicks.forEach((ln, k) => { const x = lerp(SCALE.x0, SCALE.x1, k / 4); A(ln, { x1: x, y1: SCALE.y - 12, x2: x, y2: SCALE.y + 12, 'stroke-opacity': 0.3 * so * smooth(P(t, T.rate.in + 300 + k * 40, 250)) }); });
+  rise($('rK'), t, 540, 560, T.rate.in, T.rate.out, { dy: 14, blur: 6, ax: 0.5 });
+  headline($('rQ'), WQ, t, 540, 620, T.rate.in + 150, T.rate.out, 70, { ax: 0.5 });
+  rise($('rL'), t, SCALE.x0, SCALE.y + 44, T.rate.in + 400, T.rate.out, { dy: 12, blur: 6 });
+  const lit = E.HOUSE(P(t, T.rate.slide[1] - 150, 300));
+  rise($('rR'), t, SCALE.x1, SCALE.y + 44, T.rate.in + 450, T.rate.out, { dy: 12, blur: 6, ax: 1, max: lerp(0.45, 1, lit) });
+
+  // close
+  WM.draw(t, T.wordmark);
+  rise($('tag'), t, 540, WM.yF + 118, T.tag, Infinity, { dy: 18, blur: 8, ax: 0.5 });
+  rise($('cta'), t, 540, WM.yF + 190, T.cta, Infinity, { dy: 18, blur: 8, ax: 0.5, max: 0.9 });
+}
+
+Reel.start({ duration: T.dur, render, init, fonts: ['500 400px "Playfair Display"', 'italic 500 140px "Playfair Display"', '500 24px "JetBrains Mono"'] });
+</script>
+</body>
+</html>
