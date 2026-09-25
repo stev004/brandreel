@@ -69,3 +69,18 @@ export function fullStop(bus, at) {
   let a = 0, b = 0, c = 0;
   add(bus, at, 1.2, (i, t) => { a += (2 * Math.PI * 1318.5) / SR; b += (2 * Math.PI * 2637) / SR; c += (2 * Math.PI * 329.6) / SR; return Math.sin(a) * ar(t, 0.002, 0.14) * 0.3 + Math.sin(b) * ar(t, 0.001, 0.05) * 0.1 + Math.sin(c) * ar(t, 0.004, 0.22) * 0.18; });
 }
+
+// Load an animatic's timing file (the same one its HTML loads), so picture and score share cues.
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+export function loadTiming(id) {
+  const dir = join(dirname(fileURLToPath(import.meta.url)), '..', '..', 'animatics');
+  const src = readFileSync(join(dir, 'lib', 'timing-kit.js'), 'utf8').replace(/if \(typeof module[^\n]*/, '') + '\n' + readFileSync(join(dir, `${id}.timing.js`), 'utf8');
+  return new Function(src + '\nreturn TIMING;')();
+}
+
+// Heartbeat on explicit beat times (from a timing file), so the picture's pulses and the audio agree.
+export function heartbeatAt(bus, beatsMs, { gain, amp = 0.55, dub = 0.3 }) {
+  beatsMs.forEach((ms, i) => { const g = gain(ms); if (g <= 0.01) return; const per = (beatsMs[i + 1] ?? ms + 800) - ms; thump(bus, ms / 1000, 78, 44, amp * g); thump(bus, (ms + per * dub) / 1000, 70, 50, amp * 0.58 * g); });
+}

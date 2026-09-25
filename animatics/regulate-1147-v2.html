@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>11:47 AM Reel</title>
+<!--
+  brandreel animatic v2 rev2 - regulate - "11:47 AM" social reel, ~13s (T.dur), 1080x1920 @ 60
+  Steven 2026-09-25: refine in your own style, convey the same stuff. Same story as v1 /
+  motion concept 04: 11:47 AM, everything is urgent, the pings pile up, pressure drives the
+  gauge to the redline, "Let it out slow." on one long breath out, the pings break apart,
+  "For the days that don't stop." Rebuilt in the showreel's language, the same series as
+  3:04 AM v2 (big serif clock, colon blinking on the heartbeat):
+  - One unbroken take: the clock's lower colon dot becomes the white point, lands on the
+    needle tip at rest, is driven to the redline, falls, and becomes the full stop.
+  - Pings arrive on heartbeats and stack like an inbox: each new one lands at the bottom and
+    ratchets the rest up (records ratchet); older ones sink back in depth.
+  - The app's Pressure Gauge, driven like the game: 8 taps ratchet the needle (each jolts the
+    gauge 6pt, and the stack and camera with it), tremble at the amber redline, hold 400ms,
+    then fall fast-then-slow; "Let it out slow." / LONG BREATH OUT are the app's words.
+  - Cause and effect: as the pressure drops through 80/64/48/32/16%, the pings break, newest
+    first, word by word.
+  rev2 (Fable critique 09-25): the inbox drives the gauge. The gauge draws in under the clock at
+  0.7s; each ping lands on a heartbeat and kicks the needle +18% with a 120ms overshoot (no taps,
+  no dead hold); the point is born at the hub and rides out along the needle; words flash one
+  bright frame as they break; the gauge leaves as soon as the needle settles.
+  Laws: emerald ground; Anxious amber on the redline, LONG BREATH OUT and the label word only;
+  the dot white; teal unused; hook on screen at frame 0; wordmark only at the end.
+
+  COPY LIST: 11:47 · AM · everything is urgent. · re: re: re: · just following up... ·
+  can you jump on a call? · per my last email · quick question · 11:47 (ping times) ·
+  PRESSURE · ANXIOUS · PRESSURE GAUGE · Let it out slow. · LONG BREATH OUT · regulate. ·
+  For the days that don't stop. · 4 TOOLS FREE ON THE APP STORE
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,500;1,500&display=block" rel="stylesheet">
+<link rel="stylesheet" href="lib/reel.css">
+<style>
+  #cam{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:540px 1200px}
+  #clock{display:flex;align-items:baseline;font-family:var(--serif);font-weight:500;font-size:300px;line-height:1;color:var(--cream);font-variant-numeric:lining-nums;letter-spacing:-.02em;transform-origin:50% 60%}
+  #clock .colon{display:inline-block}
+  #clock .ampm{font-family:var(--mono);font-size:40px;letter-spacing:.3em;margin-left:22px;color:var(--sage)}
+  .ping{font-family:var(--sans);font-size:42px;color:#dfe5de;white-space:nowrap;line-height:1}
+  .ping .w{display:inline-block}
+  .ptime{font-family:var(--mono);font-size:22px;letter-spacing:.2em;color:var(--sage);white-space:nowrap;line-height:1}
+</style>
+<body>
+<div id="wrap"><div id="stage"><div id="cam">
+  <svg id="g" viewBox="0 0 1080 1920"><defs><filter id="glow" x="-200%" y="-200%" width="500%" height="500%"><feGaussianBlur stdDeviation="9"/></filter></defs></svg>
+  <div class="t" id="clock"><span class="d" id="dA">11</span><span class="colon" id="colon"></span><span class="d" id="dB">47</span><span class="ampm" id="ampm">AM</span></div>
+  <div class="t head italic" id="moment" style="font-size:100px;white-space:nowrap">everything is urgent.</div>
+  <div class="t ping" id="p0">re: re: re:</div>
+  <div class="t ping" id="p1">just following up...</div>
+  <div class="t ping" id="p2">can you jump on a call?</div>
+  <div class="t ping" id="p3">per my last email</div>
+  <div class="t ping" id="p4">quick question</div>
+  <div class="t ptime" id="q0">11:47</div><div class="t ptime" id="q1">11:47</div><div class="t ptime" id="q2">11:47</div><div class="t ptime" id="q3">11:47</div><div class="t ptime" id="q4">11:47</div>
+  <div class="t mono" id="press" style="font-size:20px;color:var(--cream)">Pressure</div>
+  <div class="t head" id="slow" style="font-size:88px;white-space:nowrap">Let it out slow.</div>
+  <div class="t mono" id="lbo" style="color:var(--anx);font-size:26px;letter-spacing:.3em">Long breath out</div>
+  <div class="t tool" id="tool"><i style="color:var(--anx)">Anxious</i> &middot; Pressure Gauge</div>
+</div>
+  <div id="wm"></div>
+  <div class="t head italic" id="line" style="font-size:56px;white-space:nowrap;opacity:.9">For the days that don't stop.</div>
+  <div class="t cta" id="cta">4 tools free on the App Store</div>
+</div></div>
+<div id="bar"><button id="play">Play</button><span id="tc">0.00s</span><input id="scrub" type="range" min="0" step="1" value="0"><span>regulate &middot; 11:47 am v2 &middot; 1080&times;1920 &middot; 60fps</span></div>
+<audio id="snd" preload="auto"></audio>
+<script src="lib/timing-kit.js"></script>
+<script src="regulate-1147-v2.timing.js"></script>
+<script src="lib/reel-kit.js"></script>
+<script>
+const { E, clamp, lerp, P, smooth, kf, fbm, $, S, A, place, riseV, rise, splitWords, headline, path, wordmark } = Reel;
+const T = TIMING, C = { cream: '#F2F0E9', anx: '#D4A574', white: '#FFFFFF' }, D2R = Math.PI / 180;
+const HUB0 = [540, 1470], RA = 380, NL = RA * 95 / 110, SLOT = 96, BOTTOM = 930;
+const FRAG = [[-80, -42, -14], [24, -78, 9], [72, -30, 16], [-36, -90, -8], [90, -60, 12]];
+
+const tip = (deg, hub, len) => [hub[0] + len * Math.sin(deg * D2R), hub[1] - len * Math.cos(deg * D2R)];
+function jolt(t) {
+  let j = 0; for (const b of T.pingIn) { const k = t - b; if (k >= 0 && k < 135) j += (k < 45 ? 6 : k < 90 ? -6 : 0) * Math.max(0.3, T.pressure(t)); }
+  if (t >= T.tremble[0] && t < T.tremble[1]) j += 5 * fbm(t / 22, 31) * (1 - smooth(P(t, T.tremble[1] - 150, 150)));
+  return j;
+}
+const theta = (t) => -90 + 180 * T.pressure(t) + (t > T.tremble[0] && t < T.tremble[1] ? 2.6 * fbm(t / 30, 21) : 0);
+const hubAt = (t) => [HUB0[0] + jolt(t), HUB0[1]];
+const lastBeat = (t) => { let b = -1e9; for (const x of T.beats) { if (x <= t) b = x; else break; } return b; };
+
+const arc = S('path', { fill: 'none', stroke: C.cream, 'stroke-width': 3, 'stroke-linecap': 'round' });
+const ticks = Array.from({ length: 11 }, () => S('line', { stroke: C.cream, 'stroke-width': 3, 'stroke-linecap': 'round' }));
+const red = S('path', { fill: 'none', stroke: C.anx, 'stroke-width': 7, 'stroke-linecap': 'round' });
+const needle = S('line', { stroke: C.cream, 'stroke-width': 4, 'stroke-linecap': 'round' });
+const hub = S('circle', { fill: C.cream, r: 9 });
+const dotUp = S('circle', { fill: C.cream }), dotLo = S('circle', { fill: C.cream });
+const smear = S('path', { fill: 'none', stroke: C.white, 'stroke-linecap': 'round' });
+const glow = S('circle', { fill: C.white, filter: 'url(#glow)' });
+const pt = S('circle', { fill: C.white });
+
+let WM, R = 11, W_M, W_SLOW, W_LINE, PW = [], colonUp, colonLo, rC, clockBox;
+function init() {
+  WM = wordmark($('wm'), { dotPx: 22, yDot: 960 }); R = WM.R;
+  W_M = splitWords($('moment')); W_SLOW = splitWords($('slow')); W_LINE = splitWords($('line'));
+  PW = [0, 1, 2, 3, 4].map((i) => splitWords($('p' + i)));
+  const cv = document.createElement('canvas').getContext('2d'); cv.font = '500 300px "Playfair Display"';
+  const cm = cv.measureText(':'), pm = cv.measureText('.'), fm = cv.measureText('1');
+  $('colon').style.width = cm.width + 'px';
+  const c = $('clock'); c.style.transform = 'translate(0,0)';
+  const k = $('stage').getBoundingClientRect().width / 1080, cb = c.getBoundingClientRect(), cr = $('colon').getBoundingClientRect();
+  clockBox = { x: 540 - cb.width / k / 2, y: 280 };
+  const base = clockBox.y + (300 - (fm.fontBoundingBoxAscent + fm.fontBoundingBoxDescent)) / 2 + fm.fontBoundingBoxAscent;
+  rC = (pm.actualBoundingBoxAscent + pm.actualBoundingBoxDescent) / 2;
+  const cx = clockBox.x + (cr.left - cb.left) / k + (cm.actualBoundingBoxRight - cm.actualBoundingBoxLeft) / 2;
+  colonLo = [cx, base + pm.actualBoundingBoxDescent - rC]; colonUp = [cx, base - cm.actualBoundingBoxAscent + rC];
+}
+
+// the point is born at the hub, rides out along the needle, is driven by the inbox, then becomes the full stop
+function pointAt(t) {
+  if (t < T.closeGlide[0]) { const len = NL * E.SETTLE(P(t, T.needle[0], T.needle[1] - T.needle[0])); return tip(theta(t), hubAt(t), Math.max(len, 0.001)); }
+  const rest = tip(-90, HUB0, NL), u = E.HOUSE(P(t, T.closeGlide[0], T.closeGlide[1] - T.closeGlide[0]));
+  return [lerp(rest[0], WM.xF, u), lerp(rest[1], WM.yF, u) - Math.sin(Math.PI * u) * 110];
+}
+
+function render(t) {
+  // camera: each ping steps it in; the release pulls it back
+  let push = 0; for (const b of T.pingIn) push += 0.01 * E.SNAP(P(t, b, 120));
+  $('cam').style.transform = `scale(${1 + push * (1 - E.INOUT(P(t, T.fall[0], T.fall[1] - T.fall[0])))})`;
+  const beat = t - lastBeat(t), live = t < T.clockOut, j = jolt(t);
+
+  // the clock (the hook): pulses and blinks on the heartbeat, rises out as the inbox fills
+  const out = E.HOUSE(P(t, T.clockOut, 600)), pulse = live ? 1 + 0.012 * Math.exp(-beat / 140) : 1;
+  const c = $('clock'); c.style.visibility = out < 0.999 ? 'visible' : 'hidden'; c.style.opacity = (1 - out).toFixed(3);
+  c.style.filter = out > 0.01 ? `blur(${(10 * out).toFixed(2)}px)` : 'none';
+  c.style.transform = `translate(${clockBox.x}px,${clockBox.y - 40 * out}px) scale(${pulse})`;
+  const blink = 0.4 + 0.6 * Math.exp(-beat / 300);
+  A(dotUp, { cx: colonUp[0], cy: colonUp[1] - 40 * out, r: rC, 'fill-opacity': blink * (1 - out) });
+  A(dotLo, { cx: colonLo[0], cy: colonLo[1] - 40 * out, r: rC, 'fill-opacity': blink * (1 - out) });
+  headline($('moment'), W_M, t, 540, 630, 380, T.clockOut, 80, { ax: 0.5 });
+
+  // the inbox: pings land on heartbeats at the bottom slot and ratchet the stack up
+  for (let i = 0; i < 5; i++) {
+    let y = BOTTOM; for (let k = i + 1; k < 5; k++) y -= SLOT * E.SNAP(P(t, T.pingIn[k], 280));
+    const sin = E.SNAP(P(t, T.pingIn[i], 280));
+    const newer = [0, 1, 2, 3, 4].filter((k) => k > i && t >= T.pingIn[k]).length, depth = 1 - 0.1 * newer, s0 = T.shatterAt[4 - i];
+    const el = $('p' + i); el.style.visibility = sin > 0 ? 'visible' : 'hidden'; el.style.opacity = 1;
+    el.style.transform = `translate(${96 + j * 0.5}px,${y + 40 * (1 - sin)}px)`;
+    el.style.filter = sin < 1 ? `blur(${(8 * (1 - sin)).toFixed(2)}px)` : 'none';
+    PW[i].forEach((w, k) => {
+      const u = P(t, s0 + k * 70, 1000), pre = u < 0.12, v = pre ? 0 : E.SHATTER((u - 0.12) / 0.88), [fx, fy, fr] = FRAG[(k + i) % 5];
+      const pop = u > 0 && u < 0.04; // one bright frame as it breaks
+      w.style.color = pop ? '#FFFFFF' : '';
+      w.style.opacity = ((0.9 * depth) * sin * (1 - v)).toFixed(4);
+      w.style.transform = `translate(${(fx * v).toFixed(2)}px,${((pre ? 5 * u / 0.12 : 5) + fy * v).toFixed(2)}px) rotate(${(fr * v).toFixed(2)}deg)`;
+      w.style.filter = v > 0 ? `blur(${(8 * v).toFixed(2)}px)` : 'none';
+    });
+    place($('q' + i), 960, y + 10 + 40 * (1 - sin), 0.6 * depth * sin * (1 - E.HOUSE(P(t, s0, 250))), { ax: 1 });
+  }
+
+  // the gauge (the app's face)
+  const h = hubAt(t), gOut = 1 - E.HOUSE(P(t, T.gaugeOut, 450));
+  const ad = E.SETTLE(P(t, T.arc[0], T.arc[1] - T.arc[0])), ap = [];
+  for (let a = -90; a <= -90 + 180 * ad + 0.01; a += 3) ap.push(tip(Math.min(a, -90 + 180 * ad), h, RA));
+  A(arc, { d: t > T.arc[0] ? path(ap) : '', 'stroke-opacity': 0.26 * gOut });
+  ticks.forEach((ln, k) => { const a = -90 + 18 * k, p1 = tip(a, h, RA * 101 / 110), p2 = tip(a, h, RA * 116 / 110); A(ln, { x1: p1[0], y1: p1[1], x2: p2[0], y2: p2[1], 'stroke-opacity': 0.34 * smooth(P(t, T.ticks + k * 30, 250)) * gOut }); });
+  const rl = []; for (let a = 54; a <= 90.01; a += 2) rl.push(tip(a, h, RA));
+  const hot = t > T.pingIn[3] && t < T.fall[0] + 300 ? 0.15 * Math.exp(-(t - lastBeat(t)) / 200) : 0;
+  A(red, { d: path(rl), 'stroke-opacity': Math.min(1, 0.85 * smooth(P(t, T.red, 300)) + hot) * gOut });
+  const p = pointAt(t), nIn = smooth(P(t, T.needle[0], 200));
+  A(needle, { x1: h[0], y1: h[1], x2: p[0], y2: p[1], 'stroke-opacity': t < T.closeGlide[0] ? 0.9 * nIn * gOut : 0 });
+  A(hub, { cx: h[0], cy: h[1], 'fill-opacity': smooth(P(t, T.arc[0] + 200, 300)) * gOut });
+  rise($('press'), t, 540 + j, HUB0[1] + 40, T.needle[1], T.gaugeOut, { dy: 12, blur: 6, ax: 0.5, max: 0.35 });
+  headline($('slow'), W_SLOW, t, 540, 300, T.fall[0], T.gaugeOut, 70, { ax: 0.5 });
+  rise($('lbo'), t, 540, 420, T.fall[0] + 300, T.gaugeOut, { dy: 16, blur: 6, ax: 0.5 });
+  rise($('tool'), t, 540, 1566, T.needle[1], T.gaugeOut, { dy: 20, blur: 8, ax: 0.5 });
+
+  // the point
+  const sm = []; for (let k = 0; k <= 6; k++) sm.push(pointAt(Math.max(0, t - (k * 8.3) / 6)));
+  A(smear, { d: path(sm), 'stroke-width': R * 2, 'stroke-opacity': t > T.needle[0] && t < T.closeGlide[1] ? 0.55 : 0 });
+  A(glow, { cx: p[0], cy: p[1], r: R * 1.9, 'fill-opacity': 0.34 * nIn * (1 - E.HOUSE(P(t, T.closeGlide[1], 600))) });
+  A(pt, { cx: p[0], cy: p[1], r: R, 'fill-opacity': nIn });
+
+  // close
+  WM.draw(t, T.wordmark);
+  headline($('line'), W_LINE, t, 540, WM.yF + 80, T.line, Infinity, 50, { ax: 0.5 });
+  rise($('cta'), t, 540, WM.yF + 200, T.cta, Infinity, { dy: 18, blur: 8, ax: 0.5, max: 0.9 });
+}
+
+Reel.start({ duration: T.dur, render, init, fonts: ['500 300px "Playfair Display"', 'italic 500 100px "Playfair Display"', '500 24px "JetBrains Mono"', '400 42px Inter'] });
+</script>
+</body>
+</html>

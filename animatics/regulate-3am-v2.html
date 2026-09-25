@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3:04 AM Reel</title>
+<!--
+  brandreel animatic v2 rev2 - regulate - "3:04 AM" social reel, ~15s (T.dur), 1080x1920 @ 60
+  Steven 2026-09-25: "refine them and make them look more professional with the animation,
+  timing and what it's doing. remake those ones in your own style, but ensure they convey the
+  same stuff." Same story as the KEPT rev5d: 3:04 AM, awake again, five intrusive thoughts,
+  one long exhale on the Regulate Breath column, the thoughts leave, "For the nights your
+  mind won't stop." Rebuilt in the showreel's language:
+  - One unbroken take. The clock's colon is two dots; the lower one becomes the white point,
+    rides up to the top of the column and makes the exhale, then comes to rest as the full
+    stop in "regulate." Nothing cuts; every scene grows out of the last one's geometry.
+  - Picture and score share one clock (regulate-3am-v2.timing.js): the colon blinks and the
+    clock pulses on the heartbeat, and each thought arrives on a beat.
+  - Depth: thoughts sit at five depths (scale, opacity, blur), drift, and the camera pushes
+    in (1.00 -> 1.05) while the night builds, then pulls back across the exhale.
+  - Cause and effect: each thought dissolves at the instant the falling point passes its line.
+  - The exhale is 5.0s on the 3:04 AM travel curve (the KEPT 8s cut to fit a social reel).
+  rev2 (Fable critique 09-25): the clock opens 340px and low, drifts up as thoughts arrive; the
+  clock hands over the moment the last thought lands (no dead hold); column moved to x 670, taller.
+  Laws: emerald ground; Balanced sage on the column fill/ticks and the label word only; the
+  dot white; teal unused; hook text on screen at frame 0; wordmark only at the end.
+
+  COPY LIST: 3:04 · AM · awake again. · the email you didn't send · tomorrow. tomorrow. ·
+  why did you say that · why can't I just sleep · did I lock the door · Exhale ·
+  LET IT ALL THE WAY OUT · IN 4 · OUT 8 · BALANCED · REGULATE BREATH · regulate. ·
+  For the nights your mind won't stop. · 4 TOOLS FREE ON THE APP STORE
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,500;1,500&display=block" rel="stylesheet">
+<link rel="stylesheet" href="lib/reel.css">
+<style>
+  #cam{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:540px 960px}
+  #clock{display:flex;align-items:baseline;font-family:var(--serif);font-weight:500;font-size:340px;line-height:1;color:var(--cream);font-variant-numeric:lining-nums;letter-spacing:-.02em;transform-origin:50% 60%}
+  #clock .colon{display:inline-block;width:.25em}
+  #clock .ampm{font-family:var(--mono);font-size:40px;letter-spacing:.3em;margin-left:22px;color:var(--sage)}
+  .th{font-family:var(--sans);font-size:40px;color:#c4cfc6;white-space:nowrap;line-height:1}
+</style>
+<body>
+<div id="wrap"><div id="stage"><div id="cam">
+  <svg id="g" viewBox="0 0 1080 1920"><defs><filter id="glow" x="-200%" y="-200%" width="500%" height="500%"><feGaussianBlur stdDeviation="9"/></filter></defs></svg>
+  <div class="t" id="clock"><span class="d" id="d3">3</span><span class="colon" id="colon"></span><span class="d" id="d04">04</span><span class="ampm" id="ampm">AM</span></div>
+  <div class="t head italic" id="moment" style="font-size:100px;white-space:nowrap">awake again.</div>
+  <div class="t th" id="t0">the email you didn't send</div>
+  <div class="t th" id="t1">tomorrow. tomorrow.</div>
+  <div class="t th" id="t2">why did you say that</div>
+  <div class="t th" id="t3">why can't I just sleep</div>
+  <div class="t th" id="t4">did I lock the door</div>
+  <div class="t head" id="phase" style="font-size:150px;white-space:nowrap">Exhale</div>
+  <div class="t mono" id="phaseSub" style="font-size:24px">Let it all the way out</div>
+  <div class="t mono" id="lIn" style="font-size:20px;color:var(--cream)">In 4</div>
+  <div class="t mono" id="lOut" style="font-size:20px;color:var(--cream)">Out 8</div>
+  <div class="t tool" id="tool"><i style="color:var(--bal)">Balanced</i> &middot; Regulate Breath</div>
+</div>
+  <div id="wm"></div>
+  <div class="t head italic" id="line" style="font-size:52px;white-space:nowrap;opacity:.9">For the nights your mind won't stop.</div>
+  <div class="t cta" id="cta">4 tools free on the App Store</div>
+</div></div>
+<div id="bar"><button id="play">Play</button><span id="tc">0.00s</span><input id="scrub" type="range" min="0" step="1" value="0"><span>regulate &middot; 3:04 am v2 &middot; 1080&times;1920 &middot; 60fps</span></div>
+<audio id="snd" preload="auto"></audio>
+<script src="lib/timing-kit.js"></script>
+<script src="regulate-3am-v2.timing.js"></script>
+<script src="lib/reel-kit.js"></script>
+<script>
+const { E, clamp, lerp, P, smooth, kf, fbm, $, S, A, place, riseV, rise, splitWords, headline, path, wordmark } = Reel;
+const T = TIMING, C = { cream: '#F2F0E9', bal: '#7FA77F', white: '#FFFFFF' };
+const COL = T.column;
+// five thoughts: [left x, depth z] - near = larger, brighter, sharper
+const TH = [[90, 0.9], [200, 0.45], [110, 0.72], [150, 0.35], [130, 0.6]];
+
+const track = S('line', { stroke: C.cream, 'stroke-width': 12, 'stroke-linecap': 'round' });
+const fill = S('line', { stroke: C.bal, 'stroke-width': 12, 'stroke-linecap': 'butt' });
+const ticks = Array.from({ length: 12 }, () => S('line', { stroke: C.bal, 'stroke-width': 4 }));
+const dotUp = S('circle', { fill: C.cream }), dotLo = S('circle', { fill: C.cream });
+const smear = S('path', { fill: 'none', stroke: C.white, 'stroke-linecap': 'round' });
+const glow = S('circle', { fill: C.white, filter: 'url(#glow)' });
+const pt = S('circle', { fill: C.white });
+
+let WM, R = 11, W_M, W_LINE, colonUp, colonLo, rC, clockBox;
+function init() {
+  WM = wordmark($('wm'), { dotPx: 22, yDot: 960 }); R = WM.R;
+  W_M = splitWords($('moment')); W_LINE = splitWords($('line'));
+  // the colon is drawn as two circles measured from Playfair's own ':' so the lower one can become the point
+  const cv = document.createElement('canvas').getContext('2d'); cv.font = '500 340px "Playfair Display"';
+  const cm = cv.measureText(':'), pm = cv.measureText('.'), fm = cv.measureText('3');
+  $('colon').style.width = cm.width + 'px';
+  const c = $('clock'); c.style.transform = 'translate(0,0)';
+  const s = $('stage').getBoundingClientRect(), k = s.width / 1080, cb = c.getBoundingClientRect(), cr = $('colon').getBoundingClientRect();
+  const w = cb.width / k;
+  clockBox = { x: 540 - w / 2, y: 290 };
+  const base = clockBox.y + (340 - (fm.fontBoundingBoxAscent + fm.fontBoundingBoxDescent)) / 2 + fm.fontBoundingBoxAscent;
+  const dd = pm.actualBoundingBoxAscent + pm.actualBoundingBoxDescent;
+  rC = dd / 2;
+  const cx = clockBox.x + (cr.left - cb.left) / k + cm.width / 2 + (cm.actualBoundingBoxRight - cm.actualBoundingBoxLeft) / 2 - cm.width / 2;
+  colonLo = [cx, base + pm.actualBoundingBoxDescent - rC];
+  colonUp = [cx, base - cm.actualBoundingBoxAscent + rC];
+}
+const lastBeat = (t) => { let b = -1e9; for (const x of T.beats) { if (x <= t) b = x; else break; } return b; };
+
+function pointAt(t) {
+  if (t < T.glide[0]) return colonLo;
+  if (t < T.glide[1]) { const u = E.HOUSE(P(t, T.glide[0], T.glide[1] - T.glide[0])); return [lerp(colonLo[0], COL.x, u), lerp(colonLo[1], COL.top, u) - Math.sin(Math.PI * u) * 60]; }
+  if (t < T.closeGlide[0]) return [COL.x, T.pointY(t)];
+  const u = E.HOUSE(P(t, T.closeGlide[0], T.closeGlide[1] - T.closeGlide[0]));
+  return [lerp(COL.x, WM.xF, u), lerp(COL.bot, WM.yF, u) - Math.sin(Math.PI * u) * 80];
+}
+
+function render(t) {
+  // camera: a slow push while the night builds, released across the exhale
+  const cam = kf(t, [[0, 1], [T.clockOut, 1.05, (x) => x], [T.exhale[0], 1.05], [T.exhale[1], 1, E.INOUT]]);
+  $('cam').style.transform = `scale(${cam})`;
+  const beat = t - lastBeat(t), live = t < T.clockOut;
+
+  // the clock: pulses on the heartbeat, colon blinks with it
+  const out = E.HOUSE(P(t, T.clockOut, 600));
+  const pulse = live ? 1 + 0.012 * Math.exp(-beat / 140) : 1;
+  const drift = 260 * (1 - E.HOUSE(P(t, T.hookDrift[0] + 200, T.hookDrift[1])));
+  const c = $('clock'); c.style.visibility = out < 0.999 ? 'visible' : 'hidden'; c.style.opacity = 1;
+  c.style.transform = `translate(${clockBox.x}px,${clockBox.y + drift}px) scale(${pulse})`;
+  for (const id of ['d3', 'd04', 'ampm']) { const e = $(id); e.style.opacity = (1 - out).toFixed(3); e.style.filter = out > 0.01 ? `blur(${(10 * out).toFixed(2)}px)` : 'none'; e.style.display = 'inline-block'; e.style.transform = `translateY(${-30 * out}px)`; }
+  const blink = live ? 0.4 + 0.6 * Math.exp(-beat / 300) : 1;
+  A(dotUp, { cx: colonUp[0], cy: colonUp[1] + drift - 30 * out, r: rC, 'fill-opacity': blink * (1 - out) });
+  const toPoint = smooth(P(t, T.clockOut, 250));
+  A(dotLo, { cx: colonLo[0], cy: colonLo[1] + drift, r: lerp(rC, R, toPoint), 'fill-opacity': t < T.clockOut + 250 ? blink * (1 - toPoint) : 0 });
+  headline($('moment'), W_M, t, 540, 680 + drift, 380, T.clockOut, 90, { ax: 0.5 });
+
+  // thoughts: arrive on beats at their depth, drift, leave as the point passes them
+  TH.forEach(([x, z], i) => {
+    const e = $('t' + i), a = T.thoughtIn[i], d = T.dissolveAt[i], y = T.thoughtTops[i];
+    const pin = E.HOUSE(P(t, a, 700)), pout = E.HOUSE(P(t, d, 1100));
+    const o = (0.45 + 0.5 * z) * pin * (1 - pout);
+    const drift = -(0.3 + z) * 3 * (t / 1000);
+    place(e, x, y + drift, o, { dy: 20 * (1 - pin) - 46 * pout, blur: (1 - z) * 4 + 14 * (1 - pin) + 12 * pout });
+    e.style.transform += ` scale(${(0.86 + 0.2 * z) * lerp(0.94, 1, pin)})`; e.style.transformOrigin = '0 50%';
+  });
+
+  // the column: drawn down from the point as it arrives, then one long exhale
+  const colIn = E.SETTLE(P(t, T.glide[1] - 150, 550)), colOut = 1 - E.HOUSE(P(t, T.closeGlide[0] - 400, 400));
+  const pY = t < T.exhale[0] ? COL.top : Math.min(T.pointY(t), COL.bot);
+  A(track, { x1: COL.x, y1: COL.top, x2: COL.x, y2: lerp(COL.top, COL.bot, colIn), 'stroke-opacity': colIn > 0.01 ? 0.1 * colOut : 0 });
+  A(fill, { x1: COL.x, y1: pY, x2: COL.x, y2: lerp(COL.top, COL.bot, colIn), 'stroke-opacity': 0.9 * smooth(P(t, T.glide[1] - 100, 300)) * colOut });
+  const H = COL.bot - COL.top;
+  ticks.forEach((ln, k) => {
+    const inh = k < 4, i = inh ? k : k - 4, n = inh ? 4 : 8, y = COL.bot - ((i + 0.5) / n) * H;
+    const x1 = inh ? COL.x - 26 - 40 : COL.x + 26;
+    A(ln, { x1, y1: y, x2: x1 + 40, y2: y, 'stroke-opacity': (inh ? 0.5 : 0.35) * smooth(P(t, T.glide[1] + k * 30, 250)) * colOut });
+  });
+  rise($('lIn'), t, COL.x + 88, COL.top - 10, T.glide[1] + 100, T.closeGlide[0] - 400, { dy: 12, blur: 6, max: 0.3 });
+  rise($('lOut'), t, COL.x + 88, COL.bot - 10, T.glide[1] + 160, T.closeGlide[0] - 400, { dy: 12, blur: 6, max: 0.3 });
+  rise($('phase'), t, 96, 430, T.glide[0] + 300, T.closeGlide[0] - 400);
+  rise($('phaseSub'), t, 100, 620, T.glide[0] + 500, T.closeGlide[0] - 400, { dy: 16, blur: 6 });
+  rise($('tool'), t, 540, 1560, T.glide[1], T.closeGlide[0] - 300, { dy: 20, blur: 8, ax: 0.5 });
+
+  // the point (from the colon's lower dot to the full stop)
+  const p = pointAt(t), on = t >= T.clockOut;
+  const sm = []; for (let k = 0; k <= 6; k++) sm.push(pointAt(Math.max(0, t - (k * 8.3) / 6)));
+  A(smear, { d: path(sm), 'stroke-width': R * 2, 'stroke-opacity': on && t < T.closeGlide[1] ? 0.55 : 0 });
+  A(glow, { cx: p[0], cy: p[1], r: R * 1.9, 'fill-opacity': 0.34 * toPoint * (1 - E.HOUSE(P(t, T.closeGlide[1], 600))) });
+  A(pt, { cx: p[0], cy: p[1], r: on ? lerp(rC, R, toPoint) : R, 'fill-opacity': toPoint });
+
+  // close
+  WM.draw(t, T.wordmark);
+  headline($('line'), W_LINE, t, 540, WM.yF + 80, T.line, Infinity, 50, { ax: 0.5 });
+  rise($('cta'), t, 540, WM.yF + 200, T.cta, Infinity, { dy: 18, blur: 8, ax: 0.5, max: 0.9 });
+}
+
+Reel.start({ duration: T.dur, render, init, fonts: ['500 300px "Playfair Display"', 'italic 500 100px "Playfair Display"', '500 24px "JetBrains Mono"', '400 38px Inter'] });
+</script>
+</body>
+</html>

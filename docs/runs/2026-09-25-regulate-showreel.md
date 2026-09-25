@@ -53,3 +53,17 @@ Showreel verdict recorded as KEEP ("i quite like it tbf. nice animation and nois
 - Reels: 01 3:04 AM (the KEPT rev5d file untouched, 19.6s, new score `regulate-3am.sound.mjs`); 02 The Sigh (`regulate-sigh-reel.html`, 16.5s: concept 01 on the app's sigh instrument, orb removed, the fastest-claim cut); 03 11:47 AM (`regulate-1147-reel.html`, 15.5s: concept 04 on the app's Pressure Gauge, taps ratchet, pings shatter).
 - Verified: all three h264 1080x1920 at 60/1 (1176 / 990 / 930 frames), integrated -13.6 / -13.7 / -13.7 LUFS, TP -1.4 / -1.4 / -1.5 dBTP; full-length 3fps strips reviewed; spectrograms checked (the room-tone bed was cut 10 dB after the first pass).
 - Handoff with captions, first comments, alt text and claims preflight: hivemind `marketing/reels-2026-09/README.md`.
+
+## Batch 1 v2 (same day, Steven: "refine them ... more professional ... in your own style, but ensure they convey the same stuff")
+
+- Rebuilt as `animatics/regulate-3am-v2.html`, `regulate-sigh-v2.html` and `regulate-1147-v2.html`. Each has a `.timing.js` file loaded by both the HTML and the score via `lib/timing-kit.js` / `sfx.loadTiming()`, so heartbeat, pulses and cues cannot drift apart.
+- Showreel language: one take; the white point is born from the clock colon (3:04), the strike through "meditate" (Sigh) or the gauge hub (11:47) and ends as the full stop; breathing or push camera; depth of field on the thoughts; cause and effect (thoughts dissolve as the point passes, pings drive the needle and break as the pressure falls).
+- Fable critique of the first v2 strips was applied as rev2:
+  - removed the ~2s dead holds;
+  - exhales cut to 5.0s (3:04) and 3.6s (Sigh);
+  - 3:04 clock opens at 340px, low in frame;
+  - column moved to x 670 and made taller;
+  - Sigh curve 36% of the frame, guide at 9%, one caption for sip + hold;
+  - 11:47 restructured so the inbox kicks the needle, with a 1-frame flash as each word breaks and the gauge leaving as soon as it settles.
+  - Some of Fable's measurements from the thumbnails were wrong (claimed x/y positions); those were checked against the source and not applied.
+- Final: 3:04 v2 15.4s (924 frames) -13.7 LUFS / -1.5 dBTP; Sigh v2 16.0s (960) -13.6 / -1.5; 11:47 v2 11.8s (708) -13.9 / -1.5. All h264 1080x1920 60/1. 11:47 is under the 15s lint floor by design (social pacing).

@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Sigh Reel</title>
+<!--
+  brandreel animatic v2 rev2 - regulate - "The Sigh" social reel, 16.0s, 1080x1920 @ 60
+  Steven 2026-09-25: refine in your own style, convey the same stuff. Same story as v1 /
+  motion concept 01: "Can't meditate? Neither could we." -> a guided physiological sigh on the
+  app's instrument -> "That's a physiological sigh." (double inhale, long exhale) -> regulate.
+  Rebuilt in the showreel's language, one unbroken take:
+  - The white point strikes through "meditate" (the refusal, drawn), then carries that line's
+    energy down to the start of the breath curve. It traces the app's lung-fill curve (faint
+    guide ahead, Anxious amber behind, SIP / FULL markers), and ends as the full stop.
+  - The camera breathes with the lungs: scale follows lung fullness (1.00 -> 1.04 -> 1.00).
+  - Captions are the app's words at display size: phase in mono amber, instruction in serif.
+  - The name-it beat annotates the curve itself: hairline brackets label DOUBLE INHALE over the
+    rise and LONG EXHALE under the fall, like the website's figures.
+  rev2 (Fable critique 09-25): curve 36% of the frame tall (was 28%); guide at 9% so the point
+  visibly creates the shape; sip + hold share one caption (two 500ms captions were unreadable);
+  exhale 3.6s; timeline 16.0s.
+  Claims: no "fastest" claim; "Double inhale. Long exhale." is the guardrails' safe line.
+  Laws: emerald ground; amber only on the instrument, phase captions and the label word; teal
+  only on the tagline; hook on screen at frame 0; wordmark only at the end.
+
+  COPY LIST: Can't meditate? · Neither could we. · SIP · FULL · INHALE · Breathe in deeply ·
+  ONE MORE SIP · HOLD · Top up, then hold · LONG EXHALE · Slowly release ·
+  ANXIOUS · PHYSIOLOGICAL SIGH · That's a physiological sigh. · DOUBLE INHALE · LONG EXHALE ·
+  regulate. · NOT MEDITATION. REGULATION. · 4 TOOLS FREE ON THE APP STORE
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,500;1,500&display=block" rel="stylesheet">
+<link rel="stylesheet" href="lib/reel.css">
+<style>#cam{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:540px 900px}</style>
+<body>
+<div id="wrap"><div id="stage"><div id="cam">
+  <svg id="g" viewBox="0 0 1080 1920"><defs><filter id="glow" x="-200%" y="-200%" width="500%" height="500%"><feGaussianBlur stdDeviation="9"/></filter></defs></svg>
+  <div class="t head" id="q" style="font-size:112px;white-space:nowrap">Can't <span id="med">meditate</span>?</div>
+  <div class="t head italic" id="a" style="font-size:112px;white-space:nowrap">Neither could we.</div>
+  <div class="t mono" id="mSip" style="font-size:20px;color:var(--cream)">Sip</div>
+  <div class="t mono" id="mFull" style="font-size:20px;color:var(--cream)">Full</div>
+  <div class="t mono" id="k0" style="color:var(--anx);font-size:30px;letter-spacing:.3em">Inhale</div>
+  <div class="t mono" id="k1" style="color:var(--anx);font-size:30px;letter-spacing:.3em">One more sip &middot; Hold</div>
+  <div class="t mono" id="k3" style="color:var(--anx);font-size:30px;letter-spacing:.3em">Long exhale</div>
+  <div class="t head" id="i0" style="font-size:84px;white-space:nowrap">Breathe in deeply</div>
+  <div class="t head" id="i1" style="font-size:84px;white-space:nowrap">Top up, then hold</div>
+  <div class="t head" id="i3" style="font-size:84px;white-space:nowrap">Slowly release</div>
+  <div class="t tool" id="tool"><i style="color:var(--anx)">Anxious</i> &middot; Physiological Sigh</div>
+  <div class="t head" id="n1" style="width:900px;text-align:center">That's a physiological sigh.</div>
+  <div class="t mono" id="bA" style="color:var(--cream);font-size:24px">Double inhale</div>
+  <div class="t mono" id="bB" style="color:var(--cream);font-size:24px">Long exhale</div>
+</div>
+  <div id="wm"></div>
+  <div class="t tag" id="tag">Not meditation. Regulation.</div>
+  <div class="t cta" id="cta">4 tools free on the App Store</div>
+</div></div>
+<div id="bar"><button id="play">Play</button><span id="tc">0.00s</span><input id="scrub" type="range" min="0" step="1" value="0"><span>regulate &middot; the sigh v2 &middot; 1080&times;1920 &middot; 60fps</span></div>
+<audio id="snd" preload="auto"></audio>
+<script src="lib/timing-kit.js"></script>
+<script src="regulate-sigh-v2.timing.js"></script>
+<script src="lib/reel-kit.js"></script>
+<script>
+const { E, cubicBezier, clamp, lerp, P, smooth, kf, $, S, A, place, riseV, rise, splitWords, headline, path, wordmark } = Reel;
+const T = TIMING, C = { cream: '#F2F0E9', anx: '#D4A574', white: '#FFFFFF' };
+const X0 = 100, X1 = 980, Y_EMPTY = 1250, Y_FULL = 560;
+const SEG = [[0, 0.68, cubicBezier(0.3, 0.5, 0.4, 1)], [0.68, 1, cubicBezier(0.3, 0.6, 0.4, 1)], [1, 1, (x) => x], [1, 0, cubicBezier(0.35, 0, 0.45, 1)]];
+function fullness(tau) { let acc = 0; for (let i = 0; i < 4; i++) { const d = T.seg[i]; if (tau <= acc + d) return lerp(SEG[i][0], SEG[i][1], SEG[i][2]((tau - acc) / d)); acc += d; } return 0; }
+const cp = (tau) => [X0 + (X1 - X0) * clamp(tau / T.cycle), lerp(Y_EMPTY, Y_FULL, fullness(clamp(tau, 0, T.cycle)))];
+const segOff = (i) => T.segAt[i] - T.travel;
+
+const strike = S('line', { stroke: C.cream, 'stroke-width': 7, 'stroke-linecap': 'round' });
+const faint = S('path', { fill: 'none', stroke: C.cream, 'stroke-width': 3, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' });
+const done = S('path', { fill: 'none', stroke: C.anx, 'stroke-width': 7, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' });
+const markS = S('circle', { fill: C.cream, r: 6 }), markF = S('circle', { fill: C.cream, r: 6 });
+const brA = S('path', { fill: 'none', stroke: C.cream, 'stroke-width': 2.5 }), brB = S('path', { fill: 'none', stroke: C.cream, 'stroke-width': 2.5 });
+const smear = S('path', { fill: 'none', stroke: C.white, 'stroke-linecap': 'round' });
+const glow = S('circle', { fill: C.white, filter: 'url(#glow)' });
+const pt = S('circle', { fill: C.white });
+
+let WM, R = 11, W_A, W_N1, MED;
+function init() {
+  WM = wordmark($('wm'), { dotPx: 22, yDot: 960 }); R = WM.R;
+  W_A = splitWords($('a')); W_N1 = splitWords($('n1'));
+  const q = $('q'); q.style.transform = 'translate(0,0)';
+  const k = $('stage').getBoundingClientRect().width / 1080, qb = q.getBoundingClientRect(), mb = $('med').getBoundingClientRect();
+  const qx = 540 - qb.width / k / 2, qy = 640;
+  MED = { qx, qy, x0: qx + (mb.left - qb.left) / k - 6, x1: qx + (mb.right - qb.left) / k + 6, y: qy + (mb.top - qb.top) / k + (mb.height / k) * 0.6 };
+}
+
+function pointAt(t) {
+  if (t < T.strike[1]) return [lerp(MED.x0, MED.x1, E.SETTLE(P(t, T.strike[0], T.strike[1] - T.strike[0]))), MED.y];
+  if (t < T.glide[0]) return [MED.x1, MED.y];
+  if (t < T.travel) { const u = E.HOUSE(P(t, T.glide[0], T.glide[1] - T.glide[0])); return [lerp(MED.x1, X0, u), lerp(MED.y, Y_EMPTY, u) - Math.sin(Math.PI * u) * 120]; }
+  if (t < T.closeGlide[0]) return cp(t - T.travel);
+  const u = E.HOUSE(P(t, T.closeGlide[0], T.closeGlide[1] - T.closeGlide[0]));
+  return [lerp(X1, WM.xF, u), lerp(Y_EMPTY, WM.yF, u) - Math.sin(Math.PI * u) * 90];
+}
+
+function render(t) {
+  // the camera breathes with the lungs
+  const f = t > T.travel && t < T.travel + T.cycle ? fullness(t - T.travel) : 0;
+  $('cam').style.transform = `scale(${1 + 0.04 * f})`;
+
+  // hook: the refusal, drawn
+  const hq = E.HOUSE(P(t, T.hookOut, 520));
+  place($('q'), MED.qx, MED.qy, 1 - hq, { dy: -28 * hq, blur: 8 * hq });
+  headline($('a'), W_A, t, 540, 800, 350, T.hookOut + 60, 90, { ax: 0.5 });
+  const sx = pointAt(Math.min(t, T.strike[1]))[0], retract = E.HOUSE(P(t, T.hookOut, 450));
+  A(strike, { x1: lerp(MED.x0, MED.x1, retract), y1: MED.y, x2: sx, y2: MED.y, 'stroke-opacity': t > T.strike[0] && retract < 0.99 ? 0.95 : 0 });
+
+  // the instrument
+  const draw = E.SETTLE(P(t, T.curveDraw[0], T.curveDraw[1] - T.curveDraw[0])), dim = lerp(1, 0.6, E.HOUSE(P(t, T.annotate, 500))), gone = 1 - E.HOUSE(P(t, T.exit, 450));
+  const fp = []; for (let tau = 0; tau <= T.cycle * draw + 0.01; tau += 25) fp.push(cp(Math.min(tau, T.cycle * draw)));
+  A(faint, { d: t > T.curveDraw[0] ? path(fp) : '', 'stroke-opacity': 0.09 * gone });
+  const tr = clamp(t - T.travel, 0, T.cycle), dp = [];
+  if (t > T.travel) { for (let tau = 0; tau < tr; tau += 12) dp.push(cp(tau)); dp.push(cp(tr)); }
+  A(done, { d: path(dp), 'stroke-opacity': 0.95 * dim * gone });
+  const sp = cp(segOff(1)), fu = cp(segOff(2)), mo = smooth(P(t, T.curveDraw[1] - 200, 300)) * gone * (1 - E.HOUSE(P(t, T.annotate, 300)));
+  A(markS, { cx: sp[0], cy: sp[1], 'fill-opacity': 0.35 * mo }); A(markF, { cx: fu[0], cy: fu[1], 'fill-opacity': 0.35 * mo });
+  place($('mSip'), sp[0], sp[1] - 50, 0.35 * mo, { ax: 0.5 }); place($('mFull'), fu[0], fu[1] - 50, 0.35 * mo, { ax: 0.5 });
+  for (const i of [0, 1, 3]) {
+    const a = T.segAt[i], b = i === 0 ? T.segAt[1] : i === 1 ? T.segAt[3] : T.annotate - 100;
+    const pin = E.HOUSE(P(t, a, 380)), pout = E.HOUSE(P(t, b, 220)), o = pin * (1 - pout);
+    place($('k' + i), 540, 1345, o, { ax: 0.5, dy: 18 * (1 - pin) - 18 * pout, blur: 6 * (1 - pin) + 6 * pout });
+    place($('i' + i), 540, 1400, o, { ax: 0.5, dy: 30 * (1 - pin) - 24 * pout, blur: 10 * (1 - pin) + 8 * pout });
+  }
+  rise($('tool'), t, 540, 1566, T.travel - 200, T.annotate, { dy: 20, blur: 8, ax: 0.5 });
+
+  // name it: annotate the curve like a figure
+  const bd = E.SETTLE(P(t, T.annotate + 100, 600)) * gone;
+  const ax0 = cp(0)[0], ax1 = cp(segOff(2))[0], yA = Y_FULL - 70;
+  const bx0 = cp(segOff(3))[0], bx1 = cp(T.cycle)[0], yB = Y_EMPTY + 70;
+  const mA = (ax0 + ax1) / 2, hA = ((ax1 - ax0) / 2) * bd, mB = (bx0 + bx1) / 2, hB = ((bx1 - bx0) / 2) * bd;
+  A(brA, { d: `M${mA - hA} ${yA + 18}L${mA - hA} ${yA}L${mA + hA} ${yA}L${mA + hA} ${yA + 18}`, 'stroke-opacity': bd > 0.01 ? 0.6 * gone : 0 });
+  A(brB, { d: `M${mB - hB} ${yB - 18}L${mB - hB} ${yB}L${mB + hB} ${yB}L${mB + hB} ${yB - 18}`, 'stroke-opacity': bd > 0.01 ? 0.6 * gone : 0 });
+  rise($('bA'), t, mA, yA - 50, T.annotate + 350, T.exit, { dy: 14, blur: 6, ax: 0.5, max: 0.85 });
+  rise($('bB'), t, mB, yB + 26, T.annotate + 450, T.exit, { dy: 14, blur: 6, ax: 0.5, max: 0.85 });
+  headline($('n1'), W_N1, t, 540, 240, T.headline, T.exit, 70, { ax: 0.5 });
+
+  // the point
+  const p = pointAt(t), po = smooth(P(t, T.strike[0] - 150, 150));
+  const sm = []; for (let k = 0; k <= 6; k++) sm.push(pointAt(Math.max(0, t - (k * 8.3) / 6)));
+  A(smear, { d: path(sm), 'stroke-width': R * 2, 'stroke-opacity': t > T.strike[0] && t < T.closeGlide[1] ? 0.55 : 0 });
+  A(glow, { cx: p[0], cy: p[1], r: R * 1.9, 'fill-opacity': 0.34 * po * (1 - E.HOUSE(P(t, T.closeGlide[1], 600))) });
+  A(pt, { cx: p[0], cy: p[1], r: R, 'fill-opacity': po });
+
+  // close
+  WM.draw(t, T.wordmark);
+  rise($('tag'), t, 540, WM.yF + 118, T.tag, Infinity, { dy: 18, blur: 8, ax: 0.5 });
+  rise($('cta'), t, 540, WM.yF + 190, T.cta, Infinity, { dy: 18, blur: 8, ax: 0.5, max: 0.9 });
+}
+
+Reel.start({ duration: T.dur, render, init, fonts: ['500 200px "Playfair Display"', 'italic 500 112px "Playfair Display"', '500 24px "JetBrains Mono"'] });
+</script>
+</body>
+</html>
