@@ -614,7 +614,7 @@ function render(t) {
     A(el.ring, { cx: hp[0], cy: hp[1], 'stroke-opacity': ro });
     // s12 arrows
     el.arr.forEach((a, i) => {
-      const Q = i ? A2 : A1, at = i ? c.lift : c.exhale, u = E.SETTLE(P(t, at, 1100)), o = 1 - E.HOUSE(P(t, c.oneQ - 300, 500));
+      const Q = i ? A2 : A1, at = i ? c.lift : c.exhale, u = E.SETTLE(P(t, at, 1100)), o = 1 - E.HOUSE(P(t, c.app - 150, 500));
       const pts = []; for (let k = 0; k <= 30; k++) pts.push(qb(Q, 0.06 + 0.84 * (k / 30) * u));
       A(a.p, { d: t > at ? path(pts) : '', 'stroke-opacity': 0.75 * o });
       const e = qb(Q, 0.9), d = qb(Q, 0.86), ang = Math.atan2(e[1] - d[1], e[0] - d[0]), L = 18;
@@ -703,10 +703,10 @@ function render(t) {
     headline($('guess'), W.guess, t, 540, 1296, c.guess, out, 60, { ax: 0.5 });
   }
   // ---------------- s12 match
-  headline($('fitH'), W.fitH, t, 96, 300, c.match + 200, c.oneQ - 200, 60);
-  rise($('m1'), t, 360, 620, c.exhale, c.oneQ - 200, { dy: 14, blur: 6 });
+  headline($('fitH'), W.fitH, t, 96, 300, c.match + 200, c.app - 150, 60);
+  rise($('m1'), t, 360, 620, c.exhale, c.app - 150, { dy: 14, blur: 6 });
   $('m1b').style.opacity = smooth(P(t, c.movement, 400)).toFixed(3);
-  rise($('m2'), t, 360, 940, c.shutdown + 300, c.oneQ - 200, { dy: 14, blur: 6 });
+  rise($('m2'), t, 360, 940, c.shutdown + 300, c.app - 150, { dy: 14, blur: 6 });
   $('m2a').style.opacity = smooth(P(t, c.lift, 400)).toFixed(3); $('m2b').style.opacity = smooth(P(t, c.rhythm, 400)).toFixed(3);
   rise($('under'), t, 160, 1250, c.under + 300, c.lift + 400, { dy: 10, blur: 6 });
   // ---------------- s13 app
