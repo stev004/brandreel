@@ -1,0 +1,4157 @@
+{
+ "durMs": 221250,
+ "segments": [
+  {
+   "id": "s01-hook",
+   "startMs": 500,
+   "endMs": 10955
+  },
+  {
+   "id": "s02-question",
+   "startMs": 11195,
+   "endMs": 24150
+  },
+  {
+   "id": "s03-map",
+   "startMs": 24390,
+   "endMs": 34995
+  },
+  {
+   "id": "s04-vagus",
+   "startMs": 35235,
+   "endMs": 60440
+  },
+  {
+   "id": "s05-ladder",
+   "startMs": 60680,
+   "endMs": 72635
+  },
+  {
+   "id": "s06-ventral",
+   "startMs": 72875,
+   "endMs": 86005
+  },
+  {
+   "id": "s07-sympathetic",
+   "startMs": 86245,
+   "endMs": 110925
+  },
+  {
+   "id": "s08-dorsal",
+   "startMs": 111165,
+   "endMs": 134870
+  },
+  {
+   "id": "s10-window",
+   "startMs": 135110,
+   "endMs": 152515
+  },
+  {
+   "id": "s11-spot",
+   "startMs": 152755,
+   "endMs": 167660
+  },
+  {
+   "id": "s12-match",
+   "startMs": 167900,
+   "endMs": 184405
+  },
+  {
+   "id": "s13-app",
+   "startMs": 184645,
+   "endMs": 210050
+  },
+  {
+   "id": "s14-close",
+   "startMs": 210290,
+   "endMs": 217295
+  },
+  {
+   "id": "s15-tag",
+   "startMs": 218595,
+   "endMs": 221250
+  }
+ ],
+ "words": [
+  {
+   "w": "Your",
+   "s": 540,
+   "e": 690,
+   "seg": "s01-hook"
+  },
+  {
+   "w": "heart",
+   "s": 690,
+   "e": 952,
+   "seg": "s01-hook"
+  },
+  {
+   "w": "is",
+   "s": 952,
+   "e": 1090,
+   "seg": "s01-hook"
+  },
+  {
+   "w": "pounding,",
+   "s": 1090,
+   "e": 1602,
+   "seg": "s01-hook"
+  },
+  {
+   "w": "and",
+   "s": 1602,
+   "e": 1715,
+   "seg": "s01-hook"
+  },
+  {
+   "w": "nothing",
+   "s": 1715,
+   "e": 2065,
+   "seg": "s01-hook"
+  },
+  {
+   "w": "is",
+   "s": 2065,
+   "e": 2215,
+   "seg": "s01-hook"
+  },
+  {
+   "w": "wrong.",
+   "s": 2215,
+   "e": 2990,
+   "seg": "s01-hook"
+  },
+  {
+   "w": "Or",
+   "s": 2990,
+   "e": 3140,
+   "seg": "s01-hook"
+  },
+  {
+   "w": "you",
+   "s": 3140,
+   "e": 3265,
+   "seg": "s01-hook"
+  },
+  {
+   "w": "feel",
+   "s": 3265,
+   "e": 3440,
+   "seg": "s01-hook"
+  },
+  {
+   "w": "nothing",
+   "s": 3440,
+   "e": 3778,
+   "seg": "s01-hook"
+  },
+  {
+   "w": "at",
+   "s": 3778,
+   "e": 3890,
+   "seg": "s01-hook"
+  },
+  {
+   "w": "all,",
+   "s": 3890,
+   "e": 4202,
+   "seg": "s01-hook"
+  },
+  {
+   "w": "and",
+   "s": 4202,
+   "e": 4302,
+   "seg": "s01-hook"
+  },
+  {
+   "w": "you",
+   "s": 4302,
+   "e": 4415,
+   "seg": "s01-hook"
+  },
+  {
+   "w": "can't",
+   "s": 4415,
+   "e": 4652,
+   "seg": "s01-hook"
+  },
+  {
+   "w": "make",
+   "s": 4652,
+   "e": 4828,
+   "seg": "s01-hook"
+  },
+  {
+   "w": "yourself",
+   "s": 4828,
+   "e": 5190,
+   "seg": "s01-hook"
+  },
+  {
+   "w": "move.",
+   "s": 5190,
+   "e": 6140,
+   "seg": "s01-hook"
+  },
+  {
+   "w": "Neither",
+   "s": 6140,
+   "e": 6490,
+   "seg": "s01-hook"
+  },
+  {
+   "w": "one",
+   "s": 6490,
+   "e": 6678,
+   "seg": "s01-hook"
+  },
+  {
+   "w": "is",
+   "s": 6678,
+   "e": 6778,
+   "seg": "s01-hook"
+  },
+  {
+   "w": "a",
+   "s": 6778,
+   "e": 6840,
+   "seg": "s01-hook"
+  },
+  {
+   "w": "character",
+   "s": 6840,
+   "e": 7302,
+   "seg": "s01-hook"
+  },
+  {
+   "w": "flaw.",
+   "s": 7302,
+   "e": 8028,
+   "seg": "s01-hook"
+  },
+  {
+   "w": "Both",
+   "s": 8028,
+   "e": 8390,
+   "seg": "s01-hook"
+  },
+  {
+   "w": "are",
+   "s": 8390,
+   "e": 8490,
+   "seg": "s01-hook"
+  },
+  {
+   "w": "your",
+   "s": 8490,
+   "e": 8665,
+   "seg": "s01-hook"
+  },
+  {
+   "w": "nervous",
+   "s": 8665,
+   "e": 9015,
+   "seg": "s01-hook"
+  },
+  {
+   "w": "system",
+   "s": 9015,
+   "e": 9365,
+   "seg": "s01-hook"
+  },
+  {
+   "w": "doing",
+   "s": 9365,
+   "e": 9615,
+   "seg": "s01-hook"
+  },
+  {
+   "w": "its",
+   "s": 9615,
+   "e": 9815,
+   "seg": "s01-hook"
+  },
+  {
+   "w": "job.",
+   "s": 9815,
+   "e": 10865,
+   "seg": "s01-hook"
+  },
+  {
+   "w": "Underneath",
+   "s": 11235,
+   "e": 11685,
+   "seg": "s02-question"
+  },
+  {
+   "w": "every",
+   "s": 11685,
+   "e": 11998,
+   "seg": "s02-question"
+  },
+  {
+   "w": "thought,",
+   "s": 11998,
+   "e": 12385,
+   "seg": "s02-question"
+  },
+  {
+   "w": "your",
+   "s": 12385,
+   "e": 12510,
+   "seg": "s02-question"
+  },
+  {
+   "w": "body",
+   "s": 12510,
+   "e": 12798,
+   "seg": "s02-question"
+  },
+  {
+   "w": "is",
+   "s": 12798,
+   "e": 12910,
+   "seg": "s02-question"
+  },
+  {
+   "w": "asking",
+   "s": 12910,
+   "e": 13310,
+   "seg": "s02-question"
+  },
+  {
+   "w": "one",
+   "s": 13310,
+   "e": 13535,
+   "seg": "s02-question"
+  },
+  {
+   "w": "question.",
+   "s": 13535,
+   "e": 14698,
+   "seg": "s02-question"
+  },
+  {
+   "w": "Am",
+   "s": 14698,
+   "e": 14822,
+   "seg": "s02-question"
+  },
+  {
+   "w": "I",
+   "s": 14822,
+   "e": 14985,
+   "seg": "s02-question"
+  },
+  {
+   "w": "safe?",
+   "s": 14985,
+   "e": 15698,
+   "seg": "s02-question"
+  },
+  {
+   "w": "Stephen",
+   "s": 15698,
+   "e": 16110,
+   "seg": "s02-question"
+  },
+  {
+   "w": "Porges",
+   "s": 16110,
+   "e": 16585,
+   "seg": "s02-question"
+  },
+  {
+   "w": "called",
+   "s": 16585,
+   "e": 16885,
+   "seg": "s02-question"
+  },
+  {
+   "w": "this",
+   "s": 16885,
+   "e": 17060,
+   "seg": "s02-question"
+  },
+  {
+   "w": "neuroception.",
+   "s": 17060,
+   "e": 18260,
+   "seg": "s02-question"
+  },
+  {
+   "w": "It",
+   "s": 18260,
+   "e": 18410,
+   "seg": "s02-question"
+  },
+  {
+   "w": "happens",
+   "s": 18410,
+   "e": 18785,
+   "seg": "s02-question"
+  },
+  {
+   "w": "below",
+   "s": 18785,
+   "e": 19085,
+   "seg": "s02-question"
+  },
+  {
+   "w": "awareness,",
+   "s": 19085,
+   "e": 19660,
+   "seg": "s02-question"
+  },
+  {
+   "w": "faster",
+   "s": 19660,
+   "e": 20085,
+   "seg": "s02-question"
+  },
+  {
+   "w": "than",
+   "s": 20085,
+   "e": 20260,
+   "seg": "s02-question"
+  },
+  {
+   "w": "thinking.",
+   "s": 20260,
+   "e": 21135,
+   "seg": "s02-question"
+  },
+  {
+   "w": "It",
+   "s": 21135,
+   "e": 21285,
+   "seg": "s02-question"
+  },
+  {
+   "w": "sets",
+   "s": 21285,
+   "e": 21522,
+   "seg": "s02-question"
+  },
+  {
+   "w": "your",
+   "s": 21522,
+   "e": 21635,
+   "seg": "s02-question"
+  },
+  {
+   "w": "state",
+   "s": 21635,
+   "e": 21985,
+   "seg": "s02-question"
+  },
+  {
+   "w": "before",
+   "s": 21985,
+   "e": 22310,
+   "seg": "s02-question"
+  },
+  {
+   "w": "you've",
+   "s": 22310,
+   "e": 22460,
+   "seg": "s02-question"
+  },
+  {
+   "w": "formed",
+   "s": 22460,
+   "e": 22748,
+   "seg": "s02-question"
+  },
+  {
+   "w": "an",
+   "s": 22748,
+   "e": 22835,
+   "seg": "s02-question"
+  },
+  {
+   "w": "opinion.",
+   "s": 22835,
+   "e": 24060,
+   "seg": "s02-question"
+  },
+  {
+   "w": "Polyvagal",
+   "s": 24430,
+   "e": 25118,
+   "seg": "s03-map"
+  },
+  {
+   "w": "theory",
+   "s": 25118,
+   "e": 25530,
+   "seg": "s03-map"
+  },
+  {
+   "w": "is",
+   "s": 25530,
+   "e": 25642,
+   "seg": "s03-map"
+  },
+  {
+   "w": "his",
+   "s": 25642,
+   "e": 25805,
+   "seg": "s03-map"
+  },
+  {
+   "w": "map",
+   "s": 25805,
+   "e": 26092,
+   "seg": "s03-map"
+  },
+  {
+   "w": "of",
+   "s": 26092,
+   "e": 26168,
+   "seg": "s03-map"
+  },
+  {
+   "w": "what",
+   "s": 26168,
+   "e": 26305,
+   "seg": "s03-map"
+  },
+  {
+   "w": "happens",
+   "s": 26305,
+   "e": 26680,
+   "seg": "s03-map"
+  },
+  {
+   "w": "next.",
+   "s": 26680,
+   "e": 27630,
+   "seg": "s03-map"
+  },
+  {
+   "w": "It's",
+   "s": 27630,
+   "e": 27792,
+   "seg": "s03-map"
+  },
+  {
+   "w": "a",
+   "s": 27792,
+   "e": 27880,
+   "seg": "s03-map"
+  },
+  {
+   "w": "model,",
+   "s": 27880,
+   "e": 28330,
+   "seg": "s03-map"
+  },
+  {
+   "w": "not",
+   "s": 28330,
+   "e": 28518,
+   "seg": "s03-map"
+  },
+  {
+   "w": "a",
+   "s": 28518,
+   "e": 28618,
+   "seg": "s03-map"
+  },
+  {
+   "w": "scan,",
+   "s": 28618,
+   "e": 29305,
+   "seg": "s03-map"
+  },
+  {
+   "w": "and",
+   "s": 29305,
+   "e": 29430,
+   "seg": "s03-map"
+  },
+  {
+   "w": "parts",
+   "s": 29430,
+   "e": 29768,
+   "seg": "s03-map"
+  },
+  {
+   "w": "of",
+   "s": 29768,
+   "e": 29842,
+   "seg": "s03-map"
+  },
+  {
+   "w": "its",
+   "s": 29842,
+   "e": 29980,
+   "seg": "s03-map"
+  },
+  {
+   "w": "biology",
+   "s": 29980,
+   "e": 30505,
+   "seg": "s03-map"
+  },
+  {
+   "w": "are",
+   "s": 30505,
+   "e": 30605,
+   "seg": "s03-map"
+  },
+  {
+   "w": "still",
+   "s": 30605,
+   "e": 30880,
+   "seg": "s03-map"
+  },
+  {
+   "w": "debated.",
+   "s": 30880,
+   "e": 32080,
+   "seg": "s03-map"
+  },
+  {
+   "w": "But",
+   "s": 32080,
+   "e": 32230,
+   "seg": "s03-map"
+  },
+  {
+   "w": "as",
+   "s": 32230,
+   "e": 32342,
+   "seg": "s03-map"
+  },
+  {
+   "w": "a",
+   "s": 32342,
+   "e": 32405,
+   "seg": "s03-map"
+  },
+  {
+   "w": "way",
+   "s": 32405,
+   "e": 32618,
+   "seg": "s03-map"
+  },
+  {
+   "w": "of",
+   "s": 32618,
+   "e": 32730,
+   "seg": "s03-map"
+  },
+  {
+   "w": "reading",
+   "s": 32730,
+   "e": 33055,
+   "seg": "s03-map"
+  },
+  {
+   "w": "yourself,",
+   "s": 33055,
+   "e": 33580,
+   "seg": "s03-map"
+  },
+  {
+   "w": "it's",
+   "s": 33580,
+   "e": 33755,
+   "seg": "s03-map"
+  },
+  {
+   "w": "useful.",
+   "s": 33755,
+   "e": 34905,
+   "seg": "s03-map"
+  },
+  {
+   "w": "It's",
+   "s": 35275,
+   "e": 35475,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "named",
+   "s": 35475,
+   "e": 35738,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "after",
+   "s": 35738,
+   "e": 35962,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "the",
+   "s": 35962,
+   "e": 36050,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "vagus",
+   "s": 36050,
+   "e": 36425,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "nerve.",
+   "s": 36425,
+   "e": 37288,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "Vagus",
+   "s": 37288,
+   "e": 37725,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "means",
+   "s": 37725,
+   "e": 38025,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "wandering.",
+   "s": 38025,
+   "e": 38850,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "It",
+   "s": 38850,
+   "e": 39000,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "runs",
+   "s": 39000,
+   "e": 39250,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "from",
+   "s": 39250,
+   "e": 39388,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "your",
+   "s": 39388,
+   "e": 39500,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "brainstem,",
+   "s": 39500,
+   "e": 40125,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "past",
+   "s": 40125,
+   "e": 40438,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "your",
+   "s": 40438,
+   "e": 40550,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "heart",
+   "s": 40550,
+   "e": 40838,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "and",
+   "s": 40838,
+   "e": 40950,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "lungs,",
+   "s": 40950,
+   "e": 41325,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "all",
+   "s": 41325,
+   "e": 41512,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "the",
+   "s": 41512,
+   "e": 41600,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "way",
+   "s": 41600,
+   "e": 41800,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "down",
+   "s": 41800,
+   "e": 42050,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "to",
+   "s": 42050,
+   "e": 42138,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "your",
+   "s": 42138,
+   "e": 42250,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "gut.",
+   "s": 42250,
+   "e": 42825,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "Poly",
+   "s": 42825,
+   "e": 43150,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "means",
+   "s": 43150,
+   "e": 43450,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "many.",
+   "s": 43450,
+   "e": 44225,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "The",
+   "s": 44225,
+   "e": 44350,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "theory",
+   "s": 44350,
+   "e": 44700,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "splits",
+   "s": 44700,
+   "e": 45038,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "the",
+   "s": 45038,
+   "e": 45125,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "nerve",
+   "s": 45125,
+   "e": 45388,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "into",
+   "s": 45388,
+   "e": 45600,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "two",
+   "s": 45600,
+   "e": 45750,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "branches:",
+   "s": 45750,
+   "e": 46525,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "a",
+   "s": 46525,
+   "e": 46625,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "newer",
+   "s": 46625,
+   "e": 46838,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "one",
+   "s": 46838,
+   "e": 47025,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "wired",
+   "s": 47025,
+   "e": 47325,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "to",
+   "s": 47325,
+   "e": 47412,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "the",
+   "s": 47412,
+   "e": 47512,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "face",
+   "s": 47512,
+   "e": 47812,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "and",
+   "s": 47812,
+   "e": 47925,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "heart,",
+   "s": 47925,
+   "e": 48312,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "and",
+   "s": 48312,
+   "e": 48412,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "an",
+   "s": 48412,
+   "e": 48500,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "older",
+   "s": 48500,
+   "e": 48762,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "one",
+   "s": 48762,
+   "e": 48950,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "wired",
+   "s": 48950,
+   "e": 49300,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "to",
+   "s": 49300,
+   "e": 49388,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "the",
+   "s": 49388,
+   "e": 49475,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "gut.",
+   "s": 49475,
+   "e": 50300,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "And",
+   "s": 50300,
+   "e": 50450,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "most",
+   "s": 50450,
+   "e": 50688,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "of",
+   "s": 50688,
+   "e": 50762,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "the",
+   "s": 50762,
+   "e": 50850,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "nerve's",
+   "s": 50850,
+   "e": 51200,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "traffic",
+   "s": 51200,
+   "e": 51625,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "runs",
+   "s": 51625,
+   "e": 51862,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "upward.",
+   "s": 51862,
+   "e": 52662,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "Your",
+   "s": 52662,
+   "e": 52825,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "body",
+   "s": 52825,
+   "e": 53100,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "reports",
+   "s": 53100,
+   "e": 53575,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "to",
+   "s": 53575,
+   "e": 53662,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "your",
+   "s": 53662,
+   "e": 53775,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "brain",
+   "s": 53775,
+   "e": 54075,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "more",
+   "s": 54075,
+   "e": 54262,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "than",
+   "s": 54262,
+   "e": 54362,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "it",
+   "s": 54362,
+   "e": 54450,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "takes",
+   "s": 54450,
+   "e": 54750,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "orders.",
+   "s": 54750,
+   "e": 55725,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "Which",
+   "s": 55725,
+   "e": 55912,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "is",
+   "s": 55912,
+   "e": 56050,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "part",
+   "s": 56050,
+   "e": 56338,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "of",
+   "s": 56338,
+   "e": 56412,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "why",
+   "s": 56412,
+   "e": 56575,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "body-first",
+   "s": 56575,
+   "e": 57200,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "tools",
+   "s": 57200,
+   "e": 57600,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "can",
+   "s": 57600,
+   "e": 57750,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "work",
+   "s": 57750,
+   "e": 58038,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "when",
+   "s": 58038,
+   "e": 58200,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "talking",
+   "s": 58200,
+   "e": 58550,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "yourself",
+   "s": 58550,
+   "e": 58925,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "down",
+   "s": 58925,
+   "e": 59200,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "doesn't.",
+   "s": 59200,
+   "e": 60350,
+   "seg": "s04-vagus"
+  },
+  {
+   "w": "Picture",
+   "s": 60720,
+   "e": 61058,
+   "seg": "s05-ladder"
+  },
+  {
+   "w": "three",
+   "s": 61058,
+   "e": 61295,
+   "seg": "s05-ladder"
+  },
+  {
+   "w": "states",
+   "s": 61295,
+   "e": 61632,
+   "seg": "s05-ladder"
+  },
+  {
+   "w": "as",
+   "s": 61632,
+   "e": 61732,
+   "seg": "s05-ladder"
+  },
+  {
+   "w": "a",
+   "s": 61732,
+   "e": 61795,
+   "seg": "s05-ladder"
+  },
+  {
+   "w": "ladder.",
+   "s": 61795,
+   "e": 62445,
+   "seg": "s05-ladder"
+  },
+  {
+   "w": "At",
+   "s": 62445,
+   "e": 62608,
+   "seg": "s05-ladder"
+  },
+  {
+   "w": "the",
+   "s": 62608,
+   "e": 62695,
+   "seg": "s05-ladder"
+  },
+  {
+   "w": "top,",
+   "s": 62695,
+   "e": 63020,
+   "seg": "s05-ladder"
+  },
+  {
+   "w": "safe",
+   "s": 63020,
+   "e": 63308,
+   "seg": "s05-ladder"
+  },
+  {
+   "w": "and",
+   "s": 63308,
+   "e": 63420,
+   "seg": "s05-ladder"
+  },
+  {
+   "w": "social.",
+   "s": 63420,
+   "e": 64370,
+   "seg": "s05-ladder"
+  },
+  {
+   "w": "In",
+   "s": 64370,
+   "e": 64458,
+   "seg": "s05-ladder"
+  },
+  {
+   "w": "the",
+   "s": 64458,
+   "e": 64545,
+   "seg": "s05-ladder"
+  },
+  {
+   "w": "middle,",
+   "s": 64545,
+   "e": 64870,
+   "seg": "s05-ladder"
+  },
+  {
+   "w": "mobilised:",
+   "s": 64870,
+   "e": 65582,
+   "seg": "s05-ladder"
+  },
+  {
+   "w": "fight",
+   "s": 65582,
+   "e": 65920,
+   "seg": "s05-ladder"
+  },
+  {
+   "w": "or",
+   "s": 65920,
+   "e": 66082,
+   "seg": "s05-ladder"
+  },
+  {
+   "w": "flight.",
+   "s": 66082,
+   "e": 66870,
+   "seg": "s05-ladder"
+  },
+  {
+   "w": "At",
+   "s": 66870,
+   "e": 67008,
+   "seg": "s05-ladder"
+  },
+  {
+   "w": "the",
+   "s": 67008,
+   "e": 67095,
+   "seg": "s05-ladder"
+  },
+  {
+   "w": "bottom,",
+   "s": 67095,
+   "e": 67532,
+   "seg": "s05-ladder"
+  },
+  {
+   "w": "shut",
+   "s": 67532,
+   "e": 67795,
+   "seg": "s05-ladder"
+  },
+  {
+   "w": "down.",
+   "s": 67795,
+   "e": 68745,
+   "seg": "s05-ladder"
+  },
+  {
+   "w": "Under",
+   "s": 68745,
+   "e": 69032,
+   "seg": "s05-ladder"
+  },
+  {
+   "w": "threat,",
+   "s": 69032,
+   "e": 69408,
+   "seg": "s05-ladder"
+  },
+  {
+   "w": "we",
+   "s": 69408,
+   "e": 69520,
+   "seg": "s05-ladder"
+  },
+  {
+   "w": "tend",
+   "s": 69520,
+   "e": 69758,
+   "seg": "s05-ladder"
+  },
+  {
+   "w": "to",
+   "s": 69758,
+   "e": 69845,
+   "seg": "s05-ladder"
+  },
+  {
+   "w": "drop",
+   "s": 69845,
+   "e": 70120,
+   "seg": "s05-ladder"
+  },
+  {
+   "w": "down",
+   "s": 70120,
+   "e": 70358,
+   "seg": "s05-ladder"
+  },
+  {
+   "w": "the",
+   "s": 70358,
+   "e": 70445,
+   "seg": "s05-ladder"
+  },
+  {
+   "w": "ladder,",
+   "s": 70445,
+   "e": 70820,
+   "seg": "s05-ladder"
+  },
+  {
+   "w": "one",
+   "s": 70820,
+   "e": 71045,
+   "seg": "s05-ladder"
+  },
+  {
+   "w": "rung",
+   "s": 71045,
+   "e": 71282,
+   "seg": "s05-ladder"
+  },
+  {
+   "w": "at",
+   "s": 71282,
+   "e": 71382,
+   "seg": "s05-ladder"
+  },
+  {
+   "w": "a",
+   "s": 71382,
+   "e": 71445,
+   "seg": "s05-ladder"
+  },
+  {
+   "w": "time.",
+   "s": 71445,
+   "e": 72545,
+   "seg": "s05-ladder"
+  },
+  {
+   "w": "The",
+   "s": 72915,
+   "e": 72990,
+   "seg": "s06-ventral"
+  },
+  {
+   "w": "top",
+   "s": 72990,
+   "e": 73240,
+   "seg": "s06-ventral"
+  },
+  {
+   "w": "rung",
+   "s": 73240,
+   "e": 73515,
+   "seg": "s06-ventral"
+  },
+  {
+   "w": "is",
+   "s": 73515,
+   "e": 73665,
+   "seg": "s06-ventral"
+  },
+  {
+   "w": "the",
+   "s": 73665,
+   "e": 73765,
+   "seg": "s06-ventral"
+  },
+  {
+   "w": "ventral",
+   "s": 73765,
+   "e": 74190,
+   "seg": "s06-ventral"
+  },
+  {
+   "w": "vagal",
+   "s": 74190,
+   "e": 74565,
+   "seg": "s06-ventral"
+  },
+  {
+   "w": "state.",
+   "s": 74565,
+   "e": 75540,
+   "seg": "s06-ventral"
+  },
+  {
+   "w": "This",
+   "s": 75540,
+   "e": 75740,
+   "seg": "s06-ventral"
+  },
+  {
+   "w": "is",
+   "s": 75740,
+   "e": 75865,
+   "seg": "s06-ventral"
+  },
+  {
+   "w": "where",
+   "s": 75865,
+   "e": 76040,
+   "seg": "s06-ventral"
+  },
+  {
+   "w": "you",
+   "s": 76040,
+   "e": 76165,
+   "seg": "s06-ventral"
+  },
+  {
+   "w": "can",
+   "s": 76165,
+   "e": 76352,
+   "seg": "s06-ventral"
+  },
+  {
+   "w": "think,",
+   "s": 76352,
+   "e": 76690,
+   "seg": "s06-ventral"
+  },
+  {
+   "w": "connect",
+   "s": 76690,
+   "e": 77052,
+   "seg": "s06-ventral"
+  },
+  {
+   "w": "and",
+   "s": 77052,
+   "e": 77165,
+   "seg": "s06-ventral"
+  },
+  {
+   "w": "rest.",
+   "s": 77165,
+   "e": 77940,
+   "seg": "s06-ventral"
+  },
+  {
+   "w": "Your",
+   "s": 77940,
+   "e": 78090,
+   "seg": "s06-ventral"
+  },
+  {
+   "w": "breath",
+   "s": 78090,
+   "e": 78378,
+   "seg": "s06-ventral"
+  },
+  {
+   "w": "is",
+   "s": 78378,
+   "e": 78502,
+   "seg": "s06-ventral"
+  },
+  {
+   "w": "slow",
+   "s": 78502,
+   "e": 78890,
+   "seg": "s06-ventral"
+  },
+  {
+   "w": "and",
+   "s": 78890,
+   "e": 79015,
+   "seg": "s06-ventral"
+  },
+  {
+   "w": "low.",
+   "s": 79015,
+   "e": 79640,
+   "seg": "s06-ventral"
+  },
+  {
+   "w": "Your",
+   "s": 79640,
+   "e": 79790,
+   "seg": "s06-ventral"
+  },
+  {
+   "w": "face",
+   "s": 79790,
+   "e": 80128,
+   "seg": "s06-ventral"
+  },
+  {
+   "w": "moves,",
+   "s": 80128,
+   "e": 80578,
+   "seg": "s06-ventral"
+  },
+  {
+   "w": "and",
+   "s": 80578,
+   "e": 80678,
+   "seg": "s06-ventral"
+  },
+  {
+   "w": "your",
+   "s": 80678,
+   "e": 80790,
+   "seg": "s06-ventral"
+  },
+  {
+   "w": "voice",
+   "s": 80790,
+   "e": 81102,
+   "seg": "s06-ventral"
+  },
+  {
+   "w": "has",
+   "s": 81102,
+   "e": 81290,
+   "seg": "s06-ventral"
+  },
+  {
+   "w": "melody.",
+   "s": 81290,
+   "e": 82215,
+   "seg": "s06-ventral"
+  },
+  {
+   "w": "You",
+   "s": 82215,
+   "e": 82352,
+   "seg": "s06-ventral"
+  },
+  {
+   "w": "can",
+   "s": 82352,
+   "e": 82490,
+   "seg": "s06-ventral"
+  },
+  {
+   "w": "still",
+   "s": 82490,
+   "e": 82765,
+   "seg": "s06-ventral"
+  },
+  {
+   "w": "feel",
+   "s": 82765,
+   "e": 83015,
+   "seg": "s06-ventral"
+  },
+  {
+   "w": "stress",
+   "s": 83015,
+   "e": 83328,
+   "seg": "s06-ventral"
+  },
+  {
+   "w": "up",
+   "s": 83328,
+   "e": 83490,
+   "seg": "s06-ventral"
+  },
+  {
+   "w": "here.",
+   "s": 83490,
+   "e": 84015,
+   "seg": "s06-ventral"
+  },
+  {
+   "w": "It",
+   "s": 84015,
+   "e": 84140,
+   "seg": "s06-ventral"
+  },
+  {
+   "w": "just",
+   "s": 84140,
+   "e": 84302,
+   "seg": "s06-ventral"
+  },
+  {
+   "w": "doesn't",
+   "s": 84302,
+   "e": 84565,
+   "seg": "s06-ventral"
+  },
+  {
+   "w": "take",
+   "s": 84565,
+   "e": 84852,
+   "seg": "s06-ventral"
+  },
+  {
+   "w": "over.",
+   "s": 84852,
+   "e": 85915,
+   "seg": "s06-ventral"
+  },
+  {
+   "w": "The",
+   "s": 86285,
+   "e": 86360,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "middle",
+   "s": 86360,
+   "e": 86635,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "rung",
+   "s": 86635,
+   "e": 86822,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "is",
+   "s": 86822,
+   "e": 86910,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "sympathetic.",
+   "s": 86910,
+   "e": 87710,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "Your",
+   "s": 87710,
+   "e": 87860,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "heart",
+   "s": 87860,
+   "e": 88160,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "speeds",
+   "s": 88160,
+   "e": 88485,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "up.",
+   "s": 88485,
+   "e": 89060,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "Breath",
+   "s": 89060,
+   "e": 89335,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "rises",
+   "s": 89335,
+   "e": 89760,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "high",
+   "s": 89760,
+   "e": 89972,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "and",
+   "s": 89972,
+   "e": 90085,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "fast",
+   "s": 90085,
+   "e": 90422,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "into",
+   "s": 90422,
+   "e": 90622,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "the",
+   "s": 90622,
+   "e": 90722,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "chest.",
+   "s": 90722,
+   "e": 91548,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "Muscles",
+   "s": 91548,
+   "e": 91935,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "brace,",
+   "s": 91935,
+   "e": 92298,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "the",
+   "s": 92298,
+   "e": 92385,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "jaw",
+   "s": 92385,
+   "e": 92672,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "sets,",
+   "s": 92672,
+   "e": 92998,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "and",
+   "s": 92998,
+   "e": 93098,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "your",
+   "s": 93098,
+   "e": 93210,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "hands",
+   "s": 93210,
+   "e": 93485,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "go",
+   "s": 93485,
+   "e": 93660,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "cold",
+   "s": 93660,
+   "e": 93972,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "or",
+   "s": 93972,
+   "e": 94060,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "clammy.",
+   "s": 94060,
+   "e": 94685,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "Your",
+   "s": 94685,
+   "e": 94835,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "vision",
+   "s": 94835,
+   "e": 95135,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "narrows,",
+   "s": 95135,
+   "e": 95598,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "and",
+   "s": 95598,
+   "e": 95698,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "your",
+   "s": 95698,
+   "e": 95810,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "thoughts",
+   "s": 95810,
+   "e": 96072,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "start",
+   "s": 96072,
+   "e": 96310,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "to",
+   "s": 96310,
+   "e": 96410,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "race.",
+   "s": 96410,
+   "e": 96810,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "It",
+   "s": 96810,
+   "e": 96922,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "has",
+   "s": 96922,
+   "e": 97085,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "two",
+   "s": 97085,
+   "e": 97235,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "faces.",
+   "s": 97235,
+   "e": 98322,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "Flight",
+   "s": 98322,
+   "e": 98610,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "feels",
+   "s": 98610,
+   "e": 98885,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "like",
+   "s": 98885,
+   "e": 99085,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "anxiety:",
+   "s": 99085,
+   "e": 99735,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "restless,",
+   "s": 99735,
+   "e": 100185,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "wired,",
+   "s": 100185,
+   "e": 100635,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "scanning",
+   "s": 100635,
+   "e": 101010,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "for",
+   "s": 101010,
+   "e": 101122,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "the",
+   "s": 101122,
+   "e": 101235,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "exit.",
+   "s": 101235,
+   "e": 102172,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "Fight",
+   "s": 102172,
+   "e": 102460,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "feels",
+   "s": 102460,
+   "e": 102735,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "like",
+   "s": 102735,
+   "e": 102972,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "anger:",
+   "s": 102972,
+   "e": 103410,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "heat,",
+   "s": 103410,
+   "e": 103735,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "pressure,",
+   "s": 103735,
+   "e": 104122,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "a",
+   "s": 104122,
+   "e": 104222,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "short",
+   "s": 104222,
+   "e": 104535,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "fuse.",
+   "s": 104535,
+   "e": 105372,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "Energy",
+   "s": 105372,
+   "e": 105785,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "that",
+   "s": 105785,
+   "e": 105960,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "finishes",
+   "s": 105960,
+   "e": 106385,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "its",
+   "s": 106385,
+   "e": 106585,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "job",
+   "s": 106585,
+   "e": 106810,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "settles.",
+   "s": 106810,
+   "e": 107772,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "Energy",
+   "s": 107772,
+   "e": 108185,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "with",
+   "s": 108185,
+   "e": 108360,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "nowhere",
+   "s": 108360,
+   "e": 108735,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "to",
+   "s": 108735,
+   "e": 108835,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "go",
+   "s": 108835,
+   "e": 109110,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "is",
+   "s": 109110,
+   "e": 109235,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "what",
+   "s": 109235,
+   "e": 109385,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "keeps",
+   "s": 109385,
+   "e": 109622,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "you",
+   "s": 109622,
+   "e": 109735,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "stuck.",
+   "s": 109735,
+   "e": 110835,
+   "seg": "s07-sympathetic"
+  },
+  {
+   "w": "The",
+   "s": 111205,
+   "e": 111280,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "bottom",
+   "s": 111280,
+   "e": 111630,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "rung",
+   "s": 111630,
+   "e": 111868,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "is",
+   "s": 111868,
+   "e": 112005,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "dorsal",
+   "s": 112005,
+   "e": 112355,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "vagal.",
+   "s": 112355,
+   "e": 113280,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "When",
+   "s": 113280,
+   "e": 113468,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "fighting",
+   "s": 113468,
+   "e": 113905,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "or",
+   "s": 113905,
+   "e": 114068,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "fleeing",
+   "s": 114068,
+   "e": 114430,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "seems",
+   "s": 114430,
+   "e": 114692,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "impossible,",
+   "s": 114692,
+   "e": 115292,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "the",
+   "s": 115292,
+   "e": 115380,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "system",
+   "s": 115380,
+   "e": 115705,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "pulls",
+   "s": 115705,
+   "e": 115968,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "the",
+   "s": 115968,
+   "e": 116055,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "plug.",
+   "s": 116055,
+   "e": 116855,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "Energy",
+   "s": 116855,
+   "e": 117180,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "drops.",
+   "s": 117180,
+   "e": 117705,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "Your",
+   "s": 117705,
+   "e": 117855,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "limbs",
+   "s": 117855,
+   "e": 118155,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "feel",
+   "s": 118155,
+   "e": 118405,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "heavy,",
+   "s": 118405,
+   "e": 118718,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "and",
+   "s": 118718,
+   "e": 118818,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "your",
+   "s": 118818,
+   "e": 118930,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "voice",
+   "s": 118930,
+   "e": 119205,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "goes",
+   "s": 119205,
+   "e": 119480,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "flat.",
+   "s": 119480,
+   "e": 120280,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "The",
+   "s": 120280,
+   "e": 120380,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "world",
+   "s": 120380,
+   "e": 120655,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "feels",
+   "s": 120655,
+   "e": 120905,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "far",
+   "s": 120905,
+   "e": 121155,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "away,",
+   "s": 121155,
+   "e": 121555,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "foggy,",
+   "s": 121555,
+   "e": 121905,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "or",
+   "s": 121905,
+   "e": 122055,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "numb.",
+   "s": 122055,
+   "e": 122705,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "This",
+   "s": 122705,
+   "e": 122868,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "isn't",
+   "s": 122868,
+   "e": 123130,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "laziness.",
+   "s": 123130,
+   "e": 123668,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "It's",
+   "s": 123668,
+   "e": 123805,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "protection.",
+   "s": 123805,
+   "e": 124555,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "Your",
+   "s": 124555,
+   "e": 124705,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "body",
+   "s": 124705,
+   "e": 124968,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "is",
+   "s": 124968,
+   "e": 125055,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "saving",
+   "s": 125055,
+   "e": 125392,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "what",
+   "s": 125392,
+   "e": 125518,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "it",
+   "s": 125518,
+   "e": 125630,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "has.",
+   "s": 125630,
+   "e": 126292,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "Sometimes",
+   "s": 126292,
+   "e": 126792,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "it's",
+   "s": 126792,
+   "e": 126892,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "a",
+   "s": 126892,
+   "e": 126955,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "full",
+   "s": 126955,
+   "e": 127180,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "switch-off.",
+   "s": 127180,
+   "e": 128218,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "Sometimes",
+   "s": 128218,
+   "e": 128718,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "you're",
+   "s": 128718,
+   "e": 128830,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "braced",
+   "s": 128830,
+   "e": 129268,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "and",
+   "s": 129268,
+   "e": 129380,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "wired",
+   "s": 129380,
+   "e": 129718,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "underneath,",
+   "s": 129718,
+   "e": 130268,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "and",
+   "s": 130268,
+   "e": 130380,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "still",
+   "s": 130380,
+   "e": 130655,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "can't",
+   "s": 130655,
+   "e": 130905,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "move.",
+   "s": 130905,
+   "e": 131742,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "Regulate",
+   "s": 131742,
+   "e": 132230,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "calls",
+   "s": 132230,
+   "e": 132605,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "that",
+   "s": 132605,
+   "e": 132755,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "whole",
+   "s": 132755,
+   "e": 132980,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "bottom",
+   "s": 132980,
+   "e": 133355,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "rung",
+   "s": 133355,
+   "e": 133592,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "Freeze.",
+   "s": 133592,
+   "e": 134780,
+   "seg": "s08-dorsal"
+  },
+  {
+   "w": "Dan",
+   "s": 135150,
+   "e": 135412,
+   "seg": "s10-window"
+  },
+  {
+   "w": "Siegel",
+   "s": 135412,
+   "e": 135750,
+   "seg": "s10-window"
+  },
+  {
+   "w": "described",
+   "s": 135750,
+   "e": 136212,
+   "seg": "s10-window"
+  },
+  {
+   "w": "a",
+   "s": 136212,
+   "e": 136275,
+   "seg": "s10-window"
+  },
+  {
+   "w": "window",
+   "s": 136275,
+   "e": 136588,
+   "seg": "s10-window"
+  },
+  {
+   "w": "of",
+   "s": 136588,
+   "e": 136675,
+   "seg": "s10-window"
+  },
+  {
+   "w": "tolerance,",
+   "s": 136675,
+   "e": 137212,
+   "seg": "s10-window"
+  },
+  {
+   "w": "and",
+   "s": 137212,
+   "e": 137312,
+   "seg": "s10-window"
+  },
+  {
+   "w": "it",
+   "s": 137312,
+   "e": 137400,
+   "seg": "s10-window"
+  },
+  {
+   "w": "lines",
+   "s": 137400,
+   "e": 137638,
+   "seg": "s10-window"
+  },
+  {
+   "w": "up",
+   "s": 137638,
+   "e": 137788,
+   "seg": "s10-window"
+  },
+  {
+   "w": "with",
+   "s": 137788,
+   "e": 137888,
+   "seg": "s10-window"
+  },
+  {
+   "w": "this",
+   "s": 137888,
+   "e": 138050,
+   "seg": "s10-window"
+  },
+  {
+   "w": "map.",
+   "s": 138050,
+   "e": 139000,
+   "seg": "s10-window"
+  },
+  {
+   "w": "Inside",
+   "s": 139000,
+   "e": 139438,
+   "seg": "s10-window"
+  },
+  {
+   "w": "the",
+   "s": 139438,
+   "e": 139525,
+   "seg": "s10-window"
+  },
+  {
+   "w": "window,",
+   "s": 139525,
+   "e": 139912,
+   "seg": "s10-window"
+  },
+  {
+   "w": "you",
+   "s": 139912,
+   "e": 140012,
+   "seg": "s10-window"
+  },
+  {
+   "w": "can",
+   "s": 140012,
+   "e": 140125,
+   "seg": "s10-window"
+  },
+  {
+   "w": "feel",
+   "s": 140125,
+   "e": 140325,
+   "seg": "s10-window"
+  },
+  {
+   "w": "stress",
+   "s": 140325,
+   "e": 140688,
+   "seg": "s10-window"
+  },
+  {
+   "w": "and",
+   "s": 140688,
+   "e": 140800,
+   "seg": "s10-window"
+  },
+  {
+   "w": "still",
+   "s": 140800,
+   "e": 141075,
+   "seg": "s10-window"
+  },
+  {
+   "w": "think",
+   "s": 141075,
+   "e": 141325,
+   "seg": "s10-window"
+  },
+  {
+   "w": "straight.",
+   "s": 141325,
+   "e": 142262,
+   "seg": "s10-window"
+  },
+  {
+   "w": "Above",
+   "s": 142262,
+   "e": 142550,
+   "seg": "s10-window"
+  },
+  {
+   "w": "it",
+   "s": 142550,
+   "e": 142675,
+   "seg": "s10-window"
+  },
+  {
+   "w": "is",
+   "s": 142675,
+   "e": 142800,
+   "seg": "s10-window"
+  },
+  {
+   "w": "hyperarousal:",
+   "s": 142800,
+   "e": 143700,
+   "seg": "s10-window"
+  },
+  {
+   "w": "too",
+   "s": 143700,
+   "e": 143838,
+   "seg": "s10-window"
+  },
+  {
+   "w": "much",
+   "s": 143838,
+   "e": 144088,
+   "seg": "s10-window"
+  },
+  {
+   "w": "charge.",
+   "s": 144088,
+   "e": 144825,
+   "seg": "s10-window"
+  },
+  {
+   "w": "Below",
+   "s": 144825,
+   "e": 145138,
+   "seg": "s10-window"
+  },
+  {
+   "w": "it",
+   "s": 145138,
+   "e": 145238,
+   "seg": "s10-window"
+  },
+  {
+   "w": "is",
+   "s": 145238,
+   "e": 145350,
+   "seg": "s10-window"
+  },
+  {
+   "w": "hypoarousal:",
+   "s": 145350,
+   "e": 146275,
+   "seg": "s10-window"
+  },
+  {
+   "w": "too",
+   "s": 146275,
+   "e": 146425,
+   "seg": "s10-window"
+  },
+  {
+   "w": "little.",
+   "s": 146425,
+   "e": 147325,
+   "seg": "s10-window"
+  },
+  {
+   "w": "The",
+   "s": 147325,
+   "e": 147425,
+   "seg": "s10-window"
+  },
+  {
+   "w": "window",
+   "s": 147425,
+   "e": 147825,
+   "seg": "s10-window"
+  },
+  {
+   "w": "isn't",
+   "s": 147825,
+   "e": 148138,
+   "seg": "s10-window"
+  },
+  {
+   "w": "fixed.",
+   "s": 148138,
+   "e": 149000,
+   "seg": "s10-window"
+  },
+  {
+   "w": "It",
+   "s": 149000,
+   "e": 149150,
+   "seg": "s10-window"
+  },
+  {
+   "w": "narrows",
+   "s": 149150,
+   "e": 149512,
+   "seg": "s10-window"
+  },
+  {
+   "w": "under",
+   "s": 149512,
+   "e": 149750,
+   "seg": "s10-window"
+  },
+  {
+   "w": "strain,",
+   "s": 149750,
+   "e": 150238,
+   "seg": "s10-window"
+  },
+  {
+   "w": "and",
+   "s": 150238,
+   "e": 150338,
+   "seg": "s10-window"
+  },
+  {
+   "w": "it",
+   "s": 150338,
+   "e": 150425,
+   "seg": "s10-window"
+  },
+  {
+   "w": "can",
+   "s": 150425,
+   "e": 150600,
+   "seg": "s10-window"
+  },
+  {
+   "w": "widen",
+   "s": 150600,
+   "e": 150988,
+   "seg": "s10-window"
+  },
+  {
+   "w": "with",
+   "s": 150988,
+   "e": 151125,
+   "seg": "s10-window"
+  },
+  {
+   "w": "practice.",
+   "s": 151125,
+   "e": 152425,
+   "seg": "s10-window"
+  },
+  {
+   "w": "So",
+   "s": 152795,
+   "e": 152895,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "how",
+   "s": 152895,
+   "e": 153032,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "do",
+   "s": 153032,
+   "e": 153158,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "you",
+   "s": 153158,
+   "e": 153258,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "spot",
+   "s": 153258,
+   "e": 153482,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "where",
+   "s": 153482,
+   "e": 153620,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "you",
+   "s": 153620,
+   "e": 153758,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "are?",
+   "s": 153758,
+   "e": 154158,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "Check",
+   "s": 154158,
+   "e": 154420,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "three",
+   "s": 154420,
+   "e": 154645,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "things.",
+   "s": 154645,
+   "e": 155458,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "Breath:",
+   "s": 155458,
+   "e": 155932,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "slow",
+   "s": 155932,
+   "e": 156232,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "and",
+   "s": 156232,
+   "e": 156345,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "low,",
+   "s": 156345,
+   "e": 156620,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "fast",
+   "s": 156620,
+   "e": 156932,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "and",
+   "s": 156932,
+   "e": 157045,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "high,",
+   "s": 157045,
+   "e": 157282,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "or",
+   "s": 157282,
+   "e": 157370,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "barely",
+   "s": 157370,
+   "e": 157695,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "there?",
+   "s": 157695,
+   "e": 158320,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "Energy:",
+   "s": 158320,
+   "e": 158845,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "steady,",
+   "s": 158845,
+   "e": 159245,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "buzzing,",
+   "s": 159245,
+   "e": 159632,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "or",
+   "s": 159632,
+   "e": 159720,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "drained?",
+   "s": 159720,
+   "e": 160345,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "Connection:",
+   "s": 160345,
+   "e": 160995,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "can",
+   "s": 160995,
+   "e": 161108,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "you",
+   "s": 161108,
+   "e": 161220,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "take",
+   "s": 161220,
+   "e": 161432,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "in",
+   "s": 161432,
+   "e": 161532,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "a",
+   "s": 161532,
+   "e": 161608,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "face,",
+   "s": 161608,
+   "e": 161982,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "or",
+   "s": 161982,
+   "e": 162058,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "does",
+   "s": 162058,
+   "e": 162208,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "the",
+   "s": 162208,
+   "e": 162295,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "world",
+   "s": 162295,
+   "e": 162595,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "feel",
+   "s": 162595,
+   "e": 162858,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "too",
+   "s": 162858,
+   "e": 163070,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "loud,",
+   "s": 163070,
+   "e": 163408,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "or",
+   "s": 163408,
+   "e": 163495,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "too",
+   "s": 163495,
+   "e": 163695,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "far",
+   "s": 163695,
+   "e": 163945,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "away?",
+   "s": 163945,
+   "e": 164620,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "You",
+   "s": 164620,
+   "e": 164758,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "don't",
+   "s": 164758,
+   "e": 164932,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "need",
+   "s": 164932,
+   "e": 165082,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "to",
+   "s": 165082,
+   "e": 165158,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "be",
+   "s": 165158,
+   "e": 165282,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "sure.",
+   "s": 165282,
+   "e": 165745,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "A",
+   "s": 165745,
+   "e": 165845,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "rough",
+   "s": 165845,
+   "e": 166120,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "guess",
+   "s": 166120,
+   "e": 166332,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "is",
+   "s": 166332,
+   "e": 166445,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "enough.",
+   "s": 166445,
+   "e": 167570,
+   "seg": "s11-spot"
+  },
+  {
+   "w": "And",
+   "s": 167940,
+   "e": 168078,
+   "seg": "s12-match"
+  },
+  {
+   "w": "that's",
+   "s": 168078,
+   "e": 168340,
+   "seg": "s12-match"
+  },
+  {
+   "w": "why",
+   "s": 168340,
+   "e": 168515,
+   "seg": "s12-match"
+  },
+  {
+   "w": "one",
+   "s": 168515,
+   "e": 168740,
+   "seg": "s12-match"
+  },
+  {
+   "w": "breathing",
+   "s": 168740,
+   "e": 169140,
+   "seg": "s12-match"
+  },
+  {
+   "w": "exercise",
+   "s": 169140,
+   "e": 169740,
+   "seg": "s12-match"
+  },
+  {
+   "w": "can't",
+   "s": 169740,
+   "e": 170040,
+   "seg": "s12-match"
+  },
+  {
+   "w": "fit",
+   "s": 170040,
+   "e": 170240,
+   "seg": "s12-match"
+  },
+  {
+   "w": "every",
+   "s": 170240,
+   "e": 170540,
+   "seg": "s12-match"
+  },
+  {
+   "w": "state.",
+   "s": 170540,
+   "e": 171515,
+   "seg": "s12-match"
+  },
+  {
+   "w": "If",
+   "s": 171515,
+   "e": 171678,
+   "seg": "s12-match"
+  },
+  {
+   "w": "you're",
+   "s": 171678,
+   "e": 171790,
+   "seg": "s12-match"
+  },
+  {
+   "w": "activated,",
+   "s": 171790,
+   "e": 172465,
+   "seg": "s12-match"
+  },
+  {
+   "w": "a",
+   "s": 172465,
+   "e": 172540,
+   "seg": "s12-match"
+  },
+  {
+   "w": "longer",
+   "s": 172540,
+   "e": 172878,
+   "seg": "s12-match"
+  },
+  {
+   "w": "exhale",
+   "s": 172878,
+   "e": 173340,
+   "seg": "s12-match"
+  },
+  {
+   "w": "helps",
+   "s": 173340,
+   "e": 173602,
+   "seg": "s12-match"
+  },
+  {
+   "w": "your",
+   "s": 173602,
+   "e": 173715,
+   "seg": "s12-match"
+  },
+  {
+   "w": "body",
+   "s": 173715,
+   "e": 173990,
+   "seg": "s12-match"
+  },
+  {
+   "w": "settle,",
+   "s": 173990,
+   "e": 174615,
+   "seg": "s12-match"
+  },
+  {
+   "w": "and",
+   "s": 174615,
+   "e": 174740,
+   "seg": "s12-match"
+  },
+  {
+   "w": "movement",
+   "s": 174740,
+   "e": 175165,
+   "seg": "s12-match"
+  },
+  {
+   "w": "gives",
+   "s": 175165,
+   "e": 175402,
+   "seg": "s12-match"
+  },
+  {
+   "w": "the",
+   "s": 175402,
+   "e": 175502,
+   "seg": "s12-match"
+  },
+  {
+   "w": "charge",
+   "s": 175502,
+   "e": 175840,
+   "seg": "s12-match"
+  },
+  {
+   "w": "somewhere",
+   "s": 175840,
+   "e": 176190,
+   "seg": "s12-match"
+  },
+  {
+   "w": "to",
+   "s": 176190,
+   "e": 176290,
+   "seg": "s12-match"
+  },
+  {
+   "w": "go.",
+   "s": 176290,
+   "e": 177265,
+   "seg": "s12-match"
+  },
+  {
+   "w": "If",
+   "s": 177265,
+   "e": 177440,
+   "seg": "s12-match"
+  },
+  {
+   "w": "you're",
+   "s": 177440,
+   "e": 177578,
+   "seg": "s12-match"
+  },
+  {
+   "w": "shut",
+   "s": 177578,
+   "e": 177840,
+   "seg": "s12-match"
+  },
+  {
+   "w": "down,",
+   "s": 177840,
+   "e": 178265,
+   "seg": "s12-match"
+  },
+  {
+   "w": "stillness",
+   "s": 178265,
+   "e": 178690,
+   "seg": "s12-match"
+  },
+  {
+   "w": "can",
+   "s": 178690,
+   "e": 178840,
+   "seg": "s12-match"
+  },
+  {
+   "w": "pull",
+   "s": 178840,
+   "e": 179040,
+   "seg": "s12-match"
+  },
+  {
+   "w": "you",
+   "s": 179040,
+   "e": 179165,
+   "seg": "s12-match"
+  },
+  {
+   "w": "further",
+   "s": 179165,
+   "e": 179465,
+   "seg": "s12-match"
+  },
+  {
+   "w": "under.",
+   "s": 179465,
+   "e": 180340,
+   "seg": "s12-match"
+  },
+  {
+   "w": "You",
+   "s": 180340,
+   "e": 180478,
+   "seg": "s12-match"
+  },
+  {
+   "w": "need",
+   "s": 180478,
+   "e": 180628,
+   "seg": "s12-match"
+  },
+  {
+   "w": "a",
+   "s": 180628,
+   "e": 180690,
+   "seg": "s12-match"
+  },
+  {
+   "w": "gentle",
+   "s": 180690,
+   "e": 181115,
+   "seg": "s12-match"
+  },
+  {
+   "w": "lift",
+   "s": 181115,
+   "e": 181390,
+   "seg": "s12-match"
+  },
+  {
+   "w": "first:",
+   "s": 181390,
+   "e": 182178,
+   "seg": "s12-match"
+  },
+  {
+   "w": "a",
+   "s": 182178,
+   "e": 182290,
+   "seg": "s12-match"
+  },
+  {
+   "w": "rhythm,",
+   "s": 182290,
+   "e": 182690,
+   "seg": "s12-match"
+  },
+  {
+   "w": "something",
+   "s": 182690,
+   "e": 183090,
+   "seg": "s12-match"
+  },
+  {
+   "w": "to",
+   "s": 183090,
+   "e": 183215,
+   "seg": "s12-match"
+  },
+  {
+   "w": "follow.",
+   "s": 183215,
+   "e": 184315,
+   "seg": "s12-match"
+  },
+  {
+   "w": "That's",
+   "s": 184685,
+   "e": 184872,
+   "seg": "s13-app"
+  },
+  {
+   "w": "how",
+   "s": 184872,
+   "e": 185035,
+   "seg": "s13-app"
+  },
+  {
+   "w": "Regulate",
+   "s": 185035,
+   "e": 185497,
+   "seg": "s13-app"
+  },
+  {
+   "w": "is",
+   "s": 185497,
+   "e": 185635,
+   "seg": "s13-app"
+  },
+  {
+   "w": "built.",
+   "s": 185635,
+   "e": 186247,
+   "seg": "s13-app"
+  },
+  {
+   "w": "Balanced",
+   "s": 186247,
+   "e": 186697,
+   "seg": "s13-app"
+  },
+  {
+   "w": "is",
+   "s": 186697,
+   "e": 186797,
+   "seg": "s13-app"
+  },
+  {
+   "w": "the",
+   "s": 186797,
+   "e": 186885,
+   "seg": "s13-app"
+  },
+  {
+   "w": "top",
+   "s": 186885,
+   "e": 187185,
+   "seg": "s13-app"
+  },
+  {
+   "w": "rung.",
+   "s": 187185,
+   "e": 187922,
+   "seg": "s13-app"
+  },
+  {
+   "w": "Anxious",
+   "s": 187922,
+   "e": 188397,
+   "seg": "s13-app"
+  },
+  {
+   "w": "and",
+   "s": 188397,
+   "e": 188510,
+   "seg": "s13-app"
+  },
+  {
+   "w": "Angry",
+   "s": 188510,
+   "e": 188860,
+   "seg": "s13-app"
+  },
+  {
+   "w": "are",
+   "s": 188860,
+   "e": 188947,
+   "seg": "s13-app"
+  },
+  {
+   "w": "the",
+   "s": 188947,
+   "e": 189035,
+   "seg": "s13-app"
+  },
+  {
+   "w": "middle.",
+   "s": 189035,
+   "e": 189622,
+   "seg": "s13-app"
+  },
+  {
+   "w": "Freeze",
+   "s": 189622,
+   "e": 189922,
+   "seg": "s13-app"
+  },
+  {
+   "w": "is",
+   "s": 189922,
+   "e": 190022,
+   "seg": "s13-app"
+  },
+  {
+   "w": "the",
+   "s": 190022,
+   "e": 190110,
+   "seg": "s13-app"
+  },
+  {
+   "w": "bottom.",
+   "s": 190110,
+   "e": 190635,
+   "seg": "s13-app"
+  },
+  {
+   "w": "And",
+   "s": 190635,
+   "e": 190772,
+   "seg": "s13-app"
+  },
+  {
+   "w": "it",
+   "s": 190772,
+   "e": 190860,
+   "seg": "s13-app"
+  },
+  {
+   "w": "starts",
+   "s": 190860,
+   "e": 191247,
+   "seg": "s13-app"
+  },
+  {
+   "w": "with",
+   "s": 191247,
+   "e": 191360,
+   "seg": "s13-app"
+  },
+  {
+   "w": "one",
+   "s": 191360,
+   "e": 191585,
+   "seg": "s13-app"
+  },
+  {
+   "w": "question.",
+   "s": 191585,
+   "e": 192510,
+   "seg": "s13-app"
+  },
+  {
+   "w": "Where",
+   "s": 192510,
+   "e": 192672,
+   "seg": "s13-app"
+  },
+  {
+   "w": "are",
+   "s": 192672,
+   "e": 192747,
+   "seg": "s13-app"
+  },
+  {
+   "w": "you",
+   "s": 192747,
+   "e": 192860,
+   "seg": "s13-app"
+  },
+  {
+   "w": "right",
+   "s": 192860,
+   "e": 193085,
+   "seg": "s13-app"
+  },
+  {
+   "w": "now?",
+   "s": 193085,
+   "e": 193460,
+   "seg": "s13-app"
+  },
+  {
+   "w": "Anxious",
+   "s": 193460,
+   "e": 193910,
+   "seg": "s13-app"
+  },
+  {
+   "w": "leads",
+   "s": 193910,
+   "e": 194185,
+   "seg": "s13-app"
+  },
+  {
+   "w": "to",
+   "s": 194185,
+   "e": 194272,
+   "seg": "s13-app"
+  },
+  {
+   "w": "The",
+   "s": 194272,
+   "e": 194397,
+   "seg": "s13-app"
+  },
+  {
+   "w": "Sigh:",
+   "s": 194397,
+   "e": 194735,
+   "seg": "s13-app"
+  },
+  {
+   "w": "two",
+   "s": 194735,
+   "e": 194885,
+   "seg": "s13-app"
+  },
+  {
+   "w": "inhales,",
+   "s": 194885,
+   "e": 195422,
+   "seg": "s13-app"
+  },
+  {
+   "w": "one",
+   "s": 195422,
+   "e": 195610,
+   "seg": "s13-app"
+  },
+  {
+   "w": "long",
+   "s": 195610,
+   "e": 195835,
+   "seg": "s13-app"
+  },
+  {
+   "w": "exhale.",
+   "s": 195835,
+   "e": 196972,
+   "seg": "s13-app"
+  },
+  {
+   "w": "Angry",
+   "s": 196972,
+   "e": 197335,
+   "seg": "s13-app"
+  },
+  {
+   "w": "leads",
+   "s": 197335,
+   "e": 197585,
+   "seg": "s13-app"
+  },
+  {
+   "w": "to",
+   "s": 197585,
+   "e": 197685,
+   "seg": "s13-app"
+  },
+  {
+   "w": "Chaos",
+   "s": 197685,
+   "e": 198085,
+   "seg": "s13-app"
+  },
+  {
+   "w": "Release:",
+   "s": 198085,
+   "e": 198547,
+   "seg": "s13-app"
+  },
+  {
+   "w": "shake",
+   "s": 198547,
+   "e": 198772,
+   "seg": "s13-app"
+  },
+  {
+   "w": "the",
+   "s": 198772,
+   "e": 198860,
+   "seg": "s13-app"
+  },
+  {
+   "w": "heat",
+   "s": 198860,
+   "e": 199110,
+   "seg": "s13-app"
+  },
+  {
+   "w": "out.",
+   "s": 199110,
+   "e": 200022,
+   "seg": "s13-app"
+  },
+  {
+   "w": "Freeze",
+   "s": 200022,
+   "e": 200360,
+   "seg": "s13-app"
+  },
+  {
+   "w": "leads",
+   "s": 200360,
+   "e": 200660,
+   "seg": "s13-app"
+  },
+  {
+   "w": "to",
+   "s": 200660,
+   "e": 200760,
+   "seg": "s13-app"
+  },
+  {
+   "w": "Pendulum,",
+   "s": 200760,
+   "e": 201385,
+   "seg": "s13-app"
+  },
+  {
+   "w": "a",
+   "s": 201385,
+   "e": 201497,
+   "seg": "s13-app"
+  },
+  {
+   "w": "slow",
+   "s": 201497,
+   "e": 201810,
+   "seg": "s13-app"
+  },
+  {
+   "w": "left-right",
+   "s": 201810,
+   "e": 202260,
+   "seg": "s13-app"
+  },
+  {
+   "w": "rhythm",
+   "s": 202260,
+   "e": 202560,
+   "seg": "s13-app"
+  },
+  {
+   "w": "that",
+   "s": 202560,
+   "e": 202685,
+   "seg": "s13-app"
+  },
+  {
+   "w": "gives",
+   "s": 202685,
+   "e": 202897,
+   "seg": "s13-app"
+  },
+  {
+   "w": "your",
+   "s": 202897,
+   "e": 203010,
+   "seg": "s13-app"
+  },
+  {
+   "w": "attention",
+   "s": 203010,
+   "e": 203485,
+   "seg": "s13-app"
+  },
+  {
+   "w": "somewhere",
+   "s": 203485,
+   "e": 203810,
+   "seg": "s13-app"
+  },
+  {
+   "w": "to",
+   "s": 203810,
+   "e": 203935,
+   "seg": "s13-app"
+  },
+  {
+   "w": "land.",
+   "s": 203935,
+   "e": 204960,
+   "seg": "s13-app"
+  },
+  {
+   "w": "And",
+   "s": 204960,
+   "e": 205110,
+   "seg": "s13-app"
+  },
+  {
+   "w": "Balanced",
+   "s": 205110,
+   "e": 205560,
+   "seg": "s13-app"
+  },
+  {
+   "w": "leads",
+   "s": 205560,
+   "e": 205860,
+   "seg": "s13-app"
+  },
+  {
+   "w": "to",
+   "s": 205860,
+   "e": 205960,
+   "seg": "s13-app"
+  },
+  {
+   "w": "Regulate",
+   "s": 205960,
+   "e": 206435,
+   "seg": "s13-app"
+  },
+  {
+   "w": "Breath:",
+   "s": 206435,
+   "e": 206947,
+   "seg": "s13-app"
+  },
+  {
+   "w": "four",
+   "s": 206947,
+   "e": 207210,
+   "seg": "s13-app"
+  },
+  {
+   "w": "in,",
+   "s": 207210,
+   "e": 207422,
+   "seg": "s13-app"
+  },
+  {
+   "w": "eight",
+   "s": 207422,
+   "e": 207660,
+   "seg": "s13-app"
+  },
+  {
+   "w": "out,",
+   "s": 207660,
+   "e": 207972,
+   "seg": "s13-app"
+  },
+  {
+   "w": "to",
+   "s": 207972,
+   "e": 208060,
+   "seg": "s13-app"
+  },
+  {
+   "w": "help",
+   "s": 208060,
+   "e": 208272,
+   "seg": "s13-app"
+  },
+  {
+   "w": "you",
+   "s": 208272,
+   "e": 208385,
+   "seg": "s13-app"
+  },
+  {
+   "w": "stay",
+   "s": 208385,
+   "e": 208647,
+   "seg": "s13-app"
+  },
+  {
+   "w": "in",
+   "s": 208647,
+   "e": 208722,
+   "seg": "s13-app"
+  },
+  {
+   "w": "the",
+   "s": 208722,
+   "e": 208810,
+   "seg": "s13-app"
+  },
+  {
+   "w": "window.",
+   "s": 208810,
+   "e": 209960,
+   "seg": "s13-app"
+  },
+  {
+   "w": "You",
+   "s": 210330,
+   "e": 210455,
+   "seg": "s14-close"
+  },
+  {
+   "w": "can't",
+   "s": 210455,
+   "e": 210705,
+   "seg": "s14-close"
+  },
+  {
+   "w": "argue",
+   "s": 210705,
+   "e": 210992,
+   "seg": "s14-close"
+  },
+  {
+   "w": "with",
+   "s": 210992,
+   "e": 211092,
+   "seg": "s14-close"
+  },
+  {
+   "w": "a",
+   "s": 211092,
+   "e": 211155,
+   "seg": "s14-close"
+  },
+  {
+   "w": "state.",
+   "s": 211155,
+   "e": 211730,
+   "seg": "s14-close"
+  },
+  {
+   "w": "But",
+   "s": 211730,
+   "e": 211880,
+   "seg": "s14-close"
+  },
+  {
+   "w": "you",
+   "s": 211880,
+   "e": 212005,
+   "seg": "s14-close"
+  },
+  {
+   "w": "can",
+   "s": 212005,
+   "e": 212155,
+   "seg": "s14-close"
+  },
+  {
+   "w": "work",
+   "s": 212155,
+   "e": 212392,
+   "seg": "s14-close"
+  },
+  {
+   "w": "with",
+   "s": 212392,
+   "e": 212492,
+   "seg": "s14-close"
+  },
+  {
+   "w": "your",
+   "s": 212492,
+   "e": 212605,
+   "seg": "s14-close"
+  },
+  {
+   "w": "body.",
+   "s": 212605,
+   "e": 213342,
+   "seg": "s14-close"
+  },
+  {
+   "w": "Notice",
+   "s": 213342,
+   "e": 213780,
+   "seg": "s14-close"
+  },
+  {
+   "w": "where",
+   "s": 213780,
+   "e": 213955,
+   "seg": "s14-close"
+  },
+  {
+   "w": "you",
+   "s": 213955,
+   "e": 214117,
+   "seg": "s14-close"
+  },
+  {
+   "w": "are.",
+   "s": 214117,
+   "e": 214492,
+   "seg": "s14-close"
+  },
+  {
+   "w": "Name",
+   "s": 214492,
+   "e": 214805,
+   "seg": "s14-close"
+  },
+  {
+   "w": "it.",
+   "s": 214805,
+   "e": 215217,
+   "seg": "s14-close"
+  },
+  {
+   "w": "Match",
+   "s": 215217,
+   "e": 215505,
+   "seg": "s14-close"
+  },
+  {
+   "w": "the",
+   "s": 215505,
+   "e": 215605,
+   "seg": "s14-close"
+  },
+  {
+   "w": "tool",
+   "s": 215605,
+   "e": 215880,
+   "seg": "s14-close"
+  },
+  {
+   "w": "to",
+   "s": 215880,
+   "e": 215967,
+   "seg": "s14-close"
+  },
+  {
+   "w": "the",
+   "s": 215967,
+   "e": 216055,
+   "seg": "s14-close"
+  },
+  {
+   "w": "state.",
+   "s": 216055,
+   "e": 217205,
+   "seg": "s14-close"
+  },
+  {
+   "w": "Not",
+   "s": 218635,
+   "e": 218810,
+   "seg": "s15-tag"
+  },
+  {
+   "w": "meditation.",
+   "s": 218810,
+   "e": 219710,
+   "seg": "s15-tag"
+  },
+  {
+   "w": "Regulation.",
+   "s": 219710,
+   "e": 221160,
+   "seg": "s15-tag"
+  }
+ ]
+}

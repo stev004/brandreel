@@ -1,0 +1,797 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Polyvagal Explainer</title>
+<!--
+  brandreel animatic rev1 - regulate - "The ladder" polyvagal explainer, ~3:43 (T.dur), 1080x1920 @ 60
+  Brief (Steven 2026-09-26): an informative, visually creative statement piece explaining
+  polyvagal theory, the nervous-system states, how they map, their symptoms and how to spot
+  them, and how the app links to it. Infographic explanations, clear continuous narration.
+  Pure foundational knowledge. 9:16, ~4 min, British AI narrator (Kokoro bf_emma), one brief
+  honest line that the theory is a model.
+
+  CORE MECHANIC: one white point is "you" on the map. It asks "am I safe?", leads the vagus
+  nerve down to the gut and rides its traffic back up, the nerve straightens into a ladder,
+  the ladder becomes a live "you are here" spine for the whole middle act, and in the app
+  chapter the spine becomes the app's own check-in band with the point in the ring handle.
+  It closes by punctuating "Notice. Name. Match." and comes to rest as the full stop.
+
+  Taste seat (Fable 5.1 consult, 2026-09-26) rulings adopted: s09 "freeze is a blend" folded
+  into the bottom rung (Regulate calls that whole bottom rung Freeze); "poly" explained; the
+  app-to-rung mapping spoken; claims softened (useful, part of why, can widen); ladder as the
+  persistent left-edge spine s05-s12 and the rails become the spectrum band in s13; body
+  figure drawn once, never redrawn, single line, mono labels only (no drawn organs); phrase
+  captions not karaoke, Inter 400, no background, cream, never teal or a state colour; no
+  timeline bar, no "model" stamp, no pedals; Fig 04.1's "Bilateral lifts you back in" not shown.
+
+  LAWS IN PLAY (Regulate Brand Book 2026-09-04; brand.json voice.notes):
+  - The point is the only pure-white thing; never scaled or recoloured. Particles, pens, bobs
+    and the sonar rings are cream. Rings emit FROM the point; it does not pulse.
+  - A state colour names a state, one lit at a time, only on the label word of the rung we
+    are on (ventral sage, dorsal/FREEZE slate, Flight's ANXIOUS amber then Fight's ANGRY burnt
+    orange - never both lit). The 3x3 table and ladder are white/cream. The spectrum band is
+    the app's own record (SpectrumCheckIn.tsx), reused verbatim in s13 only; tools draw cream
+    beside it (Regulate Breath's sage fill is Balanced's own instrument part).
+  - Emerald #0a1812 flat ground, no cards, no gradient except the app's band. Teal only on the
+    kicker, then the tagline once the kicker is gone. Captions never teal.
+  - Playfair Display 500 (+italic), JetBrains Mono caps labels/kickers (site grammar
+    "{ 03 } - The states"), Inter for captions. Plain hyphens only.
+  - Motion: house (.2,.7,.2,1), settle (.22,1,.36,1), in-out (.45,.05,.55,.95); no springs.
+    Events snap, struggles crawl; records never redraw (every trace is a function of x or of
+    its own sample time, fixed once drawn; the breath strip scrolls, it never changes shape).
+  - Instruments from app code (regulate main, 2026-09-26): The Sigh curve = fillAt()
+    (inhale1 2500 outQuad to .68, inhale2 1200 outSin to 1, hold 1000, exhale 5000 inOutQuad),
+    compressed 0.4x here; Pendulum = arm from a top pivot, apex-to-apex 2.0s metronome, guide
+    arcs +-5.2deg at the apex; Regulate Breath = IN 4 / OUT 8 column with sage fill, 4 inhale
+    ticks left + 8 exhale ticks right, compressed 0.4x (listed deviation); check-in band =
+    vertical pill, amber -> angry -> slate -> sage, markers .1/.4/.68/.94, ring handle.
+  - Deviation: the app's check-in ring handle holds the white point.
+
+  SCENES (all cued to spoken words via regulate-polyvagal.timing.js; seconds approximate)
+  s01 0-11     hook: the point draws a pounding ECG, then a sinking flatline; headlines
+  s02 11-24    { 01 } The question: sonar rings from the point below an AWARENESS line; "Am I safe?"
+  s03 24-35    { 02 } A model, not a scan: the body draws (one line); point to the brainstem
+  s04 35-60    { 03 } The wandering nerve: point leads the vagus down to the gut; vagus/poly
+               glosses; two branches; traffic mostly upward; the point rides it back up
+  s05 60-73    { 04 } The ladder: the nerve straightens into rails; three rungs; the point drops
+  s06 73-86    { 05 } The top rung: spine + body callouts (ventral); breath strip starts
+  s07 86-111   { 06 } The middle rung: callouts, heart pulse, tunnel vision, racing thoughts;
+               Flight / Fight; the stress cycle (Threat, Completed, Stuck)
+  s08 111-135  { 07 } The bottom rung: body sinks, fogs; "Not laziness. Protection."; switch-off
+               vs braced underneath on the strip; FREEZE lands on the bottom rung
+  s10 135-152  { 08 } The window: band, the point draws the wave above and below; narrows, widens
+  s11 153-168  { 09 } How to spot it: rungs extend into a 3x3 table; the point is the cursor
+  s12 168-184  { 10 } Match the tool: climb arrows on the spine
+  s13 185-210  { 11 } The app: rungs named; the spine becomes the check-in band; the handle
+               visits each state and its free tool draws
+  s14 210-223  close: "You can't argue with a state."; the point punctuates Notice. Name. Match.;
+               glides home; wordmark; tagline
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,500;1,500&display=block" rel="stylesheet">
+<link rel="stylesheet" href="lib/reel.css">
+<style>
+  #gp{position:absolute;left:0;top:0;width:1080px;height:1920px;overflow:visible;pointer-events:none}
+  .kick{font-family:var(--mono);font-weight:500;font-size:24px;letter-spacing:.3em;text-transform:uppercase;color:var(--teal);white-space:nowrap;line-height:1}
+  .kick b{font-weight:500;opacity:.45}
+  .h{font-family:var(--serif);font-weight:500;color:var(--cream);line-height:1.08;letter-spacing:-.01em}
+  .h em,.it{font-style:italic}
+  .h .w{display:inline-block;will-change:transform,opacity,filter}
+  .it{font-family:var(--serif);font-weight:500;color:var(--cream);line-height:1.1}
+  .lab{font-family:var(--mono);font-weight:500;font-size:22px;letter-spacing:.22em;text-transform:uppercase;color:var(--sage);white-space:nowrap;line-height:1}
+  .co{white-space:nowrap}
+  .co .lab{margin-bottom:12px}
+  .co .it{font-size:36px;white-space:normal;width:250px}
+  .co.L{text-align:right}
+  #m1 .it,#m2 .it{width:auto;white-space:nowrap}
+  .cell{font-family:var(--serif);font-style:italic;font-weight:500;font-size:40px;color:var(--cream);line-height:1.1;width:260px;white-space:normal}
+  #cap{font-family:var(--sans);font-weight:400;font-size:40px;line-height:1.28;color:var(--cream);width:880px;text-align:center;text-wrap:balance;white-space:normal}
+  .anx{color:var(--anx)} .frz{color:var(--frz)} .ang{color:var(--ang)} .bal{color:var(--bal)}
+</style>
+<body>
+<div id="wrap"><div id="stage">
+  <svg id="g" viewBox="0 0 1080 1920">
+    <defs>
+      <filter id="glow" x="-200%" y="-200%" width="500%" height="500%"><feGaussianBlur stdDeviation="9"/></filter>
+      <filter id="fog" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur id="fogb" stdDeviation="0"/></filter>
+      <linearGradient id="band" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#D4A574"/><stop offset=".1" stop-color="#D4A574"/><stop offset=".4" stop-color="#C06C4D"/>
+        <stop offset=".68" stop-color="#7E9AA6"/><stop offset=".94" stop-color="#7FA77F"/><stop offset="1" stop-color="#7FA77F"/>
+      </linearGradient>
+    </defs>
+  </svg>
+  <!-- chapter kickers -->
+  <div class="t kick" id="k01"><b>{</b> 01 <b>}</b> - The question</div>
+  <div class="t kick" id="k02"><b>{</b> 02 <b>}</b> - A model, not a scan</div>
+  <div class="t kick" id="k03"><b>{</b> 03 <b>}</b> - The wandering nerve</div>
+  <div class="t kick" id="k04"><b>{</b> 04 <b>}</b> - The ladder</div>
+  <div class="t kick" id="k05"><b>{</b> 05 <b>}</b> - The top rung</div>
+  <div class="t kick" id="k06"><b>{</b> 06 <b>}</b> - The middle rung</div>
+  <div class="t kick" id="k07"><b>{</b> 07 <b>}</b> - The bottom rung</div>
+  <div class="t kick" id="k08"><b>{</b> 08 <b>}</b> - The window</div>
+  <div class="t kick" id="k09"><b>{</b> 09 <b>}</b> - How to spot it</div>
+  <div class="t kick" id="k10"><b>{</b> 10 <b>}</b> - Match the tool</div>
+  <div class="t kick" id="k11"><b>{</b> 11 <b>}</b> - The app</div>
+  <!-- s01 -->
+  <div class="t h" id="h1a" style="font-size:72px;white-space:nowrap">Your heart is pounding,</div>
+  <div class="t h" id="h1b" style="font-size:60px;white-space:nowrap"><em>and nothing is wrong.</em></div>
+  <div class="t h" id="h1c" style="font-size:64px;white-space:nowrap">Or you feel nothing at all,</div>
+  <div class="t h" id="h1d" style="font-size:52px;white-space:nowrap"><em>and you can't make yourself move.</em></div>
+  <div class="t h" id="h1e" style="font-size:88px;width:900px;text-align:center">Neither one is a <em>character flaw.</em></div>
+  <div class="t h" id="h1f" style="font-size:48px;width:720px;text-align:center;opacity:.9"><em>Both are your nervous system doing its job.</em></div>
+  <!-- s02 -->
+  <div class="t h" id="safe" style="font-size:136px;white-space:nowrap"><em>Am I safe?</em></div>
+  <div class="t lab" id="aware">Awareness</div>
+  <div class="t lab" id="neuro" style="color:var(--cream);font-size:26px">Neuroception</div>
+  <div class="t lab" id="porges">Stephen Porges</div>
+  <!-- s03-s04 -->
+  <div class="t h" id="pvt" style="font-size:76px;white-space:nowrap">Polyvagal <em>theory</em></div>
+  <div class="t lab" id="glossA">Vagus &middot; Latin</div><div class="t it" id="glossA2" style="font-size:64px">wandering</div>
+  <div class="t lab" id="glossB">Poly &middot; Greek</div><div class="t it" id="glossB2" style="font-size:64px">many</div>
+  <div class="t lab" id="lBrain">Brainstem</div><div class="t lab" id="lHeart">Heart</div>
+  <div class="t lab" id="lLungs">Lungs</div><div class="t lab" id="lGut">Gut</div>
+  <div class="t co L" id="lNew"><div class="lab">Newer branch</div><div class="it">face and heart</div></div>
+  <div class="t co" id="lOld"><div class="lab">Older branch</div><div class="it">gut</div></div>
+  <div class="t lab" id="lUp" style="color:var(--cream);font-size:24px">&uarr; Body to brain</div>
+  <div class="t lab" id="lDown" style="opacity:.6">&darr; Brain to body</div>
+  <!-- s05 ladder -->
+  <div class="t it" id="r0" style="font-size:60px">safe and social</div>
+  <div class="t it" id="r1" style="font-size:60px">mobilised</div><div class="t lab" id="r1b">Fight or flight</div>
+  <div class="t it" id="r2" style="font-size:60px">shut down</div>
+  <!-- s06-s08 rung headings -->
+  <div class="t lab" id="hd0" style="font-size:26px;color:var(--cream)"><span class="bal">Ventral vagal</span></div><div class="t it" id="hd0b" style="font-size:72px">safe and social</div>
+  <div class="t lab" id="hd1" style="font-size:26px;color:var(--cream)">Sympathetic</div><div class="t it" id="hd1b" style="font-size:72px">mobilised</div>
+  <div class="t lab" id="hd2" style="font-size:26px;color:var(--cream)"><span class="frz">Dorsal vagal</span></div><div class="t it" id="hd2b" style="font-size:72px">shut down</div>
+  <div class="t lab" id="strip">Breath &middot; illustrative</div>
+  <!-- s07 two faces + stress cycle -->
+  <div class="t h" id="flight" style="font-size:112px;white-space:nowrap"><em>Flight</em></div>
+  <div class="t lab" id="flightL" style="font-size:26px;color:var(--cream)"><span id="anxW">Anxious</span></div>
+  <div class="t it" id="fl0" style="font-size:44px">restless</div><div class="t it" id="fl1" style="font-size:44px">wired</div><div class="t it" id="fl2" style="font-size:40px">scanning for the exit</div>
+  <div class="t h" id="fight" style="font-size:112px;white-space:nowrap"><em>Fight</em></div>
+  <div class="t lab" id="fightL" style="font-size:26px;color:var(--cream)"><span id="angW">Angry</span></div>
+  <div class="t it" id="fi0" style="font-size:44px">heat</div><div class="t it" id="fi1" style="font-size:44px">pressure</div><div class="t it" id="fi2" style="font-size:44px">a short fuse</div>
+  <div class="t lab" id="scT" style="color:var(--cream)">The stress cycle</div>
+  <div class="t lab" id="scThreat">Threat</div><div class="t lab" id="scDone">Completed</div>
+  <div class="t lab" id="scStuck" style="color:var(--cream)">Stuck - where most of us live</div>
+  <!-- s08 -->
+  <div class="t h" id="lazy" style="font-size:84px;white-space:nowrap">This isn't laziness.</div>
+  <div class="t h" id="prot" style="font-size:84px;white-space:nowrap"><em>It's protection.</em></div>
+  <div class="t lab" id="swOff">Full switch-off</div>
+  <div class="t lab" id="brOff" style="color:var(--cream)">Braced underneath</div>
+  <div class="t lab" id="frzR" style="font-size:26px"><span class="frz">Freeze</span></div>
+  <!-- s10 window -->
+  <div class="t h" id="wotH" style="font-size:72px;white-space:nowrap">The window of <em>tolerance</em></div>
+  <div class="t lab" id="siegel">Dan Siegel</div>
+  <div class="t lab" id="wHyper" style="color:var(--cream)">Hyperarousal</div>
+  <div class="t lab" id="wIn" style="color:var(--cream)">Window</div>
+  <div class="t lab" id="wHypo" style="color:var(--cream)">Hypoarousal</div>
+  <div class="t lab" id="wR0">Mobilised</div><div class="t lab" id="wR1">Safe and social</div><div class="t lab" id="wR2">Shut down</div>
+  <div class="t it" id="wMuch" style="font-size:44px">too much charge</div>
+  <div class="t it" id="wLittle" style="font-size:44px">too little</div>
+  <!-- s11 table -->
+  <div class="t h" id="threeH" style="font-size:72px;white-space:nowrap">Check <em>three things.</em></div>
+  <div class="t lab" id="cB" style="color:var(--cream);font-size:24px">Breath</div>
+  <div class="t lab" id="cE" style="color:var(--cream);font-size:24px">Energy</div>
+  <div class="t lab" id="cC" style="color:var(--cream);font-size:24px">Connection</div>
+  <div class="t lab" id="rw0">Safe and social</div><div class="t lab" id="rw1">Mobilised</div><div class="t lab" id="rw2">Shut down</div>
+  <div class="t cell" id="t00">slow and low</div><div class="t cell" id="t10">fast and high</div><div class="t cell" id="t20">barely there</div>
+  <div class="t cell" id="t01">steady</div><div class="t cell" id="t11">buzzing</div><div class="t cell" id="t21">drained</div>
+  <div class="t cell" id="t02">takes in a face</div><div class="t cell" id="t12">too loud</div><div class="t cell" id="t22">too far away</div>
+  <div class="t h" id="guess" style="font-size:48px;white-space:nowrap"><em>A rough guess is enough.</em></div>
+  <!-- s12 -->
+  <div class="t h" id="fitH" style="font-size:64px;width:720px">One exercise can't fit <em>every state.</em></div>
+  <div class="t co" id="m1"><div class="lab" style="color:var(--cream)">Activated</div><div class="it" id="m1a">a longer exhale,</div><div class="it" id="m1b">movement</div></div>
+  <div class="t co" id="m2"><div class="lab" style="color:var(--cream)">Shut down</div><div class="it" id="m2a">a gentle lift first:</div><div class="it" id="m2b">a rhythm to follow</div></div>
+  <div class="t lab" id="under">Further under</div>
+  <!-- s13 app -->
+  <div class="t lab" id="ap0" style="font-size:26px;color:var(--cream)"><span id="apBal">Balanced</span></div>
+  <div class="t lab" id="ap1" style="font-size:26px;color:var(--cream)"><span id="apAnx">Anxious</span> &middot; <span id="apAng">Angry</span></div>
+  <div class="t lab" id="ap2" style="font-size:26px;color:var(--cream)"><span id="apFrz">Freeze</span></div>
+  <div class="t h" id="whereH" style="font-size:64px;white-space:nowrap">Where are you <em>right now?</em></div>
+  <div class="t lab" id="touch">Touch the band - anywhere is true</div>
+  <div class="t lab" id="tt0" style="color:var(--cream);font-size:24px"><span class="anx">Anxious</span> &middot; The Sigh</div>
+  <div class="t lab" id="tt1" style="color:var(--cream);font-size:24px"><span class="ang">Angry</span> &middot; Chaos Release</div>
+  <div class="t lab" id="tt2" style="color:var(--cream);font-size:24px"><span class="frz">Freeze</span> &middot; Pendulum</div>
+  <div class="t lab" id="tt3" style="color:var(--cream);font-size:24px"><span class="bal">Balanced</span> &middot; Regulate Breath</div>
+  <div class="t lab" id="sIn1" style="color:var(--cream)">In</div><div class="t lab" id="sIn2" style="color:var(--cream)">In</div><div class="t lab" id="sOut" style="color:var(--cream)">Out</div>
+  <div class="t lab" id="bIn" style="color:var(--cream);opacity:.3">In 4</div><div class="t lab" id="bOut" style="color:var(--cream)">Out 8</div>
+  <div class="t lab" id="shakeL" style="color:var(--cream)">Shake it out</div>
+  <!-- s14 close -->
+  <div class="t h" id="argue" style="font-size:66px;white-space:nowrap">You can't argue with a state.</div>
+  <div class="t h" id="work" style="font-size:50px;white-space:nowrap;opacity:.9"><em>But you can work with your body.</em></div>
+  <div class="t h" id="wNotice">Notice</div><div class="t h" id="wName">Name</div><div class="t h" id="wMatch">Match</div>
+  <div id="wm"></div>
+  <div class="t tag" id="tag">Not meditation. Regulation.</div>
+  <div class="t cta" id="url">getregulate.app</div>
+  <!-- captions -->
+  <div class="t" id="cap"></div>
+  <svg id="gp" viewBox="0 0 1080 1920"></svg>
+</div></div>
+<div id="bar"><button id="play">Play</button><span id="tc">0.00s</span><input id="scrub" type="range" min="0" step="1" value="0"><span>regulate &middot; polyvagal explainer &middot; 1080&times;1920 &middot; 60fps</span></div>
+<audio id="snd" preload="auto" src="../workspace/regulate-polyvagal/final/preview.m4a"></audio>
+<script src="lib/timing-kit.js"></script>
+<script src="regulate-polyvagal.vo.js"></script>
+<script src="regulate-polyvagal.timing.js"></script>
+<script src="lib/reel-kit.js"></script>
+<script>
+const { E, clamp, lerp, P, smooth, kf, fbm, hash, $, S, A, show, place, riseV, rise, splitWords, headline, path } = Reel;
+const T = TIMING, c = T.c;
+const C = { cream: '#F2F0E9', white: '#FFFFFF', ground: '#0a1812', anx: '#D4A574', frz: '#7E9AA6', ang: '#C06C4D', bal: '#7FA77F', sage: '#8F9E8B' };
+const D2R = Math.PI / 180;
+const G = (attrs = {}, parent) => S('g', attrs, parent);
+const RUNG = [560, 860, 1160], RAIL_T = 440, RAIL_B = 1280;
+const SLOT = [500, 640, 780, 920, 1060];
+const fadeWin = (t, a, b, fin = 500, fout = 500) => E.HOUSE(P(t, a, fin)) * (1 - E.HOUSE(P(t, b, fout)));
+function drawPath(el, len, u, o) { A(el, { 'stroke-dasharray': `${len} ${len + 2}`, 'stroke-dashoffset': (len * (1 - clamp(u))).toFixed(2), 'stroke-opacity': u > 0 ? o : 0 }); }
+const arcLift = (a, b, u, h) => [lerp(a[0], b[0], u), lerp(a[1], b[1], u) - Math.sin(Math.PI * u) * h];
+
+// ------------------------------------------------------------------ geometry: the body (one line)
+// right half, top of head -> right hip; the left half is its mirror, drawn from the left hip up.
+const BODY_R = [[0, 12], [36, 12, 62, 44, 62, 88], [62, 128, 44, 158, 26, 166], [26, 188, 28, 200, 28, 210], [60, 222, 118, 230, 150, 246],
+  [172, 258, 180, 290, 180, 330], [182, 420, 190, 540, 194, 640], [196, 676, 186, 694, 172, 690], [164, 640, 158, 520, 150, 400],
+  [140, 380, 134, 384, 132, 390], [126, 500, 118, 600, 128, 690], [134, 720, 140, 740, 142, 780]];
+function bodyD() {
+  const segs = []; let p = BODY_R[0];
+  for (let i = 1; i < BODY_R.length; i++) { const s = BODY_R[i]; segs.push([p, [s[0], s[1]], [s[2], s[3]], [s[4], s[5]]]); p = [s[4], s[5]]; }
+  const m = (q) => [-q[0], q[1]];
+  const left = segs.slice().reverse().map(([p0, c1, c2, p3]) => [m(p3), m(c2), m(c1), m(p0)]);
+  const all = left.concat(segs);
+  let d = `M${all[0][0][0]} ${all[0][0][1]}`;
+  for (const [, c1, c2, p3] of all) d += `C${c1[0]} ${c1[1]} ${c2[0]} ${c2[1]} ${p3[0]} ${p3[1]}`;
+  return d;
+}
+const ANCH = { head: [0, 34], eyes: [0, 82], face: [0, 104], jaw: [40, 146], brainstem: [0, 152], throat: [0, 196], chest: [0, 300], heart: [30, 322],
+  lungL: [-64, 318], lungR: [64, 318], shoulderR: [150, 246], armL: [-184, 470], armR: [184, 470], handR: [184, 672], belly: [0, 520], gut: [-18, 588] };
+const NERVE_D = 'M4 152C16 190 -6 222 8 262C18 298 32 302 24 340C16 380 -12 400 -6 440C0 480 20 500 8 540C0 566 -14 574 -18 588';
+const NERVE_V = 'M-14 96C-22 118 -4 138 -4 156C-6 190 -18 222 -8 262C0 294 18 304 30 322';
+const TWIG_L = 'M14 296C-10 300 -34 306 -60 316', TWIG_R = 'M22 300C36 300 50 306 62 316';
+
+function bodyXf(t) {
+  const m = E.HOUSE(P(t, c.ventral - 300, 1000));
+  let cx = lerp(540, 590, m), s = lerp(1, 0.92, m), top = 470;
+  top += 26 * E.SETTLE(P(t, c.dorsal + 300, 1800)) * (1 - E.HOUSE(P(t, c.window, 800)));
+  const far = E.SETTLE(P(t, c.far, 1800)) * (1 - E.HOUSE(P(t, c.window, 800)));
+  const s0 = s; s *= 1 - 0.08 * far; top += 780 * (s0 - s) * 0.5;
+  // breathing and tremble by state
+  let br = 0, jx = 0;
+  if (t >= c.ventral && t < c.symp) br = 0.006 * Math.sin((2 * Math.PI * (t - c.ventral)) / 5000);
+  else if (t >= c.symp && t < c.dorsal) { br = 0.005 * Math.sin((2 * Math.PI * (t - c.symp)) / 1500); jx = 1.6 * fbm(t / 28, 11); }
+  else if (t >= c.dorsal) br = 0.002 * Math.sin((2 * Math.PI * (t - c.dorsal)) / 7000);
+  return { cx: cx + jx, top, s, sy: s * (1 + br) };
+}
+const toW = (xf, p) => [xf.cx + p[0] * xf.s, xf.top + p[1] * xf.sy];
+function bodyOpacity(t) {
+  const draw = t >= c.theory ? 0.55 : 0;
+  let o = draw * (1 - E.HOUSE(P(t, c.ladder, 900)));
+  o += 0.55 * E.HOUSE(P(t, c.ventral + 200, 800)) * (1 - E.HOUSE(P(t, c.settles - 400, 600)));
+  o *= t >= c.faces && t < c.dorsal ? 1 - 0.7 * E.HOUSE(P(t, c.faces, 600)) : 1;
+  o += 0.42 * E.HOUSE(P(t, c.dorsal + 100, 1200)) * (1 - E.HOUSE(P(t, c.window - 200, 800)));
+  if (t >= c.dorsal) o *= 1 - 0.35 * E.HOUSE(P(t, c.far, 1500)) - 0.25 * E.HOUSE(P(t, c.lazy, 600));
+  return Math.max(0, o);
+}
+
+// ------------------------------------------------------------------ elements
+let el = {}, WM, R = 11, FS = 120, NV = {}, PART = [], CO = {}, W = {}, CAPS = [], capIdx = -2;
+function init() {
+  const g = $('g'), gp = $('gp');
+  // layers (bottom -> top)
+  el.gStrip = G({}, g); el.gHook = G({}, g); el.gBody = G({}, g); el.gTun = G({}, g); el.gNerve = G({}, g); el.gFig = G({}, g);
+  el.gSpine = G({}, g); el.gTools = G({}, g); el.gLead = G({}, g);
+  // s01 hook traces
+  el.trA = S('path', { fill: 'none', stroke: C.cream, 'stroke-width': 3, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' }, el.gHook);
+  el.trB = S('path', { fill: 'none', stroke: C.cream, 'stroke-width': 3, 'stroke-linecap': 'round' }, el.gHook);
+  // s02 sonar + awareness line
+  el.rings = Array.from({ length: 10 }, () => S('circle', { fill: 'none', stroke: C.cream, 'stroke-width': 2 }, el.gHook));
+  el.aware = S('line', { x1: 96, x2: 984, y1: 800, y2: 800, stroke: C.cream, 'stroke-width': 2, 'stroke-dasharray': '6 10' }, el.gHook);
+  // body + nerve share one transform group
+  el.bodyG = G({}, el.gBody);
+  el.body = S('path', { d: bodyD(), fill: 'none', stroke: C.cream, 'stroke-width': 2.5, 'vector-effect': 'non-scaling-stroke', 'stroke-linejoin': 'round' }, el.bodyG);
+  el.bodyLen = el.body.getTotalLength();
+  el.nerveG = G({}, el.gNerve);
+  for (const [k, d] of [['D', NERVE_D], ['V', NERVE_V], ['tl', TWIG_L], ['tr', TWIG_R]]) {
+    const p = S('path', { d, fill: 'none', stroke: C.cream, 'stroke-width': 3, 'vector-effect': 'non-scaling-stroke', 'stroke-linecap': 'round' }, el.nerveG);
+    NV[k] = { el: p, len: p.getTotalLength() };
+  }
+  NV.Dpts = Array.from({ length: 121 }, (_, i) => { const q = NV.D.el.getPointAtLength((NV.D.len * i) / 120); return [q.x, q.y]; });
+  NV.Vpts = Array.from({ length: 121 }, (_, i) => { const q = NV.V.el.getPointAtLength((NV.V.len * i) / 120); return [q.x, q.y]; });
+  PART = Array.from({ length: 34 }, (_, i) => S('circle', { fill: C.cream, r: 3.6 }, el.gNerve));
+  // tunnel vision + racing thoughts + heart pulse
+  el.tunnel = S('circle', { fill: 'none', stroke: C.ground, 'stroke-width': 1600 }, el.gTun);
+  el.race = Array.from({ length: 6 }, () => S('path', { fill: 'none', stroke: C.cream, 'stroke-width': 2, 'stroke-linecap': 'round' }, el.gTun));
+  el.pulse = Array.from({ length: 3 }, () => S('circle', { fill: 'none', stroke: C.cream, 'stroke-width': 2 }, el.gTun));
+  // breath strip (s06-s08)
+  el.stripP = S('path', { fill: 'none', stroke: C.cream, 'stroke-width': 3, 'stroke-linejoin': 'round' }, el.gStrip);
+  el.stripB = S('line', { x1: 190, x2: 984, stroke: C.cream, 'stroke-width': 1.5, 'stroke-dasharray': '2 8' }, el.gStrip);
+  el.stripPen = S('circle', { fill: C.cream, r: 5 }, el.gStrip);
+  // stress cycle figure (s07)
+  el.scBase = S('line', { x1: 190, x2: 984, y1: 1040, y2: 1040, stroke: C.cream, 'stroke-width': 1.5 }, el.gFig);
+  el.scA = S('path', { fill: 'none', stroke: C.cream, 'stroke-width': 3.5, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' }, el.gFig);
+  el.scDone = S('path', { fill: 'none', stroke: C.cream, 'stroke-width': 3, 'stroke-dasharray': '10 10' }, el.gFig);
+  el.scStuck = S('path', { fill: 'none', stroke: C.cream, 'stroke-width': 3.5, 'stroke-linejoin': 'round' }, el.gFig);
+  el.scPen = S('circle', { fill: C.cream, r: 6 }, el.gFig);
+  // window (s10)
+  el.wBand = S('rect', { x: 190, width: 794, fill: C.cream }, el.gFig);
+  el.wTop = S('line', { x1: 190, x2: 984, stroke: C.cream, 'stroke-width': 2, 'stroke-dasharray': '8 10' }, el.gFig);
+  el.wBot = S('line', { x1: 190, x2: 984, stroke: C.cream, 'stroke-width': 2, 'stroke-dasharray': '8 10' }, el.gFig);
+  el.wWave = S('path', { fill: 'none', stroke: C.cream, 'stroke-width': 3.5, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' }, el.gFig);
+  // spine / ladder / band
+  el.band = S('rect', { fill: 'url(#band)' }, el.gSpine);
+  el.railL = S('path', { fill: 'none', stroke: C.cream, 'stroke-width': 3, 'stroke-linecap': 'round' }, el.gSpine);
+  el.railR = S('path', { fill: 'none', stroke: C.cream, 'stroke-width': 3, 'stroke-linecap': 'round' }, el.gSpine);
+  el.rungs = RUNG.map(() => S('line', { stroke: C.cream, 'stroke-width': 3, 'stroke-linecap': 'round' }, el.gSpine));
+  el.ext = RUNG.map((y) => S('line', { x1: 150, y1: y, y2: y, stroke: C.cream, 'stroke-width': 1.5 }, el.gSpine));
+  el.arr = [0, 1].map(() => ({ p: S('path', { fill: 'none', stroke: C.cream, 'stroke-width': 3, 'stroke-linecap': 'round' }, el.gSpine), h: S('path', { fill: 'none', stroke: C.cream, 'stroke-width': 3, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, el.gSpine) }));
+  // tools (s13)
+  el.sigh = S('path', { fill: 'none', stroke: C.cream, 'stroke-width': 3.5, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, el.gTools);
+  el.sighBase = S('line', { x1: 440, x2: 960, y1: 1060, y2: 1060, stroke: C.cream, 'stroke-width': 1.5, 'stroke-dasharray': '2 8' }, el.gTools);
+  el.sighPen = S('circle', { fill: C.cream, r: 6 }, el.gTools);
+  el.box = S('rect', { rx: 28, fill: 'none', stroke: C.cream, 'stroke-width': 2 }, el.gTools);
+  el.chaos = Array.from({ length: 34 }, () => S('circle', { fill: C.cream }, el.gTools));
+  el.pArc = [0, 1].map(() => S('path', { fill: 'none', stroke: C.cream, 'stroke-width': 5, 'stroke-linecap': 'round' }, el.gTools));
+  el.pArm = S('line', { stroke: C.cream, 'stroke-width': 3, 'stroke-linecap': 'round' }, el.gTools);
+  el.pPiv = S('circle', { fill: C.cream, r: 7 }, el.gTools);
+  el.pBob = S('circle', { fill: C.cream, r: 15 }, el.gTools);
+  el.bTrack = S('rect', { x: 660, y: 620, width: 80, height: 540, rx: 40, fill: C.cream }, el.gTools);
+  el.bFill = S('rect', { x: 660, width: 80, rx: 40, fill: C.bal }, el.gTools);
+  el.bTicks = Array.from({ length: 12 }, () => S('line', { stroke: C.cream, 'stroke-width': 3, 'stroke-linecap': 'round' }, el.gTools));
+  // the point (top layer) + the check-in ring handle
+  el.ring = S('circle', { fill: 'none', stroke: C.cream, 'stroke-width': 3, r: 44 }, gp);
+  el.smear = S('path', { fill: 'none', stroke: C.white, 'stroke-linecap': 'round' }, gp);
+  el.glow = S('circle', { fill: C.white, filter: 'url(#glow)' }, gp);
+  el.pt = S('circle', { fill: C.white }, gp);
+
+  // callouts: [id, mono, italic, anchor, side(-1 L / 1 R), slot, at, out]
+  const CALL = [
+    ['think', 'Mind', 'think, connect, rest', 'head', -1, 0, c.think, c.symp - 200],
+    ['face', 'Face', 'moves', 'face', 1, 0, c.face, c.symp - 200],
+    ['voice6', 'Voice', 'has melody', 'throat', 1, 1, c.voice6, c.symp - 200],
+    ['breath6', 'Breath', 'slow and low', 'belly', 1, 3, c.breath6, c.symp - 200],
+    ['stress6', 'Stress', 'felt, not in charge', 'chest', -1, 2, c.stress6, c.symp - 200],
+    ['heart7', 'Heart', 'speeds up', 'heart', -1, 2, c.heart7, c.faces - 100],
+    ['breath7', 'Breath', 'high and fast', 'chest', 1, 2, c.breath7, c.faces - 100],
+    ['muscles', 'Muscles', 'brace', 'shoulderR', 1, 0, c.muscles, c.faces - 100],
+    ['jaw', 'Jaw', 'sets', 'jaw', -1, 1, c.jaw, c.faces - 100],
+    ['hands', 'Hands', 'cold or clammy', 'handR', 1, 4, c.hands, c.faces - 100],
+    ['vision', 'Vision', 'narrows', 'eyes', 1, 1, c.vision, c.faces - 100],
+    ['thoughts', 'Thoughts', 'race', 'head', -1, 0, c.thoughts, c.faces - 100],
+    ['drops', 'Energy', 'drops', 'chest', 1, 2, c.drops, c.lazy - 100],
+    ['limbs', 'Limbs', 'heavy', 'armL', -1, 3, c.limbs, c.lazy - 100],
+    ['flat', 'Voice', 'flat', 'throat', 1, 1, c.flat, c.lazy - 100],
+    ['far', 'The world', 'far away, foggy, numb', 'head', -1, 0, c.far, c.lazy - 100],
+  ];
+  const stage = $('stage');
+  for (const [id, mono, it, anchor, side, slot, at, out] of CALL) {
+    const d = document.createElement('div'); d.className = 't co' + (side < 0 ? ' L' : ''); d.innerHTML = `<div class="lab">${mono}</div><div class="it">${it}</div>`;
+    stage.insertBefore(d, $('cap'));
+    CO[id] = { d, anchor, side, y: SLOT[slot], at, out, ln: S('line', { stroke: C.cream, 'stroke-width': 1.5 }, el.gLead), dot: S('circle', { fill: C.cream, r: 4.5 }, el.gLead) };
+  }
+  // words that rise word-by-word
+  for (const id of ['h1a', 'h1b', 'h1c', 'h1d', 'h1e', 'h1f', 'safe', 'pvt', 'lazy', 'prot', 'wotH', 'threeH', 'guess', 'fitH', 'whereH', 'argue', 'work']) W[id] = splitWords($(id));
+  // the close: "Notice." "Name." "Match." set at the size where Playfair's "." is the point
+  WM = Reel.wordmark($('wm'), { dotPx: 22, yDot: 960 }); R = WM.R; FS = WM.FS;
+  const cv = document.createElement('canvas').getContext('2d'); cv.font = `500 ${FS}px "Playfair Display"`;
+  const dot = cv.measureText('.'), dcx = (dot.actualBoundingBoxRight - dot.actualBoundingBoxLeft) / 2, dcy = (dot.actualBoundingBoxDescent - dot.actualBoundingBoxAscent) / 2;
+  const fm = cv.measureText('N');
+  el.words = [['wNotice', 'Notice', 760], ['wName', 'Name', 920], ['wMatch', 'Match', 1080]].map(([id, w, yDot]) => {
+    const e = $(id); e.style.fontSize = FS + 'px'; e.style.lineHeight = '1'; e.style.whiteSpace = 'nowrap';
+    const full = cv.measureText(w + '.').width, pre = cv.measureText(w).width, x0 = 540 - full / 2;
+    const baseY = yDot - dcy, top = baseY - ((FS - (fm.fontBoundingBoxAscent + fm.fontBoundingBoxDescent)) / 2 + fm.fontBoundingBoxAscent);
+    return { e, x0, top, dot: [x0 + pre + dcx, yDot] };
+  });
+  // captions: phrase chunks from the narration's word timings
+  let cur = null;
+  const flush = (next) => { if (cur) { cur.e = next ? Math.min(next, cur.last + 700) : cur.last + 500; CAPS.push(cur); } cur = null; };
+  T.words.forEach((w, i) => {
+    const nx = T.words[i + 1];
+    if (!cur) cur = { s: w.s - 90, text: '', seg: w.seg };
+    cur.text += (cur.text ? ' ' : '') + w.w; cur.last = w.e;
+    const end = /[.?!]$/.test(w.w) || (cur.text.length >= 34 && /[,:]$/.test(w.w)) || cur.text.length >= 58 || !nx || nx.seg !== w.seg;
+    if (end) { const s = nx ? nx.s - 90 : null; flush(s); }
+  });
+  const OFF = [[0, c.q - 50], [c.safe - 150, c.safe + 800], [c.where - 150, c.where + 900], [c.close - 150, T.dur]];
+  CAPS = CAPS.filter((k) => !OFF.some(([a, b]) => k.s + 90 >= a && k.s + 90 < b));
+}
+
+// ------------------------------------------------------------------ the point, leg by leg
+const hookA = { x0: 96, x1: 984, y: 760, t0: c.pound, t1: c.numb - 100 };
+function ecg(x) {
+  const u = (x - hookA.x0) % 150, k = Math.floor((x - hookA.x0) / 150), amp = 1 + 0.12 * hash(k * 7 + 3);
+  let y = 0;
+  if (u > 56 && u <= 68) y = -170 * amp * ((u - 56) / 12);
+  else if (u > 68 && u <= 80) y = lerp(-170 * amp, 64, (u - 68) / 12);
+  else if (u > 80 && u <= 90) y = lerp(64, 0, (u - 80) / 10);
+  else if (u > 106 && u <= 138) y = -22 * Math.sin((Math.PI * (u - 106)) / 32);
+  return hookA.y + y;
+}
+const penA = (t) => { const x = lerp(hookA.x0, hookA.x1, P(t, hookA.t0, hookA.t1 - hookA.t0)); return [x, ecg(x)]; };
+const trBy = (x) => 1260 + 10 * Math.sin((x - 96) / 34) * Math.exp(-(x - 96) / 220) + (x - 96) * 0.07;
+const penB = (t) => { const x = 96 + 470 * E.SETTLE(P(t, c.numb + 150, c.flaw + 900 - c.numb)); return [x, trBy(x)]; };
+const xfNerve = () => bodyXf(c.vagus);
+const along = (pts, u) => { const f = clamp(u) * (pts.length - 1), i = Math.min(pts.length - 2, Math.floor(f)); return [lerp(pts[i][0], pts[i + 1][0], f - i), lerp(pts[i][1], pts[i + 1][1], f - i)]; };
+const dDraw = (t) => E.INOUT(P(t, c.runs, c.gut + 500 - c.runs));
+const nerveW = (pts, u) => toW(xfNerve(), along(pts, u));
+const ladderPt = (t) => [540, kf(t, [[c.top, RUNG[0]], [c.rung1, RUNG[0]], [c.rung1 + 260, RUNG[1], E.SNAP], [c.rung2, RUNG[1]], [c.rung2 + 260, RUNG[2], E.SNAP]])];
+const spineX = (t) => kf(t, [[c.ventral - 300, 540], [c.ventral + 500, 116]]);
+// window wave: a record, a function of its own sample time
+const wx = (t) => 190 + 794 * P(t, c.inside - 300, c.notFixed + 300 - c.inside);
+function wy(t) {
+  const base = kf(t, [[c.inside, 880], [c.above - 150, 880], [c.above + 700, 640], [c.belowW - 200, 640], [c.belowW + 800, 1120], [c.notFixed - 800, 1120], [c.notFixed + 200, 880]]);
+  const inW = 1 - smooth(P(t, c.above - 300, 600)) + smooth(P(t, c.notFixed - 300, 500));
+  const hi = smooth(P(t, c.above + 200, 400)) * (1 - smooth(P(t, c.belowW - 300, 400)));
+  const lo = smooth(P(t, c.belowW + 300, 400)) * (1 - smooth(P(t, c.notFixed - 700, 400)));
+  return base + clamp(inW) * 40 * Math.sin((2 * Math.PI * (t - c.inside)) / 1500) + hi * 34 * (fbm(t / 70, 5) - 0.1) + lo * 4 * Math.sin(t / 900);
+}
+const cursorY = (t) => {
+  const rows = [[c.b0, 0], [c.b1, 1], [c.b2, 2], [c.e0, 0], [c.e1, 1], [c.e2, 2], [c.k0, 0], [c.k1, 1], [c.k2, 2]];
+  const keys = [[c.spot, RUNG[1]]]; for (const [at, r] of rows) { keys.push([at - 1, keys[keys.length - 1][1]]); keys.push([at + 380, RUNG[r], E.SETTLE]); }
+  let y = kf(t, keys);
+  const wob = smooth(P(t, c.sure, 400)) * (1 - smooth(P(t, c.guess, 900)));
+  y = lerp(y, 860 + 230 * (fbm(t / 420, 9) - 0.1), wob);
+  return y;
+};
+const A1 = [[116, 860], [340, 710], [116, 560]], A2 = [[116, 1160], [340, 1010], [116, 860]];
+const qb = (Q, u) => [(1 - u) ** 2 * Q[0][0] + 2 * (1 - u) * u * Q[1][0] + u * u * Q[2][0], (1 - u) ** 2 * Q[0][1] + 2 * (1 - u) * u * Q[1][1] + u * u * Q[2][1]];
+function matchPt(t) {
+  if (t < c.shutdown) { const u = E.INOUT(P(t, c.exhale + 200, c.shutdown - c.exhale - 700)); return qb(A1, u); }
+  const u = E.INOUT(P(t, c.lift + 300, 2200));
+  const sink = 100 * E.EASE_IN(P(t, c.under, 1400)) * (1 - E.SETTLE(P(t, c.lift, 700)));
+  const drop = kf(t, [[c.shutdown, RUNG[0]], [c.shutdown + 650, RUNG[2], E.SETTLE]]);
+  return u > 0 ? qb(A2, u) : [116, drop + sink];
+}
+const BAND = { x: 200, w: 100, top: RAIL_T, h: RAIL_B - RAIL_T };
+const handleV = (t) => kf(t, [[c.where, 0.4], [c.tSigh, 0.4], [c.tSigh + 700, 0.1, E.SETTLE], [c.tChaos, 0.1], [c.tChaos + 700, 0.4, E.SETTLE], [c.tPend, 0.4], [c.tPend + 700, 0.68, E.SETTLE], [c.tBreath, 0.68], [c.tBreath + 700, 0.94, E.SETTLE]]);
+const handlePt = (t) => [BAND.x + BAND.w / 2, BAND.top + BAND.h * handleV(t)];
+
+const LEGS = [
+  [0, 0, penA],
+  [c.numb - 60, 380, penB, 60],
+  [c.q - 200, 1000, () => [540, 1000], 120],
+  [c.theory + 300, 1600, () => toW(bodyXf(c.theory), ANCH.brainstem), 80],
+  [c.runs - 100, 400, (t) => nerveW(NV.Dpts, dDraw(t)), 0],
+  [c.traffic + 300, 500, (t) => nerveW(NV.Dpts, 1 - E.INOUT(P(t, c.traffic + 800, c.bodyFirst - c.traffic - 400))), 0],
+  [c.top - 300, 900, ladderPt, 60],
+  [c.ventral - 300, 900, (t) => [spineX(t), RUNG[0]], 80],
+  [c.symp - 100, 420, () => [116, RUNG[1]], 0, E.SNAP],
+  [c.dorsal - 100, 1100, () => [116, RUNG[2]], 0, E.SETTLE],
+  [c.inside - 700, 700, (t) => [wx(t), wy(t)], 60],
+  [c.spot + 200, 1000, (t) => [116, cursorY(t)], 60],
+  [c.activated - 200, 700, matchPt, 40],
+  [c.oneQ + 200, 1100, handlePt, 0],
+  [c.close + 200, 1000, () => el.words[0].dot, 60],
+  [c.name - 120, 460, () => el.words[1].dot, 40],
+  [c.matchT - 120, 460, () => el.words[2].dot, 40],
+  [T.glide[0], T.glide[1] - T.glide[0], () => [WM.xF, WM.yF], 90],
+];
+function pointAt(t) {
+  let i = 0; while (i + 1 < LEGS.length && t >= LEGS[i + 1][0]) i++;
+  const [t0, g, fn, lift = 0, ease = E.HOUSE] = LEGS[i];
+  const p = fn(t);
+  if (i === 0 || t >= t0 + g) return p;
+  const prev = LEGS[i - 1][2](t0);
+  return arcLift(prev, p, ease(P(t, t0, g)), lift);
+}
+
+// ------------------------------------------------------------------ render helpers
+const KICKS = [['k01', c.q], ['k02', c.model], ['k03', c.vagus], ['k04', c.ladder], ['k05', c.ventral], ['k06', c.symp], ['k07', c.dorsal], ['k08', c.window], ['k09', c.spot], ['k10', c.match], ['k11', c.app]];
+function kickers(t) {
+  KICKS.forEach(([id, at], i) => { const nx = i + 1 < KICKS.length ? KICKS[i + 1][1] : c.close; rise($(id), t, 96, 236, at + 150, nx - 50, { dy: 16, blur: 6, outDur: 360 }); });
+}
+function callouts(t) {
+  for (const k in CO) {
+    const o = CO[k], xf = bodyXf(t), a = toW(xf, ANCH[o.anchor]);
+    const r = riseV(t, o.at, o.out, { dur: 520, dy: 18, blur: 6, outDur: 420, outDy: -12 });
+    place(o.d, o.side < 0 ? 400 : 780, o.y, r.o, { dy: r.dy, blur: r.blur, ax: o.side < 0 ? 1 : 0 });
+    const lu = E.SETTLE(P(t, o.at, 460)), lo = 1 - E.HOUSE(P(t, o.out, 380));
+    const ex = o.side < 0 ? 414 : 766, ey = o.y + 11;
+    A(o.ln, { x1: a[0], y1: a[1], x2: lerp(a[0], ex, lu), y2: lerp(a[1], ey, lu), 'stroke-opacity': t > o.at ? 0.38 * lo : 0 });
+    A(o.dot, { cx: a[0], cy: a[1], 'fill-opacity': t > o.at ? 0.9 * lo * smooth(P(t, o.at, 200)) : 0 });
+  }
+}
+function railPts(t, side) {
+  // nerve -> straight rails (s05), rails slide to the spine (s06), then out to the band (s13)
+  const m = E.INOUT(P(t, c.ladder + 100, 1500));
+  const xs = side < 0 ? kf(t, [[c.ventral - 300, 480], [c.ventral + 500, 96], [c.oneQ, 96], [c.oneQ + 1000, BAND.x + 3]]) : kf(t, [[c.ventral - 300, 600], [c.ventral + 500, 136], [c.oneQ, 136], [c.oneQ + 1000, BAND.x + BAND.w - 3]]);
+  const pts = side < 0 ? NV.Vpts : NV.Dpts, xf = xfNerve(), out = [];
+  for (let i = 0; i <= 40; i++) {
+    const n = toW(xf, along(pts, i / 40)), y = lerp(RAIL_T, RAIL_B, i / 40);
+    out.push([lerp(n[0], xs, m), lerp(n[1], y, m)]);
+  }
+  return out;
+}
+function stripY(ts) {
+  // the breath strip's record: a pure function of the sample's own time
+  const w = (a, d = 700) => smooth(P(ts, a - d / 2, d));
+  const vent = 1 - w(c.symp), symp = w(c.symp) * (1 - w(c.dorsal, 1400)), dors = w(c.dorsal, 1400);
+  const off = w(c.switchOff), braced = w(c.braced, 400);
+  let y = vent * 34 * Math.sin((2 * Math.PI * (ts - c.ventral)) / 5000);
+  y += symp * (-16 + 22 * Math.sin((2 * Math.PI * ts) / 1400) + 7 * (fbm(ts / 60, 3) - 0.1));
+  const dAmp = lerp(7, 1.2, off);
+  y += dors * (12 + dAmp * Math.sin((2 * Math.PI * ts) / 7000) + braced * 7 * Math.sin(ts / 14) * (0.6 + 0.4 * fbm(ts / 50, 4)));
+  return 1320 + y;
+}
+const tool = (t, a, b) => fadeWin(t, a, b, 450, 420);
+
+// ------------------------------------------------------------------ render
+function render(t) {
+  kickers(t);
+  // ---------------- s01 hook
+  const hookO = 1 - E.HOUSE(P(t, c.q - 700, 800)), hookDim = lerp(1, 0.28, E.HOUSE(P(t, c.flaw, 600)));
+  {
+    const xa = penA(Math.min(t, hookA.t1))[0], pts = [];
+    for (let x = hookA.x0; x <= xa; x += 2) pts.push([x, ecg(x)]); pts.push([xa, ecg(xa)]);
+    A(el.trA, { d: t > hookA.t0 ? path(pts) : '', 'stroke-opacity': 0.85 * hookO * hookDim });
+    const xb = t > c.numb ? penB(t)[0] : 96, pb = []; for (let x = 96; x <= xb; x += 3) pb.push([x, trBy(x)]);
+    A(el.trB, { d: t > c.numb + 150 ? path(pb) : '', 'stroke-opacity': 0.85 * hookO * hookDim });
+  }
+  headline($('h1a'), W.h1a, t, 96, 330, 0, c.flaw - 200, 60);
+  headline($('h1b'), W.h1b, t, 96, 420, c.wrong, c.flaw - 200, 60);
+  headline($('h1c'), W.h1c, t, 96, 960, c.numb, c.flaw - 200, 60);
+  headline($('h1d'), W.h1d, t, 96, 1046, c.move, c.flaw - 200, 60);
+  headline($('h1e'), W.h1e, t, 540, 760, c.flaw, c.q - 500, 70, { ax: 0.5 });
+  headline($('h1f'), W.h1f, t, 540, 1010, c.both, c.q - 500, 45, { ax: 0.5 });
+  // ---------------- s02 question
+  const qO = fadeWin(t, c.q - 200, c.theory + 200, 600, 700);
+  el.rings.forEach((r, i) => {
+    const at = T.sonar[i]; if (at === undefined) { A(r, { 'stroke-opacity': 0 }); return; }
+    const u = P(t, at, 2600), p = pointAt(Math.min(t, c.theory));
+    A(r, { cx: p[0], cy: p[1], r: 12 + 520 * E.SETTLE(u), 'stroke-opacity': t > at ? 0.42 * (1 - u) * qO : 0 });
+  });
+  A(el.aware, { 'stroke-opacity': 0.4 * E.HOUSE(P(t, c.below, 700)) * qO, 'stroke-dashoffset': (-t / 40).toFixed(1) });
+  rise($('aware'), t, 984, 764, c.below + 200, c.theory, { ax: 1, dy: 12, blur: 6, max: 0.9 });
+  headline($('safe'), W.safe, t, 540, 440, c.safe, c.theory - 400, 90, { ax: 0.5 });
+  rise($('neuro'), t, 540, 1110, c.neuro, c.theory, { ax: 0.5, dy: 14, blur: 6 });
+  rise($('porges'), t, 540, 1154, c.neuro + 250, c.theory, { ax: 0.5, dy: 14, blur: 6, max: 0.8 });
+  // ---------------- s03-s04 body + nerve
+  {
+    const xf = bodyXf(t), bo = bodyOpacity(t);
+    el.bodyG.setAttribute('transform', `translate(${xf.cx.toFixed(2)} ${xf.top.toFixed(2)}) scale(${xf.s.toFixed(4)} ${xf.sy.toFixed(4)})`);
+    drawPath(el.body, el.bodyLen, E.SETTLE(P(t, c.theory, 3600)), bo);
+    const blur = t >= c.dorsal ? 3.2 * E.SETTLE(P(t, c.far, 1800)) * (1 - E.HOUSE(P(t, c.window, 600))) : 0;
+    el.gBody.setAttribute('filter', blur > 0.05 ? 'url(#fog)' : ''); $('fogb').setAttribute('stdDeviation', blur.toFixed(2));
+    const xn = xfNerve();
+    el.nerveG.setAttribute('transform', `translate(${xn.cx} ${xn.top}) scale(${xn.s})`);
+    const nO = 1 - E.HOUSE(P(t, c.ladder + 100, 400));
+    const vBr = kf(t, [[c.newer, 0.9], [c.newer + 400, 1], [c.older, 1], [c.older + 400, 0.35], [c.traffic, 0.35], [c.traffic + 500, 0.9]]);
+    const dBr = kf(t, [[c.newer, 0.9], [c.newer + 400, 0.35], [c.older, 0.35], [c.older + 400, 1], [c.traffic, 1], [c.traffic + 500, 0.9]]);
+    drawPath(NV.D.el, NV.D.len, dDraw(t), 0.9 * nO * dBr);
+    drawPath(NV.V.el, NV.V.len, E.SETTLE(P(t, c.split, 1400)), 0.9 * nO * vBr);
+    drawPath(NV.tl.el, NV.tl.len, E.SETTLE(P(t, c.lungs, 700)), 0.6 * nO);
+    drawPath(NV.tr.el, NV.tr.len, E.SETTLE(P(t, c.lungs + 120, 700)), 0.6 * nO);
+    // traffic: most of it runs upward
+    const tO = fadeWin(t, c.traffic + 200, c.ladder + 100, 700, 400);
+    PART.forEach((p, i) => {
+      const up = i < 28, per = up ? 2600 : 3400, off = hash(i * 31 + 7) * 0.5 + 0.5;
+      const u = (((t - c.traffic) / per + off) % 1 + 1) % 1, pts = up ? (i % 3 ? NV.Dpts : NV.Vpts) : NV.Dpts;
+      const q = toW(xn, along(pts, up ? 1 - u : u));
+      A(p, { cx: q[0] + (hash(i) * 8 - 4), cy: q[1], 'fill-opacity': tO * (up ? 0.85 : 0.4) * Math.sin(Math.PI * u) });
+    });
+    const lab = (id, anchor, side, at, out, dy = 0) => { const a = toW(xn, ANCH[anchor]); rise($(id), t, side < 0 ? 300 : 780, a[1] - 11 + dy, at, out, { ax: side < 0 ? 1 : 0, dy: 12, blur: 6, max: 0.95 }); };
+    lab('lBrain', 'brainstem', -1, c.runs, c.split); lab('lHeart', 'heart', 1, c.heart4, c.split); lab('lLungs', 'lungL', -1, c.lungs, c.split); lab('lGut', 'gut', 1, c.gut, c.split);
+    rise($('lNew'), t, 300, toW(xn, ANCH.face)[1] - 20, c.newer, c.traffic - 200, { ax: 1, dy: 14, blur: 6 });
+    rise($('lOld'), t, 780, toW(xn, ANCH.gut)[1] - 60, c.older, c.traffic - 200, { dy: 14, blur: 6 });
+    rise($('lUp'), t, 780, 700, c.upward, c.ladder, { dy: 14, blur: 6 });
+    rise($('lDown'), t, 780, 760, c.upward + 400, c.ladder, { dy: 14, blur: 6 });
+    // leaders for nerve labels
+  }
+  headline($('pvt'), W.pvt, t, 96, 300, c.theory, c.vagus - 200, 80);
+  rise($('glossA'), t, 96, 300, c.wander, c.poly - 100, { dy: 12, blur: 6 });
+  rise($('glossA2'), t, 96, 330, c.wander + 120, c.poly - 100, {});
+  rise($('glossB'), t, 96, 300, c.poly + 100, c.traffic, { dy: 12, blur: 6 });
+  rise($('glossB2'), t, 96, 330, c.poly + 220, c.traffic, {});
+  // ---------------- tunnel vision, racing thoughts, heart pulse (s07)
+  {
+    const xf = bodyXf(t), eye = toW(xf, ANCH.eyes), tv = E.SETTLE(P(t, c.vision, 1500)) * (1 - E.HOUSE(P(t, c.faces, 900)));
+    A(el.tunnel, { cx: eye[0], cy: eye[1], r: 800 + lerp(1400, 300, tv), 'stroke-opacity': tv > 0.001 ? 0.78 * tv : 0 });
+    const ro = fadeWin(t, c.thoughts, c.faces, 400, 500), hd = toW(xf, ANCH.head);
+    el.race.forEach((r, i) => {
+      const rad = 70 + i * 16, a0 = (t / (260 + i * 40) + i * 1.3) % (2 * Math.PI), a1 = a0 + 0.9;
+      const p0 = [hd[0] + rad * Math.cos(a0), hd[1] + 20 + rad * 0.55 * Math.sin(a0)], p1 = [hd[0] + rad * Math.cos(a1), hd[1] + 20 + rad * 0.55 * Math.sin(a1)];
+      A(r, { d: `M${p0[0]} ${p0[1]}A${rad} ${rad * 0.55} 0 0 1 ${p1[0]} ${p1[1]}`, 'stroke-opacity': 0.4 * ro });
+    });
+    const ho = fadeWin(t, c.heart7, c.faces, 300, 500), hp = toW(xf, ANCH.heart);
+    el.pulse.forEach((p, i) => { const u = (((t - c.heart7) / 480 - i / 3) % 1 + 1) % 1; A(p, { cx: hp[0], cy: hp[1], r: 6 + 40 * E.SETTLE(u), 'stroke-opacity': t > c.heart7 ? 0.5 * (1 - u) * ho : 0 }); });
+  }
+  callouts(t);
+  // ---------------- ladder / spine / band
+  {
+    const on = E.HOUSE(P(t, c.ladder + 100, 300)) * (1 - E.HOUSE(P(t, c.oneQ + 500, 700)));
+    const dim = lerp(1, 0.25, E.HOUSE(P(t, c.window, 700)) * (1 - E.HOUSE(P(t, c.spot, 700))));
+    A(el.railL, { d: t > c.ladder ? path(railPts(t, -1)) : '', 'stroke-opacity': 0.9 * on * dim });
+    A(el.railR, { d: t > c.ladder ? path(railPts(t, 1)) : '', 'stroke-opacity': 0.9 * on * dim });
+    const xl = railPts(t, -1)[0][0], xr = railPts(t, 1)[0][0];
+    el.rungs.forEach((r, i) => {
+      const u = E.SETTLE(P(t, c.asLadder + i * 140, 600));
+      A(r, { x1: xl, x2: lerp(xl, xr, u), y1: RUNG[i], y2: RUNG[i], 'stroke-opacity': t > c.asLadder ? 0.9 * on * dim : 0 });
+    });
+    // s11: rungs extend right into table rows
+    el.ext.forEach((r, i) => { const u = E.SETTLE(P(t, c.three + i * 120, 900)) * (1 - E.HOUSE(P(t, c.match, 600))); A(r, { x2: lerp(150, 984, u), 'stroke-opacity': u > 0.001 ? 0.22 : 0 }); });
+    // s13: the rails become the app's check-in band
+    const bo = E.HOUSE(P(t, c.oneQ + 500, 900)) * (1 - E.HOUSE(P(t, c.close, 700)));
+    const bs = 1 - 0.9 * E.HOUSE(P(t, c.close, 700));
+    A(el.band, { x: BAND.x, width: BAND.w, rx: BAND.w / 2, y: lerp(handlePt(t)[1], BAND.top, bs), height: BAND.h * bs, 'fill-opacity': 0.92 * bo });
+    const ro = E.HOUSE(P(t, c.where, 500)) * (1 - E.HOUSE(P(t, c.close, 500))), hp = handlePt(t);
+    A(el.ring, { cx: hp[0], cy: hp[1], 'stroke-opacity': ro });
+    // s12 arrows
+    el.arr.forEach((a, i) => {
+      const Q = i ? A2 : A1, at = i ? c.lift : c.exhale, u = E.SETTLE(P(t, at, 1100)), o = 1 - E.HOUSE(P(t, c.oneQ - 300, 500));
+      const pts = []; for (let k = 0; k <= 30; k++) pts.push(qb(Q, 0.06 + 0.84 * (k / 30) * u));
+      A(a.p, { d: t > at ? path(pts) : '', 'stroke-opacity': 0.75 * o });
+      const e = qb(Q, 0.9), d = qb(Q, 0.86), ang = Math.atan2(e[1] - d[1], e[0] - d[0]), L = 18;
+      const h1 = [e[0] - L * Math.cos(ang - 0.5), e[1] - L * Math.sin(ang - 0.5)], h2 = [e[0] - L * Math.cos(ang + 0.5), e[1] - L * Math.sin(ang + 0.5)];
+      A(a.h, { d: `M${h1[0]} ${h1[1]}L${e[0]} ${e[1]}L${h2[0]} ${h2[1]}`, 'stroke-opacity': 0.75 * o * smooth(P(t, at + 900, 200)) });
+    });
+  }
+  // s05 ladder labels
+  rise($('r0'), t, 660, RUNG[0] - 38, c.top, c.ventral - 300); rise($('r1'), t, 660, RUNG[1] - 38, c.middle, c.ventral - 300);
+  rise($('r1b'), t, 664, RUNG[1] + 40, c.middle + 400, c.ventral - 300, { dy: 12, blur: 6 }); rise($('r2'), t, 660, RUNG[2] - 38, c.bottom, c.ventral - 300);
+  // ---------------- s06-s08 rung headings + breath strip
+  rise($('hd0'), t, 96, 300, c.ventral + 200, c.symp - 100, { dy: 12, blur: 6 }); rise($('hd0b'), t, 96, 332, c.ventral + 320, c.symp - 100);
+  rise($('hd1'), t, 96, 300, c.symp + 100, c.faces - 100, { dy: 12, blur: 6 }); rise($('hd1b'), t, 96, 332, c.symp + 220, c.faces - 100);
+  rise($('hd2'), t, 96, 300, c.dorsal + 200, c.lazy - 100, { dy: 12, blur: 6 }); rise($('hd2b'), t, 96, 332, c.dorsal + 320, c.lazy - 100);
+  {
+    const so = fadeWin(t, c.ventral + 300, c.window - 100, 800, 700), SPD = 0.11, xPen = 960, pts = [];
+    for (let x = 190; x <= xPen; x += 3) { const ts = t - (xPen - x) / SPD; if (ts >= c.ventral + 300) pts.push([x, stripY(ts)]); }
+    A(el.stripP, { d: pts.length > 1 ? path(pts) : '', 'stroke-opacity': 0.8 * so });
+    A(el.stripB, { y1: 1320, y2: 1320, 'stroke-opacity': 0.25 * so });
+    A(el.stripPen, { cx: xPen, cy: stripY(t), 'fill-opacity': so });
+    rise($('strip'), t, 190, 1222, c.ventral + 500, c.window - 100, { dy: 10, blur: 6, max: 0.8 });
+    rise($('swOff'), t, 984, 1222, c.switchOff, c.braced - 50, { ax: 1, dy: 10, blur: 6 });
+    rise($('brOff'), t, 984, 1222, c.braced + 200, c.window - 100, { ax: 1, dy: 10, blur: 6 });
+  }
+  // s07 two faces: never both lit
+  {
+    const fo = (a) => riseV(t, a, c.settles - 150, { dur: 620, dy: 30, blur: 10 });
+    const fl = 1 - 0.6 * E.HOUSE(P(t, c.fight, 500)), fi = 1;
+    const r1 = fo(c.flight), r2 = fo(c.fight);
+    place($('flight'), 350, 520, r1.o * fl, { dy: r1.dy, blur: r1.blur, ax: 0.5 }); rise($('flightL'), t, 350, 668, c.flight + 250, c.settles - 150, { ax: 0.5, dy: 12, blur: 6, max: fl });
+    $('anxW').style.color = t < c.fight + 200 ? C.anx : C.cream;
+    rise($('fl0'), t, 350, 760, c.restless, c.settles - 150, { ax: 0.5, max: fl }); rise($('fl1'), t, 350, 830, c.wired, c.settles - 150, { ax: 0.5, max: fl }); rise($('fl2'), t, 350, 900, c.exit, c.settles - 150, { ax: 0.5, max: fl });
+    place($('fight'), 790, 520, r2.o * fi, { dy: r2.dy, blur: r2.blur, ax: 0.5 }); rise($('fightL'), t, 790, 668, c.fight + 250, c.settles - 150, { ax: 0.5, dy: 12, blur: 6 });
+    $('angW').style.color = t > c.fight + 200 ? C.ang : C.cream;
+    rise($('fi0'), t, 790, 760, c.heat, c.settles - 150, { ax: 0.5 }); rise($('fi1'), t, 790, 830, c.pressure, c.settles - 150, { ax: 0.5 }); rise($('fi2'), t, 790, 900, c.fuse, c.settles - 150, { ax: 0.5 });
+  }
+  // s07 stress cycle (site Fig 02.1)
+  {
+    const so = fadeWin(t, c.settles - 100, c.dorsal - 300, 500, 600), t0 = c.settles, SPIKE = [420, 640];
+    const flatU = P(t, t0, 450), spU = E.SNAP(P(t, t0 + 450, 260));
+    const pa = [[190, 1040], [lerp(190, 360, flatU), 1040]]; if (spU > 0) pa.push([lerp(360, SPIKE[0], spU), lerp(1040, SPIKE[1], spU)]);
+    A(el.scA, { d: t > t0 ? path(pa) : '', 'stroke-opacity': 0.9 * so });
+    A(el.scBase, { 'stroke-opacity': 0.18 * so });
+    const doneX = lerp(SPIKE[0], 984, E.SETTLE(P(t, c.settles + 800, c.stuck - c.settles - 700))), pd = [];
+    for (let x = SPIKE[0]; x <= doneX; x += 4) pd.push([x, x < 720 ? lerp(SPIKE[1], 1040, E.SETTLE((x - SPIKE[0]) / 300)) : 1040]);
+    A(el.scDone, { d: t > c.settles + 800 ? path(pd) : '', 'stroke-opacity': 0.55 * so });
+    const stX = lerp(SPIKE[0], 960, P(t, c.stuck, c.stuckEnd + 900 - c.stuck)), ps = [];
+    for (let x = SPIKE[0]; x <= stX; x += 3) ps.push([x, 690 - 14 * (fbm(x / 16, 21) - 0.1) + (x - SPIKE[0] < 40 ? lerp(-50, 0, (x - SPIKE[0]) / 40) : 0)]);
+    A(el.scStuck, { d: t > c.stuck ? path(ps) : '', 'stroke-opacity': 0.9 * so });
+    const pen = t < c.settles + 800 ? pa[pa.length - 1] : t < c.stuck ? pd[pd.length - 1] || SPIKE : ps[ps.length - 1] || SPIKE;
+    A(el.scPen, { cx: pen[0], cy: pen[1], 'fill-opacity': so * (t > t0 ? 1 : 0) });
+    rise($('scT'), t, 190, 540, c.settles, c.dorsal - 300, { dy: 12, blur: 6 });
+    rise($('scThreat'), t, 440, 612, t0 + 700, c.dorsal - 300, { dy: 12, blur: 6 });
+    rise($('scDone'), t, 984, 1000, c.settled, c.dorsal - 300, { ax: 1, dy: 12, blur: 6 });
+    rise($('scStuck'), t, 984, 736, c.stuck + 600, c.dorsal - 300, { ax: 1, dy: 12, blur: 6 });
+  }
+  // s08
+  headline($('lazy'), W.lazy, t, 540, 640, c.lazy, c.switchOff - 100, 70, { ax: 0.5 });
+  headline($('prot'), W.prot, t, 540, 740, c.protect, c.switchOff - 100, 70, { ax: 0.5 });
+  rise($('frzR'), t, 160, RUNG[2] - 13, c.freezeWord, c.window + 900, { dy: 12, blur: 6 });
+  // ---------------- s10 window
+  {
+    const wo = fadeWin(t, c.window + 200, c.spot + 200, 800, 700);
+    const h = kf(t, [[c.narrows, 130], [c.narrows + 1300, 58, E.SETTLE], [c.widen, 58], [c.widen + 1600, 190, E.SETTLE]]), yc = 880;
+    A(el.wBand, { y: yc - h, height: 2 * h, 'fill-opacity': 0.05 * wo });
+    A(el.wTop, { y1: yc - h, y2: yc - h, 'stroke-opacity': 0.5 * wo }); A(el.wBot, { y1: yc + h, y2: yc + h, 'stroke-opacity': 0.5 * wo });
+    const pts = []; const t1 = Math.min(t, c.notFixed + 300);
+    for (let ts = c.inside - 300; ts <= t1; ts += 16) pts.push([wx(ts), wy(ts)]);
+    A(el.wWave, { d: t > c.inside - 300 ? path(pts) : '', 'stroke-opacity': 0.85 * wo });
+    headline($('wotH'), W.wotH, t, 96, 300, c.wot, c.spot - 100, 70);
+    rise($('siegel'), t, 96, 396, c.wot + 400, c.spot - 100, { dy: 10, blur: 6 });
+    rise($('wHyper'), t, 190, 500, c.above, c.spot - 100, { dy: 10, blur: 6 }); rise($('wIn'), t, 206, yc - h + 16, c.inside, c.spot - 100, { dy: 10, blur: 6, max: 0.7 });
+    rise($('wHypo'), t, 190, 1236, c.belowW, c.spot - 100, { dy: 10, blur: 6 });
+    rise($('wR0'), t, 984, 500, c.above + 300, c.spot - 100, { ax: 1, dy: 10, blur: 6 }); rise($('wR1'), t, 968, yc - h + 16, c.inside + 300, c.spot - 100, { ax: 1, dy: 10, blur: 6, max: 0.7 });
+    rise($('wR2'), t, 984, 1236, c.belowW + 300, c.spot - 100, { ax: 1, dy: 10, blur: 6 });
+    rise($('wMuch'), t, 540, 540, c.muchCharge, c.notFixed, { ax: 0.5 }); rise($('wLittle'), t, 540, 1170, c.little, c.notFixed, { ax: 0.5 });
+  }
+  // ---------------- s11 table
+  {
+    const out = c.match - 100;
+    headline($('threeH'), W.threeH, t, 96, 300, c.three, out, 70);
+    rise($('cB'), t, 190, 450, c.cBreath, out, { dy: 12, blur: 6 }); rise($('cE'), t, 470, 450, c.cEnergy, out, { dy: 12, blur: 6 }); rise($('cC'), t, 750, 450, c.cConn, out, { dy: 12, blur: 6 });
+    [0, 1, 2].forEach((r) => rise($('rw' + r), t, 190, RUNG[r] - 40, c.three + 300 + r * 120, out, { dy: 10, blur: 6, max: 0.85 }));
+    const at = [[c.b0, c.e0, c.k0], [c.b1, c.e1, c.k1], [c.b2, c.e2, c.k2]];
+    for (let r = 0; r < 3; r++) for (let k = 0; k < 3; k++) rise($(`t${r}${k}`), t, [190, 470, 750][k], RUNG[r] + 24, at[r][k], out, { dy: 22, blur: 8 });
+    headline($('guess'), W.guess, t, 540, 1296, c.guess, out, 60, { ax: 0.5 });
+  }
+  // ---------------- s12 match
+  headline($('fitH'), W.fitH, t, 96, 300, c.match + 200, c.oneQ - 200, 60);
+  rise($('m1'), t, 360, 620, c.exhale, c.oneQ - 200, { dy: 14, blur: 6 });
+  $('m1b').style.opacity = smooth(P(t, c.movement, 400)).toFixed(3);
+  rise($('m2'), t, 360, 940, c.shutdown + 300, c.oneQ - 200, { dy: 14, blur: 6 });
+  $('m2a').style.opacity = smooth(P(t, c.lift, 400)).toFixed(3); $('m2b').style.opacity = smooth(P(t, c.rhythm, 400)).toFixed(3);
+  rise($('under'), t, 160, 1250, c.under + 300, c.lift + 400, { dy: 10, blur: 6 });
+  // ---------------- s13 app
+  {
+    const mo = c.oneQ - 100;
+    rise($('ap0'), t, 160, RUNG[0] - 13, c.mBal, mo, { dy: 12, blur: 6 }); rise($('ap1'), t, 160, RUNG[1] - 13, c.mAnx, mo, { dy: 12, blur: 6 }); rise($('ap2'), t, 160, RUNG[2] - 13, c.mFrz, mo, { dy: 12, blur: 6 });
+    $('apBal').style.color = t < c.mAnx + 100 ? C.bal : C.cream;
+    $('apAnx').style.color = t > c.mAnx && t < c.mAng + 100 ? C.anx : C.cream;
+    $('apAng').style.color = t > c.mAng + 100 && t < c.mFrz + 100 ? C.ang : C.cream; $('apAng').style.opacity = smooth(P(t, c.mAng, 300)).toFixed(3);
+    $('apFrz').style.color = t > c.mFrz ? C.frz : C.cream;
+    headline($('whereH'), W.whereH, t, 96, 300, c.where, c.close - 200, 70);
+    rise($('touch'), t, 96, 394, c.where + 500, c.close - 200, { dy: 10, blur: 6, max: 0.85 });
+    const TT = [[c.tSigh, c.tChaos], [c.tChaos, c.tPend], [c.tPend, c.tBreath], [c.tBreath, c.close]];
+    TT.forEach(([a, b], i) => rise($('tt' + i), t, 420, 520, a + 150, b - 100, { dy: 12, blur: 6 }));
+    // The Sigh (app fillAt, compressed)
+    const so = tool(t, c.tSigh + 100, c.tChaos - 50), sa = c.inhales - 150, sb = c.tChaos - 350, PH = [2500, 1200, 1000, 5000], TOT = 9700;
+    const fillAt = (ms) => { if (ms <= PH[0]) return 0.68 * (1 - (1 - ms / PH[0]) ** 2); ms -= PH[0]; if (ms <= PH[1]) return 0.68 + 0.32 * Math.sin((ms / PH[1]) * Math.PI / 2); ms -= PH[1]; if (ms <= PH[2]) return 1; ms -= PH[2]; const u = clamp(ms / PH[3]); return 1 - (u < 0.5 ? 2 * u * u : 1 - (-2 * u + 2) ** 2 / 2); };
+    const sx = (u) => lerp(440, 960, u), sy = (u) => lerp(1060, 700, fillAt(u * TOT));
+    const su = P(t, sa, sb - sa), sp = []; for (let k = 0; k <= 160 * su; k++) sp.push([sx(k / 160), sy(k / 160)]); sp.push([sx(su), sy(su)]);
+    A(el.sigh, { d: t > sa ? path(sp) : '', 'stroke-opacity': 0.9 * so }); A(el.sighBase, { 'stroke-opacity': 0.25 * so });
+    A(el.sighPen, { cx: sx(su), cy: sy(su), 'fill-opacity': so * (t > sa ? 1 : 0) });
+    const uI1 = PH[0] / TOT, uI2 = (PH[0] + PH[1]) / TOT, uO = (PH[0] + PH[1] + PH[2] + PH[3] * 0.45) / TOT;
+    rise($('sIn1'), t, sx(uI1), sy(uI1) - 56, sa + (sb - sa) * uI1, c.tChaos - 50, { ax: 0.5, dy: 10, blur: 6 });
+    rise($('sIn2'), t, sx(uI2), sy(uI2) - 56, sa + (sb - sa) * uI2, c.tChaos - 50, { ax: 0.5, dy: 10, blur: 6 });
+    rise($('sOut'), t, sx(uO) + 40, sy(uO) - 20, sa + (sb - sa) * uO, c.tChaos - 50, { dy: 10, blur: 6 });
+    // Chaos Release: shake the heat out
+    const co = tool(t, c.tChaos + 100, c.tPend - 50), amp = kf(t, [[c.tChaos + 300, 0], [c.tChaos + 900, 0.35], [c.shake, 0.45], [c.shake + 300, 1], [c.shake + 1300, 1], [c.shake + 1800, 0]]);
+    const bj = [amp * 14 * (fbm(t / 22, 61) - 0.1), amp * 14 * (fbm(t / 22, 67) - 0.1)];
+    A(el.box, { x: 500 + bj[0], y: 640 + bj[1], width: 400, height: 440, 'stroke-opacity': 0.25 * co });
+    el.chaos.forEach((p, i) => {
+      const hx = 540 + 320 * (hash(i * 13 + 1) * 0.5 + 0.5), hy = 680 + 360 * (hash(i * 17 + 5) * 0.5 + 0.5);
+      let x = hx + bj[0] + amp * 150 * (fbm(t / 90 + i * 3.1, i + 1) - 0.1), y = hy + bj[1] + amp * 150 * (fbm(t / 90 + i * 5.7, i + 40) - 0.1);
+      x = 700 + 180 * Math.tanh((x - 700) / 180); y = 860 + 200 * Math.tanh((y - 860) / 200);
+      const esc = E.EASE_IN(P(t, c.shake + 900 + i * 30, 1000)), dir = Math.atan2(hy - 860, hx - 700);
+      x += Math.cos(dir) * 700 * esc; y += Math.sin(dir) * 700 * esc;
+      A(p, { cx: x, cy: y, r: 6 + 3 * (hash(i * 5) * 0.5 + 0.5), 'fill-opacity': co * 0.85 * (1 - esc) });
+    });
+    rise($('shakeL'), t, 700, 1130, c.shake, c.tPend - 50, { ax: 0.5, dy: 10, blur: 6 });
+    // Pendulum: top pivot, apex-to-apex 2.0s, guide arcs glow in at the apex
+    const po = tool(t, c.tPend + 100, c.tBreath - 50), PV = [700, 600], L = 520, TH = 24, ta = T.pendApex[0];
+    const th = TH * Math.cos((Math.PI * (t - ta)) / 2000), len = L * E.SETTLE(P(t, c.tPend + 200, 700));
+    const bob = [PV[0] + len * Math.sin(th * D2R), PV[1] + len * Math.cos(th * D2R)];
+    A(el.pArm, { x1: PV[0], y1: PV[1], x2: bob[0], y2: bob[1], 'stroke-opacity': 0.8 * po }); A(el.pPiv, { cx: PV[0], cy: PV[1], 'fill-opacity': po });
+    A(el.pBob, { cx: bob[0], cy: bob[1], 'fill-opacity': po });
+    el.pArc.forEach((a, s) => {
+      const sgn = s ? -1 : 1, k = Math.round(((t - ta) / 2000 - s) / 2) * 2 + s, near = Math.exp(-(((t - (ta + k * 2000)) / 420) ** 2));
+      const pts = []; for (let d = -5.2; d <= 5.2; d += 0.5) { const q = (sgn * TH + d) * D2R; pts.push([PV[0] + L * Math.sin(q), PV[1] + L * Math.cos(q)]); }
+      A(a, { d: path(pts), 'stroke-opacity': po * (0.12 + 0.6 * near) });
+    });
+    // Regulate Breath: IN 4 / OUT 8, 1:2, sage fill rises from the bottom
+    const bo = tool(t, c.tBreath + 100, c.close + 100), bi = c.fourIn - 200;
+    const fill = t < bi + 1600 ? E.INOUT(P(t, bi, 1600)) : 1 - E.INOUT(P(t, bi + 1600, 3200));
+    A(el.bTrack, { 'fill-opacity': 0.09 * bo });
+    A(el.bFill, { y: 620 + 540 * (1 - fill), height: 540 * fill, 'fill-opacity': bo * 0.9 });
+    el.bTicks.forEach((k, i) => {
+      const left = i < 4, j = left ? i : i - 4, n = left ? 4 : 8, y = 1160 - (540 * (j + 1)) / (n + 1);
+      A(k, { x1: left ? 628 : 758, x2: left ? 646 : 776, y1: y, y2: y, 'stroke-opacity': bo * (left ? 0.5 : 0.35) * smooth(P(t, c.tBreath + 300 + i * 30, 250)) });
+    });
+    $('bIn').style.color = t < bi + 1600 ? C.cream : C.sage;
+    rise($('bIn'), t, 646, 1190, c.fourIn, c.close + 100, { ax: 1, dy: 10, blur: 6 }); rise($('bOut'), t, 758, 1190, c.eightOut, c.close + 100, { dy: 10, blur: 6 });
+  }
+  // ---------------- s14 close
+  headline($('argue'), W.argue, t, 540, 470, c.argue, T.glide[0] - 300, 55, { ax: 0.5 });
+  headline($('work'), W.work, t, 540, 560, c.work, T.glide[0] - 300, 55, { ax: 0.5 });
+  [[c.notice, 0], [c.name, 1], [c.matchT, 2]].forEach(([at, i]) => { const w = el.words[i], r = riseV(t, at - 60, T.glide[0] - 250 + i * 60, { dur: 620, dy: 30, blur: 10 }); place(w.e, w.x0, w.top, r.o, { dy: r.dy, blur: r.blur }); });
+  WM.draw(t, T.wordmark);
+  rise($('tag'), t, 540, WM.yF + 96, T.tag, Infinity, { ax: 0.5, dy: 16, blur: 8 });
+  rise($('url'), t, 540, WM.yF + 170, T.tag + 900, Infinity, { ax: 0.5, dy: 14, blur: 6, max: 0.85 });
+  // ---------------- captions
+  {
+    let i = -1; for (let k = 0; k < CAPS.length; k++) if (t >= CAPS[k].s && t < CAPS[k].e) { i = k; break; }
+    const cap = $('cap');
+    if (i !== capIdx) { capIdx = i; if (i >= 0) cap.textContent = CAPS[i].text; }
+    if (i >= 0) { const k = CAPS[i], r = riseV(t, k.s, k.e - 140, { dur: 220, dy: 8, blur: 3, outDur: 140, outDy: -4, outBlur: 2 }); place(cap, 540, 1440, r.o * 0.94, { dy: r.dy, blur: r.blur, ax: 0.5 }); }
+    else show(cap, 0);
+  }
+  // ---------------- the point
+  const p = pointAt(t), pin = smooth(P(t, 0, 60));
+  const sm = []; for (let k = 0; k <= 6; k++) sm.push(pointAt(Math.max(0, t - (k * 8.3) / 6)));
+  A(el.smear, { d: path(sm), 'stroke-width': R * 2, 'stroke-opacity': 0.5 * pin });
+  A(el.glow, { cx: p[0], cy: p[1], r: R * 1.9, 'fill-opacity': 0.3 * pin * (1 - E.HOUSE(P(t, T.glide[1], 700))) });
+  A(el.pt, { cx: p[0], cy: p[1], r: R, 'fill-opacity': pin });
+}
+
+Reel.start({ duration: T.dur, render, init, fonts: ['500 120px "Playfair Display"', 'italic 500 100px "Playfair Display"', '500 24px "JetBrains Mono"', '400 40px Inter'] });
+</script>
+</body>
+</html>
