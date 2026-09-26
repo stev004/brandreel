@@ -82,7 +82,8 @@
   .lab{font-family:var(--mono);font-weight:500;font-size:22px;letter-spacing:.22em;text-transform:uppercase;color:var(--sage);white-space:nowrap;line-height:1}
   .co{white-space:nowrap}
   .co .lab{margin-bottom:12px}
-  .co .it{font-size:36px;white-space:normal;width:250px}
+  .co .it{font-size:34px;white-space:normal;width:240px}
+  .co.R .it{width:176px}
   .co.L{text-align:right}
   #m1 .it,#m2 .it{width:auto;white-space:nowrap}
   .cell{font-family:var(--serif);font-style:italic;font-weight:500;font-size:40px;color:var(--cream);line-height:1.1;width:260px;white-space:normal}
@@ -164,7 +165,7 @@
   <div class="t h" id="wotH" style="font-size:72px;white-space:nowrap">The window of <em>tolerance</em></div>
   <div class="t lab" id="siegel">Dan Siegel</div>
   <div class="t lab" id="wHyper" style="color:var(--cream)">Hyperarousal</div>
-  <div class="t lab" id="wIn" style="color:var(--cream)">Window</div>
+  <div class="t lab" id="wIn" style="color:var(--cream)">Window &middot; <span style="color:var(--sage)">safe and social</span></div>
   <div class="t lab" id="wHypo" style="color:var(--cream)">Hypoarousal</div>
   <div class="t lab" id="wR0">Mobilised</div><div class="t lab" id="wR1">Safe and social</div><div class="t lab" id="wR2">Shut down</div>
   <div class="t it" id="wMuch" style="font-size:44px">too much charge</div>
@@ -249,7 +250,7 @@ const TWIG_L = 'M14 296C-10 300 -34 306 -60 316', TWIG_R = 'M22 300C36 300 50 30
 
 function bodyXf(t) {
   const m = E.HOUSE(P(t, c.ventral - 300, 1000));
-  let cx = lerp(540, 590, m), s = lerp(1, 0.92, m), top = 470;
+  let cx = lerp(540, 600, m), s = lerp(1, 0.84, m), top = lerp(470, 490, m);
   top += 26 * E.SETTLE(P(t, c.dorsal + 300, 1800)) * (1 - E.HOUSE(P(t, c.window, 800)));
   const far = E.SETTLE(P(t, c.far, 1800)) * (1 - E.HOUSE(P(t, c.window, 800)));
   const s0 = s; s *= 1 - 0.08 * far; top += 780 * (s0 - s) * 0.5;
@@ -265,9 +266,9 @@ function bodyOpacity(t) {
   const draw = t >= c.theory ? 0.55 : 0;
   let o = draw * (1 - E.HOUSE(P(t, c.ladder, 900)));
   o += 0.55 * E.HOUSE(P(t, c.ventral + 200, 800)) * (1 - E.HOUSE(P(t, c.settles - 400, 600)));
-  o *= t >= c.faces && t < c.dorsal ? 1 - 0.7 * E.HOUSE(P(t, c.faces, 600)) : 1;
+  o *= t >= c.faces && t < c.dorsal ? 1 - E.HOUSE(P(t, c.faces, 600)) : 1;
   o += 0.42 * E.HOUSE(P(t, c.dorsal + 100, 1200)) * (1 - E.HOUSE(P(t, c.window - 200, 800)));
-  if (t >= c.dorsal) o *= 1 - 0.35 * E.HOUSE(P(t, c.far, 1500)) - 0.25 * E.HOUSE(P(t, c.lazy, 600));
+  if (t >= c.dorsal) o *= 1 - 0.35 * E.HOUSE(P(t, c.far, 1500)) - 0.5 * E.HOUSE(P(t, c.lazy, 600));
   return Math.max(0, o);
 }
 
@@ -362,10 +363,13 @@ function init() {
   ];
   const stage = $('stage');
   for (const [id, mono, it, anchor, side, slot, at, out] of CALL) {
-    const d = document.createElement('div'); d.className = 't co' + (side < 0 ? ' L' : ''); d.innerHTML = `<div class="lab">${mono}</div><div class="it">${it}</div>`;
+    const d = document.createElement('div'); d.className = 't co' + (side < 0 ? ' L' : ' R'); d.innerHTML = `<div class="lab">${mono}</div><div class="it">${it}</div>`;
     stage.insertBefore(d, $('cap'));
     CO[id] = { d, anchor, side, y: SLOT[slot], at, out, ln: S('line', { stroke: C.cream, 'stroke-width': 1.5 }, el.gLead), dot: S('circle', { fill: C.cream, r: 4.5 }, el.gLead) };
   }
+  // at most three callouts on screen: within a rung, each leaves as the fourth one arrives
+  const groups = {}; for (const k in CO) (groups[CO[k].out] = groups[CO[k].out] || []).push(CO[k]);
+  for (const g of Object.values(groups)) { g.sort((x, y) => x.at - y.at); g.forEach((o, i) => { if (g[i + 3]) o.out = Math.min(o.out, g[i + 3].at - 150); }); }
   // words that rise word-by-word
   for (const id of ['h1a', 'h1b', 'h1c', 'h1d', 'h1e', 'h1f', 'safe', 'pvt', 'lazy', 'prot', 'wotH', 'threeH', 'guess', 'fitH', 'whereH', 'argue', 'work']) W[id] = splitWords($(id));
   // the close: "Notice." "Name." "Match." set at the size where Playfair's "." is the point
@@ -373,7 +377,7 @@ function init() {
   const cv = document.createElement('canvas').getContext('2d'); cv.font = `500 ${FS}px "Playfair Display"`;
   const dot = cv.measureText('.'), dcx = (dot.actualBoundingBoxRight - dot.actualBoundingBoxLeft) / 2, dcy = (dot.actualBoundingBoxDescent - dot.actualBoundingBoxAscent) / 2;
   const fm = cv.measureText('N');
-  el.words = [['wNotice', 'Notice', 760], ['wName', 'Name', 920], ['wMatch', 'Match', 1080]].map(([id, w, yDot]) => {
+  el.words = [['wNotice', 'Notice', 820], ['wName', 'Name', 985], ['wMatch', 'Match', 1150]].map(([id, w, yDot]) => {
     const e = $(id); e.style.fontSize = FS + 'px'; e.style.lineHeight = '1'; e.style.whiteSpace = 'nowrap';
     const full = cv.measureText(w + '.').width, pre = cv.measureText(w).width, x0 = 540 - full / 2;
     const baseY = yDot - dcy, top = baseY - ((FS - (fm.fontBoundingBoxAscent + fm.fontBoundingBoxDescent)) / 2 + fm.fontBoundingBoxAscent);
@@ -385,8 +389,10 @@ function init() {
   T.words.forEach((w, i) => {
     const nx = T.words[i + 1];
     if (!cur) cur = { s: w.s - 90, text: '', seg: w.seg };
-    cur.text += (cur.text ? ' ' : '') + w.w; cur.last = w.e;
-    const end = /[.?!]$/.test(w.w) || (cur.text.length >= 34 && /[,:]$/.test(w.w)) || cur.text.length >= 58 || !nx || nx.seg !== w.seg;
+    cur.text += (cur.text ? ' ' : '') + w.w.replace(/-/g, '\u2011'); cur.last = w.e;
+    let toEnd = 0; for (let k = i + 1; T.words[k] && T.words[k].seg === w.seg; k++) { toEnd++; if (/[.?!]$/.test(T.words[k].w)) break; }
+    const soft = (cur.text.length >= 34 && /[,:]$/.test(w.w)) || cur.text.length >= 58;
+    const end = /[.?!]$/.test(w.w) || (soft && (toEnd > 3 || cur.text.length >= 74)) || !nx || nx.seg !== w.seg;
     if (end) { const s = nx ? nx.s - 90 : null; flush(s); }
   });
   const OFF = [[0, c.q - 50], [c.safe - 150, c.safe + 800], [c.where - 150, c.where + 900], [c.close - 150, T.dur]];
@@ -481,9 +487,9 @@ function callouts(t) {
   for (const k in CO) {
     const o = CO[k], xf = bodyXf(t), a = toW(xf, ANCH[o.anchor]);
     const r = riseV(t, o.at, o.out, { dur: 520, dy: 18, blur: 6, outDur: 420, outDy: -12 });
-    place(o.d, o.side < 0 ? 400 : 780, o.y, r.o, { dy: r.dy, blur: r.blur, ax: o.side < 0 ? 1 : 0 });
+    place(o.d, o.side < 0 ? 386 : 808, o.y, r.o, { dy: r.dy, blur: r.blur, ax: o.side < 0 ? 1 : 0 });
     const lu = E.SETTLE(P(t, o.at, 460)), lo = 1 - E.HOUSE(P(t, o.out, 380));
-    const ex = o.side < 0 ? 414 : 766, ey = o.y + 11;
+    const ex = o.side < 0 ? 398 : 796, ey = o.y + 11;
     A(o.ln, { x1: a[0], y1: a[1], x2: lerp(a[0], ex, lu), y2: lerp(a[1], ey, lu), 'stroke-opacity': t > o.at ? 0.38 * lo : 0 });
     A(o.dot, { cx: a[0], cy: a[1], 'fill-opacity': t > o.at ? 0.9 * lo * smooth(P(t, o.at, 200)) : 0 });
   }
@@ -516,7 +522,7 @@ const tool = (t, a, b) => fadeWin(t, a, b, 450, 420);
 function render(t) {
   kickers(t);
   // ---------------- s01 hook
-  const hookO = 1 - E.HOUSE(P(t, c.q - 700, 800)), hookDim = lerp(1, 0.28, E.HOUSE(P(t, c.flaw, 600)));
+  const hookO = 1 - E.HOUSE(P(t, c.q - 700, 800)), hookDim = lerp(1, 0.12, E.HOUSE(P(t, c.flaw, 600)));
   {
     const xa = penA(Math.min(t, hookA.t1))[0], pts = [];
     for (let x = hookA.x0; x <= xa; x += 2) pts.push([x, ecg(x)]); pts.push([xa, ecg(xa)]);
@@ -528,8 +534,8 @@ function render(t) {
   headline($('h1b'), W.h1b, t, 96, 420, c.wrong, c.flaw - 200, 60);
   headline($('h1c'), W.h1c, t, 96, 960, c.numb, c.flaw - 200, 60);
   headline($('h1d'), W.h1d, t, 96, 1046, c.move, c.flaw - 200, 60);
-  headline($('h1e'), W.h1e, t, 540, 760, c.flaw, c.q - 500, 70, { ax: 0.5 });
-  headline($('h1f'), W.h1f, t, 540, 1010, c.both, c.q - 500, 45, { ax: 0.5 });
+  headline($('h1e'), W.h1e, t, 540, 870, c.flaw, c.q - 500, 70, { ax: 0.5 });
+  headline($('h1f'), W.h1f, t, 540, 1100, c.both, c.q - 500, 45, { ax: 0.5 });
   // ---------------- s02 question
   const qO = fadeWin(t, c.q - 200, c.theory + 200, 600, 700);
   el.rings.forEach((r, i) => {
@@ -546,7 +552,7 @@ function render(t) {
   {
     const xf = bodyXf(t), bo = bodyOpacity(t);
     el.bodyG.setAttribute('transform', `translate(${xf.cx.toFixed(2)} ${xf.top.toFixed(2)}) scale(${xf.s.toFixed(4)} ${xf.sy.toFixed(4)})`);
-    drawPath(el.body, el.bodyLen, E.SETTLE(P(t, c.theory, 3600)), bo);
+    drawPath(el.body, el.bodyLen, E.INOUT(P(t, c.theory, 6500)), bo);
     const blur = t >= c.dorsal ? 3.2 * E.SETTLE(P(t, c.far, 1800)) * (1 - E.HOUSE(P(t, c.window, 600))) : 0;
     el.gBody.setAttribute('filter', blur > 0.05 ? 'url(#fog)' : ''); $('fogb').setAttribute('stdDeviation', blur.toFixed(2));
     const xn = xfNerve();
@@ -570,8 +576,8 @@ function render(t) {
     lab('lBrain', 'brainstem', -1, c.runs, c.split); lab('lHeart', 'heart', 1, c.heart4, c.split); lab('lLungs', 'lungL', -1, c.lungs, c.split); lab('lGut', 'gut', 1, c.gut, c.split);
     rise($('lNew'), t, 300, toW(xn, ANCH.face)[1] - 20, c.newer, c.traffic - 200, { ax: 1, dy: 14, blur: 6 });
     rise($('lOld'), t, 780, toW(xn, ANCH.gut)[1] - 60, c.older, c.traffic - 200, { dy: 14, blur: 6 });
-    rise($('lUp'), t, 780, 700, c.upward, c.ladder, { dy: 14, blur: 6 });
-    rise($('lDown'), t, 780, 760, c.upward + 400, c.ladder, { dy: 14, blur: 6 });
+    rise($('lUp'), t, 984, 700, c.upward, c.ladder, { ax: 1, dy: 14, blur: 6 });
+    rise($('lDown'), t, 984, 760, c.upward + 400, c.ladder, { ax: 1, dy: 14, blur: 6 });
     // leaders for nerve labels
   }
   headline($('pvt'), W.pvt, t, 96, 300, c.theory, c.vagus - 200, 80);
@@ -669,7 +675,7 @@ function render(t) {
     rise($('scT'), t, 190, 540, c.settles, c.dorsal - 300, { dy: 12, blur: 6 });
     rise($('scThreat'), t, 440, 612, t0 + 700, c.dorsal - 300, { dy: 12, blur: 6 });
     rise($('scDone'), t, 984, 1000, c.settled, c.dorsal - 300, { ax: 1, dy: 12, blur: 6 });
-    rise($('scStuck'), t, 984, 736, c.stuck + 600, c.dorsal - 300, { ax: 1, dy: 12, blur: 6 });
+    rise($('scStuck'), t, 984, 770, c.stuck + 600, c.dorsal - 300, { ax: 1, dy: 12, blur: 6 });
   }
   // s08
   headline($('lazy'), W.lazy, t, 540, 640, c.lazy, c.switchOff - 100, 70, { ax: 0.5 });
@@ -686,9 +692,9 @@ function render(t) {
     A(el.wWave, { d: t > c.inside - 300 ? path(pts) : '', 'stroke-opacity': 0.85 * wo });
     headline($('wotH'), W.wotH, t, 96, 300, c.wot, c.spot - 100, 70);
     rise($('siegel'), t, 96, 396, c.wot + 400, c.spot - 100, { dy: 10, blur: 6 });
-    rise($('wHyper'), t, 190, 500, c.above, c.spot - 100, { dy: 10, blur: 6 }); rise($('wIn'), t, 206, yc - h + 16, c.inside, c.spot - 100, { dy: 10, blur: 6, max: 0.7 });
+    rise($('wHyper'), t, 190, 500, c.above, c.spot - 100, { dy: 10, blur: 6 }); rise($('wIn'), t, 190, yc + h + 18, c.inside, c.spot - 100, { dy: 10, blur: 6, max: 0.85 });
     rise($('wHypo'), t, 190, 1236, c.belowW, c.spot - 100, { dy: 10, blur: 6 });
-    rise($('wR0'), t, 984, 500, c.above + 300, c.spot - 100, { ax: 1, dy: 10, blur: 6 }); rise($('wR1'), t, 968, yc - h + 16, c.inside + 300, c.spot - 100, { ax: 1, dy: 10, blur: 6, max: 0.7 });
+    rise($('wR0'), t, 984, 500, c.above + 300, c.spot - 100, { ax: 1, dy: 10, blur: 6 }); 
     rise($('wR2'), t, 984, 1236, c.belowW + 300, c.spot - 100, { ax: 1, dy: 10, blur: 6 });
     rise($('wMuch'), t, 540, 540, c.muchCharge, c.notFixed, { ax: 0.5 }); rise($('wLittle'), t, 540, 1170, c.little, c.notFixed, { ax: 0.5 });
   }
@@ -729,7 +735,7 @@ function render(t) {
     A(el.sigh, { d: t > sa ? path(sp) : '', 'stroke-opacity': 0.9 * so }); A(el.sighBase, { 'stroke-opacity': 0.25 * so });
     A(el.sighPen, { cx: sx(su), cy: sy(su), 'fill-opacity': so * (t > sa ? 1 : 0) });
     const uI1 = PH[0] / TOT, uI2 = (PH[0] + PH[1]) / TOT, uO = (PH[0] + PH[1] + PH[2] + PH[3] * 0.45) / TOT;
-    rise($('sIn1'), t, sx(uI1), sy(uI1) - 56, sa + (sb - sa) * uI1, c.tChaos - 50, { ax: 0.5, dy: 10, blur: 6 });
+    rise($('sIn1'), t, sx(uI1) - 26, sy(uI1) - 8, sa + (sb - sa) * uI1, c.tChaos - 50, { ax: 1, dy: 10, blur: 6 });
     rise($('sIn2'), t, sx(uI2), sy(uI2) - 56, sa + (sb - sa) * uI2, c.tChaos - 50, { ax: 0.5, dy: 10, blur: 6 });
     rise($('sOut'), t, sx(uO) + 40, sy(uO) - 20, sa + (sb - sa) * uO, c.tChaos - 50, { dy: 10, blur: 6 });
     // Chaos Release: shake the heat out
@@ -769,8 +775,8 @@ function render(t) {
     rise($('bIn'), t, 646, 1190, c.fourIn, c.close + 100, { ax: 1, dy: 10, blur: 6 }); rise($('bOut'), t, 758, 1190, c.eightOut, c.close + 100, { dy: 10, blur: 6 });
   }
   // ---------------- s14 close
-  headline($('argue'), W.argue, t, 540, 470, c.argue, T.glide[0] - 300, 55, { ax: 0.5 });
-  headline($('work'), W.work, t, 540, 560, c.work, T.glide[0] - 300, 55, { ax: 0.5 });
+  headline($('argue'), W.argue, t, 540, 380, c.argue, T.glide[0] - 300, 55, { ax: 0.5 });
+  headline($('work'), W.work, t, 540, 468, c.work, T.glide[0] - 300, 55, { ax: 0.5 });
   [[c.notice, 0], [c.name, 1], [c.matchT, 2]].forEach(([at, i]) => { const w = el.words[i], r = riseV(t, at - 60, T.glide[0] - 250 + i * 60, { dur: 620, dy: 30, blur: 10 }); place(w.e, w.x0, w.top, r.o, { dy: r.dy, blur: r.blur }); });
   WM.draw(t, T.wordmark);
   rise($('tag'), t, 540, WM.yF + 96, T.tag, Infinity, { ax: 0.5, dy: 16, blur: 8 });

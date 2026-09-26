@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """vo-words.py <workspace> <animatic-id> - Kokoro narration with word-level timing.
 
-Reads <workspace>/vo.json ({voice, lang, speed, gapMs, chunkGapMs?, segments:[{id,text,gapMs?}]}),
+Reads <workspace>/vo.json ({voice, lang, speed, gapMs, chunkGapMs?, sentGapMs?, beatGapMs?, segments:[{id,text,gapMs?,speed?}]}),
 synthesizes each segment, trims each chunk to its spoken words, and butts them together with
 fixed short gaps so the narration runs continuously. Writes:
   <workspace>/vo.wav            24 kHz mono float narration
@@ -12,6 +12,7 @@ Word times come from Kokoro's own token timestamps, so no separate aligner is ne
 from __future__ import annotations
 
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -38,7 +39,18 @@ def main() -> None:
             g = int(SR * seg["gapMs"] / 1000) if "gapMs" in seg else gap
             out.append(np.zeros(g, dtype=np.float32)); cursor += g
         seg_start = cursor
-        for ci, res in enumerate(pipe(seg["text"], voice=cfg["voice"], speed=cfg.get("speed", 1.0))):
+        # natural pauses: each sentence is voiced on its own and followed by a breath (sentGapMs);
+        # " | " in the text marks an extra beat (beatGapMs) inside or between sentences.
+        pieces, gaps = [], []
+        for part in re.split(r"\s*\|\s*", seg["text"]):
+            sents = [x for x in re.split(r"(?<=[.?!])\s+", part.strip()) if x] if cfg.get("sentGapMs") else [part.strip()]
+            for k, x in enumerate(sents):
+                gaps.append(cfg.get("sentGapMs", 0) if k else cfg.get("beatGapMs", 0)); pieces.append(x)
+        results = []
+        for pi, piece in enumerate(pieces):
+            for ci, res in enumerate(pipe(piece, voice=cfg["voice"], speed=seg.get("speed", cfg.get("speed", 1.0)))):
+                results.append((gaps[pi] if pi and not ci else None, res))
+        for ci, (pgap, res) in enumerate(results):
             audio = res.audio.numpy() if hasattr(res.audio, "numpy") else np.asarray(res.audio)
             toks = [t for t in res.tokens if t.start_ts is not None and t.end_ts is not None]
             if not toks:
@@ -46,11 +58,14 @@ def main() -> None:
             a = max(0, int((toks[0].start_ts - 0.04) * SR))
             b = min(len(audio), int((toks[-1].end_ts + 0.09) * SR))
             if ci:
-                out.append(np.zeros(chunk_gap, dtype=np.float32)); cursor += chunk_gap
+                g2 = int(SR * pgap / 1000) if pgap is not None else chunk_gap
+                out.append(np.zeros(g2, dtype=np.float32)); cursor += g2
             clip = audio[a:b].astype(np.float32)
             fade = min(240, len(clip) // 4)
             clip[:fade] *= np.linspace(0, 1, fade); clip[-fade:] *= np.linspace(1, 0, fade)
             base_ms = (cursor - a) / SR * 1000
+            if words:
+                words[-1]["ws"] = True  # a new chunk/sentence never continues the previous word
             for t in res.tokens:
                 txt = t.text
                 if t.start_ts is None or not txt.strip():
