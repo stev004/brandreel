@@ -14,5 +14,3 @@ audio/.venv/
 audio/rife-v4.25/
 __pycache__/
 workspace/**/review.md
-workspace/**/cb/
-audio/.venv-cb/
