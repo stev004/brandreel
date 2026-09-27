@@ -5,7 +5,7 @@
   "gapMs": 900,
   "chunkGapMs": 120,
   "leadMs": 600,
-  "note": "rev3 (Steven 09-26: slower, natural pauses): speed .90; each sentence voiced alone + 400ms breath; ' | ' = 650ms beat; 900ms between chapters. rev2: Fable critique. [word](/ipa/) pins pronunciation.",
+  "note": "rev4 (Steven 09-27: Kokoro monotone, picked Chatterbox sample A): Chatterbox, cloned from a Kokoro bf_emma reference; sentence groups voiced whole so tone carries; 380ms between groups, ' | ' = 650ms beat, 900ms between chapters. Kokoro pipeline (bin/vo-words.py) still works with these segments.",
   "segments": [
     {
       "id": "s01-hook",
@@ -66,5 +66,20 @@
     }
   ],
   "sentGapMs": 400,
-  "beatGapMs": 650
+  "beatGapMs": 650,
+  "engine": "chatterbox",
+  "cb": {
+    "ref": "ref_bf_emma.wav",
+    "refNote": "Kokoro bf_emma, speed .95, reading: 'I rebuilt myself slowly, one small practice at a time. Some days were heavy, and some days were lighter than I expected. What helped most was learning to notice what my body was already telling me.' (regenerate with bin/vo-words.py tooling if lost)",
+    "exaggeration": 0.55,
+    "cfg": 0.45,
+    "seed": 7,
+    "groupChars": 260,
+    "tempo": 0.89
+  },
+  "groupGapMs": 380,
+  "respell": {
+    "hypoarousal": "hypo-arousal",
+    "hyperarousal": "hyper-arousal"
+  }
 }

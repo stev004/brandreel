@@ -37,7 +37,7 @@ var TIMING = (function () {
   c.heart4 = cue('s04', 'past your heart'); c.lungs = cue('s04', 'and lungs'); c.gut = cue('s04', 'your gut');
   c.poly = cue('s04', 'Poly means many'); c.split = cue('s04', 'two branches'); c.newer = cue('s04', 'a newer one');
   c.older = cue('s04', 'an older one'); c.traffic = cue('s04', 'most of the'); c.upward = cue('s04', 'runs upward');
-  c.reports = cue('s04', 'Your body reports'); c.bodyFirst = cue('s04', 'body-first');
+  c.reports = cue('s04', 'Your body reports'); c.bodyFirst = cue('s04', 'Which is part') + 900;
   // s05 ladder
   c.ladder = S.s05.startMs; c.asLadder = cue('s05', 'as a ladder'); c.top = cue('s05', 'At the top');
   c.middle = cue('s05', 'In the middle'); c.bottom = cue('s05', 'At the bottom'); c.threat = cue('s05', 'Under threat');
@@ -82,7 +82,7 @@ var TIMING = (function () {
   c.mAng = cue('s13', 'Angry are'); c.mFrz = cue('s13', 'Freeze is the bottom'); c.oneQ = cue('s13', 'And it starts');
   c.where = cue('s13', 'Where are you'); c.tSigh = cue('s13', 'Anxious leads'); c.inhales = cue('s13', 'two inhales');
   c.longEx = cue('s13', 'one long exhale'); c.tChaos = cue('s13', 'Angry leads'); c.shake = cue('s13', 'shake the heat out');
-  c.tPend = cue('s13', 'Freeze leads'); c.lr = cue('s13', 'a slow left-right'); c.land = cue('s13', 'somewhere to land');
+  c.tPend = cue('s13', 'Freeze leads'); c.lr = cue('s13', 'a slow'); c.land = cue('s13', 'somewhere to land');
   c.tBreath = cue('s13', 'And Balanced leads'); c.fourIn = cue('s13', 'four in'); c.eightOut = cue('s13', 'eight out');
   c.stay = cue('s13', 'to help you stay');
   // s14 close

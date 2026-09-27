@@ -1,0 +1,272 @@
+{
+ "sr": 24000,
+ "durMs": 297936,
+ "pieces": [
+  {
+   "i": 0,
+   "seg": "s01-hook",
+   "text": "Your heart is pounding, and nothing is wrong. Or you feel nothing at all, and you can't make yourself move. Neither one is a character flaw. Both are your nervous system doing its job.",
+   "startMs": 600,
+   "endMs": 14061
+  },
+  {
+   "i": 1,
+   "seg": "s02-question",
+   "text": "Underneath every thought, your body is asking one question.",
+   "startMs": 14961,
+   "endMs": 19048
+  },
+  {
+   "i": 2,
+   "seg": "s02-question",
+   "text": "Am I safe?",
+   "startMs": 19698,
+   "endMs": 20689
+  },
+  {
+   "i": 3,
+   "seg": "s02-question",
+   "text": "Stephen Porges called this neuroception. It happens below awareness, faster than thinking. It sets your state before you've formed an opinion.",
+   "startMs": 21339,
+   "endMs": 30619
+  },
+  {
+   "i": 4,
+   "seg": "s03-map",
+   "text": "Polyvagal theory is his map of what happens next. It's a model, not a scan, and parts of its biology are still debated.",
+   "startMs": 31519,
+   "endMs": 40286
+  },
+  {
+   "i": 5,
+   "seg": "s03-map",
+   "text": "But as a way of reading yourself, it's useful.",
+   "startMs": 40936,
+   "endMs": 43772
+  },
+  {
+   "i": 6,
+   "seg": "s04-vagus",
+   "text": "It's named after the vagus nerve. Vagus means wandering. It runs from your brainstem, past your heart and lungs, all the way down to your gut.",
+   "startMs": 44672,
+   "endMs": 54451
+  },
+  {
+   "i": 7,
+   "seg": "s04-vagus",
+   "text": "Poly means many. The theory splits the nerve into two branches: a newer one wired to the face and heart, and an older one wired to the gut.",
+   "startMs": 55101,
+   "endMs": 65565
+  },
+  {
+   "i": 8,
+   "seg": "s04-vagus",
+   "text": "And most of the nerve's traffic runs upward. Your body reports to your brain more than it takes orders. Which is part of why body-first tools can work when talking yourself down doesn't.",
+   "startMs": 66215,
+   "endMs": 78297
+  },
+  {
+   "i": 9,
+   "seg": "s05-ladder",
+   "text": "Picture three states as a ladder.",
+   "startMs": 79197,
+   "endMs": 81356
+  },
+  {
+   "i": 10,
+   "seg": "s05-ladder",
+   "text": "At the top, safe and social. In the middle, mobilised: fight or flight. At the bottom, shut down. Under threat, we tend to drop down the ladder, one rung at a time.",
+   "startMs": 82006,
+   "endMs": 95655
+  },
+  {
+   "i": 11,
+   "seg": "s06-ventral",
+   "text": "The top rung is the ventral vagal state. This is where you can think, connect and rest. Your breath is slow and low. Your face moves, and your voice has melody. You can still feel stress up here. It just doesn't take over.",
+   "startMs": 96555,
+   "endMs": 111760
+  },
+  {
+   "i": 12,
+   "seg": "s07-sympathetic",
+   "text": "The middle rung is sympathetic. Your heart speeds up. Breath rises high and fast into the chest. Muscles brace, the jaw sets, and your hands go cold or clammy. Your vision narrows, and your thoughts start to race.",
+   "startMs": 112660,
+   "endMs": 127543
+  },
+  {
+   "i": 13,
+   "seg": "s07-sympathetic",
+   "text": "It has two faces.",
+   "startMs": 128193,
+   "endMs": 129874
+  },
+  {
+   "i": 14,
+   "seg": "s07-sympathetic",
+   "text": "Flight feels like anxiety: restless, wired, scanning for the exit. Fight feels like anger: heat, pressure, a short fuse.",
+   "startMs": 130524,
+   "endMs": 139233
+  },
+  {
+   "i": 15,
+   "seg": "s07-sympathetic",
+   "text": "Energy that finishes its job settles. Energy with nowhere to go is what keeps you stuck.",
+   "startMs": 139883,
+   "endMs": 146154
+  },
+  {
+   "i": 16,
+   "seg": "s08-dorsal",
+   "text": "The bottom rung is dorsal vagal. When fighting or fleeing seems impossible, the system pulls the plug. Energy drops. Your limbs feel heavy, and your voice goes flat. The world feels far away, foggy, or numb.",
+   "startMs": 147054,
+   "endMs": 162739
+  },
+  {
+   "i": 17,
+   "seg": "s08-dorsal",
+   "text": "This isn't laziness.",
+   "startMs": 163389,
+   "endMs": 165190
+  },
+  {
+   "i": 18,
+   "seg": "s08-dorsal",
+   "text": "It's protection. Your body is saving what it has.",
+   "startMs": 165840,
+   "endMs": 169849
+  },
+  {
+   "i": 19,
+   "seg": "s08-dorsal",
+   "text": "Sometimes it's a full switch-off. Sometimes you're braced and wired underneath, and still can't move.",
+   "startMs": 170499,
+   "endMs": 177481
+  },
+  {
+   "i": 20,
+   "seg": "s08-dorsal",
+   "text": "Regulate calls that whole bottom rung Freeze.",
+   "startMs": 178131,
+   "endMs": 180999
+  },
+  {
+   "i": 21,
+   "seg": "s10-window",
+   "text": "Dan Siegel described a window of tolerance, and it lines up with this map. Inside the window, you can feel stress and still think straight. Above it is hyperarousal: too much charge.",
+   "startMs": 181899,
+   "endMs": 193233
+  },
+  {
+   "i": 22,
+   "seg": "s10-window",
+   "text": "Below it is hypoarousal: too little.",
+   "startMs": 193613,
+   "endMs": 196761
+  },
+  {
+   "i": 23,
+   "seg": "s10-window",
+   "text": "The window isn't fixed. It narrows under strain, and it can widen with practice.",
+   "startMs": 197411,
+   "endMs": 203169
+  },
+  {
+   "i": 24,
+   "seg": "s11-spot",
+   "text": "So how do you spot where you are? Check three things.",
+   "startMs": 204069,
+   "endMs": 207694
+  },
+  {
+   "i": 25,
+   "seg": "s11-spot",
+   "text": "Breath: slow and low, fast and high, or barely there? Energy: steady, buzzing, or drained? Connection: can you take in a face, or does the world feel too loud, or too far away?",
+   "startMs": 208344,
+   "endMs": 223054
+  },
+  {
+   "i": 26,
+   "seg": "s11-spot",
+   "text": "You don't need to be sure. A rough guess is enough.",
+   "startMs": 223704,
+   "endMs": 227143
+  },
+  {
+   "i": 27,
+   "seg": "s12-match",
+   "text": "And that's why one breathing exercise can't fit every state. If you're activated, a longer exhale helps your body settle, and movement gives the charge somewhere to go.",
+   "startMs": 228043,
+   "endMs": 238745
+  },
+  {
+   "i": 28,
+   "seg": "s12-match",
+   "text": "If you're shut down, stillness can pull you further under. You need a gentle lift first: a rhythm, something to follow.",
+   "startMs": 239395,
+   "endMs": 247130
+  },
+  {
+   "i": 29,
+   "seg": "s13-app",
+   "text": "That's how Regulate is built. Balanced is the top rung. Anxious and Angry are the middle. Freeze is the bottom.",
+   "startMs": 248030,
+   "endMs": 255895
+  },
+  {
+   "i": 30,
+   "seg": "s13-app",
+   "text": "And it starts with one question. Where are you right now?",
+   "startMs": 256545,
+   "endMs": 260699
+  },
+  {
+   "i": 31,
+   "seg": "s13-app",
+   "text": "Anxious leads to The Sigh: two inhales, one long exhale. Angry leads to Chaos Release: shake the heat out. Freeze leads to Pendulum, a slow left-right rhythm that gives your attention somewhere to land.",
+   "startMs": 261349,
+   "endMs": 275746
+  },
+  {
+   "i": 32,
+   "seg": "s13-app",
+   "text": "And Balanced leads to Regulate Breath: four in, eight out, to help you stay in the window.",
+   "startMs": 276126,
+   "endMs": 282654
+  },
+  {
+   "i": 33,
+   "seg": "s14-close",
+   "text": "You can't argue with a state. But you can work with your body.",
+   "startMs": 283554,
+   "endMs": 287783
+  },
+  {
+   "i": 34,
+   "seg": "s14-close",
+   "text": "Notice where you are.",
+   "startMs": 288433,
+   "endMs": 289786
+  },
+  {
+   "i": 35,
+   "seg": "s14-close",
+   "text": "Name it.",
+   "startMs": 290436,
+   "endMs": 291276
+  },
+  {
+   "i": 36,
+   "seg": "s14-close",
+   "text": "Match the tool to the state.",
+   "startMs": 291926,
+   "endMs": 293833
+  },
+  {
+   "i": 37,
+   "seg": "s15-tag",
+   "text": "Not meditation. Regulation.",
+   "startMs": 295533,
+   "endMs": 297936
+  }
+ ]
+}
