@@ -6,7 +6,9 @@
 //   easeMs 800, relaxPerMissedPeak .75, angle = -amp * cos(pi * elapsed / 2000) (+ = right).
 // MAX_ANGLE is the app's own on its reference iPhone (393x852pt): asin((393/2 - 16) / (0.52*852)).
 // The run starts like the app's: elapsed 0 at the left apex (peak 0, untapped), then taps exactly
-// on peaks 1, 2, 3 (R L R), so the swing grows the way it does in-game.
+// on peaks 1, 2, 3, 4 (R L R L), so the swing grows the way it does in-game.
+// v3 (Steven 09-28: "each swing should light up one opposing word at a time"): four passes, and each
+// apex lights ONE word of the draft on the side opposite the bob, outside in (I'll, when, reply, properly).
 var TIMING = (function () {
   const HALF = 2000, WIN = 350;
   const ARM = Math.round(0.52 * 852), MAX = (Math.asin((393 / 2 - 16) / ARM) * 180) / Math.PI;
@@ -23,15 +25,16 @@ var TIMING = (function () {
   };
   T.el = (t) => t - T.release;                   // reel ms -> the game's elapsed ms
   T.at = (e) => T.release + e;                   // the game's elapsed ms -> reel ms
-  T.apex = [2000, 4000, 6000].map(T.at);          // the three taps: R L R
-  T.side = [1, -1, 1];
-  T.center = [1000, 3000, 5000].map(T.at);        // centre crossings: the arriving side's guide glows in
-  // the cursor comes back at the third pass and blinks in the bob's time (on at each apex and
-  // each centre crossing: once a second, a caret's own rate)
-  T.cursorOn = T.apex[2];
+  T.apex = [2000, 4000, 6000, 8000].map(T.at);    // the four taps: R L R L
+  T.side = [1, -1, 1, -1];
+  T.center = [1000, 3000, 5000, 7000].map(T.at);  // centre crossings: the arriving side's guide glows in
+  T.wakeLag = 60;                                   // each apex lights one word (opposite side) this long after the tap
+  // the fourth word completes the line and the cursor comes back: it blinks once a second
+  // (a caret's own rate, the bob's apex-to-apex time)
+  T.cursorOn = T.apex[3] + T.wakeLag;
 
   // ---- the app's metronome, stepped at 1ms from elapsed 0 (left apex, idle) past the third tap ----
-  const N = 7000, hitAt = [2000, 4000, 6000];
+  const N = 9000, hitAt = [2000, 4000, 6000, 8000];
   const AMP = new Float64Array(N + 1), TGT = new Float64Array(N + 1);
   const s = { e: 0, amp: MP.idle, tgt: MP.idle, last: -1 };
   AMP[0] = s.amp; TGT[0] = s.tgt;
@@ -48,14 +51,15 @@ var TIMING = (function () {
   T.amp = (t) => AMP[idx(t)];
   // degrees, + = right; held at the left apex (rotation = -idle, as the app starts) until release
   T.angle = (t) => (t <= T.release ? -MP.idle : -T.amp(t) * Math.cos((Math.PI * T.el(t)) / HALF));
-  T.ampLast = T.amp(T.apex[2]);                     // the third tap's apex: the point lets go here
+  T.ampLast = T.amp(T.apex[3]);                     // the fourth tap's apex (left): the point lets go here
+  T.angLast = T.side[3] * T.ampLast;                // ... as an angle (+ = right)
   // predictedPeakAmplitude(state at reel time t, upcoming peak): the guide arc's centre angle
   T.predict = (t, peakEl) => { const i = idx(t); return Math.max(0, TGT[i] + (AMP[i] - TGT[i]) * Math.exp(-Math.max(0, peakEl - T.el(t)) / MP.ease)); };
 
   // ---- the close ----
-  T.letGo = T.apex[2];                              // the arm lets go at the third apex (zero velocity)
+  T.letGo = T.apex[3];                              // the arm lets go at the fourth apex (zero velocity)
   T.hudOut = T.letGo + 250;
-  T.glide = [T.letGo + 80, T.letGo + 1000];         // up onto the full stop
+  T.glide = [T.letGo + 80, T.letGo + 1360];         // up onto the full stop (the whole cream line + blinking cursor hold ~1.3s before landing)
   T.land = T.glide[1];
   T.draftOut = T.land + 350;                        // the unstuck line holds past the landing, then leaves
   T.wordmark = T.land + 200; T.line = T.wordmark + 700; T.cta = T.wordmark + 1150;

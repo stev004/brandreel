@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Held Reel</title>
+<!--
+  brandreel animatic v1 - regulate - "Held." social reel (Angry -> Chaos Release), ~16s (T.dur), 1080x1920 @ 60
+  Direction 3 of marketing/reels-2026-09/ANGRY_AND_TRAILER_DIRECTIONS.md (Steven 2026-09-28: see all
+  three Angry directions). Built from regulate-612-angry (same Chaos Release physics, colours, ball
+  sizes, charge-to-ball binding, collision-driven score). One unbroken take.
+  - Hook: 6:12 PM / jaw tight. saying nothing. on screen from frame 0, the colon blinking on the heartbeat.
+  - Held: the digits leave; the colon's lower dot stays, the white point. The argument arrives on
+    heartbeats (fine. / you always do this / forget it), then is held in: the three lines are pressed
+    into one justified two-line block, letterspacing closing, weight rising, the block shrinking and
+    heating toward Angry, a faint tremor in it and a squeeze on every heartbeat. The frame is dead
+    still; only the point trembles. The charge numeral rises with the squeeze (the holding IS the
+    charge), 100 at the tightest.
+  - Instruction: "Shake it out instead." + SHAKE YOUR DEVICE TO DRAIN THE CHARGE (the app's line,
+    ShakeGame.tsx:607, its accessibility label for the playing screen). A phone edge draws around the block.
+  - Shake: the phone (edge, block, numeral, swarm) jolts at the game's 110ms cooldown while the
+    headline and the point hold still. The first jolt bursts the block from the inside into the game's
+    red balls; the charge drains 100 -> 0 in five bouts and the swarm thins with it. Last ball gone:
+    stillness, silence. The point, still all along the shaking, falls into the full stop of "regulate."
+  - The game is the app's (components/ShakeGame.tsx, app main): balls 10-18pt at .85 in #C06C4D /
+    #B54B32; no gravity, wall bounces (.92-.98 + jitter), equal-mass collisions (.9), damping .999,
+    speed floor bound to the charge; each shake kicks every ball at m x 260pt/s x .6-1.4, capped
+    1200pt/s; visible balls = round(charge% x 80) by index; the charge drains one step per 60ms
+    sensor update while shaking; milestone haptics at 75/50/25; numeral + PERCENT CHARGED as the HUD.
+  DEVIATIONS (honest):
+  - The charge RISING 0 -> 100 while the block is held is the reel's metaphor; in the app the charge
+    starts at 100 and only drains.
+  - Time: the drain is ~3.7s of shaking in five bouts; the game takes ~12-20s of real effort. Compressed ~4x.
+  - The burst's birth kick is aimed outward from the block (a burst from the inside) at 1.25x force;
+    in the game balls start spread over the screen. From the first jolt on, kicks are the game's
+    (own random direction per ball).
+  - One shake impulse per 110ms jolt (the haptic cadence), not per 60ms sensor update; hidden balls
+    leave the collision pass. HUD reduced to numeral + PERCENT CHARGED (no top bar, track or KEEP
+    SHAKING: the instruction line carries the ask). The playfield is a 640px phone (S = 1.63 px/pt).
+  - Serif is Playfair Display (Brand Book), not the app's Cormorant.
+  Laws: emerald ground; Angry burnt orange (+ the game's deep red on balls) is the only state colour:
+  balls, the block's heat, the instruction mono, the burst flash; the dot pure white; teal unused;
+  hook on screen at frame 0; wordmark only at the end.
+
+  COPY LIST: 6:12 · PM · jaw tight. saying nothing. · fine. · you always do this · forget it ·
+  0-100 · PERCENT CHARGED · Shake it out instead. · SHAKE YOUR DEVICE TO DRAIN THE CHARGE ·
+  regulate. · Somewhere to put it. · 4 TOOLS FREE ON THE APP STORE
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,500;1,500&display=block" rel="stylesheet">
+<link rel="stylesheet" href="lib/reel.css">
+<style>
+  #cam{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:540px 718px}
+  #still{position:absolute;left:0;top:0;width:1080px;height:1920px}
+  #g2{position:absolute;left:0;top:0;width:1080px;height:1920px;overflow:visible}
+  #clock{display:flex;align-items:baseline;font-family:var(--serif);font-weight:500;font-size:300px;line-height:1;color:var(--cream);font-variant-numeric:lining-nums;letter-spacing:-.02em;transform-origin:50% 60%}
+  #clock .colon{display:inline-block}
+  #clock .ampm{font-family:var(--mono);font-size:40px;letter-spacing:.3em;margin-left:22px;color:var(--sage)}
+  #blk{position:absolute;left:0;top:0;width:0;height:0;transform-origin:0 0}
+  .wd{position:absolute;left:0;top:0;font-family:var(--sans);font-weight:400;color:#dfe5de;white-space:pre;line-height:1;visibility:hidden}
+  .wd .c{display:inline-block}
+  .hud{font-family:var(--mono);font-weight:500;font-size:22px;letter-spacing:.26em;text-transform:uppercase;color:var(--sage);white-space:nowrap;line-height:1}
+  #num{font-family:var(--serif);font-weight:500;font-size:150px;line-height:1;color:var(--cream);font-variant-numeric:lining-nums tabular-nums;white-space:nowrap}
+</style>
+<body>
+<div id="wrap"><div id="stage">
+<div id="cam">
+  <svg id="g" viewBox="0 0 1080 1920"></svg>
+  <div id="blk"></div>
+  <div class="t" id="num">0</div>
+  <div class="t hud" id="lab">Percent charged</div>
+</div>
+<div id="still">
+  <div class="t" id="clock"><span class="d" id="dA">6</span><span class="colon" id="colon"></span><span class="d" id="dB">12</span><span class="ampm" id="ampm">PM</span></div>
+  <div class="t head italic" id="moment" style="font-size:96px;white-space:nowrap;text-align:center">jaw tight.<br>saying nothing.</div>
+  <div class="t head" id="shk" style="font-size:72px;white-space:nowrap">Shake it out instead.</div>
+  <div class="t mono" id="ins" style="color:var(--ang);font-size:24px">Shake your device to drain the charge</div>
+  <svg id="g2" viewBox="0 0 1080 1920"><defs><filter id="glow" x="-200%" y="-200%" width="500%" height="500%"><feGaussianBlur stdDeviation="9"/></filter></defs></svg>
+</div>
+  <div id="wm"></div>
+  <div class="t head italic" id="line" style="font-size:56px;white-space:nowrap;opacity:.9">Somewhere to put it.</div>
+  <div class="t cta" id="cta">4 tools free on the App Store</div>
+</div></div>
+<div id="bar"><button id="play">Play</button><span id="tc">0.00s</span><input id="scrub" type="range" min="0" step="1" value="0"><span>regulate &middot; held &middot; 1080&times;1920 &middot; 60fps</span></div>
+<audio id="snd" preload="auto"></audio>
+<script src="lib/timing-kit.js"></script>
+<script src="regulate-angry-held.timing.js"></script>
+<script src="lib/reel-kit.js"></script>
+<script>
+const { E, clamp, lerp, P, smooth, kf, hash, vnoise, $, S, A, place, riseV, rise, splitWords, headline, path, wordmark } = Reel;
+const T = TIMING, F = T.field, BK = T.block, C = { cream: [242, 240, 233], words: [223, 229, 222], ang: [192, 108, 77], deep: '#B54B32' };
+const NUM_Y = 930, LAB_Y = 1106, SHK_Y = 1262, INS_Y = 1430;
+const rgb = (a, b, u) => `rgb(${a.map((v, i) => Math.round(lerp(v, b[i], u))).join(',')})`;
+
+// the phone jolts once per 110ms shake stroke: a snap out, a quick settle
+function jolt(t) {
+  let dx = 0, dy = 0, rot = 0;
+  for (const J of T.jolts) {
+    const k = t - J.t; if (k < 0 || k > 200) continue;
+    const env = k < 22 ? E.SNAP(k / 22) : Math.exp(-(k - 22) / 38);
+    const a = (hash(J.t * 7 + 3) + 1) * Math.PI, amp = J.k === 0 ? 30 : 19;
+    dx += Math.cos(a) * amp * env; dy += Math.sin(a) * amp * env * 0.8; rot += hash(J.t * 13 + 5) * 1.1 * env;
+  }
+  return [dx, dy, rot];
+}
+const lastBeat = (t) => { let b = -1e9; for (const x of T.beats) { if (x <= t) b = x; else break; } return b; };
+
+// in-cam layer: the phone edge, the balls
+const phone = S('rect', { x: F.x0, y: F.y0, width: F.x1 - F.x0, height: F.y1 - F.y0, rx: 72, fill: 'none', stroke: 'rgb(242,240,233)', 'stroke-width': 3, pathLength: 1, 'stroke-dasharray': 1 });
+const island = S('rect', { x: 540 - 58, y: F.y0 + 22, width: 116, height: 32, rx: 16, fill: 'rgb(242,240,233)' });
+const ballEls = T.balls.map((b) => S('line', { stroke: b.col ? C.deep : 'rgb(192,108,77)', 'stroke-width': b.r * 2, 'stroke-linecap': 'round' }));
+// still layer: the colon and the point
+const g2 = $('g2');
+const dotUp = S('circle', { fill: 'rgb(242,240,233)' }, g2), dotLo = S('circle', { fill: 'rgb(242,240,233)' }, g2);
+const smear = S('path', { fill: 'none', stroke: '#FFFFFF', 'stroke-linecap': 'round' }, g2);
+const glow = S('circle', { fill: '#FFFFFF', filter: 'url(#glow)' }, g2);
+const pt = S('circle', { fill: '#FFFFFF' }, g2);
+
+const WORDS = T.lines.flat(), LINE_OF = T.lines.flatMap((l, i) => l.map(() => i));
+let WM, R = 11, W_M, W_SHK, W_LINE, WD = [], colonUp, colonLo, rC, clockBox;
+function init() {
+  WM = wordmark($('wm'), { dotPx: 22, yDot: 960 }); R = WM.R;
+  W_M = splitWords($('moment')); W_SHK = splitWords($('shk')); W_LINE = splitWords($('line'));
+  const blk = $('blk');
+  WD = WORDS.map((w) => { const el = document.createElement('div'); el.className = 'wd'; blk.appendChild(el); const cs = [...w].map((ch) => { const s = document.createElement('span'); s.className = 'c'; s.textContent = ch; el.appendChild(s); return s; }); return { el, cs }; });
+  const cv = document.createElement('canvas').getContext('2d'); cv.font = '500 300px "Playfair Display"';
+  const cm = cv.measureText(':'), pm = cv.measureText('.'), fm = cv.measureText('1');
+  $('colon').style.width = cm.width + 'px';
+  const c = $('clock'); c.style.transform = 'translate(0,0)';
+  const k = $('stage').getBoundingClientRect().width / 1080, cb = c.getBoundingClientRect(), cr = $('colon').getBoundingClientRect();
+  clockBox = { x: 540 - cb.width / k / 2, y: 236 };
+  const base = clockBox.y + (300 - (fm.fontBoundingBoxAscent + fm.fontBoundingBoxDescent)) / 2 + fm.fontBoundingBoxAscent;
+  rC = (pm.actualBoundingBoxAscent + pm.actualBoundingBoxDescent) / 2;
+  const cx = clockBox.x + (cr.left - cb.left) / k + (cm.actualBoundingBoxRight - cm.actualBoundingBoxLeft) / 2;
+  colonLo = [cx, base + pm.actualBoundingBoxDescent - rC]; colonUp = [cx, base - cm.actualBoundingBoxAscent + rC];
+  window.__measure = () => { const L = layout(T.comp[1] + 1); let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9; L.pos.forEach(([x, y], j) => { x0 = Math.min(x0, x); x1 = Math.max(x1, x + L.w[j]); y0 = Math.min(y0, y + 0.2 * L.fs); y1 = Math.max(y1, y + 0.95 * L.fs); });
+    return { x0: +(BK.cx + L.kx * x0).toFixed(1), x1: +(BK.cx + L.kx * x1).toFixed(1), y0: +(BK.cy + L.ky * y0).toFixed(1), y1: +(BK.cy + L.ky * y1).toFixed(1), colonLo }; };
+}
+
+// the held block: loose three lines -> one justified two-line block, tighter, heavier, smaller
+function layout(t) {
+  const c = T.held(t), u2 = E.INOUT(P(c, 0.25, 0.75));
+  const fs = BK.fs, wt = Math.round(lerp(400, 820, c)), ls = lerp(0.05, -0.05, c);
+  const w = WD.map(({ el }) => { el.style.fontSize = fs + 'px'; el.style.fontWeight = wt; el.style.letterSpacing = ls + 'em'; return el.offsetWidth - ls * fs; });
+  // loose: centred lines, generous word spaces, 112px apart
+  const loose = [], gL = 0.3 * fs;
+  T.lines.forEach((_, i) => { const idx = WORDS.map((_, j) => j).filter((j) => LINE_OF[j] === i); const LW = idx.reduce((s, j) => s + w[j], 0) + gL * (idx.length - 1); let x = -LW / 2; idx.forEach((j) => { loose[j] = [x, (i - 1) * BK.gap - fs / 2]; x += w[j] + gL; }); });
+  // tight: two lines justified to a common measure (word spaces stretch), leading .9
+  const tight = [], gT = 0.2 * fs, lead = 0.9 * fs;
+  const nat = T.brickLines.map((idx) => idx.reduce((s, j) => s + w[j], 0) + gT * (idx.length - 1)), Wb = Math.max(...nat);
+  T.brickLines.forEach((idx, li) => { const g = (Wb - idx.reduce((s, j) => s + w[j], 0)) / (idx.length - 1); let x = -Wb / 2; idx.forEach((j) => { tight[j] = [x, (li ? lead / 2 : -lead / 2) - fs / 2]; x += w[j] + g; }); });
+  // choreographed so no two words ever cross: the middle line splits vertically first, then slides;
+  // the outer lines slide first, then close in on it
+  const SCH = [[[0, 0.35], [0.4, 0.7]], [[0.15, 0.55], [0, 0.3]], [[0.2, 0.55], [0.55, 0.8]]];
+  const pos = WORDS.map((_, j) => { const [sx, sy] = SCH[LINE_OF[j]], ux = E.INOUT(P(c, sx[0], sx[1] - sx[0])), uy = E.INOUT(P(c, sy[0], sy[1] - sy[0]));
+    return [lerp(loose[j][0], tight[j][0], ux), lerp(loose[j][1], tight[j][1], uy)]; });
+  const beat = t - lastBeat(t), sq = 1 - 0.028 * c * Math.exp(-beat / 130);
+  const k = lerp(1, 0.8, u2) * sq;
+  return { c, fs, w, pos, kx: k * lerp(1, 0.94, u2), ky: k * lerp(1, 0.9, u2) };
+}
+
+// the point: the colon's lower dot; trembles while it is held, still once it is shaken, then falls
+const FALL = Reel.cubicBezier(0.55, 0, 0.6, 1), DRIFT = Reel.cubicBezier(0.25, 0.4, 0.3, 1);
+function pointAt(t) {
+  if (t < T.fall[0]) {
+    const on = smooth(P(t, T.clockOut, 400)) * (1 - smooth(P(t, T.burst - 40, 60)));
+    const a = on * (0.9 + 2.6 * T.held(t));
+    return [colonLo[0] + a * vnoise(t / 26, 3), colonLo[1] + a * vnoise(t / 26, 7)];
+  }
+  const u = P(t, T.fall[0], T.fall[1] - T.fall[0]);
+  return [lerp(colonLo[0], WM.xF, DRIFT(u)), lerp(colonLo[1], WM.yF, FALL(u))];
+}
+
+function render(t) {
+  const [jx, jy, jr] = jolt(t);
+  $('cam').style.transform = `translate(${jx.toFixed(2)}px,${jy.toFixed(2)}px) rotate(${jr.toFixed(3)}deg)`;
+  const beat = t - lastBeat(t), live = t < T.clockOut;
+
+  // the clock (the hook): pulses and blinks on the heartbeat; digits leave, the lower dot stays
+  const out = E.HOUSE(P(t, T.clockOut, 600)), pulse = live ? 1 + 0.012 * Math.exp(-beat / 140) : 1;
+  const c = $('clock'); c.style.visibility = out < 0.999 ? 'visible' : 'hidden'; c.style.opacity = 1;
+  c.style.transform = `translate(${clockBox.x}px,${clockBox.y}px) scale(${pulse})`;
+  for (const id of ['dA', 'dB', 'ampm']) { const e = $(id); e.style.display = 'inline-block'; e.style.opacity = (1 - out).toFixed(3); e.style.filter = out > 0.01 ? `blur(${(10 * out).toFixed(2)}px)` : 'none'; e.style.transform = `translateY(${-30 * out}px)`; }
+  const blink = live ? 0.4 + 0.6 * Math.exp(-beat / 300) : 1;
+  A(dotUp, { cx: colonUp[0], cy: colonUp[1] - 30 * out, r: rC, 'fill-opacity': blink * (1 - out) });
+  const toPoint = smooth(P(t, T.clockOut, 250));
+  A(dotLo, { cx: colonLo[0], cy: colonLo[1], r: rC, 'fill-opacity': t < T.clockOut + 250 ? blink * (1 - toPoint) : 0 });
+  headline($('moment'), W_M, t, 540, 600, T.italic, T.italicOut, 80, { ax: 0.5 });
+
+  // the held block
+  const L = layout(t), blk = $('blk');
+  const tr = 2.2 * Math.pow(L.c, 1.5) * (t < T.burst ? 1 : 0);
+  const bx = BK.cx + tr * vnoise(t / 22, 11), by = BK.cy + tr * vnoise(t / 22, 17);
+  blk.style.transform = `translate(${bx.toFixed(2)}px,${by.toFixed(2)}px) scale(${L.kx.toFixed(4)},${L.ky.toFixed(4)})`;
+  const heat = 0.8 * smooth(P(L.c, 0.3, 0.7)), col = rgb(C.words, C.ang, heat);
+  const gone = t > T.burst + T.RIPPLE + 260;
+  WD.forEach(({ el, cs }, j) => {
+    const r = riseV(t, T.lineIn[LINE_OF[j]], Infinity, { dur: 620, dy: 30, blur: 12 });
+    if (r.o <= 0.002 || gone) { el.style.visibility = 'hidden'; return; }
+    el.style.visibility = 'visible'; el.style.opacity = r.o.toFixed(4); el.style.color = col;
+    el.style.transform = `translate(${L.pos[j][0].toFixed(2)}px,${(L.pos[j][1] + r.dy).toFixed(2)}px)`;
+    el.style.filter = r.blur > 0.05 ? `blur(${r.blur.toFixed(2)}px)` : 'none';
+    cs.forEach((s) => {
+      if (t < T.burst) { s.style.opacity = 1; s.style.color = ''; s.style.transform = 'none'; s.style.filter = 'none'; return; }
+      const wx = BK.cx + L.kx * (L.pos[j][0] + s.offsetLeft + s.offsetWidth / 2), wy = BK.cy + L.ky * (L.pos[j][1] + 0.58 * L.fs);
+      const k = t - T.rippleAt(wx, wy);
+      if (k < 0) { s.style.opacity = 1; s.style.color = ''; s.style.transform = 'none'; s.style.filter = 'none'; return; }
+      const flash = k < 34, v = E.HOUSE(P(k, 34, 150));
+      s.style.color = 'rgb(214,128,96)'; s.style.opacity = (flash ? 1 : 1 - v).toFixed(4);
+      s.style.transform = `scale(${(flash ? 1.15 : 1.15 + 0.6 * v).toFixed(3)})`;
+      s.style.filter = `blur(${(9 * v).toFixed(2)}px)`;
+    });
+  });
+
+  // the swarm: the game's balls, visible by index against the charge; drawn with a half-frame smear
+  T.balls.forEach((b, i) => {
+    const el = ballEls[i];
+    if (!T.alive(i, t)) { el.style.visibility = 'hidden'; return; }
+    const p = T.posAt(i, t), q = t - 16.67 >= b.tb ? T.posAt(i, t - 16.67) : p, bin = smooth(P(t, b.tb, 60));
+    el.style.visibility = 'visible';
+    A(el, { x1: lerp(p[0], q[0], 0.35), y1: lerp(p[1], q[1], 0.35), x2: p[0], y2: p[1], 'stroke-opacity': 0.85 * bin, 'stroke-width': b.r * 2 * lerp(0.4, 1, bin) });
+  });
+
+  // the phone edge draws in with the instruction; leaves with the HUD
+  const hOut = 1 - E.HOUSE(P(t, T.hudOut, 500)), draw = E.SETTLE(P(t, T.phone, 900));
+  A(phone, { 'stroke-dashoffset': (1 - draw).toFixed(4), 'stroke-opacity': (0.3 * hOut * (draw > 0.001 ? 1 : 0)).toFixed(4) });
+  A(island, { 'fill-opacity': (0.22 * smooth(P(t, T.phone + 350, 400)) * hOut).toFixed(4) });
+
+  // the charge: rises with the squeeze, drains with the shaking
+  const charge = T.charge(t);
+  $('num').textContent = String(t < T.burst ? Math.round(charge) : Math.ceil(charge));
+  rise($('num'), t, 540, NUM_Y, T.numIn, T.hudOut, { ax: 0.5, dy: 30 });
+  rise($('lab'), t, 540, LAB_Y, T.numIn + 120, T.hudOut, { dy: 16, blur: 6, ax: 0.5 });
+
+  // the instruction: still while the phone shakes under it; leaves once the shaking is established
+  headline($('shk'), W_SHK, t, 540, SHK_Y, T.instr, T.headOut, 70, { ax: 0.5 });
+  rise($('ins'), t, 540, INS_Y, T.mono, T.headOut + 80, { dy: 16, blur: 6, ax: 0.5 });
+
+  // the point
+  const p = pointAt(t), on = t >= T.clockOut;
+  const sm = []; for (let k = 0; k <= 6; k++) sm.push(pointAt(Math.max(0, t - (k * 8.3) / 6)));
+  A(smear, { d: path(sm), 'stroke-width': R * 2, 'stroke-opacity': t > T.fall[0] && t < T.fall[1] ? 0.55 : 0 });
+  A(glow, { cx: p[0], cy: p[1], r: R * 1.9, 'fill-opacity': 0.34 * toPoint * (1 - E.HOUSE(P(t, T.fall[1], 600))) });
+  A(pt, { cx: p[0], cy: p[1], r: on ? lerp(rC, R, toPoint) : R, 'fill-opacity': toPoint });
+
+  // close
+  WM.draw(t, T.wordmark);
+  headline($('line'), W_LINE, t, 540, WM.yF + 80, T.line, Infinity, 50, { ax: 0.5 });
+  rise($('cta'), t, 540, WM.yF + 200, T.cta, Infinity, { dy: 18, blur: 8, ax: 0.5, max: 0.9 });
+}
+
+Reel.start({ duration: T.dur, render, init, fonts: ['500 300px "Playfair Display"', 'italic 500 96px "Playfair Display"', '500 24px "JetBrains Mono"', '400 64px Inter', '820 64px Inter'] });
+</script>
+</body>
+</html>
