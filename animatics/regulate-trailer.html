@@ -4,34 +4,44 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Regulate Trailer</title>
 <!--
-  brandreel animatic v2 - regulate - "Trailer" 32.4s, 1080x1920 @ 60. The Instagram "Start here"
+  brandreel animatic v2 - regulate - "Trailer" 33.2s, 1080x1920 @ 60. The Instagram "Start here"
   highlight (the account's front door); replaces the showreel there (regulate-showreel.* kept).
   v1 Steven 2026-09-28: "it needs clearer polyvagal theory response ... like the onboarding version".
   v2 Steven 2026-09-28: Act 1 LOVED, unchanged. Act 2 rethought: "the simulated games for act 2 are
   fine - i think our issue is more the time given to each game and maybe what is presented ... some
   intro or examples to the games ... an appealing why or how it helps ... i don't think geode release
   should be included". Each game is now a small before -> after the viewer feels, not a logo flash.
+  v2.1 Steven 2026-09-28: "act 2 is better at conveying what we do. although the games of chaos need
+  to take from the chaos trailer itself. it needs an iphone and solid animation like that one for chaos
+  release." Only the Chaos Release beat is rebuilt, from the 6:12 PM Angry reels (regulate-angry-*):
+  their phone, HUD, swarm physics, shake motion and collision rattle. It grows by one beat (4.0s);
+  everything after it shifts 800ms, cuts still on the 75bpm grid. Acts 1 and 3 and the other beats unchanged.
 
   ACT 1 (0-8.5s, one take, UNCHANGED from v1): the onboarding's Reflection screen, faithfully.
     "The response that never finished." then StressCycleChart.tsx drawn by one pen (BASELINE - CALM,
     THREAT, COMPLETED + STUCK, the 1.6s plateau hold, the white point born on the stuck line, RELEASE
     to REGULATED), the point glides to the anchor, "Ten games. One for how you feel right now."
-  ACT 2 (8.5-26.9s) on a 75bpm pulse (800ms beat), every cut on a downbeat.
+  ACT 2 (8.5-27.7s) on a 75bpm pulse (800ms beat), every cut on the beat.
     BRIDGE (8.5-10.9s, 3 beats): the app's home check-in (app/(tabs)/index.tsx): serif "How are you,
       really?" and the four state rows as the app draws them (48pt rounded tile with its own glow,
       title, sage subtitle, chevron, hairlines, the app's 90ms row stagger). The Angry row is pressed
       (the app's 0.98 press), the others clear, and its tile flies up to become the small state chip
       of the first game's label. Spine: pick how you feel, get the tool.
-    FIVE GAME BEATS (3.2s = 4 beats each). Every beat: a STATE · GAME label with the state's chip
+    FIVE GAME BEATS (3.2s = 4 beats each; Chaos Release 4.0s = 5 beats). Every beat: a STATE · GAME label with the state's chip
       (y 236), the felt question in serif italic from the cut (y 320), the game doing its one real
       thing (the hero, y 470..1150), then the answer in cream (y 1250) as the game resolves; the
       question dims so one thing leads at a time.
-      1 ANGRY · CHAOS RELEASE (components/ShakeGame.tsx, free) "Still fuming?" 80 balls (10-18pt,
-        angry / deep red at .85, speeds 100-360pt/s, charge-bound target speed, wall restitution
-        .92-.98, equal-mass ball collisions), 128pt charge numeral + PERCENT CHARGED, KEEP SHAKING cue.
-        A 1.9s vigorous shake: an impulse every 60ms accelerometer update (m x 260pt/s per ball,
-        random direction, capped 1200pt/s), drain min(.22 + .11m, .7) per update: 100 -> ~80, the swarm
-        thins with it (visible = charge share of 80). "Shake the charge out."
+      1 ANGRY · CHAOS RELEASE (components/ShakeGame.tsx, free) "Still fuming?" The 6:12 PM reels' iPhone
+        (FAMILY BLOCK: body 408x852 r62, 2px cream edge at 22%, screen 390x834 r53 glass at 3%, 9px bezel,
+        100x28 island, the two-halves 900ms draw-in), here scaled x0.9 about its centre, body y 510..1277.
+        80 balls (10-18pt at .85, #C06C4D / #B54B32) fade in across the glass at the game's starting speeds;
+        the HUD: 127px serif numeral + PERCENT CHARGED, the app's line SHAKE YOUR DEVICE / TO DRAIN THE
+        CHARGE (0.52-1.28s). Then two bouts of 110ms strokes (1.40s, 2.25s): the whole phone jolts per stroke
+        (numeral and HUD ride it; the label, question and answer stay dead still), every live ball is kicked
+        (m x 260pt/s x .6-1.4, capped 1200pt/s), the charge drains one step per 60ms sensor update, 100 -> 68,
+        and the swarm thins with it (visible = round(charge% x 80) by index; a released ball fades in 90ms).
+        Deterministic run in the timing file (T.chaos), shared with the score's rattle. "Shake the charge
+        out." sits under the phone (y 1372, own slot for this beat).
       2 ANXIOUS · PRESSURE GAUGE · REGULATE+ (app/pressure-gauge.tsx) "Wound tight?" The 280pt gauge at
         3x: 180deg face (cream .18), 11 ticks (.3), amber redline on the last 20%, #EFC488 needle + hub,
         PRESSURE. Taps ratchet the needle to the redline (each tap jolts the gauge x pressure, the
@@ -50,7 +60,7 @@
         app's curve (its own fillAt(): 0.68 out-quad inhale, out-sin sip to full, hold, in-out-quad
         exhale, flat rest), faint ahead (.14), amber burn behind, SIP and FULL waypoints, the amber
         comet (r5 + r11 glow .18). "Two breaths in. One long breath out." lands on the exhale.
-  ACT 3 (26.9s-end, one take): the Sigh's long exhale carries on; the comet turns from amber to the
+  ACT 3 (27.7s-end, one take): the Sigh's long exhale carries on; the comet turns from amber to the
     white point, the curve clears, the point glides to rest as the white full stop of "regulate."
     (dot measured from Playfair's "." at the wordmark size), NOT MEDITATION. REGULATION., 4 TOOLS
     FREE ON THE APP STORE.
@@ -59,12 +69,16 @@
   - Principle 1 (one take) is broken on purpose in Act 2 (hard cuts on the beat, the brief).
   - Brand type, not the app's: Playfair Display replaces the app's Cormorant Garamond (numerals,
     headline, grounding hero); Inter/JetBrains Mono replace SF/Menlo. Layout, colours, copy are the app's.
-  - Scale: phone points x2.3 (home rows), x2.45 (Chaos, Pendulum bob, Sigh), x3 (gauge), x2 (grounding).
+  - Scale: phone points x2.3 (home rows), x2.45 (Pendulum bob, Sigh), x3 (gauge), x2 (grounding); Chaos
+    Release is the 6:12 PM reels' phone at 0.99 px/pt, then x0.9 (0.89 px/pt) to clear the text by >= 90px.
   - The app's own eyebrows/HUD (ANGER · CHAOS RELEASE + % + bar, TAP TO THE REDLINE + bar, PASSES
     counter, bottom instructions, back buttons, grounding count run / hint / Next button) are left out:
-    the trailer's label, question and answer take those places. Chaos keeps its KEEP SHAKING cue.
-  - Chaos: the swarm is walled to y 470..1150 (the app's walls are the screen edges); the game layer
-    jitters while shaking to show the phone moving (a screen recording would not move). Drain real.
+    the trailer's label, question and answer take those places. Chaos keeps the numeral + PERCENT CHARGED
+    and, as the 6:12 PM reels do, the game screen's VoiceOver line SHAKE YOUR DEVICE TO DRAIN THE CHARGE
+    (ShakeGame.tsx:607) where its cue sits (the visible intro line is "Shake your device hard and don't stop.").
+  - Chaos: the playfield is the phone's glass under the 59pt top inset (the app's). Time is compressed as
+    in the 6:12 PM reels: 15 strokes over ~1.5s drain 32 points (the game takes far longer); one kick per
+    110ms stroke (the haptic cadence), not per 60ms sensor update; released balls fade over 90ms.
   - Pressure Gauge: 12 taps of 8.3% (app: 1% a tap, ~100 taps); each tap eases in over 60ms (app:
     instant); the fall is 2.4s out-cubic (app 6.0s, 2.5x).
   - Pendulum: half swing 1600ms (app 2000ms, 1.25x) so both apexes land on the 75bpm beats 2 and 4;
@@ -88,8 +102,8 @@
   STUCK - WHERE MOST OF US LIVE · REGULATED · Ten games. One for how you feel right now. ·
   How are you, really? · Anxious / Panic · Overthinking, stressed, worried · Numb / Freeze ·
   Shut down, disconnected, heavy · Angry / Frustrated · Irritated, on edge, heated · Balanced / Flow ·
-  Calm, present, grounded · ANGRY · CHAOS RELEASE · Still fuming? · 100..80 · PERCENT CHARGED ·
-  KEEP SHAKING · Shake the charge out. · ANXIOUS · PRESSURE GAUGE · REGULATE+ · Wound tight? · PRESSURE ·
+  Calm, present, grounded · ANGRY · CHAOS RELEASE · Still fuming? · 100..68 · PERCENT CHARGED ·
+  SHAKE YOUR DEVICE / TO DRAIN THE CHARGE · Shake the charge out. · ANXIOUS · PRESSURE GAUGE · REGULATE+ · Wound tight? · PRESSURE ·
   Push it to the redline. Let it out slow. · NUMB · PENDULUM · Gone numb? · Follow the swing back. ·
   NUMB · 5-4-3-2-1 GROUNDING · REGULATE+ · Somewhere else? · 5 things you can see. · lamp, window,
   plant... · and... · one more... · Light on the window · A green mug · My own hands · Keys on the
@@ -113,7 +127,12 @@
   .ans{font-family:var(--serif);font-weight:500;font-size:60px;line-height:1.12;color:var(--cream);width:840px;text-align:center;text-wrap:balance}
   .rowT{font-family:var(--sans);font-weight:600;font-size:37px;color:var(--cream);white-space:nowrap;line-height:1.2}
   .rowS{font-family:var(--sans);font-weight:400;font-size:30px;color:#8BA89F;white-space:nowrap;line-height:1.2}
-  .num{font-family:var(--serif);font-weight:500;font-size:240px;line-height:1;color:var(--cream);font-variant-numeric:tabular-nums oldstyle-nums;white-space:nowrap}
+  /* Chaos Release's phone + HUD: the 6:12 PM Angry reels' FAMILY CSS (#num / #lab / #cue there) */
+  #cam,#gC{position:absolute;left:0;top:0;width:1080px;height:1920px}
+  #gC{overflow:visible}
+  #chNum{font-family:var(--serif);font-weight:500;line-height:1;color:var(--cream);font-variant-numeric:lining-nums tabular-nums;white-space:nowrap;transform-origin:50% 60%}
+  #chLab{font-family:var(--mono);font-weight:500;font-size:18px;letter-spacing:.26em;text-transform:uppercase;color:var(--sage);white-space:nowrap;line-height:1}
+  #chCue{font-family:var(--mono);font-weight:500;font-size:20px;letter-spacing:.2em;text-transform:uppercase;color:var(--ang);white-space:nowrap;line-height:1.7;text-align:center}
   .mlab{font-family:var(--mono);font-weight:500;font-size:27px;letter-spacing:.27em;text-transform:uppercase;white-space:nowrap;line-height:1}
   #gd{position:absolute;left:0;top:0;width:800px}
   #gd .hero{display:flex;align-items:flex-end;gap:32px}
@@ -140,6 +159,12 @@
     <g id="fly"></g>
     <g id="pl"></g>
   </svg>
+  <div id="cam" style="display:none">
+    <svg id="gC" viewBox="0 0 1080 1920" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="t" id="chNum">100</div>
+    <div class="t" id="chLab">Percent charged</div>
+    <div class="t" id="chCue">Shake your device<br>to drain the charge</div>
+  </div>
 
   <div class="t head" id="hA" style="width:888px">The response that never <span style="color:#E7836E">finished.</span></div>
   <div class="t lab" id="lBase" style="color:#8F9E8B;font-size:22px">Baseline - calm</div>
@@ -152,9 +177,6 @@
   <div class="t head" id="hB" style="width:888px">How are you,<br>really?</div>
   <div id="rowsText"></div>
 
-  <div class="t num" id="cNum">100</div>
-  <div class="t mlab" id="cLab" style="color:#8F9E8B">Percent charged</div>
-  <div class="t mlab" id="cCue" style="color:#C06C4D">Keep shaking</div>
   <div class="t mlab" id="gLab" style="color:rgba(242,240,233,.35);font-size:30px;letter-spacing:.36em">Pressure</div>
   <div class="t" id="gd">
     <div class="hero"><div class="hn">5</div><div class="hl">things you<br>can <b>see.</b></div></div>
@@ -222,7 +244,7 @@ const hexMix = (a, b, k) => { const pa = [1, 3, 5].map((i) => parseInt(a.slice(i
 const BT = T.bridge, G = T.games, NG = G.length;
 const snapK = (u) => E.SNAP(P(u, 0, T.snap));
 const localT = (i, t) => t - T.cuts[i];
-const beatEnd = (i) => (i === NG - 1 ? T.dur : T.cuts[i] + T.beatLen);
+const beatEnd = (i) => (i === NG - 1 ? T.dur : T.cuts[i + 1]);
 const liveB = (i, t) => t >= T.cuts[i] && t < beatEnd(i);
 function mulberry(a) { return () => { a |= 0; a = (a + 0x6d2b79f5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
 
@@ -243,7 +265,7 @@ function beatText(i, t) {
   place(SUB[i], 540, Y_SUB, k * out, { ax: 0.5, dy: 10 * (1 - k) });
   place(FELT[i], 540, Y_FELT, k * out * (1 - 0.58 * ansP), { ax: 0.5, dy: 14 * (1 - k) });
   const r = riseV(u, G[i].ansAt, Infinity, { dur: 620, dy: 30, blur: 8 });
-  place(ANS[i], 540, Y_ANS, on ? r.o * out : 0, { ax: 0.5, dy: r.dy, blur: r.blur });
+  place(ANS[i], 540, G[i].ansY || Y_ANS, on ? r.o * out : 0, { ax: 0.5, dy: r.dy, blur: r.blur });
 }
 function groupSnap(i, t, cx = 540, cy = 820) {
   const g = FG[i];
@@ -313,59 +335,66 @@ function drawBridge(t) {
 }
 
 // =====================================================================
-// 1 CHAOS RELEASE (components/ShakeGame.tsx) - pt x2.45, swarm walled to the hero band
+// 1 CHAOS RELEASE - the 6:12 PM Angry reels' phone, HUD, swarm and shake (their FAMILY BLOCK in
+// regulate-angry-reply.html), drawn in the family's native px; the whole phone is scaled by CH.k about
+// its centre and lifted by CH.dy. The run (ShakeGame.tsx's step) is T.chaos, shared with the score.
 // =====================================================================
-const SC = 1080 / 440;
-const CH = { N: 80, x0: 0, x1: 1080, y0: 470, y1: 1150 };
-const chBalls = Array.from({ length: CH.N }, (_, i) => {
-  const size = ((hash(i * 7 + 1) + 1) / 2 * 8 + 10) * SC, r = size / 2;
-  const a = (hash(i * 7 + 2) + 1) * Math.PI, sp = ((hash(i * 7 + 3) + 1) / 2 * 260 + 100) * SC;
-  return { r, x0: CH.x0 + r + (hash(i * 7 + 4) + 1) / 2 * (CH.x1 - CH.x0 - 2 * r), y0: CH.y0 + r + (hash(i * 7 + 5) + 1) / 2 * (CH.y1 - CH.y0 - 2 * r),
-    vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, el: S('circle', { r, fill: hash(i * 7 + 6) > 0 ? C.ang : C.deep, 'fill-opacity': 0.85 }, FG[0]) };
-});
-// shake force (g above 1g) of a vigorous ~3Hz shake, sampled at the app's 60ms accelerometer rate
-const shakeM = (ms) => { const [a, b] = T.chaos.shake; if (ms < a || ms > b) return 0; const e = smooth(P(ms, a, 200)) * (1 - smooth(P(ms, b - 200, 200))); return e * (4.6 * Math.abs(Math.sin((2 * Math.PI * 3 * (ms - a)) / 1000)) + 1.4); };
-let chMemo = null;
-function chSim(u) {
-  const DT = 1000 / 60, n = Math.floor(clamp(u, 0, T.beatLen) / DT);
-  if (!chMemo || chMemo.n > n) {
-    chMemo = { n: 0, rnd: mulberry(4242), charge: 100, nextUpd: 0, st: chBalls.map((b) => ({ x: b.x0, y: b.y0, vx: b.vx, vy: b.vy, r: b.r })) };
+const SC = 1080 / 440;                              // phone pt -> px for the other game beats (x2.45)
+const CH = T.chaos, CBD = CH.body, CSC = CH.screen, gC = $('gC'), cam = $('cam');
+cam.style.transformOrigin = `${CH.pivot[0]}px ${CH.pivot[1]}px`;
+// the phone jolts once per 110ms shake stroke (a snap out, a quick settle); the text around it stays dead still
+function chJolt(u) {
+  let dx = 0, dy = 0, rot = 0;
+  for (const J of CH.jolts) {
+    const k = u - J.t; if (k < 0 || k > 200) continue;
+    const env = k < 22 ? E.SNAP(k / 22) : Math.exp(-(k - 22) / 38);
+    const a = (hash(J.t * 7 + 3) + 1) * Math.PI, amp = J.k === 0 ? 20 : 13;
+    dx += Math.cos(a) * amp * env; dy += Math.sin(a) * amp * env * 0.8; rot += hash(J.t * 13 + 5) * 1.1 * env;
   }
-  const M = chMemo, st = M.st;
-  while (M.n < n) {
-    const ms = M.n * DT, dt = DT / 1000;
-    // accelerometer updates (every 60ms): drain + one impulse per ball
-    while (M.nextUpd <= ms + DT) {
-      const m = shakeM(M.nextUpd);
-      if (m > 0.35) {
-        M.charge = Math.max(0, M.charge - Math.min(0.22 + m * 0.11, 0.7));
-        const imp = m * 260 * SC, cap = 1200 * SC;
-        for (const q of st) { const f = 0.6 + M.rnd() * 0.8, a = M.rnd() * Math.PI * 2; q.vx += Math.cos(a) * imp * f; q.vy += Math.sin(a) * imp * f; const s = Math.hypot(q.vx, q.vy); if (s > cap) { q.vx *= cap / s; q.vy *= cap / s; } }
-      }
-      M.nextUpd += T.chaos.upd;
-    }
-    const target = (100 + 260 * (M.charge / 100)) * SC;
-    for (const q of st) {
-      q.x += q.vx * dt; q.y += q.vy * dt;
-      if (q.x - q.r < CH.x0 || q.x + q.r > CH.x1) { q.vx = -q.vx * (0.92 + M.rnd() * 0.06); q.vy += (M.rnd() - 0.5) * 6 * SC; q.x = q.x - q.r < CH.x0 ? CH.x0 + q.r : CH.x1 - q.r; }
-      if (q.y - q.r < CH.y0 || q.y + q.r > CH.y1) { q.vy = -q.vy * (0.92 + M.rnd() * 0.06); q.vx += (M.rnd() - 0.5) * 6 * SC; q.y = q.y - q.r < CH.y0 ? CH.y0 + q.r : CH.y1 - q.r; }
-      q.vx *= 0.999; q.vy *= 0.999;
-      const s = Math.hypot(q.vx, q.vy);
-      if (s < target * 0.85) { const a = M.rnd() * Math.PI * 2, acc = Math.min(target * 0.08, target - s); q.vx += Math.cos(a) * acc; q.vy += Math.sin(a) * acc; }
-    }
-    for (let i = 0; i < st.length; i++) for (let j = i + 1; j < st.length; j++) {
-      const p = st[i], q = st[j], dx = q.x - p.x, dy = q.y - p.y, md = p.r + q.r, d2 = dx * dx + dy * dy;
-      if (d2 >= md * md) continue;
-      const d = Math.sqrt(d2) || 0.001, nx = dx / d, ny = dy / d, sep = (md - d) * 0.52;
-      p.x -= nx * sep; p.y -= ny * sep; q.x += nx * sep; q.y += ny * sep;
-      const rel = (q.vx - p.vx) * nx + (q.vy - p.vy) * ny;
-      if (rel < 0) { const imp = -(1 + 0.9) * rel * 0.5; p.vx -= nx * imp; p.vy -= ny * imp; q.vx += nx * imp; q.vy += ny * imp; }
-    }
-    M.n++;
-  }
-  return M;
+  return [dx, dy, rot];
 }
-const chJit = (u) => { const [a, b] = T.chaos.shake, e = smooth(P(u, a, 150)) * (1 - smooth(P(u, b - 150, 150))); return [e * 12 * Math.sin((2 * Math.PI * 3 * (u - a)) / 1000), e * 5 * Math.sin((2 * Math.PI * 6 * (u - a)) / 1000 + 0.7)]; };
+// glass, the game's balls, the device edge (two halves from the top centre down to the bottom centre), the island
+const chHalf = (sg) => { const { x0, y0, x1, y1, rx } = CBD, x = sg > 0 ? x1 : x0, sw = sg > 0 ? 1 : 0;
+  return `M540 ${y0}H${x - sg * rx}A${rx} ${rx} 0 0 ${sw} ${x} ${y0 + rx}V${y1 - rx}A${rx} ${rx} 0 0 ${sw} ${x - sg * rx} ${y1}H540`; };
+const PH = {};
+PH.glass = S('rect', { x: CSC.x0, y: CSC.y0, width: CSC.x1 - CSC.x0, height: CSC.y1 - CSC.y0, rx: CSC.rx, fill: C.cream, 'fill-opacity': 0 }, gC);
+PH.balls = CH.balls.map((b) => S('line', { stroke: b.col ? C.deep : C.ang, 'stroke-width': b.r * 2, 'stroke-linecap': 'round', visibility: 'hidden' }, gC));
+PH.edge = [1, -1].map((sg) => S('path', { d: chHalf(sg), fill: 'none', stroke: C.cream, 'stroke-width': 2, pathLength: 1, 'stroke-opacity': 0 }, gC));
+PH.island = S('rect', { x: 540 - CH.island.w / 2, y: CH.island.top, width: CH.island.w, height: CH.island.h, rx: CH.island.h / 2, fill: '#050c09', stroke: C.cream, 'stroke-width': 1.5, 'fill-opacity': 0, 'stroke-opacity': 0 }, gC);
+function chPhone(u) {
+  const d = E.SETTLE(P(u, CH.phoneIn, CH.drawIn)), on = u >= CH.phoneIn ? 1 : 0;
+  PH.edge.forEach((e) => A(e, { 'stroke-dasharray': `${d.toFixed(4)} 1`, 'stroke-opacity': (0.22 * on).toFixed(4) }));
+  A(PH.glass, { 'fill-opacity': (0.03 * E.HOUSE(P(u, CH.phoneIn + 250, 650))).toFixed(4) });
+  const isl = E.HOUSE(P(u, CH.phoneIn + 450, 450));
+  A(PH.island, { 'fill-opacity': (0.9 * isl).toFixed(4), 'stroke-opacity': (0.14 * isl).toFixed(4) });
+}
+// the swarm: visible by index against the charge (the game's binding), a half-frame smear; a ball the
+// charge lets go of fades and shrinks over 90ms instead of popping
+function chBalls(u) {
+  CH.balls.forEach((b, i) => {
+    const el = PH.balls[i]; let o = 0, k = 1;
+    if (CH.alive(i, u)) o = 1;
+    else if (u >= CH.gone[i] && u < CH.gone[i] + 90) { const v = E.HOUSE((u - CH.gone[i]) / 90); o = 1 - v; k = 1 - 0.45 * v; }
+    if (o <= 0) { el.setAttribute('visibility', 'hidden'); return; }
+    const p = CH.posAt(i, u), q = u - 16.67 >= b.tb ? CH.posAt(i, u - 16.67) : p, bin = smooth(P(u, b.tb, 60));
+    el.setAttribute('visibility', 'visible');
+    A(el, { x1: lerp(p[0], q[0], 0.35), y1: lerp(p[1], q[1], 0.35), x2: p[0], y2: p[1], 'stroke-opacity': (0.85 * bin * o).toFixed(4), 'stroke-width': (b.r * 2 * lerp(0.4, 1, bin) * k).toFixed(2) });
+  });
+}
+// the game's HUD: serif numeral + PERCENT CHARGED where ShakeGame.tsx centres them, the app's line where its cue sits
+function chHUD(u) {
+  const n = $('chNum'); n.textContent = String(Math.ceil(CH.charge(u) - 1e-9));
+  rise(n, u, 540, CH.num.cy - CH.num.px / 2, CH.hudIn, Infinity, { ax: 0.5, dy: 30 });
+  rise($('chLab'), u, 540, CH.lab.y, CH.hudIn + 120, Infinity, { dy: 16, blur: 6, ax: 0.5, max: 0.9 });
+  rise($('chCue'), u, 540, CH.cue.y, CH.cueIn, CH.cueOut, { dy: 16, blur: 6, ax: 0.5, max: 0.9 });
+}
+window.__chaosLayout = () => {   // ink boxes of the Chaos beat on the 1080x1920 frame (for the >=90px check)
+  const cv = document.createElement('canvas').getContext('2d');
+  const ink = (font, px, lh, top, text) => { cv.font = font; const m = cv.measureText(text), base = top + (lh - (m.fontBoundingBoxAscent + m.fontBoundingBoxDescent)) / 2 + m.fontBoundingBoxAscent; return [+(base - m.actualBoundingBoxAscent).toFixed(1), +(base + m.actualBoundingBoxDescent).toFixed(1), +m.width.toFixed(1)]; };
+  const felt = ink('italic 500 78px "Playfair Display"', 78, 78 * 1.06, Y_FELT, G[0].felt), ans = ink('500 60px "Playfair Display"', 60, 60 * 1.12, G[0].ansY, G[0].ans);
+  const top = CH.top, bot = CH.pivot[1] + CH.dy + (CBD.y1 - CH.pivot[1]) * CH.k, x0 = 540 - ((CBD.x1 - CBD.x0) / 2) * CH.k;
+  return { felt, phone: [+top.toFixed(1), +bot.toFixed(1), +x0.toFixed(1), +(1080 - x0).toFixed(1)], ans, feltToPhone: +(top - felt[1]).toFixed(1), phoneToAns: +(ans[0] - bot).toFixed(1), ansBottom: ans[1] };
+};
 
 // =====================================================================
 // 2 PRESSURE GAUGE (app/pressure-gauge.tsx) - the 280pt box at x3, hub at (540, 960)
@@ -455,6 +484,7 @@ function init() {
   W_H = splitWords($('hA')); W_L = splitWords($('hL')); W_B = splitWords($('hB'));
   for (const k in P1) LEN[k] = P1[k].getTotalLength();
   CHIP0 = [540 - SUB[0].offsetWidth / 2 + 13, Y_SUB + 13];
+  $('chNum').style.fontSize = CH.num.px + 'px';
   window.__wm = { xF: WM.xF, yF: WM.yF, R };
 }
 
@@ -483,17 +513,13 @@ function render(t) {
 
   // ================= ACT 2 =================
   drawBridge(t);
-  // 1 chaos
-  if (groupSnap(0, t)) {
-    const u = localT(0, t), M = chSim(u), n = Math.round((M.charge / 100) * CH.N), j = chJit(u);
-    FG[0].setAttribute('transform', FG[0].getAttribute('transform') + ` translate(${j[0].toFixed(2)} ${j[1].toFixed(2)})`);
-    chBalls.forEach((b, i) => A(b.el, { cx: M.st[i].x.toFixed(2), cy: M.st[i].y.toFixed(2), visibility: i < n ? 'visible' : 'hidden' }));
-    $('cNum').textContent = String(Math.ceil(M.charge - 1e-9));
-    const k = snapK(u);
-    place($('cNum'), 540 + j[0], 640 + j[1], k, { ax: 0.5, dy: 14 * (1 - k) });
-    place($('cLab'), 540 + j[0], 912 + j[1], k, { ax: 0.5, dy: 10 * (1 - k) });
-    place($('cCue'), 540 + j[0], 1096 + j[1], k * (1 - E.HOUSE(P(u, T.chaos.shake[1], 400))), { ax: 0.5 });
-  } else { show($('cNum'), 0); show($('cLab'), 0); show($('cCue'), 0); }
+  // 1 chaos: the phone (shaken as one body, the text around it still), its swarm and HUD
+  if (liveB(0, t)) {
+    const u = localT(0, t), J = chJolt(u);
+    cam.style.display = '';
+    cam.style.transform = `translate(${J[0].toFixed(2)}px,${(CH.dy + J[1]).toFixed(2)}px) rotate(${J[2].toFixed(3)}deg) scale(${CH.k})`;
+    chPhone(u); chBalls(u); chHUD(u);
+  } else cam.style.display = 'none';
   // 2 gauge
   if (groupSnap(1, t)) {
     const u = localT(1, t), p = gP(u), trem = Math.sin((t + 1200) / 560) * 2;
@@ -562,7 +588,7 @@ function render(t) {
   rise($('cta'), t, 540, WM.yF + 190, T.cta, Infinity, { dy: 18, blur: 8, ax: 0.5, max: 0.9 });
 }
 
-Reel.start({ duration: T.dur, render, init, fonts: ['500 200px "Playfair Display"', 'italic 500 84px "Playfair Display"', '500 24px "JetBrains Mono"', '400 42px Inter', '600 37px Inter'] });
+Reel.start({ duration: T.dur, render, init, fonts: ['500 127px "Playfair Display"', '500 20px "JetBrains Mono"', '500 200px "Playfair Display"', 'italic 500 84px "Playfair Display"', '500 24px "JetBrains Mono"', '400 42px Inter', '600 37px Inter'] });
 </script>
 </body>
 </html>
