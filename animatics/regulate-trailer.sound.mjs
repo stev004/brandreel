@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 // Score for regulate-trailer.html; every cue is read from regulate-trailer.timing.js.
 // Act 1: a heartbeat that climbs at THREAT, holds high under STUCK, and settles at RELEASE.
-// Act 2: a 120bpm pulse, each cut carries its game's own gesture. Act 3: the breath out, the
-// house full-stop tick, then silence.
+// Act 2: a 75bpm pulse (cuts every 4 beats), each game carries its own gesture. Act 3: the Sigh's
+// long breath out, the house full-stop tick, then silence.
+import { spawnSync } from 'node:child_process';
 import { SR, makeBus, add, rng, biquad, reverb, mixInto, master, writeWav } from '../bin/lib/dsp.mjs';
 import { P, kf, lerp, heartbeatAt, thump, tick, wood, pad, breath, air, room, ping, tone, crackle, fullStop, loadTiming } from '../bin/lib/sfx.mjs';
 const T = loadTiming('regulate-trailer'), s = (ms) => ms / 1000;
 const dry = makeBus(T.dur / 1000), wet = makeBus(T.dur / 1000);
+const clamp = (x, a = 0, b = 1) => (x < a ? a : x > b ? b : x);
 const sm = (x) => (x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x));
-const C = T.cuts;
+const C = T.cuts, B = T.beat;
 
 // ---------------- ACT 1 ----------------
 room(dry, 0, T.dur, (ms) => sm(P(ms, 0, 300)) * (1 - sm(P(ms, T.wordmark, 2500))), 0.15);
@@ -29,39 +31,69 @@ tone(wet, s(T.regLabel), 587.33, 0.04, 0.4, 0.05, 0.9);
 air(wet, s(T.toAnchor[0]), s(T.toAnchor[1] - T.toAnchor[0]), (u) => lerp(1800, 500, u), (u) => Math.sin(Math.PI * u), 0.06, 14);
 tone(wet, s(T.line), 293.66, 0.045, 0, 0.2, 1.1);
 
-// ---------------- ACT 2: 120bpm pulse ----------------
-T.pulse.forEach((ms, i) => { const down = i % 3 === 0; thump(dry, s(ms), down ? 96 : 84, 46, down ? 0.5 : 0.3); tick(wet, s(ms + 250), 5200, 0.018, i % 2 ? 0.4 : -0.4); });
-C.forEach((c, i) => air(wet, s(c) - 0.002, 0.18, (u) => lerp(5000, 900, u), (u) => Math.exp(-u * 5), 0.08, 30 + i));   // each hard cut
-// 1 sigh: the sip (short top-up inhale), then the hold
-breath(dry, s(C[0] + 240), 1.2, 1700, 2300, (u) => sm(u / 0.2) * (1 - sm((u - 0.75) / 0.25)), 0.55, 41);
-// 2 gauge: five taps drive the needle, pitch rises with pressure; ping at the redline
-T.gaugeTaps.forEach((tp, k) => wood(dry, s(C[1] + tp), -0.2 + k * 0.1, 0.5 + k * 0.06, 760 + k * 90));
-{ let ph = 0; add(dry, s(C[1] + 250), 1.25, (i, t) => { const u = Math.min(1, t / 1.0); ph += (2 * Math.PI * (196 + 240 * u)) / SR; return Math.sin(ph) * 0.045 * sm(t / 0.1) * (1 - sm((t - 1.1) / 0.15)); }); }
-ping(wet, s(C[1] + 1250), 1174.66, 0.07, 0.3);
-// 3 geode: taps + glassy cracks
-T.taps.forEach((tp, k) => { wood(dry, s(C[2] + tp), 0, 0.5, 1200 + k * 60); for (let j = 0; j < 2; j++) crackle(wet, s(C[2] + tp) + 0.03 + j * 0.05, 0.4, -0.3 + k * 0.2, 70 + k * 3 + j); });
-tone(wet, s(C[2] + 1150), 1567.98, 0.05, 0, 0.01, 0.7);
-// 4 chaos: a rattle on every shake
-{ const r = rng(51), bp = biquad('bp', 2200, 0.8);
-  add(dry, s(C[3] + 250), 1.05, (i, t) => { const env = Math.pow(Math.abs(Math.sin(2 * Math.PI * t * 4)), 3) * (1 - sm((t - 0.7) / 0.35)); return bp(r() * 2 - 1) * env * 0.5; }); }
-[312, 562, 812, 1062].forEach((k, j) => { crackle(wet, s(C[3] + k), 0.35, j % 2 ? 0.5 : -0.5, 90 + j); thump(dry, s(C[3] + k), 70, 40, 0.18, j % 2 ? 0.3 : -0.3); });
-// 5 tension: a clench that tightens, ticks on the count
-{ const r = rng(61), lp = biquad('lp', 180, 0.9); let ph = 0;
-  add(dry, s(C[4]), 1.5, (i, t) => { const u = t / 1.5; ph += (2 * Math.PI * (70 + 40 * u * u)) / SR; return (Math.sin(ph) * 0.06 + lp(r() * 2 - 1) * 0.35) * u * u * (1 - sm((t - 1.44) / 0.05)); }); }
-T.tenseCount.forEach((c, k) => tick(wet, s(C[4] + c), 1760 - k * 80, 0.08));
-// 6 pendulum: the app's apex tone as the bob reaches the guide (right), a soft tap
-tone(wet, s(C[5] + T.pendApex), 523.25, 0.08, 0.6, 0.01, 0.5); wood(dry, s(C[5] + T.pendApex), 0.6, 0.35, 880);
-air(wet, s(C[5]), 1.44, (u) => 900 + 700 * Math.sin(Math.PI * u), (u) => Math.sin(Math.PI * u) * 0.8, 0.05, 62, (u) => Math.sin(Math.PI * u) * 0.6);
-// 7 focus follow: a slow calming pulse (the press-and-hold rhythm) and a drifting glide
-{ let ph = 0; add(wet, s(C[6] + 100), 1.4, (i, t) => { ph += (2 * Math.PI * 440) / SR; return Math.sin(ph) * 0.04 * (0.6 + 0.4 * Math.sin(2 * Math.PI * t * 2)) * sm(t / 0.15) * (1 - sm((t - 1.2) / 0.2)); }, { panFn: (t) => Math.sin(t * 2) * 0.5 }); }
-// 8 breath: the inhale up the column, ticks enter
-for (let k = 0; k < 12; k++) tick(wet, s(C[7] + 40 + k * 22), 3000 + k * 40, 0.035, k < 4 ? -0.4 : 0.4);
-breath(dry, s(C[7] + 240), 1.26, 1100, 1900, (u) => sm(u / 0.3) * (1 - sm((u - 0.85) / 0.15)), 0.5, 71);
 
-// ---------------- ACT 3: out-breath, rest, full stop, silence ----------------
-breath(dry, s(T.exhale[0]), s(T.exhale[1] - T.exhale[0]), 1050, 460, (u) => sm(u / 0.1) * Math.pow(1 - u, 1.0), 0.5, 81);
-pad(wet, T.act3, T.dur, [146.83, 220, 293.66, 369.99], (ms) => sm(P(ms, T.act3, 1500)) * (1 - sm(P(ms, T.glide[1] - 400, 2400))), 0.05);
+// ---------------- ACT 2: the check-in bridge + five game beats on a 75bpm pulse ----------------
+const BT = T.bridge;
+T.pulse.forEach((ms, i) => { const down = (ms - T.act2) % (4 * B) === 0 || ms === T.act2; const g = sm(P(ms, T.act2, 1600)) * 0.7 + 0.3;
+  thump(dry, s(ms), down ? 92 : 80, 46, (down ? 0.34 : 0.21) * g); tick(wet, s(ms + B / 2), 2400, 0.01, i % 2 ? 0.3 : -0.3); });
+pad(wet, T.act2, T.act3 + 400, [146.83, 220, 293.66], (ms) => sm(P(ms, T.act2, 1500)) * (1 - sm(P(ms, C[4] + 1200, 1600))), 0.026);
+C.forEach((c, i) => air(wet, s(c) - 0.002, 0.16, (u) => lerp(3200, 800, u), (u) => Math.exp(-u * 5), 0.05, 30 + i));   // each cut
+// bridge: the rows arrive, the Angry row is pressed, its tile flies up
+[0, 1, 2, 3].forEach((k) => tone(wet, s(BT.rows + k * BT.rowStep + 60), [587.33, 659.25, 739.99, 880][k], 0.018, -0.3 + k * 0.2, 0.01, 0.35));
+wood(dry, s(BT.press), 0, 0.3, 520);
+air(wet, s(BT.fly[0]), s(BT.fly[1] - BT.fly[0]), (u) => lerp(700, 2200, u), (u) => Math.sin(Math.PI * u), 0.05, 21);
+
+// 1 CHAOS: a rattle on every accelerometer impulse, the swarm's wall clicks, a low shake rumble
+{ const [a, b] = T.chaos.shake; const m = (ms) => { if (ms < a || ms > b) return 0; const e = sm(P(ms, a, 200)) * (1 - sm(P(ms, b - 200, 200))); return e * (4.6 * Math.abs(Math.sin((2 * Math.PI * 3 * (ms - a)) / 1000)) + 1.4); };
+  for (let ms = 0; ms < b + 60; ms += T.chaos.upd) { const f = m(ms); if (f <= 0.35) continue; const r = rng(500 + ms), bp = biquad('bp', 1500 + 500 * ((ms / 60) % 3), 1.1), pan = ((ms / 60) % 2 ? 0.35 : -0.35);
+    add(dry, s(C[0] + ms), 0.09, (i, t) => bp(r() * 2 - 1) * Math.exp(-t / 0.022) * Math.min(1, t / 0.002) * 0.16 * (f / 6), { pan }); }
+  for (let ms = a; ms < b; ms += 1000 / 3) thump(dry, s(C[0] + ms + 80), 70, 40, 0.16, 0);
+  for (let k = 0; k < 22; k++) { const ms = 150 + k * 130 + (k * 37) % 50; if (ms > 3000) break; tick(wet, s(C[0] + ms), 1100 + (k * 173) % 700, 0.02 * (ms < b ? 1 : 0.5), ((k * 7) % 5) / 2.5 - 0.8); } }
+
+// 2 PRESSURE GAUGE: taps climb with the needle, a hum rises with pressure, the redline lands,
+// then the long breath out as it falls
+{ const g = T.gauge, c = C[1];
+  g.taps.forEach((tp, k) => wood(dry, s(c + tp), -0.15 + (k % 2) * 0.3, 0.28 + k * 0.012, 700 + k * 45));
+  let ph = 0; const d = (g.peak + g.hold + 300 - g.taps[0]) / 1000;
+  add(dry, s(c + g.taps[0]), d, (i, t) => { const ms = g.taps[0] + t * 1000, u = clamp((ms - g.taps[0]) / (g.peak - g.taps[0])); ph += (2 * Math.PI * (130 + 130 * u)) / SR; return Math.sin(ph) * 0.05 * u * sm(t / 0.1) * (1 - sm(P(ms, g.peak + g.hold, 300))); });
+  thump(dry, s(c + g.peak), 84, 42, 0.26); tone(wet, s(c + g.peak), 880, 0.04, 0.3, 0.005, 0.5);
+  breath(dry, s(c + g.peak + g.hold), s(g.fall) + 0.3, 1100, 420, (u) => sm(u / 0.08) * Math.pow(1 - u, 1.2), 0.42, 43);
+  air(wet, s(c + g.peak + g.hold), s(g.fall), (u) => 2000 * Math.pow(1 - u, 1.6) + 250, (u) => sm(u / 0.05) * Math.pow(1 - u, 1.4), 0.07, 44); }
+
+// 3 PENDULUM: the app's hard-panned apex tones (right, then left) and the hit tone on each tap;
+// a soft air follows the swing across the stereo field
+{ const c = C[2], pan = (u) => Math.sin((Math.PI * (u + T.pend.e0)) / T.pend.half - Math.PI / 2) * -0.8;
+  T.pend.hits.forEach((h, k) => { const p = k === 0 ? 0.9 : -0.9; tone(wet, s(c + h), 440, 0.065, p, 0.004, 0.55); tone(wet, s(c + h) + 0.02, 659.25, 0.03, p, 0.004, 0.4); wood(dry, s(c + h), p, 0.14, 900); });
+  air(wet, s(c), 3.2, (u) => 700 + 500 * Math.abs(Math.sin((Math.PI * (u * 3200 + T.pend.e0)) / T.pend.half - Math.PI / 2)), (u) => 0.6 * sm(u / 0.06) * (1 - sm((u - 0.9) / 0.1)), 0.045, 62, (u) => pan(u * 3200)); }
+
+// 4 GROUNDING: soft steps, one per thing named, climbing
+T.ground.entries.forEach((e, k) => { tone(wet, s(C[3] + e), [392, 440, 493.88, 587.33, 659.25][k], 0.032, -0.4 + k * 0.2, 0.01, 0.5); tick(wet, s(C[3] + e), 1600, 0.02, -0.4 + k * 0.2); });
+
+// 5 SIGH: two breaths in (the long first, the short sip), the hold, then the long breath out
+breath(dry, s(T.sighIn1[0]), s(T.sighIn1[1] - T.sighIn1[0]), 700, 1500, (u) => sm(u / 0.25) * (1 - sm((u - 0.8) / 0.2)), 0.42, 71);
+breath(dry, s(T.sighSip[0]), s(T.sighSip[1] - T.sighSip[0]), 1500, 2300, (u) => sm(u / 0.2) * (1 - sm((u - 0.7) / 0.3)), 0.42, 72);
+
+// ---------------- ACT 3: the out-breath, rest, full stop, silence ----------------
+breath(dry, s(T.exhale[0]), s(T.exhale[1] - T.exhale[0]), 1050, 420, (u) => sm(u / 0.08) * Math.pow(1 - u, 1.0), 0.5, 81);
+air(wet, s(T.exhale[0]), s(T.exhale[1] - T.exhale[0]), (u) => 1900 * Math.pow(1 - u, 1.5) + 220, (u) => sm(u / 0.05) * Math.pow(1 - u, 1.2), 0.08, 82);
+pad(wet, T.act3 - 700, T.dur, [146.83, 220, 293.66, 369.99], (ms) => sm(P(ms, T.act3 - 700, 1800)) * (1 - sm(P(ms, T.glide[1] - 400, 2400))), 0.05);
 air(wet, s(T.glide[0]), s(T.glide[1] - T.glide[0]), (u) => lerp(1800, 500, u), (u) => Math.sin(Math.PI * u), 0.08, 83);
 fullStop(wet, s(T.glide[1]));
 reverb(wet, { mix: 0.4, room: 0.84, damp: 0.4, preDelayMs: 20 }); mixInto(dry, wet, 1); master(dry, 1.1);
-writeWav(process.argv[2] || 'regulate-trailer.wav', dry);
+// Peak control for the -1.5 dBTP ceiling: bin/render-reel.sh gains the mix to -14 LUFS and sample-limits
+// at -1.6 dBFS, and the AAC encode then overshoots to ~-1.3 dBTP. So limit here first, smoothly (5ms
+// look-ahead, 80ms release, peaks read on a 4x interpolated signal), to 10.2 dB above the mix's own
+// integrated loudness (measured with ffmpeg, twice); the render's limiter then has nothing left to catch.
+{ const out = process.argv[2] || 'regulate-trailer.wav';
+  const lufs = () => { writeWav(out, dry); const r = spawnSync('ffmpeg', ['-hide_banner', '-i', out, '-af', 'loudnorm=print_format=json', '-f', 'null', '-'], { encoding: 'utf8' }); const m = /"input_i"\s*:\s*"(-?[\d.]+)"/.exec(r.stderr || ''); return m ? +m[1] : null; };
+  for (let pass = 0; pass < 2; pass++) {
+    const I = lufs(); if (I == null) break;
+    const ceil = Math.pow(10, (I + 10.2) / 20), N = dry.n, look = Math.round(0.005 * SR), rel = Math.exp(-1 / (0.08 * SR));
+    const need = new Float32Array(N);
+    for (let n = 0; n < N; n++) { let pk = 0; for (const ch of [dry.L, dry.R]) { const a = ch[n], b = ch[n + 1] ?? a, c = ch[n - 1] ?? a; const i1 = (-c + 9 * a + 9 * b - (ch[n + 2] ?? b)) / 16; pk = Math.max(pk, Math.abs(a), Math.abs(i1)); } need[n] = pk > ceil ? ceil / pk : 1; }
+    const m = new Float32Array(N); const q = [];               // min of need[] over [n, n + look]
+    for (let n = N - 1; n >= 0; n--) { while (q.length && need[q[q.length - 1]] >= need[n]) q.pop(); q.push(n); while (q[0] > n + look) q.shift(); m[n] = need[q[0]]; }
+    let cur = 1; for (let n = 0; n < N; n++) { cur = m[n] < cur ? m[n] : m[n] + (cur - m[n]) * rel; m[n] = cur; }   // instant down, 80ms release
+    let acc = 0; for (let n = 0; n < N; n++) { acc += m[n] - (n >= look ? m[n - look] : 1); const gg = (acc + look) / look; dry.L[n] *= gg; dry.R[n] *= gg; }   // 5ms ramp
+  }
+  writeWav(out, dry); }

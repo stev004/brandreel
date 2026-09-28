@@ -4,110 +4,140 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Regulate Trailer</title>
 <!--
-  brandreel animatic v1 - regulate - "Trailer" 27.0s, 1080x1920 @ 60. The Instagram "Start here"
+  brandreel animatic v2 - regulate - "Trailer" 32.4s, 1080x1920 @ 60. The Instagram "Start here"
   highlight (the account's front door); replaces the showreel there (regulate-showreel.* kept).
-  Steven 2026-09-28: "it needs clearer polyvagal theory response that doesn't turn off but.. a bit
-  like the onboarding version. it should be clear like that and longer on that screen. then maybe a
-  scan through a load of our games.. a flash. surely the showreel should be like a trailer".
-  Structure: marketing/reels-2026-09/ANGRY_AND_TRAILER_DIRECTIONS.md ("Showreel -> trailer").
+  v1 Steven 2026-09-28: "it needs clearer polyvagal theory response ... like the onboarding version".
+  v2 Steven 2026-09-28: Act 1 LOVED, unchanged. Act 2 rethought: "the simulated games for act 2 are
+  fine - i think our issue is more the time given to each game and maybe what is presented ... some
+  intro or examples to the games ... an appealing why or how it helps ... i don't think geode release
+  should be included". Each game is now a small before -> after the viewer feels, not a logo flash.
 
-  ACT 1 (0-8.5s, one take): the onboarding's Reflection screen, faithfully. "The response that never
-    finished." ("finished." in the onboarding's STUCK_RED #E7836E) is on screen at frame 0 with the
-    dashed baseline. Then StressCycleChart.tsx drawn by one pen, its own paths (the 800x300 viewBox,
-    mapped to 888x480, taller than the card for the phone), colours and order: BASELINE - CALM, the rise (cream .7, in-quad) to THREAT
-    (lands 1.0s with one impact ring), the fork dot, COMPLETED (mix(teal, sage, .45) at .62, out-cubic
-    1100ms) and STUCK (coral, the app's wiggling plateau, linear 1450ms) drawn together, then
-    "STUCK - WHERE MOST OF US LIVE". HOLD 1.6s on the plateau (it trembles). The white point is born
-    on the stuck line's end and rides RELEASE (teal, out-cubic 1200ms) down to REGULATED; hold 1.0s.
-    The graph clears, the point glides to the anchor, "Ten games. One for how you feel right now."
-  ACT 2 (8.5-20.5s): hard cuts on a 120bpm beat, 1.5s each. Each instrument snaps in (240ms SNAP)
-    around the white point, which sits at the SAME screen position (540, 800) on every cut: the only
-    continuous thing. The point does one act; the game's real instruction line sits beneath
-    (serif, y 1230) and a small STATE · GAME sub-label at the top (y 262, where the app's eyebrow is).
-      1 Physiological Sigh (app/physiological-sigh.tsx): the lung-fill curve (faint ahead, amber
-        burn behind, SIP / FULL waypoints), the sip at the app's real 1200ms (0.68 -> 1.0, out-sin).
-        "Quick top-up breath".
-      2 Pressure Gauge (pressure-gauge.tsx): 180deg face, 11 ticks, amber redline last 20%; the point
-        is the hub, five taps on the 8ths drive the needle to the redline, tremble. "Tap to the redline".
-      3 Geode Release (geode.tsx): the amber crystal ring (glow layers, #EFC488 rim), the point is
-        the impact point; four taps run the app's crack paths out to the rim. "Keep tapping".
-      4 Chaos Release (ShakeGame.tsx): 80 angry/deep-red balls, the charge numeral + PERCENT CHARGED;
-        the point shakes (4Hz) and the charge drains 100 -> 86 at the app's drain rate, the swarm
-        thins with it. "Shake your device to drain the charge".
-      5 Tension Release (body-scan.tsx): TENSE, the rust vignette clenches in from the edges, the
-        countdown numeral, the point trembles. "Make tight fists, squeeze hard".
-      6 Pendulum (bilateral-rhythm.tsx): hairline arm from a top pivot, the point is the bob (slate
-        glow), out to the freezeAlt guide arc (+-5.2deg), hit ring on arrival, back to centre.
-        "Tap each side as the bob arrives".
-      7 Focus Follow (focus-follow.tsx): the orb's Lissajous (the app's 4.5s x / 5.5s y eased sweeps)
-        and its comet wake of slate motes (14, spaced by distance). "Keep following...".
-      8 Regulate Breath (breathing.tsx vagal): column track, sage fill + ticks (4 in / 8 out), IN 4 /
-        OUT 8 rail; the point rides the inhale. "Inhale" -> "Exhale" as Act 3 begins.
-  ACT 3 (20.5-27s, one take): the exhale carries the point back down the column to the anchor, the
-    instrument clears, the point glides to rest as the white full stop of "regulate." (dot measured
-    from Playfair's "." at the wordmark size), NOT MEDITATION. REGULATION., 4 TOOLS FREE ON THE APP STORE.
+  ACT 1 (0-8.5s, one take, UNCHANGED from v1): the onboarding's Reflection screen, faithfully.
+    "The response that never finished." then StressCycleChart.tsx drawn by one pen (BASELINE - CALM,
+    THREAT, COMPLETED + STUCK, the 1.6s plateau hold, the white point born on the stuck line, RELEASE
+    to REGULATED), the point glides to the anchor, "Ten games. One for how you feel right now."
+  ACT 2 (8.5-26.9s) on a 75bpm pulse (800ms beat), every cut on a downbeat.
+    BRIDGE (8.5-10.9s, 3 beats): the app's home check-in (app/(tabs)/index.tsx): serif "How are you,
+      really?" and the four state rows as the app draws them (48pt rounded tile with its own glow,
+      title, sage subtitle, chevron, hairlines, the app's 90ms row stagger). The Angry row is pressed
+      (the app's 0.98 press), the others clear, and its tile flies up to become the small state chip
+      of the first game's label. Spine: pick how you feel, get the tool.
+    FIVE GAME BEATS (3.2s = 4 beats each). Every beat: a STATE · GAME label with the state's chip
+      (y 236), the felt question in serif italic from the cut (y 320), the game doing its one real
+      thing (the hero, y 470..1150), then the answer in cream (y 1250) as the game resolves; the
+      question dims so one thing leads at a time.
+      1 ANGRY · CHAOS RELEASE (components/ShakeGame.tsx, free) "Still fuming?" 80 balls (10-18pt,
+        angry / deep red at .85, speeds 100-360pt/s, charge-bound target speed, wall restitution
+        .92-.98, equal-mass ball collisions), 128pt charge numeral + PERCENT CHARGED, KEEP SHAKING cue.
+        A 1.9s vigorous shake: an impulse every 60ms accelerometer update (m x 260pt/s per ball,
+        random direction, capped 1200pt/s), drain min(.22 + .11m, .7) per update: 100 -> ~80, the swarm
+        thins with it (visible = charge share of 80). "Shake the charge out."
+      2 ANXIOUS · PRESSURE GAUGE · REGULATE+ (app/pressure-gauge.tsx) "Wound tight?" The 280pt gauge at
+        3x: 180deg face (cream .18), 11 ticks (.3), amber redline on the last 20%, #EFC488 needle + hub,
+        PRESSURE. Taps ratchet the needle to the redline (each tap jolts the gauge x pressure, the
+        slow tremor grows with pressure), 400ms peak hold, then it falls out-cubic. "Push it to the
+        redline. Let it out slow." (the app's own release prompt is "Let it out slow.")
+      3 NUMB · PENDULUM (app/bilateral-rhythm.tsx + utils/bilateralRhythm.ts, free) "Gone numb?" The
+        hairline arm (cream .16), the 20pt slate bob with its .32 glow, the freezeAlt guide arcs (+-5.2deg,
+        .55, fading in 600ms at each centre crossing toward the coming apex). Two apexes, right then
+        left, each a hit: the app's glow flash (.32 -> 1 in 90ms -> .32 in 400ms) and 1.04 bob pop, the
+        amplitude growing by the app's hitGrowth. "Follow the swing back."
+      4 NUMB · 5-4-3-2-1 GROUNDING · REGULATE+ (app/grounding.tsx) "Somewhere else?" The app's step
+        screen at 2x: serif "5" + "things you / can see." ("see." in the screen's slate tone), the five
+        input lines (slate mono index, hairline, the app's placeholders "lamp, window, plant...",
+        "and...", "one more..."), filled one at a time. "Name what's around you. Come back to the room."
+      5 ANXIOUS · PHYSIOLOGICAL SIGH (app/physiological-sigh.tsx, free) "Can't catch your breath?" The
+        app's curve (its own fillAt(): 0.68 out-quad inhale, out-sin sip to full, hold, in-out-quad
+        exhale, flat rest), faint ahead (.14), amber burn behind, SIP and FULL waypoints, the amber
+        comet (r5 + r11 glow .18). "Two breaths in. One long breath out." lands on the exhale.
+  ACT 3 (26.9s-end, one take): the Sigh's long exhale carries on; the comet turns from amber to the
+    white point, the curve clears, the point glides to rest as the white full stop of "regulate."
+    (dot measured from Playfair's "." at the wordmark size), NOT MEDITATION. REGULATION., 4 TOOLS
+    FREE ON THE APP STORE.
 
-  DEVIATIONS (listed per principle 3):
-  - Principle 1 (one take) is broken on purpose in Act 2 (the brief). Acts 1 and 3 are one take each.
-  - Game order / states: the brief paired Geode with Angry and Tension Release with Balanced. The app
-    files Geode Release under Anxious (MenuData.ts; its ring and progress are amber) and Tension
-    Release's play screen says "ANGER · TENSION RELEASE" (tension highlights in the angry tone). So the
-    order is Sigh, Pressure Gauge, Geode (ANXIOUS) · Chaos, Tension (ANGRY) · Pendulum, Focus Follow
-    (FREEZE) · Regulate Breath (BALANCED): still Anxious -> Angry -> Freeze -> Balanced, every label true,
-    and the calmest tool hands the point to the close. Release's sage never appears (state colour law).
-  - The app's coloured comet / bob / orb / breath dot are the white point (as the showreel); their
-    state glow is kept as a halo behind it. The gauge's point is its hub, the geode's its impact point.
-  - Time: Sigh's sip is real time. Gauge ratchets 20% a tap (app: 1% a tap against decay); Geode's
-    cracks run in 4 taps (app: to 100 progress); Tension's count runs 5-4-3 on the beat (app 1/s) and
-    its clench (app 4.5s in-quad) is compressed to the flash; Pendulum's out-and-back takes 1440ms
-    (app: 2000ms per half swing, 1.4x); Regulate Breath keeps 1:2 but 4s/8s -> 1.26s/2.5s (3.2x), the
-    exhale on the 3:04 AM travel curve (as the showreel). Chaos drain and Focus Follow speed are real.
-  - Focus Follow: the camera holds the orb (the point) still and the wake streams off it; in the app
-    the orb crosses a still screen. Same relative motion, so the point keeps its match-cut position.
-  - Sigh: the camera tracks the comet (the curve slides beneath the point) for the same reason.
-  - REGULATED sits right-aligned under the baseline at the graph edge (the app's label, above the
-    line at 94%, would overhang the frame and sit on the point).
-  - Graph line weights scaled for 1080 wide; the dashed baseline at .16 (app hairlineSoft .055).
+  DEVIATIONS (per principle 3):
+  - Principle 1 (one take) is broken on purpose in Act 2 (hard cuts on the beat, the brief).
+  - Brand type, not the app's: Playfair Display replaces the app's Cormorant Garamond (numerals,
+    headline, grounding hero); Inter/JetBrains Mono replace SF/Menlo. Layout, colours, copy are the app's.
+  - Scale: phone points x2.3 (home rows), x2.45 (Chaos, Pendulum bob, Sigh), x3 (gauge), x2 (grounding).
+  - The app's own eyebrows/HUD (ANGER · CHAOS RELEASE + % + bar, TAP TO THE REDLINE + bar, PASSES
+    counter, bottom instructions, back buttons, grounding count run / hint / Next button) are left out:
+    the trailer's label, question and answer take those places. Chaos keeps its KEEP SHAKING cue.
+  - Chaos: the swarm is walled to y 470..1150 (the app's walls are the screen edges); the game layer
+    jitters while shaking to show the phone moving (a screen recording would not move). Drain real.
+  - Pressure Gauge: 12 taps of 8.3% (app: 1% a tap, ~100 taps); each tap eases in over 60ms (app:
+    instant); the fall is 2.4s out-cubic (app 6.0s, 2.5x).
+  - Pendulum: half swing 1600ms (app 2000ms, 1.25x) so both apexes land on the 75bpm beats 2 and 4;
+    the arm is 650px (the app's is 52% of screen height) so the swing sits under the question; the
+    amplitude starts near the app's cap (mid-session). The app draws no hit ring: the hit is its
+    glow flash + pop. The bob stays the app's slate (it is not white in the app).
+  - Grounding: the app files it under Freeze and Balanced (MenuData.ts); its screen always accents in
+    the Freeze slate (TONE = stateFrozen). The label says NUMB (orchestrator 09-28: matches the app, which labels it FREEZE; one state colour per surface), the screen keeps its
+    real slate accents. The constellation dots are left out for space. Entries are typed at ~260ms each.
+  - Sigh: 0.5x time (inhale 1.25s, sip 0.6s, hold 0.5s, exhale 2.5s); curve box 888x540 (app 392x287pt).
+    The comet is amber (app) and becomes the white point only after the cut to Act 3.
+  - Home rows: the app's tiles use freezeSlate #607D8B / green #6B8E6B; here the state tokens
+    (#7E9AA6 / #7FA77F, the brief and the game screens). No eyebrow ("FRIDAY MORNING") or tab bar.
 
-  LAWS: emerald ground flat; the point is the only pure-white thing; one state colour per surface and
-  only in its own flash; teal only on RELEASE / REGULATED (the onboarding's) and the tagline; no em or
-  en dashes on screen. Safe area: scene within y 236..1470, nothing at x > 940 for y 1150..1500.
+  LAWS: emerald ground flat; the point is the only pure-white thing and appears in Act 2 only as the
+  Sigh's own comet; one state colour names each beat; teal only on RELEASE / REGULATED and the
+  tagline; no em or en dashes on screen. Safe area: scene within y 236..1470, nothing at x > 940 for
+  y 1150..1500.
 
   COPY LIST: The response that never finished. · BASELINE - CALM · THREAT · COMPLETED ·
   STUCK - WHERE MOST OF US LIVE · REGULATED · Ten games. One for how you feel right now. ·
-  ANXIOUS · PHYSIOLOGICAL SIGH · SIP · FULL · Quick top-up breath · ANXIOUS · PRESSURE GAUGE ·
-  Tap to the redline · ANXIOUS · GEODE RELEASE · Keep tapping · ANGRY · CHAOS RELEASE · 100..86 ·
-  PERCENT CHARGED · Shake your device to drain the charge · ANGRY · TENSION RELEASE · 5 4 3 · TENSE ·
-  Make tight fists, squeeze hard · FREEZE · PENDULUM · Tap each side as the bob arrives ·
-  FREEZE · FOCUS FOLLOW · Keep following... · BALANCED · REGULATE BREATH · IN 4 · OUT 8 · Inhale ·
-  Exhale · regulate. · NOT MEDITATION. REGULATION. · 4 TOOLS FREE ON THE APP STORE
+  How are you, really? · Anxious / Panic · Overthinking, stressed, worried · Numb / Freeze ·
+  Shut down, disconnected, heavy · Angry / Frustrated · Irritated, on edge, heated · Balanced / Flow ·
+  Calm, present, grounded · ANGRY · CHAOS RELEASE · Still fuming? · 100..80 · PERCENT CHARGED ·
+  KEEP SHAKING · Shake the charge out. · ANXIOUS · PRESSURE GAUGE · REGULATE+ · Wound tight? · PRESSURE ·
+  Push it to the redline. Let it out slow. · NUMB · PENDULUM · Gone numb? · Follow the swing back. ·
+  NUMB · 5-4-3-2-1 GROUNDING · REGULATE+ · Somewhere else? · 5 things you can see. · lamp, window,
+  plant... · and... · one more... · Light on the window · A green mug · My own hands · Keys on the
+  table · The door frame · Name what's around you. Come back to the room. · ANXIOUS · PHYSIOLOGICAL
+  SIGH · Can't catch your breath? · SIP · FULL · Two breaths in. One long breath out. · regulate. ·
+  NOT MEDITATION. REGULATION. · 4 TOOLS FREE ON THE APP STORE
 
   CONTRACT: window.__seek(ms) draws that frame synchronously; window.__durationMs. Rendered by
   bin/animatic-render.mjs. Score: regulate-trailer.sound.mjs, cues from regulate-trailer.timing.js.
 -->
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,500;1,500&display=block" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,500;1,500&display=block" rel="stylesheet">
 <link rel="stylesheet" href="lib/reel.css">
 <style>
   .lab{font-family:var(--mono);font-weight:500;font-size:26px;letter-spacing:.18em;text-transform:uppercase;white-space:nowrap;line-height:1}
-  .instr{font-family:var(--serif);font-weight:500;font-size:64px;line-height:1.1;color:var(--cream);width:800px;text-align:center;text-wrap:balance}
-  .sub{font-family:var(--mono);font-weight:500;font-size:24px;letter-spacing:.26em;text-transform:uppercase;color:var(--cream);white-space:nowrap;line-height:1;opacity:.9}
+  .sub{font-family:var(--mono);font-weight:500;font-size:23px;letter-spacing:.22em;text-transform:uppercase;color:var(--cream);white-space:nowrap;line-height:26px;height:26px;display:flex;align-items:center;gap:18px}
   .sub i{font-style:normal}
-  .num{font-family:var(--serif);font-weight:500;font-size:220px;line-height:1;color:var(--cream);font-variant-numeric:tabular-nums lining-nums;white-space:nowrap}
+  .sub .plus{color:var(--sage)}
+  .sub .chip{display:block;width:26px;height:26px;border-radius:7px;flex:none}
+  .felt{font-family:var(--serif);font-style:italic;font-weight:500;font-size:78px;line-height:1.06;color:var(--cream);white-space:nowrap}
+  .ans{font-family:var(--serif);font-weight:500;font-size:60px;line-height:1.12;color:var(--cream);width:840px;text-align:center;text-wrap:balance}
+  .rowT{font-family:var(--sans);font-weight:600;font-size:37px;color:var(--cream);white-space:nowrap;line-height:1.2}
+  .rowS{font-family:var(--sans);font-weight:400;font-size:30px;color:#8BA89F;white-space:nowrap;line-height:1.2}
+  .num{font-family:var(--serif);font-weight:500;font-size:240px;line-height:1;color:var(--cream);font-variant-numeric:tabular-nums oldstyle-nums;white-space:nowrap}
+  .mlab{font-family:var(--mono);font-weight:500;font-size:27px;letter-spacing:.27em;text-transform:uppercase;white-space:nowrap;line-height:1}
+  #gd{position:absolute;left:0;top:0;width:800px}
+  #gd .hero{display:flex;align-items:flex-end;gap:32px}
+  #gd .hn{font-family:var(--serif);font-weight:500;font-size:192px;line-height:192px;color:var(--cream)}
+  #gd .hl{font-family:var(--serif);font-weight:500;font-size:56px;line-height:62px;color:var(--cream);padding-bottom:16px}
+  #gd .hl b{font-weight:500;color:#7E9AA6}
+  #gd .lines{margin-top:40px}
+  #gd .ln{display:flex;align-items:center;gap:28px;border-bottom:2px solid rgba(242,240,233,.1);height:84px}
+  #gd .ix{font-family:var(--mono);font-weight:500;font-size:20px;color:#7E9AA6;width:28px}
+  #gd .tx{font-family:var(--sans);font-weight:400;font-size:30px;color:var(--cream);white-space:nowrap;position:relative}
+  #gd .ph{color:#8F9E8B}
 </style>
 <body>
 <div id="wrap"><div id="stage">
   <svg id="g" viewBox="0 0 1080 1920" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <filter id="glow" x="-200%" y="-200%" width="500%" height="500%"><feGaussianBlur stdDeviation="9"/></filter>
-      <filter id="soft" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="14"/></filter>
-      <linearGradient id="vT" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C06C4D" stop-opacity=".45"/><stop offset="1" stop-color="#C06C4D" stop-opacity="0"/></linearGradient>
-      <linearGradient id="vB" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#C06C4D" stop-opacity=".45"/><stop offset="1" stop-color="#C06C4D" stop-opacity="0"/></linearGradient>
-      <linearGradient id="vL" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#C06C4D" stop-opacity=".45"/><stop offset="1" stop-color="#C06C4D" stop-opacity="0"/></linearGradient>
-      <linearGradient id="vR" x1="1" y1="0" x2="0" y2="0"><stop offset="0" stop-color="#C06C4D" stop-opacity=".45"/><stop offset="1" stop-color="#C06C4D" stop-opacity="0"/></linearGradient>
+      <filter id="tglow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="10"/></filter>
+      <filter id="bglow" x="-200%" y="-200%" width="500%" height="500%"><feGaussianBlur stdDeviation="16"/></filter>
     </defs>
     <g id="act1"></g>
-    <g id="f0"></g><g id="f1"></g><g id="f2"></g><g id="f3"></g><g id="f4"></g><g id="f5"></g><g id="f6"></g><g id="f7"></g>
+    <g id="br"></g>
+    <g id="f0"></g><g id="f1"></g><g id="f2"></g><g id="f3"></g><g id="f4"></g>
+    <g id="fly"></g>
     <g id="pl"></g>
   </svg>
 
@@ -119,15 +149,20 @@
   <div class="t lab" id="lReg" style="color:#4FD1C5">Regulated</div>
   <div class="t head italic" id="hL" style="width:888px;font-size:84px">Ten games. One for how you feel right now.</div>
 
-  <div class="t lab" id="sSip" style="color:rgba(242,240,233,.34);font-size:20px">Sip</div>
-  <div class="t lab" id="sFull" style="color:rgba(242,240,233,.34);font-size:20px">Full</div>
+  <div class="t head" id="hB" style="width:888px">How are you,<br>really?</div>
+  <div id="rowsText"></div>
+
   <div class="t num" id="cNum">100</div>
-  <div class="t lab" id="cLab" style="color:#8F9E8B">Percent charged</div>
-  <div class="t num" id="tNum" style="color:#C06C4D">5</div>
-  <div class="t lab" id="tLab" style="color:#C06C4D;font-size:28px;letter-spacing:.3em">Tense</div>
-  <div class="t lab" id="bIn" style="color:rgba(242,240,233,.3)">In 4</div>
-  <div class="t lab" id="bOut" style="color:rgba(242,240,233,.3)">Out 8</div>
-  <div id="flashText"></div>
+  <div class="t mlab" id="cLab" style="color:#8F9E8B">Percent charged</div>
+  <div class="t mlab" id="cCue" style="color:#C06C4D">Keep shaking</div>
+  <div class="t mlab" id="gLab" style="color:rgba(242,240,233,.35);font-size:30px;letter-spacing:.36em">Pressure</div>
+  <div class="t" id="gd">
+    <div class="hero"><div class="hn">5</div><div class="hl">things you<br>can <b>see.</b></div></div>
+    <div class="lines" id="gLines"></div>
+  </div>
+  <div class="t lab" id="sSip" style="color:rgba(242,240,233,.3);font-size:22px">Sip</div>
+  <div class="t lab" id="sFull" style="color:rgba(242,240,233,.3);font-size:22px">Full</div>
+  <div id="beatText"></div>
 
   <div id="wm"></div>
   <div class="t tag" id="tag">Not meditation. Regulation.</div>
@@ -178,168 +213,236 @@ const STUCK_END = [GX(562), GY(131)];
 const plateauJit = (t) => (t < T.stuck[1] || t > T.release[0] + 200 ? 0 : (2.2 * (fbm(t / 34, 5) - 0.0) + 0.8 * Math.sin(t / 23)) * smooth(P(t, T.stuck[1], 250)) * (1 - smooth(P(t, T.release[0], 200))));
 const relTip = (t) => { const f = outCubic(P(t, T.release[0], T.release[1] - T.release[0])); const q = P1.release.getPointAtLength(LEN.release * f); return [q.x, q.y]; };
 
+
 // =====================================================================
-// ACT 2 - the eight flashes
+// ACT 2 - shared
 // =====================================================================
-const FG = [0, 1, 2, 3, 4, 5, 6, 7].map((i) => $('f' + i));
-const INSTR = ['Quick top-up breath', 'Tap to the redline', 'Keep tapping', 'Shake your device to drain the charge',
-  'Make tight fists, squeeze hard', 'Tap each side as the bob arrives', 'Keep following...', 'Inhale'];
-const SCOL = { Anxious: C.anx, Angry: C.ang, Freeze: C.frz, Balanced: C.bal };
-const ft = $('flashText'), IN = [], SUB = [];
-T.games.forEach((g, i) => {
-  const a = document.createElement('div'); a.className = 't instr'; a.textContent = INSTR[i]; ft.appendChild(a); IN.push(a);
-  const b = document.createElement('div'); b.className = 't sub'; b.innerHTML = `<i style="color:${SCOL[g.state]}">${g.state}</i> &middot; ${g.game}`; ft.appendChild(b); SUB.push(b);
-});
-const exIn = document.createElement('div'); exIn.className = 't instr'; exIn.textContent = 'Exhale'; ft.appendChild(exIn);
-const local = (i, t) => t - T.cuts[i];
-const live = (i, t) => { const u = local(i, t); return u >= 0 && (i === 7 ? t < T.clear + 700 : u < T.flash); };
+const outQuad = (x) => 1 - (1 - clamp(x)) * (1 - clamp(x));
+const hexMix = (a, b, k) => { const pa = [1, 3, 5].map((i) => parseInt(a.slice(i, i + 2), 16)), pb = [1, 3, 5].map((i) => parseInt(b.slice(i, i + 2), 16)); return `rgb(${pa.map((v, i) => Math.round(lerp(v, pb[i], k))).join(',')})`; };
+const BT = T.bridge, G = T.games, NG = G.length;
 const snapK = (u) => E.SNAP(P(u, 0, T.snap));
-function groupSnap(i, t) {
+const localT = (i, t) => t - T.cuts[i];
+const beatEnd = (i) => (i === NG - 1 ? T.dur : T.cuts[i] + T.beatLen);
+const liveB = (i, t) => t >= T.cuts[i] && t < beatEnd(i);
+function mulberry(a) { return () => { a |= 0; a = (a + 0x6d2b79f5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+
+// ---- per-beat text: label (chip + STATE · GAME), felt question, answer
+const bt = $('beatText'), SUB = [], FELT = [], ANS = [];
+G.forEach((g) => {
+  const s = document.createElement('div'); s.className = 't sub';
+  s.innerHTML = `<span class="chip" style="background:${g.col};box-shadow:0 0 14px ${g.col}73"></span><span><i style="color:${g.col}">${g.state}</i> &middot; ${g.game}${g.plus ? ' <span class="plus">&middot; Regulate+</span>' : ''}</span>`;
+  bt.appendChild(s); SUB.push(s);
+  const f = document.createElement('div'); f.className = 't felt'; f.textContent = g.felt; bt.appendChild(f); FELT.push(f);
+  const a = document.createElement('div'); a.className = 't ans'; a.innerHTML = g.ans.replace('\n', '<br>'); bt.appendChild(a); ANS.push(a);
+});
+const Y_SUB = 236, Y_FELT = 318, Y_ANS = 1250;
+function beatText(i, t) {
+  const on = liveB(i, t), u = localT(i, t), k = on ? snapK(u) : 0;
+  const out = i === NG - 1 ? 1 - E.HOUSE(P(t, T.textOut, 520)) : 1;
+  const ansP = E.HOUSE(P(u, G[i].ansAt, 620));
+  place(SUB[i], 540, Y_SUB, k * out, { ax: 0.5, dy: 10 * (1 - k) });
+  place(FELT[i], 540, Y_FELT, k * out * (1 - 0.58 * ansP), { ax: 0.5, dy: 14 * (1 - k) });
+  const r = riseV(u, G[i].ansAt, Infinity, { dur: 620, dy: 30, blur: 8 });
+  place(ANS[i], 540, Y_ANS, on ? r.o * out : 0, { ax: 0.5, dy: r.dy, blur: r.blur });
+}
+function groupSnap(i, t, cx = 540, cy = 820) {
   const g = FG[i];
-  if (!live(i, t)) { g.style.display = 'none'; return false; }   // display, not visibility: children set their own
-  const k = snapK(local(i, t)), s = lerp(0.94, 1, k);
+  if (!liveB(i, t)) { g.style.display = 'none'; return false; }
+  const k = snapK(localT(i, t)), s = lerp(0.96, 1, k);
   g.style.display = ''; g.setAttribute('opacity', k.toFixed(4));
-  g.setAttribute('transform', `translate(${AX} ${AY}) scale(${s.toFixed(4)}) translate(${-AX} ${-AY})`);
+  g.setAttribute('transform', `translate(${cx} ${cy}) scale(${s.toFixed(4)}) translate(${-cx} ${-cy})`);
   return true;
 }
-function flashText(i, t, outAt = Infinity) {
-  const on = live(i, t), u = local(i, t), k = on ? snapK(u) : 0, o = k * (1 - E.HOUSE(P(t, outAt, 450)));
-  place(IN[i], AX, 1230, i === 7 ? o * (1 - smooth(P(t, T.act3 - 60, 120))) : o, { dy: 16 * (1 - k), ax: 0.5 });
-  place(SUB[i], AX, 262, o, { dy: 12 * (1 - k), ax: 0.5 });
-}
+const FG = [0, 1, 2, 3, 4].map((i) => $('f' + i));
 
-// ---- 1 Physiological Sigh: the app's lung-fill curve (10.7s breath), camera tracks the comet
-const SIG = { W: 680, H: 360, MS: 10700 };
-const fillAt = (ms) => { if (ms <= 2500) return 0.68 * (1 - (1 - ms / 2500) ** 2); ms -= 2500; if (ms <= 1200) return 0.68 + 0.32 * outSin(ms / 1200); ms -= 1200; if (ms <= 1000) return 1; ms -= 1000; if (ms <= 5000) return 1 - inOutQuad(ms / 5000); return 0; };
-const sigW = (ms) => [(ms / SIG.MS) * SIG.W, -fillAt(ms) * SIG.H];
-const sigFaint = S('path', { fill: 'none', stroke: C.cream, 'stroke-opacity': 0.16, 'stroke-width': 3, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, FG[0]);
-const sigBurn = S('path', { fill: 'none', stroke: C.anx, 'stroke-width': 6, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, FG[0]);
-const sigSip = S('circle', { r: 4, fill: C.cream, 'fill-opacity': 0.3 }, FG[0]), sigFull = S('circle', { r: 4, fill: C.cream, 'fill-opacity': 0.3 }, FG[0]);
-const sigmaC = (u) => 2500 + clamp(u - 240, 0, 1260);
-
-// ---- 2 Pressure Gauge: hub = the point
-const GA = { R: 320 }; GA.NL = (GA.R * 95) / 110;
-const gtip = (deg, len) => [AX + len * Math.sin(deg * D2R), AY - len * Math.cos(deg * D2R)];
-const gArc = S('path', { fill: 'none', stroke: C.cream, 'stroke-opacity': 0.26, 'stroke-width': 3, 'stroke-linecap': 'round' }, FG[1]);
-const gTicks = Array.from({ length: 11 }, () => S('line', { stroke: C.cream, 'stroke-opacity': 0.34, 'stroke-width': 3, 'stroke-linecap': 'round' }, FG[1]));
-const gRed = S('path', { fill: 'none', stroke: C.anx, 'stroke-opacity': 0.85, 'stroke-width': 8, 'stroke-linecap': 'round' }, FG[1]);
-const gNeedle = S('line', { stroke: C.cream, 'stroke-opacity': 0.92, 'stroke-width': 5, 'stroke-linecap': 'round' }, FG[1]);
-const gRings = T.gaugeTaps.map(() => S('circle', { fill: 'none', stroke: C.cream, 'stroke-width': 3 }, FG[1]));
-{ const ap = []; for (let a = -90; a <= 90.01; a += 2) ap.push(gtip(a, GA.R)); A(gArc, { d: path(ap) });
-  const rl = []; for (let a = 54; a <= 90.01; a += 2) rl.push(gtip(a, GA.R)); A(gRed, { d: path(rl) });
-  gTicks.forEach((ln, k) => { const a = -90 + 18 * k, p1 = gtip(a, (GA.R * 101) / 110), p2 = gtip(a, (GA.R * 116) / 110); A(ln, { x1: p1[0], y1: p1[1], x2: p2[0], y2: p2[1] }); }); }
-const KICK = (k) => (k <= 0 ? 0 : k < 90 ? 1.15 * E.SNAP(k / 90) : k < 240 ? 1.15 - 0.15 * E.HOUSE((k - 90) / 150) : 1);
-const gPress = (u) => { let p = 0; for (const b of T.gaugeTaps) p += 0.2 * KICK(u - b); return Math.min(p, 1); };
-
-// ---- 3 Geode Release: the app's ring + crack paths (280 box, centre 140,140) at 2.2x around the point
-const GE = 2.2, gx = (x) => AX + (x - 140) * GE, gy = (y) => AY + (y - 140) * GE;
-const CRACKS = [
-  ['M140 140 L135 124 L142 109 L137 94 L145 78 L139 62 L146 46 L141 31', '#EFC488', 2.5, 0, 45],
-  ['M135 124 L120 119 L106 125 L91 118 L76 123 L61 115 L45 121 L34 114', '#EFC488', 1.8, 7, 42],
-  ['M142 109 L157 103 L171 109 L186 101 L201 106 L217 99 L234 105 L247 99', '#F5D9A8', 2.2, 13, 53],
-  ['M137 94 L122 86 L108 91 L94 82 L79 88 L64 80 L49 86 L36 77', '#F5D9A8', 1.5, 19, 63],
-  ['M145 78 L160 69 L175 73 L190 63 L205 68 L221 59 L237 65 L248 59', '#F5D9A8', 1.5, 26, 72],
-  ['M139 62 L126 68 L113 78 L99 87 L84 99 L69 111 L54 126 L41 137', '#FFF3DC', 3, 33, 82],
-  ['M146 46 L158 57 L169 70 L181 84 L192 99 L204 113 L218 124 L234 132 L247 130', '#FFF3DC', 3, 39, 90],
-  ['M135 124 L145 137 L156 151 L168 166 L181 180 L194 194 L208 205 L223 211', '#FFF3DC', 2.5, 44, 94],
-  ['M142 109 L131 122 L120 136 L108 149 L96 161 L84 172 L70 181 L56 185', '#FFF3DC', 2, 51, 98],
-  ['M137 94 L149 105 L160 118 L172 132 L184 145 L196 157 L209 168 L224 174 L240 171', '#FFF3DC', 2, 58, 100],
+// =====================================================================
+// BRIDGE - the home check-in (app/(tabs)/index.tsx), phone pt x2.3
+// =====================================================================
+const HS = 2.3, BR = { x0: 96, x1: 940, top: 590, rowH: 184, tile: 48 * HS, rad: 14 * HS };
+const ROWS = [
+  { t: 'Anxious / Panic', s: 'Overthinking, stressed, worried', c: C.anx },
+  { t: 'Numb / Freeze', s: 'Shut down, disconnected, heavy', c: C.frz },
+  { t: 'Angry / Frustrated', s: 'Irritated, on edge, heated', c: C.ang },
+  { t: 'Balanced / Flow', s: 'Calm, present, grounded', c: C.bal },
 ];
-const geG = S('g', {}, FG[2]);
-const geGlowO = S('circle', { cx: AX, cy: AY, r: 132 * GE, fill: C.anx, 'fill-opacity': 0.08 }, geG);
-const geGlowI = S('circle', { cx: AX, cy: AY, r: 116 * GE, fill: C.anx, 'fill-opacity': 0.12 }, geG);
-const geHalo = S('circle', { cx: AX, cy: AY, r: 108 * GE, fill: 'none', stroke: C.anx, 'stroke-width': 20, 'stroke-opacity': 0.3, filter: 'url(#soft)' }, geG);
-const geRing = S('circle', { cx: AX, cy: AY, r: 108 * GE, fill: 'rgba(212,165,116,0.07)', stroke: C.rim, 'stroke-width': 2.5 * GE }, geG);
-const geCr = CRACKS.map(([d, col, w]) => { let k = 0; const dd = d.replace(/-?\d+(?:\.\d+)?/g, (n) => ((k++ % 2 === 0 ? gx(+n) : gy(+n)).toFixed(2))); return S('path', { d: dd, fill: 'none', stroke: col, 'stroke-width': w * GE, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, geG); });
-const geP = (u) => { let p = 0; T.taps.forEach((b) => (p += 25 * E.SETTLE(P(u, b, 220)))); return p; };
-const geShake = (u) => { let s = 0; T.taps.forEach((b) => { const k = u - b; if (k >= 0 && k < 140) s += 7 * Math.sin(k / 14) * (1 - k / 140); }); return s; };
-
-// ---- 4 Chaos Release: deterministic swarm, 80 balls (10-18pt at 2.75x), angry / deep red, .85
-const CH = { N: 80, box: [0, 310, 1080, 1160] };   // swarm kept above the instruction + Reels buttons
-const balls = Array.from({ length: CH.N }, (_, i) => {
-  const r = ((hash(i * 7 + 1) + 1) / 2 * 8 + 10) * 2.75 / 2;
-  const a = (hash(i * 7 + 2) + 1) * Math.PI, sp = ((hash(i * 7 + 3) + 1) / 2 * 260 + 100) * 2.75;
-  return { r, x0: r + (hash(i * 7 + 4) + 1) / 2 * (1080 - 2 * r), y0: CH.box[1] + r + (hash(i * 7 + 5) + 1) / 2 * (CH.box[3] - CH.box[1] - 2 * r), vx: Math.cos(a) * sp, vy: Math.sin(a) * sp,
-    el: S('circle', { r, fill: hash(i * 7 + 6) > 0 ? C.ang : C.deep, 'fill-opacity': 0.85 }, FG[3]) };
+const PRESSED = 2;
+const gB = $('br'), rtx = $('rowsText');
+const bRows = ROWS.map((r, i) => {
+  const g = S('g', {}, gB), cy = BR.top + BR.rowH * (i + 0.5);
+  const hl = S('line', { x1: BR.x0, x2: BR.x1, y1: BR.top + BR.rowH * (i + 1), y2: BR.top + BR.rowH * (i + 1), stroke: '#16241d', 'stroke-width': 2 }, g);
+  const hlTop = i === 0 ? S('line', { x1: BR.x0, x2: BR.x1, y1: BR.top, y2: BR.top, stroke: '#16241d', 'stroke-width': 2 }, g) : null;
+  const inner = S('g', {}, g);
+  const gl = S('rect', { x: BR.x0, y: cy - BR.tile / 2, width: BR.tile, height: BR.tile, rx: BR.rad, fill: r.c, 'fill-opacity': 0.45, filter: 'url(#tglow)' }, inner);
+  const tile = S('rect', { x: BR.x0, y: cy - BR.tile / 2, width: BR.tile, height: BR.tile, rx: BR.rad, fill: r.c }, inner);
+  const cs = (18 * HS) / 24, cx0 = BR.x1 - 20 - 12 * cs, cy0 = cy - 12 * cs;
+  S('path', { d: 'M9 18l6-6-6-6', transform: `translate(${cx0} ${cy0}) scale(${cs})`, fill: 'none', stroke: '#8F9E8B', 'stroke-width': 2, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, inner);
+  const tt = document.createElement('div'); tt.className = 't rowT'; tt.textContent = r.t; rtx.appendChild(tt);
+  const ts = document.createElement('div'); ts.className = 't rowS'; ts.textContent = r.s; rtx.appendChild(ts);
+  return { g, inner, gl, tile, tt, ts, cy, hl, hlTop };
 });
-const chShake = (u) => 30 * Math.sin((2 * Math.PI * (u - 250)) / 250) * (u < 250 || u > 1250 ? 0 : 1 - smooth(P(u, 850, 400)));
-const chCharge = (u) => 100 - 14 * smooth(P(u, 250, 1050));   // app drain: up to ~11.7%/s while shaking
+const flyT = S('rect', { fill: C.ang }, $('fly')), flyG = S('rect', { fill: C.ang, 'fill-opacity': 0.45, filter: 'url(#tglow)' }, $('fly'));
+let CHIP0 = [0, 0];
+function drawBridge(t) {
+  const on = t >= BT.lineOut && t < T.cuts[0];
+  gB.style.display = on ? '' : 'none';
+  const fade = 1 - E.HOUSE(P(t, BT.fly[0], 320));
+  headline($('hB'), W_B, t, 96, 300, BT.head, BT.fly[0] - 40, 70);
+  if (!on) $('hB').style.visibility = 'hidden';
+  const pr = t - BT.press, press = pr < 0 ? 0 : pr < 110 ? E.SNAP(pr / 110) : 1 - E.HOUSE(clamp((pr - 110) / 260));
+  bRows.forEach((r, i) => {
+    const p = on ? E.HOUSE(P(t, BT.rows + i * BT.rowStep, 520)) : 0;
+    const keep = i === PRESSED ? 1 : fade, o = p * keep;
+    const dy = 14 * HS * (1 - p), sc = i === PRESSED ? 1 - 0.02 * press : 1;
+    r.g.setAttribute('opacity', (p * fade).toFixed(4));
+    r.inner.setAttribute('transform', `translate(0 ${dy.toFixed(2)}) translate(${BR.x0} ${r.cy}) scale(${sc.toFixed(4)}) translate(${-BR.x0} ${-r.cy})`);
+    const tx = BR.x0 + BR.tile + 16 * HS;
+    const to = i === PRESSED ? o * (1 - E.HOUSE(P(t, BT.fly[0], 260))) : o;
+    place(r.tt, tx, r.cy - 44 + dy, on ? to : 0, {}); place(r.ts, tx, r.cy + 5 + dy, on ? to : 0, {});
+    // the pressed tile hands over to the flying tile
+    const hide = i === PRESSED && t >= BT.fly[0];
+    r.tile.style.visibility = hide ? 'hidden' : 'visible'; r.gl.style.visibility = hide ? 'hidden' : 'visible';
+    if (i === PRESSED) A(r.gl, { 'fill-opacity': 0.45 + 0.35 * press });
+  });
+  // the Angry tile flies to the first game's chip
+  if (t >= BT.fly[0] && t < T.cuts[0]) {
+    const u = E.HOUSE(P(t, BT.fly[0], BT.fly[1] - BT.fly[0])), r0 = bRows[PRESSED];
+    const s0 = BR.tile, s1 = 26, sz = lerp(s0, s1, u), rad = lerp(BR.rad, 7, u);
+    const cx = lerp(BR.x0 + s0 / 2, CHIP0[0], u), cy = lerp(r0.cy, CHIP0[1], u);
+    [flyT, flyG].forEach((el) => A(el, { x: cx - sz / 2, y: cy - sz / 2, width: sz, height: sz, rx: rad, visibility: 'visible' }));
+  } else { A(flyT, { visibility: 'hidden' }); A(flyG, { visibility: 'hidden' }); }
+}
+
+// =====================================================================
+// 1 CHAOS RELEASE (components/ShakeGame.tsx) - pt x2.45, swarm walled to the hero band
+// =====================================================================
+const SC = 1080 / 440;
+const CH = { N: 80, x0: 0, x1: 1080, y0: 470, y1: 1150 };
+const chBalls = Array.from({ length: CH.N }, (_, i) => {
+  const size = ((hash(i * 7 + 1) + 1) / 2 * 8 + 10) * SC, r = size / 2;
+  const a = (hash(i * 7 + 2) + 1) * Math.PI, sp = ((hash(i * 7 + 3) + 1) / 2 * 260 + 100) * SC;
+  return { r, x0: CH.x0 + r + (hash(i * 7 + 4) + 1) / 2 * (CH.x1 - CH.x0 - 2 * r), y0: CH.y0 + r + (hash(i * 7 + 5) + 1) / 2 * (CH.y1 - CH.y0 - 2 * r),
+    vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, el: S('circle', { r, fill: hash(i * 7 + 6) > 0 ? C.ang : C.deep, 'fill-opacity': 0.85 }, FG[0]) };
+});
+// shake force (g above 1g) of a vigorous ~3Hz shake, sampled at the app's 60ms accelerometer rate
+const shakeM = (ms) => { const [a, b] = T.chaos.shake; if (ms < a || ms > b) return 0; const e = smooth(P(ms, a, 200)) * (1 - smooth(P(ms, b - 200, 200))); return e * (4.6 * Math.abs(Math.sin((2 * Math.PI * 3 * (ms - a)) / 1000)) + 1.4); };
+let chMemo = null;
 function chSim(u) {
-  const dt = 1 / 120, n = Math.floor(clamp(u, 0, 1500) / (dt * 1000));
-  const st = balls.map((b) => ({ x: b.x0, y: b.y0, vx: b.vx, vy: b.vy }));
-  const kicks = [312, 562, 812, 1062];               // shake peaks
-  for (let s = 0; s < n; s++) {
-    const ms = s * dt * 1000;
-    for (let i = 0; i < CH.N; i++) {
-      const q = st[i], r = balls[i].r;
-      for (const k of kicks) if (ms <= k && ms + dt * 1000 > k) { const a = (hash(i * 13 + k) + 1) * Math.PI; q.vx += Math.cos(a) * 520; q.vy += Math.sin(a) * 520; }
-      const sp = Math.hypot(q.vx, q.vy); if (sp > 2600) { q.vx *= 2600 / sp; q.vy *= 2600 / sp; }
-      q.x += q.vx * dt; q.y += q.vy * dt;
-      if (q.x < r) { q.x = r; q.vx = Math.abs(q.vx) * 0.95; } if (q.x > 1080 - r) { q.x = 1080 - r; q.vx = -Math.abs(q.vx) * 0.95; }
-      if (q.y < CH.box[1] + r) { q.y = CH.box[1] + r; q.vy = Math.abs(q.vy) * 0.95; } if (q.y > CH.box[3] - r) { q.y = CH.box[3] - r; q.vy = -Math.abs(q.vy) * 0.95; }
-    }
+  const DT = 1000 / 60, n = Math.floor(clamp(u, 0, T.beatLen) / DT);
+  if (!chMemo || chMemo.n > n) {
+    chMemo = { n: 0, rnd: mulberry(4242), charge: 100, nextUpd: 0, st: chBalls.map((b) => ({ x: b.x0, y: b.y0, vx: b.vx, vy: b.vy, r: b.r })) };
   }
-  return st;
+  const M = chMemo, st = M.st;
+  while (M.n < n) {
+    const ms = M.n * DT, dt = DT / 1000;
+    // accelerometer updates (every 60ms): drain + one impulse per ball
+    while (M.nextUpd <= ms + DT) {
+      const m = shakeM(M.nextUpd);
+      if (m > 0.35) {
+        M.charge = Math.max(0, M.charge - Math.min(0.22 + m * 0.11, 0.7));
+        const imp = m * 260 * SC, cap = 1200 * SC;
+        for (const q of st) { const f = 0.6 + M.rnd() * 0.8, a = M.rnd() * Math.PI * 2; q.vx += Math.cos(a) * imp * f; q.vy += Math.sin(a) * imp * f; const s = Math.hypot(q.vx, q.vy); if (s > cap) { q.vx *= cap / s; q.vy *= cap / s; } }
+      }
+      M.nextUpd += T.chaos.upd;
+    }
+    const target = (100 + 260 * (M.charge / 100)) * SC;
+    for (const q of st) {
+      q.x += q.vx * dt; q.y += q.vy * dt;
+      if (q.x - q.r < CH.x0 || q.x + q.r > CH.x1) { q.vx = -q.vx * (0.92 + M.rnd() * 0.06); q.vy += (M.rnd() - 0.5) * 6 * SC; q.x = q.x - q.r < CH.x0 ? CH.x0 + q.r : CH.x1 - q.r; }
+      if (q.y - q.r < CH.y0 || q.y + q.r > CH.y1) { q.vy = -q.vy * (0.92 + M.rnd() * 0.06); q.vx += (M.rnd() - 0.5) * 6 * SC; q.y = q.y - q.r < CH.y0 ? CH.y0 + q.r : CH.y1 - q.r; }
+      q.vx *= 0.999; q.vy *= 0.999;
+      const s = Math.hypot(q.vx, q.vy);
+      if (s < target * 0.85) { const a = M.rnd() * Math.PI * 2, acc = Math.min(target * 0.08, target - s); q.vx += Math.cos(a) * acc; q.vy += Math.sin(a) * acc; }
+    }
+    for (let i = 0; i < st.length; i++) for (let j = i + 1; j < st.length; j++) {
+      const p = st[i], q = st[j], dx = q.x - p.x, dy = q.y - p.y, md = p.r + q.r, d2 = dx * dx + dy * dy;
+      if (d2 >= md * md) continue;
+      const d = Math.sqrt(d2) || 0.001, nx = dx / d, ny = dy / d, sep = (md - d) * 0.52;
+      p.x -= nx * sep; p.y -= ny * sep; q.x += nx * sep; q.y += ny * sep;
+      const rel = (q.vx - p.vx) * nx + (q.vy - p.vy) * ny;
+      if (rel < 0) { const imp = -(1 + 0.9) * rel * 0.5; p.vx -= nx * imp; p.vy -= ny * imp; q.vx += nx * imp; q.vy += ny * imp; }
+    }
+    M.n++;
+  }
+  return M;
 }
+const chJit = (u) => { const [a, b] = T.chaos.shake, e = smooth(P(u, a, 150)) * (1 - smooth(P(u, b - 150, 150))); return [e * 12 * Math.sin((2 * Math.PI * 3 * (u - a)) / 1000), e * 5 * Math.sin((2 * Math.PI * 6 * (u - a)) / 1000 + 0.7)]; };
 
-// ---- 5 Tension Release: the rust clench vignette (edges), countdown, TENSE
-const vig = [S('rect', { x: 0, y: 0, width: 1080, height: 520, fill: 'url(#vT)' }, FG[4]), S('rect', { x: 0, y: 1400, width: 1080, height: 520, fill: 'url(#vB)' }, FG[4]),
-  S('rect', { x: 0, y: 0, width: 300, height: 1920, fill: 'url(#vL)' }, FG[4]), S('rect', { x: 780, y: 0, width: 300, height: 1920, fill: 'url(#vR)' }, FG[4])];
-const tGlow = (u) => 0.95 * inQuad(P(u, 0, 1450));
-const tTrem = (u) => { const amp = 6 * tGlow(u) * (1 - smooth(P(u, 1430, 60))); return [amp * (fbm(u / 16, 41) * 1.6), amp * (fbm(u / 19, 43) * 1.6)]; };
-
-// ---- 6 Pendulum: pivot above, the point is the bob
-const PE = { L: 460, amp: 18 }; PE.piv = [AX, AY - PE.L];
-const peArm = S('line', { stroke: C.cream, 'stroke-opacity': 0.22, 'stroke-width': 2.5 }, FG[5]);
-const pePiv = S('circle', { cx: PE.piv[0], cy: PE.piv[1], r: 6, fill: C.cream, 'fill-opacity': 0.5 }, FG[5]);
-const peGuide = S('path', { fill: 'none', stroke: C.frzAlt, 'stroke-width': 8, 'stroke-linecap': 'round' }, FG[5]);
-const peGuideL = S('path', { fill: 'none', stroke: C.frzAlt, 'stroke-width': 8, 'stroke-linecap': 'round' }, FG[5]);
-const peHit = S('circle', { fill: 'none', stroke: C.frz, 'stroke-width': 4 }, FG[5]);
-const pePsi = (u) => PE.amp * Math.sin((Math.PI * clamp(u, 0, 1440)) / 1440);
-const peBob = (u) => { const s = pePsi(u) * D2R; return [PE.piv[0] + PE.L * Math.sin(s), PE.piv[1] + PE.L * Math.cos(s)]; };
-const peArc = (c) => { const pts = []; for (let a = c - 5.2; a <= c + 5.21; a += 0.8) pts.push([PE.piv[0] + PE.L * Math.sin(a * D2R), PE.piv[1] + PE.L * Math.cos(a * D2R)]); return path(pts); };
-A(peGuide, { d: peArc(PE.amp) }); A(peGuideL, { d: peArc(-PE.amp) });
-
-// ---- 7 Focus Follow: the orb's Lissajous, camera holds the orb; the wake of slate motes streams off
-const FF = { rX: 212, rY: 560, t0: 10200 };
-const sweep = (tw, per) => { const k = Math.floor(tw / per), f = tw / per - k, e = EASE(f); return k % 2 === 0 ? lerp(-1, 1, e) : lerp(1, -1, e); };
-const orbW = (tw) => [FF.rX * sweep(tw, 4500), FF.rY * sweep(tw + 1400, 5500)];
-const motes = Array.from({ length: 14 }, () => S('circle', { fill: C.frz }, FG[6]));
-function wake(tw) {
-  const out = []; let last = orbW(tw), acc = 0; const step = 4;
-  for (let back = step; back < 4000 && out.length < 14; back += step) { const p = orbW(tw - back); acc += Math.hypot(p[0] - last[0], p[1] - last[1]); last = p; if (acc >= 22) { out.push(p); acc = 0; } }
-  return out;
-}
-
-// ---- 8 Regulate Breath: the vagal column (bottom = the anchor)
-const BR = { top: AY - 430, bot: AY, w: 26 };
-const brTrack = S('line', { x1: AX, y1: BR.top, x2: AX, y2: BR.bot, stroke: C.cream, 'stroke-opacity': 0.09, 'stroke-width': BR.w, 'stroke-linecap': 'round' }, FG[7]);
-const brFill = S('line', { stroke: C.bal, 'stroke-opacity': 0.9, 'stroke-width': BR.w, 'stroke-linecap': 'round' }, FG[7]);
-const brTicks = Array.from({ length: 12 }, (_, k) => S('line', { stroke: C.bal, 'stroke-width': 4 }, FG[7]));
-const brY = (t) => {
-  const u = local(7, t);
-  if (t < T.act3) return lerp(BR.bot, BR.top, RISE(P(u, 240, 1260)));
-  return lerp(BR.top, BR.bot, E.INOUT(P(t, T.exhale[0], T.exhale[1] - T.exhale[0])));
+// =====================================================================
+// 2 PRESSURE GAUGE (app/pressure-gauge.tsx) - the 280pt box at x3, hub at (540, 960)
+// =====================================================================
+const GS = 3, GH = [540, 960];
+const gX = (x) => GH[0] + (x - 140) * GS, gY = (y) => GH[1] + (y - 190) * GS;
+const gpol = (r, deg) => { const a = deg * D2R; return [140 + r * Math.cos(a), 190 + r * Math.sin(a)]; };
+const gWrap = S('g', {}, FG[1]);
+S('path', { d: `M ${gX(30)} ${gY(190)} A ${110 * GS} ${110 * GS} 0 0 1 ${gX(250)} ${gY(190)}`, fill: 'none', stroke: C.cream, 'stroke-opacity': 0.18, 'stroke-width': 1.5 * GS, 'stroke-linecap': 'round' }, gWrap);
+{ const rs = gpol(110, 324); S('path', { d: `M ${gX(rs[0]).toFixed(1)} ${gY(rs[1]).toFixed(1)} A ${110 * GS} ${110 * GS} 0 0 1 ${gX(250)} ${gY(190)}`, fill: 'none', stroke: C.anx, 'stroke-opacity': 0.85, 'stroke-width': 2.5 * GS, 'stroke-linecap': 'round' }, gWrap); }
+for (let i = 0; i < 11; i++) { const d = 180 + i * 18, a = gpol(101, d), b = gpol(116, d); S('line', { x1: gX(a[0]), y1: gY(a[1]), x2: gX(b[0]), y2: gY(b[1]), stroke: C.cream, 'stroke-opacity': 0.3, 'stroke-width': 1.5 * GS, 'stroke-linecap': 'round' }, gWrap); }
+const gNeedle = S('line', { stroke: C.rim, 'stroke-width': 2 * GS, 'stroke-linecap': 'round' }, gWrap);
+const gHub = S('circle', { cx: GH[0], cy: GH[1], r: 5 * GS, fill: C.rim }, gWrap);
+const gP = (u) => {
+  const g = T.gauge, fall0 = g.peak + g.hold;
+  if (u >= fall0) return 1 - outCubic((u - fall0) / g.fall);
+  let p = 0; for (const b of g.taps) p += E.SNAP(P(u, b, 60)) / g.taps.length; return Math.min(1, p);
 };
+const gShake = (u) => { let s = 0; for (const b of T.gauge.taps) { const k = u - b; if (k >= 0 && k < 135) s += k < 45 ? lerp(0, 6, k / 45) : k < 90 ? lerp(6, -6, (k - 45) / 45) : lerp(-6, 0, (k - 90) / 45); } return s; };
+
+// =====================================================================
+// 3 PENDULUM (app/bilateral-rhythm.tsx + utils/bilateralRhythm.ts)
+// =====================================================================
+const PE = { piv: [540, 470], Lc: 650, bob: 20 * SC, cap: 20.6, a0: 19.2 };
+const peGuideL = S('path', { fill: 'none', stroke: C.frzAlt, 'stroke-width': 3 * SC, 'stroke-linecap': 'round' }, FG[2]);
+const peGuideR = S('path', { fill: 'none', stroke: C.frzAlt, 'stroke-width': 3 * SC, 'stroke-linecap': 'round' }, FG[2]);
+const peArm = S('line', { stroke: C.cream, 'stroke-opacity': 0.16, 'stroke-width': 2.4 }, FG[2]);
+const peShadow = S('circle', { fill: C.frz, filter: 'url(#bglow)' }, FG[2]);
+const peGlow = S('circle', { fill: C.frz }, FG[2]);
+const peCore = S('circle', { fill: C.frz }, FG[2]);
+// amplitude: the app's metronome target grows by hitGrowth on each hit and eases (800ms)
+function peAmp(u) {
+  let tgt = PE.a0, amp = PE.a0, last = -800;
+  for (const h of T.pend.hits) { if (u < h) break; amp = tgt + (amp - tgt) * Math.exp(-(h - last) / 800); tgt = tgt + 0.25 * (PE.cap - tgt); last = h; }
+  return tgt + (amp - tgt) * Math.exp(-(u - Math.max(0, last)) / 800);
+}
+const peAng = (u) => -peAmp(u) * Math.cos((Math.PI * (u + T.pend.e0)) / T.pend.half);
+const pePos = (deg, r = PE.Lc) => [PE.piv[0] + r * Math.sin(deg * D2R), PE.piv[1] + r * Math.cos(deg * D2R)];
+const peArc = (deg) => { const a = deg * D2R, s = a - 0.09, e = a + 0.09, p0 = pePos(s / D2R), p1 = pePos(e / D2R); return `M ${p0[0].toFixed(2)} ${p0[1].toFixed(2)} A ${PE.Lc} ${PE.Lc} 0 0 0 ${p1[0].toFixed(2)} ${p1[1].toFixed(2)}`; };
+const inOutEase = cubicBezier(0.42, 0, 0.58, 1);
+
+// =====================================================================
+// 4 5-4-3-2-1 GROUNDING (app/grounding.tsx) - the step screen at x2
+// =====================================================================
+const GD = { x: 140, y: 490 };
+const GENT = ['Light on the window', 'A green mug', 'My own hands', 'Keys on the table', 'The door frame'];
+const GPH = ['lamp, window, plant…', 'and…', 'and…', 'and…', 'one more…'];
+const gLines = GENT.map((txt, i) => {
+  const ln = document.createElement('div'); ln.className = 'ln';
+  ln.innerHTML = `<span class="ix">${i + 1}</span><span class="tx"><span class="ph">${GPH[i]}</span><span class="en"></span></span>`;
+  $('gLines').appendChild(ln); return { ph: ln.querySelector('.ph'), en: ln.querySelector('.en'), txt };
+});
+
+// =====================================================================
+// 5 PHYSIOLOGICAL SIGH (app/physiological-sigh.tsx) - the curve, comet rides it
+// =====================================================================
+const SG = { L: 96, R: 984, TOP: 600, BOT: 1140, MS: 10700 };
+const sFill = (ms) => { if (ms <= 2500) return 0.68 * outQuad(ms / 2500); ms -= 2500; if (ms <= 1200) return 0.68 + 0.32 * outSin(ms / 1200); ms -= 1200; if (ms <= 1000) return 1; ms -= 1000; if (ms <= 5000) return 1 - inOutQuad(ms / 5000); return 0; };
+const sXY = (ms) => [SG.L + (clamp(ms / SG.MS)) * (SG.R - SG.L), SG.BOT - sFill(ms) * (SG.BOT - SG.TOP)];
+const sPts = []; for (let k = 0; k < 160; k++) sPts.push(sXY((k / 159) * SG.MS));
+const sFaint = S('path', { d: path(sPts), fill: 'none', stroke: C.cream, 'stroke-opacity': 0.14, 'stroke-width': 1.5 * SC, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, FG[4]);
+const sBurn = S('path', { fill: 'none', stroke: C.anx, 'stroke-width': 2.5 * SC, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, FG[4]);
+const sSipD = S('circle', { r: 1.5 * SC, fill: C.cream, 'fill-opacity': 0.28 }, FG[4]), sFullD = S('circle', { r: 1.5 * SC, fill: C.cream, 'fill-opacity': 0.28 }, FG[4]);
+{ const a = sXY(2500), b = sXY(3700); A(sSipD, { cx: a[0], cy: a[1] }); A(sFullD, { cx: b[0], cy: b[1] }); }
+const sBreathMs = (t) => clamp((t - T.cuts[4] - T.sigh.start) / T.sigh.k, 0, 9700);
 
 // =====================================================================
 // the point: one position function across all three acts
 // =====================================================================
-let WM, R = 11, W_H, W_L;
+let WM, R = 11, W_H, W_L, W_B;
 function pointAt(t) {
   if (t < T.release[0]) return [STUCK_END[0], STUCK_END[1] + plateauJit(t)];
   if (t < T.act1Out) return relTip(Math.min(t, T.release[1]));
-  if (t < T.act2) { const e = relTip(T.release[1]), u = E.HOUSE(P(t, T.toAnchor[0], T.toAnchor[1] - T.toAnchor[0])); return [lerp(e[0], AX, u), lerp(e[1], AY, u) - Math.sin(Math.PI * u) * 60]; }
-  if (t < T.act3 && t < T.cuts[7]) {
-    const i = Math.min(7, Math.floor((t - T.act2) / T.flash)), u = local(i, t), id = T.games[i].id;
-    if (id === 'chaos') return [AX + chShake(u), AY];
-    if (id === 'tension') { const j = tTrem(u); return [AX + j[0], AY + j[1]]; }
-    if (id === 'pendulum') return peBob(u);
-    return [AX, AY];
-  }
-  if (t < T.glide[0]) return [AX, brY(t)];
-  const u = E.HOUSE(P(t, T.glide[0], T.glide[1] - T.glide[0]));
-  return [lerp(AX, WM.xF, u), lerp(AY, WM.yF, u) - Math.sin(Math.PI * u) * 90];
+  if (t < T.cuts[4]) { const e = relTip(T.release[1]), u = E.HOUSE(P(t, T.toAnchor[0], T.toAnchor[1] - T.toAnchor[0])); return [lerp(e[0], AX, u), lerp(e[1], AY, u) - Math.sin(Math.PI * u) * 60]; }
+  if (t < T.glide[0]) return sXY(sBreathMs(t));
+  const s = sXY(9700), u = E.HOUSE(P(t, T.glide[0], T.glide[1] - T.glide[0]));
+  return [lerp(s[0], WM.xF, u), lerp(s[1], WM.yF, u) - Math.sin(Math.PI * u) * 110];
 }
 const PL = $('pl');
 const halo = S('circle', { fill: C.anx }, PL);
@@ -349,9 +452,9 @@ const pt = S('circle', { fill: C.white }, PL);
 
 function init() {
   WM = wordmark($('wm'), { dotPx: 22, yDot: 960 }); R = WM.R;
-  W_H = splitWords($('hA')); W_L = splitWords($('hL'));
+  W_H = splitWords($('hA')); W_L = splitWords($('hL')); W_B = splitWords($('hB'));
   for (const k in P1) LEN[k] = P1[k].getTotalLength();
-  A(sigSip, { cx: sigW(2500)[0], cy: sigW(2500)[1] }); A(sigFull, { cx: sigW(3700)[0], cy: sigW(3700)[1] });
+  CHIP0 = [540 - SUB[0].offsetWidth / 2 + 13, Y_SUB + 13];
   window.__wm = { xF: WM.xF, yF: WM.yF, R };
 }
 
@@ -375,91 +478,83 @@ function render(t) {
   lab($('lDone'), GX(413), GY(227), T.completedLabel);
   lab($('lStuck'), 398, 686, T.stuckLabel, { dur: 520 });
   lab($('lReg'), GX(800), GY(262) + 20, T.regLabel, { dur: 650, ax: 1 });
-  headline($('hL'), W_L, t, 96, 300, T.line, T.act2 + 1e-3 > t ? Infinity : -1e9, 70);
-  if (t >= T.act2) $('hL').style.visibility = 'hidden';
+  headline($('hL'), W_L, t, 96, 300, T.line, BT.lineOut, 70);
+  if (t >= BT.lineOut) { const o = 1 - E.HOUSE(P(t, BT.lineOut, 320)); $('hL').style.opacity = o.toFixed(4); if (o < 0.002) $('hL').style.visibility = 'hidden'; }
 
   // ================= ACT 2 =================
-  // 1 sigh
+  drawBridge(t);
+  // 1 chaos
   if (groupSnap(0, t)) {
-    const u = local(0, t), tc = sigmaC(u), c = sigW(tc), ox = AX - c[0], oy = AY - c[1];
-    FG[0].setAttribute('transform', FG[0].getAttribute('transform') + ` translate(${ox.toFixed(2)} ${oy.toFixed(2)})`);
-    const fp = [], bp = []; for (let ms = 0; ms <= 9700; ms += 50) { const w = sigW(ms); fp.push(w); if (ms < tc) bp.push(w); } bp.push(c);
-    A(sigFaint, { d: path(fp) }); A(sigBurn, { d: path(bp) });
-    const k = snapK(u), sp = sigW(2500), fu = sigW(3700);
-    place($('sSip'), sp[0] + ox + 18, sp[1] + oy - 8, k * 1, {});
-    place($('sFull'), fu[0] + ox, fu[1] + oy - 44, k, { ax: 0.5 });
-  } else { show($('sSip'), 0); show($('sFull'), 0); }
+    const u = localT(0, t), M = chSim(u), n = Math.round((M.charge / 100) * CH.N), j = chJit(u);
+    FG[0].setAttribute('transform', FG[0].getAttribute('transform') + ` translate(${j[0].toFixed(2)} ${j[1].toFixed(2)})`);
+    chBalls.forEach((b, i) => A(b.el, { cx: M.st[i].x.toFixed(2), cy: M.st[i].y.toFixed(2), visibility: i < n ? 'visible' : 'hidden' }));
+    $('cNum').textContent = String(Math.ceil(M.charge - 1e-9));
+    const k = snapK(u);
+    place($('cNum'), 540 + j[0], 640 + j[1], k, { ax: 0.5, dy: 14 * (1 - k) });
+    place($('cLab'), 540 + j[0], 912 + j[1], k, { ax: 0.5, dy: 10 * (1 - k) });
+    place($('cCue'), 540 + j[0], 1096 + j[1], k * (1 - E.HOUSE(P(u, T.chaos.shake[1], 400))), { ax: 0.5 });
+  } else { show($('cNum'), 0); show($('cLab'), 0); show($('cCue'), 0); }
   // 2 gauge
   if (groupSnap(1, t)) {
-    const u = local(1, t), p = gPress(u), trem = u > 1250 ? 2.4 * fbm(u / 28, 21) * smooth(P(u, 1250, 80)) : 0;
-    const th = -90 + 180 * p + trem, tp = gtip(th, GA.NL);
-    A(gNeedle, { x1: AX, y1: AY, x2: tp[0], y2: tp[1] });
-    A(gRed, { 'stroke-opacity': Math.min(1, 0.85 + (p > 0.79 ? 0.15 : 0)) });
-    gRings.forEach((rg, j) => { const k = u - T.gaugeTaps[j]; A(rg, { cx: AX, cy: AY, r: lerp(R + 4, 64, E.SETTLE(clamp(k / 420))), 'stroke-opacity': k < 0 ? 0 : (1 - E.HOUSE(clamp(k / 420))) * 0.4 }); });
-  }
-  // 3 geode
+    const u = localT(1, t), p = gP(u), trem = Math.sin((t + 1200) / 560) * 2;
+    gWrap.setAttribute('transform', `translate(${(gShake(u) * p * GS).toFixed(2)} 0)`);
+    const th = (-90 + p * 180 + trem * p) * D2R, L = 95 * GS;
+    A(gNeedle, { x1: GH[0], y1: GH[1], x2: GH[0] + L * Math.sin(th), y2: GH[1] - L * Math.cos(th) });
+    const k = snapK(u); place($('gLab'), 540 + gShake(u) * p * GS, gY(202), k, { ax: 0.5 });
+  } else show($('gLab'), 0);
+  // 3 pendulum
   if (groupSnap(2, t)) {
-    const u = local(2, t), p = geP(u), sh = geShake(u);
-    geG.setAttribute('transform', `translate(${sh.toFixed(2)} 0)`);
-    geCr.forEach((el, j) => { const [, , , s0, s1] = CRACKS[j]; const raw = clamp((p - s0) / (s1 - s0)); const L = el.getTotalLength(); A(el, { 'stroke-dasharray': `${L} ${L}`, 'stroke-dashoffset': L * (1 - raw), visibility: raw > 0.001 ? 'visible' : 'hidden' }); });
-    A(geHalo, { 'stroke-opacity': 0.25 + 0.2 * (p / 100) });
+    const u = localT(2, t), ang = peAng(u), b = pePos(ang), tip = pePos(ang, PE.Lc + 10 * SC);
+    A(peArm, { x1: PE.piv[0], y1: PE.piv[1], x2: tip[0], y2: tip[1] });
+    // guides: the coming apex's arc glows in over 600ms from each centre crossing (local 0: right, 1600: left)
+    const rG = (u < 1600 ? inOutEase(P(u, 0, 600)) : 1 - inOutEase(P(u, 1600, 300)));
+    const lG = (u < 1600 ? 1 - inOutEase(P(u, 0, 300)) : inOutEase(P(u, 1600, 600)));
+    A(peGuideR, { d: peArc(peAmp(Math.min(u, 800))), 'stroke-opacity': 0.55 * rG });
+    A(peGuideL, { d: peArc(-peAmp(Math.max(u, 1600))), 'stroke-opacity': 0.55 * lG });
+    let go = 0.32, sc = 1;
+    for (const h of T.pend.hits) { const k = u - h; if (k >= 0 && k < 490) go = k < 90 ? lerp(0.32, 1, k / 90) : lerp(1, 0.32, (k - 90) / 400); if (k >= 0 && k < 400) sc = k < 150 ? lerp(1, 1.04, k / 150) : lerp(1.04, 1, (k - 150) / 250); }
+    A(peShadow, { cx: b[0], cy: b[1], r: (PE.bob / 2) * sc * 1.25, 'fill-opacity': 0.9 });
+    A(peGlow, { cx: b[0], cy: b[1], r: PE.bob * sc, 'fill-opacity': go });
+    A(peCore, { cx: b[0], cy: b[1], r: (PE.bob / 2) * sc });
   }
-  // 4 chaos
-  if (groupSnap(3, t)) {
-    const u = local(3, t), st = chSim(u), ch = chCharge(u), n = Math.round((ch / 100) * CH.N);
-    balls.forEach((b, i) => A(b.el, { cx: st[i].x, cy: st[i].y, visibility: i < n ? 'visible' : 'hidden' }));
-    $('cNum').textContent = String(Math.floor(ch + 0.0001));
-    const k = snapK(u); place($('cNum'), AX, 380, k, { ax: 0.5, dy: 14 * (1 - k) }); place($('cLab'), AX, 640, k, { ax: 0.5, dy: 10 * (1 - k) });
-  } else { show($('cNum'), 0); show($('cLab'), 0); }
-  // 5 tension
+  // 4 grounding
+  {
+    const on = liveB(3, t), u = localT(3, t), k = on ? snapK(u) : 0;
+    place($('gd'), GD.x, GD.y, k, { dy: 12 * (1 - k) });
+    if (on) gLines.forEach((L, i) => {
+      const a = T.ground.entries[i], n = Math.round(L.txt.length * clamp((u - a) / T.ground.type));
+      L.en.textContent = u >= a ? L.txt.slice(0, Math.max(1, n)) : '';
+      L.ph.style.display = u >= a ? 'none' : '';
+    });
+  }
+  // 5 sigh (runs on into Act 3)
   if (groupSnap(4, t)) {
-    const u = local(4, t), gl = tGlow(u); vig.forEach((r) => A(r, { opacity: gl }));
-    $('tNum').textContent = String(5 - T.tenseCount.filter((c) => u >= c).length + 1);
-    const k = snapK(u); place($('tNum'), AX, 380, k, { ax: 0.5, dy: 14 * (1 - k) }); place($('tLab'), AX, 640, k, { ax: 0.5, dy: 10 * (1 - k) });
-  } else { show($('tNum'), 0); show($('tLab'), 0); }
-  // 6 pendulum
-  if (groupSnap(5, t)) {
-    const u = local(5, t), b = peBob(u);
-    A(peArm, { x1: PE.piv[0], y1: PE.piv[1], x2: b[0], y2: b[1] });
-    const go = smooth(P(u, T.pendApex - 420, 300)) * (1 - smooth(P(u, T.pendApex + 150, 350)));
-    A(peGuide, { 'stroke-opacity': 0.2 + 0.4 * go }); A(peGuideL, { 'stroke-opacity': 0.2 });
-    const k = u - T.pendApex; A(peHit, { cx: b[0], cy: b[1], r: lerp(R + 6, R + 34, E.SETTLE(clamp(k / 520))), 'stroke-opacity': k < 0 ? 0 : (k < 90 ? E.SNAP(k / 90) : 1 - E.HOUSE((k - 90) / 430)) * 0.9 });
-  }
-  // 7 focus follow
-  if (groupSnap(6, t)) {
-    const u = local(6, t), tw = FF.t0 + u, o = orbW(tw), w = wake(tw);
-    motes.forEach((m, j) => { const q = w[j]; if (!q) { A(m, { visibility: 'hidden' }); return; } const fade = 1 - j / 14; A(m, { visibility: 'visible', cx: AX + q[0] - o[0], cy: AY + q[1] - o[1], r: (6 + fade * 14) / 2 * 1.4, 'fill-opacity': 0.1 + fade * 0.45 }); });
-  }
-  // 8 breath (runs on into Act 3)
-  if (groupSnap(7, t)) {
-    const u = local(7, t), y = brY(t), clr = 1 - E.HOUSE(P(t, T.clear, 500));
-    FG[7].setAttribute('opacity', (snapK(u) * clr).toFixed(4));
-    A(brFill, { x1: AX, y1: Math.min(y, BR.bot), x2: AX, y2: BR.bot, visibility: BR.bot - y > 2 ? 'visible' : 'hidden' });
-    const H = BR.bot - BR.top;
-    brTicks.forEach((ln, k) => { const inh = k < 4, i = inh ? k : k - 4, n = inh ? 4 : 8, yy = BR.bot - (i / (n - 1)) * H;
-      const x1 = inh ? AX - BR.w / 2 - 22 - 44 : AX + BR.w / 2 + 22, tin = smooth(P(u, 40 + k * 22, 200));
-      A(ln, { x1, y1: yy, x2: x1 + 44, y2: yy, 'stroke-opacity': (inh ? 0.5 : 0.35) * tin }); });
-    const ko = snapK(u) * clr;
-    place($('bIn'), AX + BR.w / 2 + 22 + 44 + 26, BR.top - 12, ko, {}); place($('bOut'), AX + BR.w / 2 + 22 + 44 + 26, BR.bot - 12, ko, {});
-  } else { show($('bIn'), 0); show($('bOut'), 0); }
-  T.games.forEach((_, i) => flashText(i, t, i === 7 ? T.clear : Infinity));
-  { const k = E.SNAP(P(t, T.act3, 240)); place(exIn, AX, 1230, t >= T.act3 ? k * (1 - E.HOUSE(P(t, T.clear, 450))) : 0, { dy: 16 * (1 - k), ax: 0.5 }); }
+    const bm = sBreathMs(t), c = sXY(bm), bp = []; for (let ms = 0; ms < bm; ms += 60) bp.push(sXY(ms)); bp.push(c);
+    A(sBurn, { d: path(bp) });
+    const co = 1 - E.HOUSE(P(t, T.curveOut[0], T.curveOut[1]));
+    FG[4].setAttribute('opacity', (snapK(localT(4, t)) * co).toFixed(4));
+    const k = snapK(localT(4, t)) * co, a = sXY(2500), f = sXY(3700);
+    place($('sSip'), a[0] + 9 * SC, a[1] - 11, k, {}); place($('sFull'), f[0], f[1] - 10 * SC - 22, k, { ax: 0.5 });
+  } else { show($('sSip'), 0); show($('sFull'), 0); }
+  G.forEach((_, i) => beatText(i, t));
 
   // ================= the point =================
-  const p = pointAt(t), vis = smooth(P(t, T.born, 250));
-  let hc = null, hr = 0, ho = 0;
-  if (t >= T.act2 && t < T.act3) { const i = Math.floor((t - T.act2) / T.flash), id = T.games[i].id, k = snapK(local(i, t));
-    if (id === 'sigh') { hc = C.anx; hr = 30; ho = 0.18 * k; }
-    else if (id === 'pendulum') { hc = C.frz; hr = 26; ho = 0.32 * k; }
-    else if (id === 'focus') { hc = C.frz; hr = 44; ho = 0.3 * k; }
-    else if (id === 'breath') { hc = C.bal; hr = 26; ho = 0.3 * k; } }
-  else if (t >= T.act3 && t < T.clear + 500) { hc = C.bal; hr = 26; ho = 0.3 * (1 - E.HOUSE(P(t, T.clear, 500))); }
-  A(halo, { cx: p[0], cy: p[1], r: hr || 1, fill: hc || C.white, 'fill-opacity': hc ? ho : 0 });
+  const p = pointAt(t);
+  let vis = smooth(P(t, T.born, 250)), rad = R, col = C.white, white = 1;
+  if (t >= BT.pointOut[0] && t < T.cuts[4]) { const f = E.HOUSE(P(t, BT.pointOut[0], BT.pointOut[1])); vis *= 1 - f; rad = R * (1 - 0.6 * f); }
+  let hc = null, ho = 0, hr = 11 * SC;
+  if (t >= T.cuts[4]) {
+    white = E.INOUT(P(t, T.whiten[0], T.whiten[1] - T.whiten[0]));
+    col = hexMix(C.anx, C.white, white); rad = lerp(5 * SC, R, white);
+    const k = snapK(localT(4, t)); vis = k;
+    hc = C.anx; ho = 0.18 * k * (1 - white);
+  }
+  A(halo, { cx: p[0], cy: p[1], r: hr, fill: hc || C.white, 'fill-opacity': hc ? ho : 0 });
   const sm = []; for (let k = 0; k <= 6; k++) sm.push(pointAt(Math.max(0, t - (k * 8.3) / 6)));
-  const cutNear = T.cuts.some((c) => t >= c && t < c + 9);
-  A(smear, { d: path(sm), 'stroke-width': R * 2, 'stroke-opacity': t > T.born + 100 && t < T.glide[1] && !cutNear ? 0.55 * vis : 0 });
-  A(glow, { cx: p[0], cy: p[1], r: R * 1.9, 'fill-opacity': 0.34 * vis * (1 - E.HOUSE(P(t, T.glide[1], 600))) });
-  A(pt, { cx: p[0], cy: p[1], r: R, 'fill-opacity': vis });
+  const smOn = t > T.born + 100 && t < T.glide[1] && !(t >= BT.pointOut[0] && t < T.cuts[4] + 12);
+  A(smear, { d: path(sm), stroke: col, 'stroke-width': rad * 2, 'stroke-opacity': smOn ? 0.55 * vis : 0 });
+  A(glow, { cx: p[0], cy: p[1], r: R * 1.9, 'fill-opacity': 0.34 * vis * white * (1 - E.HOUSE(P(t, T.glide[1], 600))) });
+  A(pt, { cx: p[0], cy: p[1], r: rad, fill: col, 'fill-opacity': vis });
 
   // ================= ACT 3: the close =================
   WM.draw(t, T.wordmark);
@@ -467,7 +562,7 @@ function render(t) {
   rise($('cta'), t, 540, WM.yF + 190, T.cta, Infinity, { dy: 18, blur: 8, ax: 0.5, max: 0.9 });
 }
 
-Reel.start({ duration: T.dur, render, init, fonts: ['500 200px "Playfair Display"', 'italic 500 84px "Playfair Display"', '500 24px "JetBrains Mono"', '400 42px Inter'] });
+Reel.start({ duration: T.dur, render, init, fonts: ['500 200px "Playfair Display"', 'italic 500 84px "Playfair Display"', '500 24px "JetBrains Mono"', '400 42px Inter', '600 37px Inter'] });
 </script>
 </body>
 </html>
