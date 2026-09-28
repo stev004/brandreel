@@ -31,7 +31,11 @@
   teal unused; hook on screen at frame 0; wordmark only at the end; no em/en dashes.
 
   COPY LIST: Nothing's wrong. · BALANCED · REGULATE BREATH · Inhale · 4s · Exhale · 8s · IN 4 ·
-  OUT 8 · Keep it that way. · regulate. · For the days that are fine. · 4 TOOLS FREE ON THE APP STORE
+  OUT 8 · Keep it that way. · regulate. · Maintenance, not rescue. ·
+  A MINUTE A DAY, EVEN ON THE GOOD DAYS · 4 TOOLS FREE ON THE APP STORE
+  v4 (09-28, Steven: "we should reference maintaining your nervous system with it"): the close line
+  carries maintenance ("Maintenance, not rescue." + a small mono "A minute a day, even on the good
+  days", replacing "For the days that are fine."); the end card holds ~0.5s longer for the extra line.
 -->
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,500;1,500&display=block" rel="stylesheet">
@@ -56,7 +60,8 @@
   <div class="t mono" id="lOut" style="font-size:20px;color:var(--cream)">Out 8</div>
 </div>
   <div id="wm"></div>
-  <div class="t head italic" id="line" style="font-size:56px;white-space:nowrap;opacity:.9">For the days that are fine.</div>
+  <div class="t head italic" id="line" style="font-size:56px;white-space:nowrap;opacity:.9">Maintenance, not rescue.</div>
+  <div class="t mono" id="sub" style="font-size:22px;letter-spacing:.2em;color:var(--cream)">A minute a day, even on the good days</div>
   <div class="t cta" id="cta">4 tools free on the App Store</div>
 </div></div>
 <div id="bar"><button id="play">Play</button><span id="tc">0.00s</span><input id="scrub" type="range" min="0" step="1" value="0"><span>regulate &middot; balanced &middot; 1080&times;1920 &middot; 60fps</span></div>
@@ -70,6 +75,7 @@ const T = TIMING, C = { cream: '#F2F0E9', bal: '#7FA77F', white: '#FFFFFF' };
 const COL = T.column, H = COL.bot - COL.top;
 const CW = 10, TL = 34, GAP = 22;                 // column width, tick length, gaps (app row: phase | ticks | column | ticks | rail)
 const HOOK_Y = 300;
+const LINE_DY = 118, SUB_DY = 268, CTA_DY = 338;  // end card: close line, maintenance line, CTA (ink gaps: wordmark 90 line 90 sub 51 cta)
 
 const track = S('line', { stroke: C.cream, 'stroke-width': CW, 'stroke-linecap': 'round' });
 const fill = S('line', { stroke: C.bal, 'stroke-width': CW, 'stroke-linecap': 'round' });
@@ -157,8 +163,9 @@ function render(t) {
 
   // close
   WM.draw(t, T.wordmark);
-  headline($('line'), W_LINE, t, 540, WM.yF + 80, T.line, Infinity, 50, { ax: 0.5 });
-  rise($('cta'), t, 540, WM.yF + 200, T.cta, Infinity, { dy: 18, blur: 8, ax: 0.5, max: 0.9 });
+  headline($('line'), W_LINE, t, 540, WM.yF + LINE_DY, T.line, Infinity, 50, { ax: 0.5 });
+  rise($('sub'), t, 540, WM.yF + SUB_DY, T.sub, Infinity, { dy: 18, blur: 8, ax: 0.5, max: 0.7 });
+  rise($('cta'), t, 540, WM.yF + CTA_DY, T.cta, Infinity, { dy: 18, blur: 8, ax: 0.5, max: 0.9 });
 }
 
 Reel.start({ duration: T.dur, render, init, fonts: ['500 200px "Playfair Display"', 'italic 500 112px "Playfair Display"', '500 24px "JetBrains Mono"'] });

@@ -32,7 +32,7 @@ var TIMING = (function () {
   T.settle = T.exhale[1] + 200;               // rests at the foot
   T.colOut = T.exhale[1] + 50;                // the column leaves around it
   T.closeGlide = [T.settle, T.settle + 800];
-  T.wordmark = T.closeGlide[1]; T.line = T.wordmark + 600; T.cta = T.wordmark + 1050;
-  T.dur = Math.ceil((T.cta + 1500) / 100) * 100;
+  T.wordmark = T.closeGlide[1]; T.line = T.wordmark + 600; T.sub = T.line + 500; T.cta = T.sub + 500;
+  T.dur = Math.ceil((T.cta + 1900) / 100) * 100;   // v4: three lines under the wordmark, each gets read
   return T;
 })();

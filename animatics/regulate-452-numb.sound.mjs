@@ -25,6 +25,10 @@ room(dry, 0, T.dur, (ms) => sm(P(ms, 0, 500)) * (1 - sm(P(ms, T.wordmark, 2500))
 // the draft appears: one dry key/caret click, then nothing (the cursor is dead)
 { const r = rng(452), bp = biquad('bp', 3200, 2.2), lo = biquad('bp', 900, 3);
   add(dry, s(T.draft + 120), 0.06, (i, t) => (bp(r() * 2 - 1) * 1.6 * Math.exp(-t / 0.0022) + lo(r() * 2 - 1) * 0.9 * Math.exp(-t / 0.006)) * 0.16, { pan: 0.25 }); }
+// v4: "Not lazy. Frozen." - one soft low cue under the line (a held low sine pair, slow swell, gone before the drop)
+{ const d = s(T.nameOut + 500 - T.name);
+  add(dry, s(T.name + 60), d, (i, t) => { const u = t / d, env = sm(u / 0.3) * (1 - sm((u - 0.55) / 0.45));
+    return (Math.sin(2 * Math.PI * 98 * t) * 0.8 + Math.sin(2 * Math.PI * 147 * t) * 0.2) * env * 0.05; }, { pan: 0 }); }
 // the colon's dot drops onto the left apex; a soft catch as the arm takes it
 air(wet, s(T.fall[0]), s(T.fall[1] - T.fall[0]), (u) => lerp(2200, 600, u), (u) => Math.sin(Math.PI * u), 0.05, 61, (u) => lerp(-0.1, -0.7, u));
 tick(wet, s(T.fall[1]), 1500, 0.06, -0.7);

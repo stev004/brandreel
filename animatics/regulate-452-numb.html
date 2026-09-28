@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>4:52 PM Reel</title>
 <!--
-  brandreel animatic v3 - regulate - "4:52 PM" (Freeze -> Pendulum) social reel, ~18.0s (T.dur), 1080x1920 @ 60
+  brandreel animatic v4 - regulate - "4:52 PM" (Freeze -> Pendulum) social reel, ~21.3s (T.dur), 1080x1920 @ 60
   Steven 2026-09-28 on v1: "4:52pm is an okay idea. i like the idea of signifying a freeze response.
   but it needs to be clearer and how pendulum helps. lots of overlapping elements". v2 rebuilds it
   in the 11:47 AM v2 language: one instrument, big, obviously acting on the scenario; one thing at
@@ -41,11 +41,17 @@
     The guide arc is slate #7E9AA6 (app: freezeAlt #89C2D9; brand law: the Freeze colour names Freeze).
   - Four passes, not thirty; the arm lets go on the fourth tap (in-game the swing carries on).
   - No haptics (it's video): the apex haptic is carried by the hit ring and the panned tone.
+  - v4 (Steven 09-28: "how do people watching it know its freeze? maybe we need more context on the
+    slide before"): after the stuck frame the clock leaves (its lower dot stays) and the state is
+    named in the hook's slot and style, alone with the dead draft: "Not lazy. Frozen." (~1.6s settled
+    read); it leaves, then the dot drops and everything from v3 runs unchanged (shifted +3.25s).
+    FREEZE · PENDULUM now heads the top slot from the drop onward (30px), so the state is named
+    again at the tool before the first swing; the instruction, then the counter, sit under it.
   Laws: emerald ground; Freeze slate on the frozen draft, guide arcs, bob glow, ring and the label
   word only; the dot white; teal unused; hook on screen at frame 0; wordmark only at the end;
   plain hyphens.
 
-  COPY LIST: 4:52 · PM · frozen on the same line. · I'll reply properly when · Tap each side as the
+  COPY LIST: 4:52 · PM · frozen on the same line. · Not lazy. Frozen. · I'll reply properly when · Tap each side as the
   bob arrives · FREEZE · PENDULUM · 00 / 30 .. 04 / 30 · PASSES · regulate. ·
   For the days you can't start. · 4 TOOLS FREE ON THE APP STORE
 -->
@@ -60,6 +66,7 @@
   .snt{font-family:var(--sans);font-size:58px;color:var(--frz);white-space:nowrap;line-height:1}
   .snt .w{display:inline-block}
   #count{font-family:var(--mono);font-weight:500;font-size:64px;letter-spacing:.06em;color:var(--cream);white-space:nowrap;line-height:1}
+  #tool{font-size:30px;opacity:1}   /* v4: the label names the state at the tool; a touch larger so it reads at phone size */
   .instr{font-family:var(--sans);font-size:40px;color:var(--sage);white-space:nowrap;line-height:1}
 </style>
 <body>
@@ -71,6 +78,7 @@
   </defs></svg>
   <div class="t" id="clock"><span class="d" id="dA">4</span><span class="colon" id="colon"></span><span class="d" id="dB">52</span><span class="ampm" id="ampm">PM</span></div>
   <div class="t head italic" id="moment" style="font-size:84px;white-space:nowrap">frozen on the same line.</div>
+  <div class="t head italic" id="name" style="font-size:84px;white-space:nowrap">Not lazy. Frozen.</div>
   <div class="t snt" id="snt">I'll reply properly when</div>
   <div class="t instr" id="instr">Tap each side as the bob arrives</div>
   <div class="t tool" id="tool"><i style="color:var(--frz)">Freeze</i> &middot; Pendulum</div>
@@ -81,7 +89,7 @@
   <div class="t head italic" id="line" style="font-size:56px;white-space:nowrap;opacity:.9">For the days you can't start.</div>
   <div class="t cta" id="cta">4 tools free on the App Store</div>
 </div></div>
-<div id="bar"><button id="play">Play</button><span id="tc">0.00s</span><input id="scrub" type="range" min="0" step="1" value="0"><span>regulate &middot; 4:52 pm freeze v3 &middot; 1080&times;1920 &middot; 60fps</span></div>
+<div id="bar"><button id="play">Play</button><span id="tc">0.00s</span><input id="scrub" type="range" min="0" step="1" value="0"><span>regulate &middot; 4:52 pm freeze v4 &middot; 1080&times;1920 &middot; 60fps</span></div>
 <audio id="snd" preload="auto"></audio>
 <script src="lib/timing-kit.js"></script>
 <script src="regulate-452-numb.timing.js"></script>
@@ -109,10 +117,10 @@ const smear = S('path', { fill: 'none', stroke: C.white, 'stroke-linecap': 'roun
 const glow = S('circle', { fill: C.white, filter: 'url(#glow)' });
 const pt = S('circle', { fill: C.cream });
 
-let WM, R = 11, W_M, W_LINE, SW = [], wake = [], wakeOrder = [], colonUp, colonLo, rC, clockBox, snt, CUR;
+let WM, R = 11, W_M, W_N, W_LINE, SW = [], wake = [], wakeOrder = [], colonUp, colonLo, rC, clockBox, snt, CUR;
 function init() {
   WM = wordmark($('wm'), { dotPx: 22, yDot: 960 }); R = WM.R;
-  W_M = splitWords($('moment')); W_LINE = splitWords($('line'));
+  W_M = splitWords($('moment')); W_N = splitWords($('name')); W_LINE = splitWords($('line'));
   const k = $('stage').getBoundingClientRect().width / 1080;
   // the draft (text + cursor) is centred as a unit in the bottom slot
   const s = $('snt'); SW = splitWords(s);
@@ -192,6 +200,8 @@ function render(t) {
   c.style.filter = cOut > 0.01 ? `blur(${(8 * cOut).toFixed(2)}px)` : 'none';
   A(dotUp, { cx: colonUp[0], cy: colonUp[1] - 34 * cOut, r: rC, 'fill-opacity': 1 - cOut });
   headline($('moment'), W_M, t, 540, MOMENT_Y, T.moment, T.momentOut, 70, { ax: 0.5 });
+  // v4: the state named in the hook's slot, alone with the dead draft (the clock has gone)
+  headline($('name'), W_N, t, 540, MOMENT_Y, T.name, T.nameOut, 90, { ax: 0.5 });
 
   // the draft: frozen (slate); each apex wakes one word on the opposite side (cream, one white frame)
   const dOut = E.HOUSE(P(t, T.draftOut, 520));
@@ -240,8 +250,8 @@ function render(t) {
   A(halo, { cx: p[0], cy: p[1], r: 2 * BR * scale, 'fill-opacity': (0.32 + 0.68 * flash) * haloOn });
 
   // top slot: the instruction, then the HUD (the app's: eyebrow, counter NN / 30, PASSES)
-  rise($('instr'), t, 540, TOP_Y + 60, T.instr, T.instrOut, { dy: 20, blur: 8, ax: 0.5 });
-  rise($('tool'), t, 540, TOP_Y, T.hud, T.hudOut, { dy: 20, blur: 8, ax: 0.5 });
+  rise($('instr'), t, 540, TOP_Y + 80, T.instr, T.instrOut, { dy: 20, blur: 8, ax: 0.5, outDy: -8 });
+  rise($('tool'), t, 540, TOP_Y, T.tool, T.hudOut, { dy: 20, blur: 8, ax: 0.5 });
   const cnt = $('count'); cnt.textContent = String(hits).padStart(2, '0') + ' / 30';
   const tick = hits ? 1 + 0.06 * (1 - E.HOUSE(P(t, T.apex[hits - 1], 280))) : 1;
   rise(cnt, t, 540, TOP_Y + 54, T.hud + 80, T.hudOut + 40, { dy: 20, blur: 8, ax: 0.5 });

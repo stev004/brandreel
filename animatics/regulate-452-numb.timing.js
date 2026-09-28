@@ -18,11 +18,19 @@ var TIMING = (function () {
     moment: 150, momentOut: 2250,   // "frozen on the same line." under the clock (the hook)
     draft: 2800,                    // the frozen draft rises in, bottom slot, dead cursor
     clockOut: 4200,                 // the clock leaves; its frozen colon's lower dot stays
-    fall: [4350, 5050],             // ... and drops onto the left apex; the arm draws up from it
-    instr: 4700, instrOut: 6350,    // "Tap each side as the bob arrives" (top slot)
-    hud: 6500,                      // FREEZE · PENDULUM / 00 / 30 / PASSES (top slot)
-    release: 5100,                  // reel ms of the game's elapsed 0
+    // v4 (Steven 09-28: "how do people watching it know its freeze?"): the state gets named in the
+    // hook's slot, alone with the dead draft, before the Pendulum arrives. Everything after it
+    // runs exactly as v3, shifted later by D.
+    name: 4600, nameOut: 7000,      // "Not lazy. Frozen." (hook slot; ~1.6s settled read)
   };
+  const D = 3250;                   // v3's fall began at 4350
+  Object.assign(T, {
+    fall: [4350 + D, 5050 + D],     // the colon's dot drops onto the left apex; the arm draws up from it
+    instr: 4700 + D, instrOut: 6350 + D,   // "Tap each side as the bob arrives" (top slot, under the label)
+    hud: 6500 + D,                  // 00 / 30 / PASSES take the instruction's place under the label
+    release: 5100 + D,              // reel ms of the game's elapsed 0
+  });
+  T.tool = T.instr - 300;           // FREEZE · PENDULUM heads the top slot before the first swing and stays
   T.el = (t) => t - T.release;                   // reel ms -> the game's elapsed ms
   T.at = (e) => T.release + e;                   // the game's elapsed ms -> reel ms
   T.apex = [2000, 4000, 6000, 8000].map(T.at);    // the four taps: R L R L
