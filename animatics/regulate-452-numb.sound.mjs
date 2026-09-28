@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Score for regulate-452-numb.html (v3); every cue is read from regulate-452-numb.timing.js.
 // No music bed, no heartbeat: freeze is quiet. A bare key click as the frozen draft appears (and
-// nothing after it: the cursor is dead), the colon dot's drop onto the apex, then the Pendulum's
+// nothing after it: the cursor is dead), the white point's free fall and the string's catch (v5), then the Pendulum's
 // own tones exactly as the app synthesizes them (scripts/gen-bilateral-tones.js: apex 396Hz sine,
 // 0.22s, 12ms attack, exponential decay to -60dB, peak -24dBFS; hit 528Hz, 0.30s, -18dBFS), hard
 // panned to the side the bob arrives on; on each apex a soft light "lift" (filtered air + a quiet
@@ -29,9 +29,21 @@ room(dry, 0, T.dur, (ms) => sm(P(ms, 0, 500)) * (1 - sm(P(ms, T.wordmark, 2500))
 { const d = s(T.nameOut + 500 - T.name);
   add(dry, s(T.name + 60), d, (i, t) => { const u = t / d, env = sm(u / 0.3) * (1 - sm((u - 0.55) / 0.45));
     return (Math.sin(2 * Math.PI * 98 * t) * 0.8 + Math.sin(2 * Math.PI * 147 * t) * 0.2) * env * 0.05; }, { pan: 0 }); }
-// the colon's dot drops onto the left apex; a soft catch as the arm takes it
-air(wet, s(T.fall[0]), s(T.fall[1] - T.fall[0]), (u) => lerp(2200, 600, u), (u) => Math.sin(Math.PI * u), 0.05, 61, (u) => lerp(-0.1, -0.7, u));
-tick(wet, s(T.fall[1]), 1500, 0.06, -0.7);
+// v5: the point free-falls onto the left apex (a faint air that grows with speed), and the string
+// catches it: a soft muted "thup" plus a low tension pluck whose pitch follows the string's stretch
+// (T.spring, the same curve the picture uses), decaying with the settle. Panned to the catch (x 239 of 1080).
+{ const CP = -0.56, F = s(T.fall[1] - T.fall[0]);
+  air(wet, s(T.fall[0]) + 0.12, F - 0.12, (u) => lerp(500, 1600, u), (u) => u * u, 0.045, 61, CP);
+  const r = rng(4520), bp = biquad('bp', 620, 1.6);
+  add(dry, s(T.fall[1]), 0.08, (i, t) => bp(r() * 2 - 1) * Math.exp(-t / 0.011) * 0.35, { pan: CP });
+  let ph = 0, ph2 = 0;
+  add(dry, s(T.fall[1]), 0.6, (i, t) => {
+    const st = T.spring(t * 1000) / 30, f = 147 * (1 + 0.05 * st);
+    ph += (2 * Math.PI * f) / SR; ph2 += (2 * Math.PI * 2 * f) / SR;
+    const env = Math.min(1, t / 0.004) * Math.exp(-t / 0.16);
+    return (Math.sin(ph) + 0.28 * Math.sin(ph2) * Math.exp(-t / 0.06)) * env * 0.075;
+  }, { pan: CP });
+  tick(wet, s(T.fall[1]), 1320, 0.03, CP); }
 // the four passes: apex tone + hit tone, hard-panned (reverb is per-channel, so the pan holds)
 T.apex.forEach((at, n) => {
   const pan = T.side[n];

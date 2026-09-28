@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>4:52 PM Reel</title>
 <!--
-  brandreel animatic v4 - regulate - "4:52 PM" (Freeze -> Pendulum) social reel, ~21.3s (T.dur), 1080x1920 @ 60
+  brandreel animatic v5 - regulate - "4:52 PM" (Freeze -> Pendulum) social reel, ~21.3s (T.dur), 1080x1920 @ 60
   Steven 2026-09-28 on v1: "4:52pm is an okay idea. i like the idea of signifying a freeze response.
   but it needs to be clearer and how pendulum helps. lots of overlapping elements". v2 rebuilds it
   in the 11:47 AM v2 language: one instrument, big, obviously acting on the scenario; one thing at
@@ -13,8 +13,16 @@
     "frozen on the same line." (names the freeze in words). The line swaps for the draft it means:
     "I'll reply properly when" in Freeze slate with a dead, unblinking cursor. Clock + draft hold
     together (the stuck frame), with the empty middle where the swing will be.
-  - One unbroken take: the clock leaves, but its frozen colon's lower dot stays, turns white and
-    drops onto the Pendulum's left apex; the arm draws up out of it. The dot is the bob.
+  - One unbroken take: the clock leaves whole (both colon dots with it; nothing hovers). v5 (Steven
+    09-28: "the dot ... should drop perfectly onto the pendulum in a smooth and realistic physics
+    motion ... we don't want floating elements for no reason"): when "Not lazy. Frozen." has gone, the
+    white point is let go at the pivot's height (above the frame) straight over the left apex and
+    free-falls under constant g (~5.9k px/s^2: 1213px in 640ms, ~63px/frame at the catch) while the
+    string draws down from the pivot and waits at full length; the string catches it exactly at the
+    bob position, stretches (damped spring, 200ms period, zeta .38, ~30px overshoot, the dot squashes
+    +-12% along the string) and settles in ~330ms, then the swing starts on the game's clock
+    (release unchanged). The catch has its own sound (a soft string-tension pluck whose pitch follows
+    the stretch). The dot is the bob.
   - The app's Pendulum, big (arm 1250px, swing ~660 to ~720px wide), driven like the game
     (regulate-452-numb.timing.js ports utils/bilateralRhythm.ts line for line): starts at rest on
     the left apex (elapsed 0, as the app does), fixed 2.0s half-swing, the arriving side's guide arc
@@ -41,6 +49,7 @@
     The guide arc is slate #7E9AA6 (app: freezeAlt #89C2D9; brand law: the Freeze colour names Freeze).
   - Four passes, not thirty; the arm lets go on the fourth tap (in-game the swing carries on).
   - No haptics (it's video): the apex haptic is carried by the hit ring and the panned tone.
+  - v5: the catch is a spring settle along the string (the app's bob simply sits at the left apex).
   - v4 (Steven 09-28: "how do people watching it know its freeze? maybe we need more context on the
     slide before"): after the stuck frame the clock leaves (its lower dot stays) and the state is
     named in the hook's slot and style, alone with the dead draft: "Not lazy. Frozen." (~1.6s settled
@@ -89,7 +98,7 @@
   <div class="t head italic" id="line" style="font-size:56px;white-space:nowrap;opacity:.9">For the days you can't start.</div>
   <div class="t cta" id="cta">4 tools free on the App Store</div>
 </div></div>
-<div id="bar"><button id="play">Play</button><span id="tc">0.00s</span><input id="scrub" type="range" min="0" step="1" value="0"><span>regulate &middot; 4:52 pm freeze v4 &middot; 1080&times;1920 &middot; 60fps</span></div>
+<div id="bar"><button id="play">Play</button><span id="tc">0.00s</span><input id="scrub" type="range" min="0" step="1" value="0"><span>regulate &middot; 4:52 pm freeze v5 &middot; 1080&times;1920 &middot; 60fps</span></div>
 <audio id="snd" preload="auto"></audio>
 <script src="lib/timing-kit.js"></script>
 <script src="regulate-452-numb.timing.js"></script>
@@ -104,11 +113,15 @@ const GUIDE_HALF = 0.09 / D2R;                                   // the app's +-
 const L = 1250, PIV = [540, -120], BR = 20;                      // arm, pivot (above frame), bob radius
 const APP_K = L / 443;                                           // app pt -> reel px
 const CLOCK_Y = 262, MOMENT_Y = 668, DRAFT_Y = 1262, TOP_Y = 262;
-const bobAt = (deg) => [PIV[0] + L * Math.sin(deg * D2R), PIV[1] + L * Math.cos(deg * D2R)];
+const bobAt = (deg, len = L) => [PIV[0] + len * Math.sin(deg * D2R), PIV[1] + len * Math.cos(deg * D2R)];
+// v5 free fall: let go at the pivot's height straight above the left apex, constant g, caught at fall[1]
+const FALL_MS = T.fall[1] - T.fall[0];
+let CATCH, G_FALL;                                               // catch point; g in px/ms^2 (~5.9e3 px/s^2)
 
 const guideL = S('path', { fill: 'none', stroke: C.frz, 'stroke-linecap': 'round' });
 const guideR = S('path', { fill: 'none', stroke: C.frz, 'stroke-linecap': 'round' });
 const dotUp = S('circle', { fill: C.cream });
+const dotLo = S('circle', { fill: C.cream });
 const cursor = S('rect', { fill: C.frz });
 const arm = S('line', { stroke: 'url(#armG)', 'stroke-linecap': 'round', 'stroke-width': 3.5 });
 const ring = S('circle', { fill: 'none', stroke: C.frz, 'stroke-width': 5 });
@@ -148,24 +161,19 @@ function init() {
   rC = (pm.actualBoundingBoxAscent + pm.actualBoundingBoxDescent) / 2;
   const ccx = clockBox.x + (cr.left - cb.left) / k + (cm.actualBoundingBoxRight - cm.actualBoundingBoxLeft) / 2;
   colonLo = [ccx, cbase + pm.actualBoundingBoxDescent - rC]; colonUp = [ccx, cbase - cm.actualBoundingBoxAscent + rC];
-  window.__geo = { L, PIV, xF: WM.xF, yF: WM.yF, snt, CUR, wake, wakeOrder, cx, colonLo, apexL: bobAt(-T.idle), apexLast: bobAt(T.angLast), apexX: T.apex.map((e, n) => bobAt(T.side[n] * T.amp(e))[0]) };
+  CATCH = bobAt(-T.idle); G_FALL = (2 * (CATCH[1] - PIV[1])) / (FALL_MS * FALL_MS);
+  window.__geo = { CATCH, G_FALL, L, PIV, xF: WM.xF, yF: WM.yF, snt, CUR, wake, wakeOrder, cx, colonLo, apexL: bobAt(-T.idle), apexLast: bobAt(T.angLast), apexX: T.apex.map((e, n) => bobAt(T.side[n] * T.amp(e))[0]) };
 }
 
-// the white point: the colon's lower dot, then the bob, then the full stop
+// the white point: let go at the pivot's height, free fall, caught by the string (spring), the bob, then the full stop
+const stretchAt = (t) => (t < T.fall[1] || t >= T.release ? 0 : T.spring(t - T.fall[1]));
 function pointAt(t) {
-  if (t < T.fall[0]) return colonLo;
-  if (t < T.fall[1]) {
-    const u = P(t, T.fall[0], T.fall[1] - T.fall[0]), a = bobAt(-T.idle);
-    const ux = E.INOUT(u), uy = E.INOUT(u);
-    return [lerp(colonLo[0], a[0], ux), lerp(colonLo[1], a[1], uy)];
-  }
-  if (t < T.letGo) return bobAt(T.angle(t));
+  if (t < T.fall[1]) { const tau = Math.max(0, t - T.fall[0]); return [CATCH[0], PIV[1] + 0.5 * G_FALL * tau * tau]; }
+  if (t < T.letGo) return bobAt(T.angle(t), L + stretchAt(t));
   const a = bobAt(T.angLast), u = E.HOUSE(P(t, T.glide[0], T.glide[1] - T.glide[0]));
   return [lerp(a[0], WM.xF, u), lerp(a[1], WM.yF, u) - Math.sin(Math.PI * u) * 70];
 }
 const radiusAt = (t) => {
-  if (t < T.fall[0]) return rC;
-  if (t < T.fall[1]) return lerp(rC, BR, E.INOUT(P(t, T.fall[0], T.fall[1] - T.fall[0])));
   return lerp(BR, R, E.HOUSE(P(t, T.glide[0], T.glide[1] - T.glide[0])));
 };
 // guide glow per side: the app's start state lights the left guide; then at each centre crossing
@@ -199,6 +207,7 @@ function render(t) {
   c.style.transform = `translate(${clockBox.x}px,${clockBox.y - 34 * cOut}px)`;
   c.style.filter = cOut > 0.01 ? `blur(${(8 * cOut).toFixed(2)}px)` : 'none';
   A(dotUp, { cx: colonUp[0], cy: colonUp[1] - 34 * cOut, r: rC, 'fill-opacity': 1 - cOut });
+  A(dotLo, { cx: colonLo[0], cy: colonLo[1] - 34 * cOut, r: rC, 'fill-opacity': 1 - cOut });
   headline($('moment'), W_M, t, 540, MOMENT_Y, T.moment, T.momentOut, 70, { ax: 0.5 });
   // v4: the state named in the hook's slot, alone with the dead draft (the clock has gone)
   headline($('name'), W_N, t, 540, MOMENT_Y, T.name, T.nameOut, 90, { ax: 0.5 });
@@ -222,13 +231,14 @@ function render(t) {
   if (t >= T.cursorOn) { const ph = (t - T.cursorOn) % 1000; curO = ph < 530 ? 1 : 0; curFill = ph < 50 && t < T.cursorOn + 1000 ? C.white : C.cream; }
   A(cursor, { x: CUR.x, y: CUR.y + dy, width: CUR.w, height: CUR.h, fill: curFill, 'fill-opacity': curO * dr.o * (1 - dOut) });
 
-  // the arm draws up out of the dot as it lands on the left apex, and lets go at the last tap
+  // v5: the string draws down from the pivot while the point falls and is waiting at full length
+  // ~100ms before the catch; from the catch it carries the point (stretching with the spring) and lets go at the last tap
   const p = pointAt(t), rad = radiusAt(t);
-  const g = E.HOUSE(P(t, T.fall[1] - 250, 600));
-  const bob = t < T.letGo ? p : bobAt(T.angLast);
-  const top = [lerp(bob[0], PIV[0], g), lerp(bob[1], PIV[1], g)];
+  // (its top fades out above y 470, so the visible tip leads the point down its last ~60%)
+  const g = lerp(0.36, 1, E.INOUT(P(t, T.fall[0] + 200, FALL_MS - 300))) * (t >= T.fall[0] + 200 ? 1 : 0);
+  const bob = t < T.fall[1] ? bobAt(-T.idle, L * g) : t < T.letGo ? p : bobAt(T.angLast);
   const armO = 0.34 * (g > 0.001 ? 1 : 0) * (1 - E.HOUSE(P(t, T.letGo + 40, 380)));
-  A(arm, { x1: top[0], y1: top[1], x2: bob[0], y2: bob[1] + 0.01, 'stroke-opacity': armO });
+  A(arm, { x1: PIV[0], y1: PIV[1], x2: bob[0], y2: bob[1] + 0.01, 'stroke-opacity': armO });
 
   // guide arcs (the app's: slate, 3pt, .55, at the bob centre's radius)
   const gd = guides(t);
@@ -258,11 +268,14 @@ function render(t) {
   if (cnt.style.visibility === 'visible') cnt.style.transform += ` scale(${tick.toFixed(4)})`;
   rise($('passes'), t, 540, TOP_Y + 140, T.hud + 160, T.hudOut + 80, { dy: 16, blur: 6, ax: 0.5, max: 0.9 });
 
-  // the point (cream colon dot -> white as it falls; motion-blur smear, glow)
-  const white = smooth(P(t, T.fall[0], 250));
-  A(pt, { cx: p[0], cy: p[1], r: rad * (t < T.letGo ? scale : 1), fill: white > 0.5 ? C.white : C.cream, 'fill-opacity': t < T.clockOut ? 1 - cOut : 1 });
+  // the point (white from the moment it is let go; motion-blur smear, glow)
+  // v5: the point is only on screen from the moment it is let go (above the frame); white throughout.
+  // At the catch it stretches along the string with the spring (+-12% at the 30px overshoot)
+  const white = t >= T.fall[0] ? 1 : 0, k = 0.12 * stretchAt(t) / 30, ang = t < T.letGo ? T.angle(t) : 0;
+  A(pt, { cx: p[0], cy: p[1], r: rad * (t < T.letGo ? scale : 1), fill: C.white, 'fill-opacity': white,
+    transform: k ? `translate(${p[0].toFixed(2)} ${p[1].toFixed(2)}) rotate(${(-ang).toFixed(3)}) scale(${(1 - k / 2).toFixed(4)} ${(1 + k).toFixed(4)}) translate(${(-p[0]).toFixed(2)} ${(-p[1]).toFixed(2)})` : '' });
   const sm = []; for (let kq = 0; kq <= 6; kq++) sm.push(pointAt(Math.max(0, t - (kq * 8.3) / 6)));
-  A(smear, { d: path(sm), 'stroke-width': rad * 2, 'stroke-opacity': t > T.fall[0] && t < T.land ? 0.55 : 0 });
+  A(smear, { d: path(sm), 'stroke-width': rad * 2, 'stroke-opacity': t > T.fall[0] + 20 && t < T.land ? 0.55 : 0 });
   A(glow, { cx: p[0], cy: p[1], r: rad * 1.9, 'fill-opacity': 0.34 * white * (1 - haloOn * 0.8) * (1 - E.HOUSE(P(t, T.land, 600))) });
 
   // close

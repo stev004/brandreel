@@ -10,18 +10,19 @@
   (timing, picture and score): the same phone, header, HUD, swarm physics, instruction beat,
   white-point rules, close and sound palette. One unbroken take.
   - Hook: 6:12 PM / jaw tight. saying nothing. on screen from frame 0, the colon blinking on the heartbeat.
-  - Held: the digits rise away; the colon's lower dot stays in the header, the white point. The
+  - Held: the clock rises away whole, colon and all (fix 09-28: no point floats over the story). The
     argument arrives on heartbeats (fine. / you always do this / forget it) where the phone's glass
     will be, then is held in: the three lines are pressed into one justified two-line block,
     letterspacing closing, weight rising, the block shrinking and heating toward Angry, a faint tremor
-    in it and a squeeze on every heartbeat. The frame is dead still; only the point trembles. The
+    in it and a squeeze on every heartbeat. The frame is dead still. The
     charge numeral rises with the squeeze (the holding IS the charge), 100 at the tightest.
   - Instruction: "Shake it out instead." in the headline slot; the phone draws in around the block;
     SHAKE YOUR DEVICE TO DRAIN THE CHARGE (the app's line, ShakeGame.tsx:607) where the game's cue sits.
   - Shake: the phone (edge, block, numeral, swarm) jolts at the game's 110ms cooldown while the header
-    holds still and the point hides. The first stroke bursts the block from the inside into the game's
+    holds still. The first stroke bursts the block from the inside into the game's
     red balls; the charge drains 100 -> 0 in five bouts and the swarm thins with it. Last ball gone:
-    stillness, silence. The phone leaves; the point comes back where it held on, still now, and falls
+    stillness, silence. The phone leaves; the white point fades and grows in, still, where the colon's
+    lower dot sat, and falls
     into the full stop of "regulate."; Somewhere to put it.; 4 TOOLS FREE ON THE APP STORE.
   - The game is the app's (components/ShakeGame.tsx, app main): balls 10-18pt at .85 in #C06C4D /
     #B54B32; no gravity, wall bounces (.92-.98 + jitter), equal-mass collisions (.9), damping .999,
@@ -255,8 +256,8 @@ function layout(t) {
   return { c, fs, w, pos, kx: k * lerp(1, 0.94, u2), ky: k * lerp(1, 0.9, u2) };
 }
 
-// the point: the colon's lower dot, left in the header; it trembles while the argument is held,
-// hides as the game takes over, comes back still after the stillness, and falls
+// the point: not on screen from the clock's exit until after the stillness (the colon leaves with the
+// digits); it then fades and grows in where the colon's lower dot sat, and falls
 function pointAt(t) {
   if (t >= T.ptBack) return pointFall(t, CLK.lo);
   const a = smooth(P(t, T.clockOut, 400)) * (0.9 + 2.6 * T.held(t));
@@ -267,8 +268,8 @@ function render(t) {
   const [jx, jy, jr] = jolt(t);
   $('cam').style.transform = `translate(${jx.toFixed(2)}px,${jy.toFixed(2)}px) rotate(${jr.toFixed(3)}deg)`;
 
-  // header: the digits rise away; the lower colon dot stays as the white point
-  drawClock(t, T.clockOut, T.clockOut, true);
+  // header: the whole clock rises away, colon included (no point floats over the story)
+  drawClock(t, T.clockOut, T.clockOut, false);
   headline($('moment'), W_M, t, 540, HEAD_Y, -1e9, T.italicOut, 60, { ax: 0.5 });
   drawInstr(t);
   drawPhone(t, T.phone, T.hudOut);
@@ -301,7 +302,8 @@ function render(t) {
   // the charge: rises with the squeeze, drains with the shaking
   drawHUD(t, T.shown(t), T.numIn, T.hudOut);
   drawBalls(t);
-  drawPoint(t, pointAt, pointVis(t, T.clockOut), lerp(CLK.rC, R, smooth(P(t, T.clockOut, 250))));
+  const back = E.HOUSE(P(t, T.ptBack, 450));   // appears only after the stillness: fade + gentle scale in
+  drawPoint(t, pointAt, t < T.ptBack ? 0 : pointVis(t, T.clockOut), R * lerp(0.55, 1, back));
 
   drawClose(t);
 }

@@ -17,7 +17,7 @@ var TIMING = (function () {
     HALF, MAX, idle: MP.idle, cap: MP.cap,
     moment: 150, momentOut: 2250,   // "frozen on the same line." under the clock (the hook)
     draft: 2800,                    // the frozen draft rises in, bottom slot, dead cursor
-    clockOut: 4200,                 // the clock leaves; its frozen colon's lower dot stays
+    clockOut: 4200,                 // the clock leaves, both colon dots with it (v5: nothing stays behind)
     // v4 (Steven 09-28: "how do people watching it know its freeze?"): the state gets named in the
     // hook's slot, alone with the dead draft, before the Pendulum arrives. Everything after it
     // runs exactly as v3, shifted later by D.
@@ -25,11 +25,26 @@ var TIMING = (function () {
   };
   const D = 3250;                   // v3's fall began at 4350
   Object.assign(T, {
-    fall: [4350 + D, 5050 + D],     // the colon's dot drops onto the left apex; the arm draws up from it
+    // v5 (Steven 09-28: "the dot ... should drop perfectly onto the pendulum in a smooth and realistic
+    // physics motion ... we don't want floating elements"): the colon's dots leave WITH the clock (nothing
+    // hovers). When the name has gone, the white point is let go at the pivot's height, straight above
+    // the left apex, and free-falls (constant g); the string draws down from the pivot and is waiting at
+    // full length, so the point is caught exactly at the bob position (fall[1]), stretches the string and
+    // settles on a damped spring before the swing starts on the game's own clock (release, unchanged).
+    fall: [7380, 8020],             // free fall: pivot height -> the left apex (catch at fall[1])
     instr: 4700 + D, instrOut: 6350 + D,   // "Tap each side as the bob arrives" (top slot, under the label)
     hud: 6500 + D,                  // 00 / 30 / PASSES take the instruction's place under the label
     release: 5100 + D,              // reel ms of the game's elapsed 0
   });
+  // the catch: radial string stretch (px, + = longer) tau ms after contact; a damped spring
+  // (period 200ms, zeta .38) carrying ~40% of the impact speed, tapered to exactly 0 by release
+  T.catchV = 1.53;                  // px/ms along the string at contact (impact ~3.8 px/ms)
+  T.spring = (tau) => {
+    if (tau <= 0) return 0;
+    const w = (2 * Math.PI) / 200, z = 0.38, wd = w * Math.sqrt(1 - z * z), end = T.release - T.fall[1];
+    const taper = tau >= end ? 0 : tau <= end - 90 ? 1 : 0.5 + 0.5 * Math.cos((Math.PI * (tau - end + 90)) / 90);
+    return (T.catchV / wd) * Math.exp(-z * w * tau) * Math.sin(wd * tau) * taper;
+  };
   T.tool = T.instr - 300;           // FREEZE · PENDULUM heads the top slot before the first swing and stays
   T.el = (t) => t - T.release;                   // reel ms -> the game's elapsed ms
   T.at = (e) => T.release + e;                   // the game's elapsed ms -> reel ms
