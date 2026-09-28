@@ -4,42 +4,46 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Unsent Reply</title>
 <!--
-  brandreel animatic v1 - regulate - "Typing the reply you won't send." (Angry -> Chaos Release),
-  Direction 1 of ANGRY_AND_TRAILER_DIRECTIONS.md, ~16.5s (T.dur), 1080x1920 @ 60. Built from
-  regulate-612-angry (same Chaos Release physics, colours, ball sizes, charge binding, collision score).
-  - Story: 6:12 PM / typing the reply you won't send. An abstract phone outline (the game's screen
-    edge made explicit: cream hairline on emerald, no bubbles, no chat chrome). A draft types itself,
-    each line starting on a heartbeat: "fine." / "you always do this" / "forget it", each retyped
-    bigger and hotter (cream -> Angry). Every keystroke loads the charge numeral (0 -> 34 -> 67 -> 100);
-    deleting a line gives none of it back. The white point is the cursor. Instruction beat: "Shake it
-    out instead." + SHAKE YOUR DEVICE TO DRAIN THE CHARGE. Then the phone is shaken (clock and headline
-    stay dead still): the draft's letters become the game's red balls, the charge drains 100 -> 0 in
-    bouts at the game's 110ms stroke cadence and the swarm thins with it. Stillness. The cursor falls
-    into the full stop of "regulate."; Somewhere to put it.; 4 TOOLS FREE ON THE APP STORE.
+  brandreel animatic v2 - regulate - "Typing the reply you won't send." (Angry -> Chaos Release),
+  Direction 1 of ANGRY_AND_TRAILER_DIRECTIONS.md, ~18s (T.dur), 1080x1920 @ 60. One of a family of
+  three (reply / loud / held) that share one FAMILY BLOCK (timing, picture and score): the same phone,
+  header, HUD, swarm physics, instruction beat, white-point rules, close and sound palette.
+  - Story: 6:12 PM / typing the reply you won't send. An iPhone-proportioned phone draws in under the
+    header (the game's screen made explicit: a cream hairline, a faint glass, the Dynamic Island; no
+    chat chrome). A draft types itself, each line starting on a heartbeat: "fine." / "you always do
+    this" / "forget it", each retyped bigger and hotter (cream -> Angry). Every keystroke loads the
+    charge numeral (0 -> 34 -> 67 -> 100); deleting a line gives none of it back. The white point is
+    the cursor. Instruction beat: "Shake it out instead." in the headline slot + SHAKE YOUR DEVICE TO
+    DRAIN THE CHARGE where the game's cue sits. Then the phone is shaken (clock and headline stay dead
+    still): the draft's letters become the game's red balls, the cursor hides as the game takes over,
+    the charge drains 100 -> 0 in bouts at the game's 110ms stroke cadence and the swarm thins with it.
+    Stillness, silence. The phone leaves; the cursor comes back alone on the empty draft line, then
+    falls into the full stop of "regulate."; Somewhere to put it.; 4 TOOLS FREE ON THE APP STORE.
   - The game is the app's (components/ShakeGame.tsx, app main): balls 10-18pt at .85 in #C06C4D /
     #B54B32; no gravity, wall bounces (restitution .92-.98 + tangential jitter), equal-mass collisions
     (.9), damping .999, speed floor bound to the charge; each shake kicks every ball in its own random
     direction at m x 260pt/s x .6-1.4, capped 1200pt/s; visible balls = round(charge% x 80) by index;
-    serif numeral + PERCENT CHARGED; drain in steps, one per 60ms sensor update, only while shaking;
-    milestone haptics at 75/50/25 are thumps. The sim runs in the timing file; the score reads it.
+    the serif numeral + PERCENT CHARGED sit centred above the balls (zIndex 10, as the app); the
+    playfield starts under the 59pt top safe inset; drain in steps, one per 60ms sensor update, only
+    while shaking; milestone haptics at 75/50/25 are thumps. The sim runs in the timing file.
   DEVIATIONS (honest):
   - The charge climbing 0 -> 100 while typing is story, not the app: in the game the charge starts
     full at 100. From the first stroke on, the charge and the ball binding are the game's.
   - "SHAKE YOUR DEVICE TO DRAIN THE CHARGE" is the game screen's VoiceOver label (ShakeGame.tsx:607),
     not on-screen copy; the visible intro line is "Shake your device hard and don't stop." It is set
-    inside the phone where the game's cue sits; the game's own cue (KEEP SHAKING) is not shown.
-  - The in-game HUD's top bar (ANGER · CHAOS RELEASE / NN%) and progress track are omitted to keep one
+    where the game's cue sits (the game's own cue, KEEP SHAKING, is not shown).
+  - The in-game top bar (ANGER - CHAOS RELEASE / NN%) and progress track are omitted to keep one
     thing to read at a time; only the serif numeral + PERCENT CHARGED are kept.
-  - Time: the drain is ~4.7s of shaking in five bouts; the game takes ~12-20s of real effort. One shake
+  - Time: the drain is ~4.8s of shaking in five bouts; the game takes ~12-20s of real effort. One shake
     impulse per 110ms stroke (the haptic cadence), not per 60ms sensor update; hidden balls leave the
-    collision pass. The playfield is the phone outline (460 x 830px, S = 1.17 px/pt), shorter than a
-    real 393 x 852pt screen so it fits under the clock inside the safe area.
+    collision pass; a ball the charge releases fades over 90ms instead of vanishing in one frame.
+  - The phone is 390 x 834px of glass (0.99 px/pt, ~19.2:9) so it fits under the header in the safe area.
   - The swarm is born from the letters of "forget it" (79 balls = the game's binding at the first
     stroke), not already scattered across a full screen.
   - Serif is Playfair Display (Brand Book), not the app's Cormorant.
   Laws: emerald ground; Angry burnt orange (+ the game's deep red on balls) is the only state colour,
-  on the draft's heat, the balls and the letter flash; the dot pure white; teal unused; hook text on
-  screen at frame 0; wordmark only at the end. No em/en dashes on screen.
+  on the draft's heat, the balls and the app's cue line; the dot pure white and never on the playfield
+  during play; teal unused; hook text on screen at frame 0; wordmark only at the end. No em/en dashes.
 
   COPY LIST: 6:12 · PM · typing the reply you won't send. · fine. · you always do this · forget it ·
   0-100 · PERCENT CHARGED · Shake it out instead. · SHAKE YOUR DEVICE / TO DRAIN THE CHARGE ·
@@ -49,17 +53,19 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,500;1,500&display=block" rel="stylesheet">
 <link rel="stylesheet" href="lib/reel.css">
 <style>
-  #cam{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:540px 1045px}
-  #still{position:absolute;left:0;top:0;width:1080px;height:1920px}
-  #g2{position:absolute;left:0;top:0;width:1080px;height:1920px;overflow:visible}
-  #clock{display:flex;align-items:baseline;font-family:var(--serif);font-weight:500;font-size:190px;line-height:1;color:var(--cream);font-variant-numeric:lining-nums;letter-spacing:-.02em;transform-origin:50% 60%}
-  #clock .colon{display:inline-block}
-  #clock .ampm{font-family:var(--mono);font-size:32px;letter-spacing:.3em;margin-left:18px;color:var(--sage)}
+  /* ==== FAMILY CSS: byte-identical in regulate-angry-reply / -loud / -held .html ==== */
+  #cam,#still,#g2{position:absolute;left:0;top:0;width:1080px;height:1920px}
+  #g2{overflow:visible}
+  #clock{display:flex;align-items:baseline;font-family:var(--serif);font-weight:500;line-height:1;color:var(--cream);font-variant-numeric:lining-nums;letter-spacing:-.02em;transform-origin:50% 60%}
+  #clock .colon,#clock .d,#clock .ampm{display:inline-block}
+  #clock .ampm{font-family:var(--mono);font-size:30px;letter-spacing:.3em;margin-left:18px;color:var(--sage)}
+  .hl{font-size:58px;white-space:nowrap}
+  #num{font-family:var(--serif);font-weight:500;line-height:1;color:var(--cream);font-variant-numeric:lining-nums tabular-nums;white-space:nowrap;transform-origin:50% 60%}
+  #lab{font-family:var(--mono);font-weight:500;font-size:18px;letter-spacing:.26em;text-transform:uppercase;color:var(--sage);white-space:nowrap;line-height:1}
+  #cue{font-family:var(--mono);font-weight:500;font-size:20px;letter-spacing:.2em;text-transform:uppercase;color:var(--ang);white-space:nowrap;line-height:1.7;text-align:center}
+  /* ==== END FAMILY CSS ==== */
   .ln{font-family:var(--sans);font-weight:400;color:var(--cream);white-space:pre;line-height:1}
   .ln .c{display:inline-block;transform-origin:50% 90%;will-change:transform,opacity,filter}
-  #num{font-family:var(--serif);font-weight:500;font-size:170px;line-height:1;color:var(--cream);font-variant-numeric:lining-nums tabular-nums;white-space:nowrap;transform-origin:50% 60%}
-  .hud{font-family:var(--mono);font-weight:500;font-size:20px;letter-spacing:.26em;text-transform:uppercase;color:var(--sage);white-space:nowrap;line-height:1}
-  #mono{font-family:var(--mono);font-weight:500;font-size:20px;letter-spacing:.2em;text-transform:uppercase;color:var(--cream);white-space:nowrap;line-height:1.7;text-align:center}
 </style>
 <body>
 <div id="wrap"><div id="stage">
@@ -67,13 +73,13 @@
   <svg id="g" viewBox="0 0 1080 1920"></svg>
   <div class="t ln" id="l0"></div><div class="t ln" id="l1"></div><div class="t ln" id="l2"></div>
   <div class="t" id="num">0</div>
-  <div class="t hud" id="lab">Percent charged</div>
-  <div class="t" id="mono">Shake your device<br>to drain the charge</div>
+  <div class="t" id="lab">Percent charged</div>
+  <div class="t" id="cue">Shake your device<br>to drain the charge</div>
 </div>
 <div id="still">
   <div class="t" id="clock"><span class="d" id="dA">6</span><span class="colon" id="colon"></span><span class="d" id="dB">12</span><span class="ampm" id="ampm">PM</span></div>
-  <div class="t head italic" id="moment" style="font-size:60px;white-space:nowrap">typing the reply you won't send.</div>
-  <div class="t head italic" id="instr" style="font-size:60px;white-space:nowrap">Shake it out instead.</div>
+  <div class="t head italic hl" id="moment">typing the reply you won't send.</div>
+  <div class="t head italic hl" id="instr">Shake it out instead.</div>
   <svg id="g2" viewBox="0 0 1080 1920"><defs><filter id="glow" x="-200%" y="-200%" width="500%" height="500%"><feGaussianBlur stdDeviation="9"/></filter></defs></svg>
 </div>
   <div id="wm"></div>
@@ -86,99 +92,169 @@
 <script src="regulate-angry-reply.timing.js"></script>
 <script src="lib/reel-kit.js"></script>
 <script>
-const { E, clamp, lerp, P, smooth, kf, hash, $, S, A, place, riseV, rise, splitWords, headline, path, wordmark } = Reel;
-const T = TIMING, PH = T.phone, C = { cream: '#F2F0E9', ang: '#C06C4D', deep: '#B54B32', white: '#FFFFFF' };
-const OX = 540, OY = 1045;                         // the phone's centre: the shake pivots here
-const HEAD_Y = 486, NUM_Y = 990, LAB_Y = 1192, MONO_Y = 1318, CUR_R = 8;
+// ==== FAMILY BLOCK: byte-identical in regulate-angry-reply / -loud / -held .html (refine 09-28) ====
+// The header (clock + headline slot), the one phone, the game's HUD and swarm, the instruction beat,
+// the white point's rules and the end card. Stories live outside this block.
+const { E, clamp, lerp, P, smooth, kf, hash, vnoise, $, S, A, place, riseV, rise, splitWords, headline, path, wordmark } = Reel;
+const T = TIMING, FAM = T.FAM, BODY = FAM.body, SCR = FAM.screen;
+const C = { cream: '#F2F0E9', sage: '#8F9E8B', ang: '#C06C4D', deep: '#B54B32', white: '#FFFFFF', ground: '#0a1812', flash: 'rgb(214,128,96)' };   // flash: a letter's one bright frame as it breaks (never white: white is the point's alone)
+const PIVOT = [540, (BODY.y0 + BODY.y1) / 2];   // the shake pivots on the phone's centre
+$('cam').style.transformOrigin = `${PIVOT[0]}px ${PIVOT[1]}px`;
 
-// the phone jolts once per 110ms shake stroke: a snap out, a quick settle (a phone in a hand rotates)
+// the phone jolts once per 110ms shake stroke (a snap out, a quick settle); the header stays dead still
 function jolt(t) {
   let dx = 0, dy = 0, rot = 0;
   for (const J of T.jolts) {
     const k = t - J.t; if (k < 0 || k > 200) continue;
     const env = k < 22 ? E.SNAP(k / 22) : Math.exp(-(k - 22) / 38);
-    const a = (hash(J.t * 7 + 3) + 1) * Math.PI, amp = J.k === 0 ? 30 : 19;
-    dx += Math.cos(a) * amp * env; dy += Math.sin(a) * amp * env * 0.8; rot += hash(J.t * 13 + 5) * 1.6 * env;
+    const a = (hash(J.t * 7 + 3) + 1) * Math.PI, amp = J.k === 0 ? 20 : 13;
+    dx += Math.cos(a) * amp * env; dy += Math.sin(a) * amp * env * 0.8; rot += hash(J.t * 13 + 5) * 1.1 * env;
   }
   return [dx, dy, rot];
 }
-// map a point on the phone through the shake (translate(dx,dy) rotate(rot) about the phone's centre)
-const shaken = (p, [dx, dy, rot]) => { const a = (rot * Math.PI) / 180, x = p[0] - OX, y = p[1] - OY; return [OX + dx + x * Math.cos(a) - y * Math.sin(a), OY + dy + x * Math.sin(a) + y * Math.cos(a)]; };
+const shaken = (p, [dx, dy, rot]) => { const a = (rot * Math.PI) / 180, x = p[0] - PIVOT[0], y = p[1] - PIVOT[1]; return [PIVOT[0] + dx + x * Math.cos(a) - y * Math.sin(a), PIVOT[1] + dy + x * Math.sin(a) + y * Math.cos(a)]; };
 const lastBeat = (t) => { let b = -1e9; for (const x of T.beats) { if (x <= t) b = x; else break; } return b; };
-const mix = (a, b, u) => { const h = (s) => [1, 3, 5].map((i) => parseInt(s.substr(i, 2), 16)); const A_ = h(a), B_ = h(b); return `rgb(${A_.map((v, i) => Math.round(lerp(v, B_[i], u))).join(',')})`; };
 
-// the phone: a cream hairline, a small pill at the top so it reads as a phone and nothing more
-// two halves, each drawn from the top centre down to the bottom centre
-const half = (sg) => { const { x0, y0, x1, y1, rx } = PH, x = sg > 0 ? x1 : x0, sw = sg > 0 ? 1 : 0;
+// the phone: glass, the game's balls, the device edge (two halves drawn from the top centre down to the
+// bottom centre), the Dynamic Island. Same element stack, sizes and draw-in in all three reels.
+const half = (sg) => { const { x0, y0, x1, y1, rx } = BODY, x = sg > 0 ? x1 : x0, sw = sg > 0 ? 1 : 0;
   return `M540 ${y0}H${x - sg * rx}A${rx} ${rx} 0 0 ${sw} ${x} ${y0 + rx}V${y1 - rx}A${rx} ${rx} 0 0 ${sw} ${x - sg * rx} ${y1}H540`; };
-const phone = [1, -1].map((sg) => S('path', { d: half(sg), fill: 'none', stroke: C.cream, 'stroke-width': 2, pathLength: 1 }));
-const pill = S('rect', { x: 540 - 40, y: PH.y0 + 22, width: 80, height: 22, rx: 11, fill: 'none', stroke: C.cream, 'stroke-width': 2 });
-const ballEls = T.balls.map((b) => S('line', { stroke: b.col ? C.deep : C.ang, 'stroke-width': b.r * 2, 'stroke-linecap': 'round' }));
-// still layer: the colon, and the point
-const g2 = $('g2');
-const dotUp = S('circle', { fill: C.cream }, g2), dotLo = S('circle', { fill: C.cream }, g2);
-const smear = S('path', { fill: 'none', stroke: C.white, 'stroke-linecap': 'round' }, g2);
-const glow = S('circle', { fill: C.white, filter: 'url(#glow)' }, g2);
-const pt = S('circle', { fill: C.white }, g2);
-
-let WM, R = 11, W_M, W_I, W_LINE, LC = [], colonUp, colonLo, rC, clockBox;
-function init() {
-  WM = wordmark($('wm'), { dotPx: 22, yDot: 960 }); R = WM.R;
-  W_M = splitWords($('moment')); W_I = splitWords($('instr')); W_LINE = splitWords($('line'));
-  T.lines.forEach((L, i) => {
-    const el = $('l' + i); el.style.fontSize = L.size + 'px'; el.style.color = mix(C.cream, C.ang, L.heat); el.innerHTML = '';
-    LC[i] = [...L.text].map((ch) => { const s = document.createElement('span'); s.className = 'c'; s.textContent = ch === ' ' ? ' ' : ch; el.appendChild(s); return s; });
+const PH = {};
+PH.glass = S('rect', { x: SCR.x0, y: SCR.y0, width: SCR.x1 - SCR.x0, height: SCR.y1 - SCR.y0, rx: SCR.rx, fill: C.cream, 'fill-opacity': 0 });
+PH.balls = T.balls.map((b) => S('line', { stroke: b.col ? C.deep : C.ang, 'stroke-width': b.r * 2, 'stroke-linecap': 'round', visibility: 'hidden' }));
+PH.edge = [1, -1].map((sg) => S('path', { d: half(sg), fill: 'none', stroke: C.cream, 'stroke-width': 2, pathLength: 1, 'stroke-opacity': 0 }));
+PH.island = S('rect', { x: 540 - FAM.island.w / 2, y: FAM.island.top, width: FAM.island.w, height: FAM.island.h, rx: FAM.island.h / 2, fill: '#050c09', stroke: C.cream, 'stroke-width': 1.5, 'fill-opacity': 0, 'stroke-opacity': 0 });
+function drawPhone(t, tIn, tOut) {
+  const d = E.SETTLE(P(t, tIn, FAM.drawIn)), o = 1 - E.HOUSE(P(t, tOut, 520)), on = t >= tIn ? 1 : 0;
+  PH.edge.forEach((e) => A(e, { 'stroke-dasharray': `${d.toFixed(4)} 1`, 'stroke-opacity': (0.22 * on * o).toFixed(4) }));
+  A(PH.glass, { 'fill-opacity': (0.03 * E.HOUSE(P(t, tIn + 250, 650)) * o).toFixed(4) });
+  const isl = E.HOUSE(P(t, tIn + 450, 450)) * o;
+  A(PH.island, { 'fill-opacity': (0.9 * isl).toFixed(4), 'stroke-opacity': (0.14 * isl).toFixed(4) });
+}
+// the swarm: visible by index against the charge (the game's binding), drawn with a half-frame smear;
+// a ball the charge lets go of fades and shrinks over 90ms instead of popping
+function drawBalls(t) {
+  T.balls.forEach((b, i) => {
+    const el = PH.balls[i]; let o = 0, k = 1;
+    if (T.alive(i, t)) o = 1;
+    else if (T.gone[i] > b.tb && t >= T.gone[i] && t < T.gone[i] + 90) { const u = E.HOUSE((t - T.gone[i]) / 90); o = 1 - u; k = 1 - 0.45 * u; }
+    if (o <= 0) { el.setAttribute('visibility', 'hidden'); return; }
+    const p = T.posAt(i, t), q = t - 16.67 >= b.tb ? T.posAt(i, t - 16.67) : p, bin = smooth(P(t, b.tb, 60));
+    el.setAttribute('visibility', 'visible');
+    A(el, { x1: lerp(p[0], q[0], 0.35), y1: lerp(p[1], q[1], 0.35), x2: p[0], y2: p[1], 'stroke-opacity': (0.85 * bin * o).toFixed(4), 'stroke-width': (b.r * 2 * lerp(0.4, 1, bin) * k).toFixed(2) });
   });
-  window.__measure = () => T.lines.map((L, i) => LC[i].map((s) => [s.textContent, +(s.offsetLeft + s.offsetWidth / 2).toFixed(1), +(0.6 * L.size).toFixed(1), +s.offsetWidth.toFixed(1)]));
-  const cv = document.createElement('canvas').getContext('2d'); cv.font = '500 190px "Playfair Display"';
-  const cm = cv.measureText(':'), pm = cv.measureText('.'), fm = cv.measureText('1');
-  $('colon').style.width = cm.width + 'px';
-  const c = $('clock'); c.style.transform = 'translate(0,0)';
-  const k = $('stage').getBoundingClientRect().width / 1080, cb = c.getBoundingClientRect(), cr = $('colon').getBoundingClientRect();
-  clockBox = { x: 540 - cb.width / k / 2, y: 236 };
-  const base = clockBox.y + (190 - (fm.fontBoundingBoxAscent + fm.fontBoundingBoxDescent)) / 2 + fm.fontBoundingBoxAscent;
-  rC = (pm.actualBoundingBoxAscent + pm.actualBoundingBoxDescent) / 2;
-  const cx = clockBox.x + (cr.left - cb.left) / k + (cm.actualBoundingBoxRight - cm.actualBoundingBoxLeft) / 2;
-  colonLo = [cx, base + pm.actualBoundingBoxDescent - rC]; colonUp = [cx, base - cm.actualBoundingBoxAscent + rC];
+}
+// the game's HUD: serif numeral + PERCENT CHARGED, centred where ShakeGame.tsx centres it, above the balls
+function drawHUD(t, value, tIn, tOut, kick = 0) {
+  const n = $('num'); n.textContent = String(value);
+  rise(n, t, 540, FAM.num.cy - FAM.num.px / 2, tIn, tOut, { ax: 0.5, dy: 30 });
+  if (kick && n.style.visibility === 'visible') n.style.transform += ` scale(${(1 + kick).toFixed(4)})`;
+  rise($('lab'), t, 540, FAM.lab.y, tIn + 120, tOut, { dy: 16, blur: 6, ax: 0.5, max: 0.9 });
 }
 
+// the header: the hook's clock, and one headline slot under it (the moment line, then the instruction)
+let CLK = null, HEAD_Y = 0, W_I = null, W_LINE = null, WM = null, R = 11;
+const G2 = $('g2');
+const dotUp = S('circle', { fill: C.cream }, G2), dotLo = S('circle', { fill: C.cream }, G2);
+const PT = { smear: S('path', { fill: 'none', stroke: C.white, 'stroke-linecap': 'round' }, G2), glow: S('circle', { fill: C.white, filter: 'url(#glow)' }, G2), pt: S('circle', { fill: C.white }, G2) };
+function initFamily() {
+  WM = wordmark($('wm'), { dotPx: 22, yDot: 960 }); R = WM.R;
+  W_I = splitWords($('instr')); W_LINE = splitWords($('line'));
+  $('num').style.fontSize = FAM.num.px + 'px';
+  const px = FAM.clock.px, c = $('clock'), cv = document.createElement('canvas').getContext('2d');
+  c.style.fontSize = px + 'px'; cv.font = `500 ${px}px "Playfair Display"`;
+  const cm = cv.measureText(':'), pm = cv.measureText('.'), fm = cv.measureText('1'), d6 = cv.measureText('6');
+  $('colon').style.width = cm.width + 'px'; c.style.transform = 'translate(0,0)';
+  const k = $('stage').getBoundingClientRect().width / 1080, cb = c.getBoundingClientRect(), cr = $('colon').getBoundingClientRect();
+  const off = (px - (fm.fontBoundingBoxAscent + fm.fontBoundingBoxDescent)) / 2 + fm.fontBoundingBoxAscent;   // box top -> baseline
+  const y = FAM.clock.inkTop - off + d6.actualBoundingBoxAscent, base = y + off, rC = (pm.actualBoundingBoxAscent + pm.actualBoundingBoxDescent) / 2;
+  const x = 540 - cb.width / k / 2, cx = x + (cr.left - cb.left) / k + (cm.actualBoundingBoxRight - cm.actualBoundingBoxLeft) / 2;
+  CLK = { x, y, base, rC, lo: [cx, base + pm.actualBoundingBoxDescent - rC], up: [cx, base - cm.actualBoundingBoxAscent + rC] };
+  // the headline's ink top sits FAM.head.gap below the clock's baseline
+  cv.font = `italic 500 ${FAM.head.px}px "Playfair Display"`;
+  const hm = cv.measureText('Shake it out instead.'), lh = 1.06 * FAM.head.px;
+  const hoff = (lh - (hm.fontBoundingBoxAscent + hm.fontBoundingBoxDescent)) / 2 + hm.fontBoundingBoxAscent;
+  HEAD_Y = base + FAM.head.gap - hoff + hm.actualBoundingBoxAscent;
+  window.__layout = () => [...document.querySelectorAll('.hl')].map((el) => { const m = cv.measureText(el.textContent); return { text: el.textContent, inkTop: +(HEAD_Y + hoff - m.actualBoundingBoxAscent).toFixed(1), inkBottom: +(HEAD_Y + hoff + m.actualBoundingBoxDescent).toFixed(1), width: +m.width.toFixed(1), clearToPhone: +(BODY.y0 - HEAD_Y - hoff - m.actualBoundingBoxDescent).toFixed(1) }; }).concat([{ clockInkTop: FAM.clock.inkTop, clockBase: +base.toFixed(1), colonLo: CLK.lo.map((v) => +v.toFixed(1)), rC: +rC.toFixed(2), R }]);
+}
+// the clock pulses and its colon blinks on the heartbeat while live; it leaves by rising out with a
+// blur. keepLow: the colon's lower dot stays behind (it becomes the white point).
+function drawClock(t, liveUntil, outAt, keepLow) {
+  const beat = t - lastBeat(t), live = t < liveUntil, out = E.HOUSE(P(t, outAt, 520)), c = $('clock');
+  const pulse = live ? 1 + 0.012 * Math.exp(-beat / 140) : 1;
+  c.style.visibility = out < 0.999 ? 'visible' : 'hidden'; c.style.opacity = 1;
+  c.style.transform = `translate(${CLK.x}px,${CLK.y}px) scale(${pulse.toFixed(5)})`;
+  for (const id of ['dA', 'dB', 'ampm']) { const e = $(id); e.style.opacity = (1 - out).toFixed(3); e.style.filter = out > 0.01 ? `blur(${(10 * out).toFixed(2)}px)` : 'none'; e.style.transform = `translateY(${(-28 * out).toFixed(2)}px)`; }
+  const blink = live ? 0.4 + 0.6 * Math.exp(-beat / 300) : 1;
+  A(dotUp, { cx: CLK.up[0], cy: CLK.up[1] - 28 * out, r: CLK.rC, 'fill-opacity': (blink * (1 - out)).toFixed(4) });
+  if (keepLow) A(dotLo, { cx: CLK.lo[0], cy: CLK.lo[1], r: CLK.rC, 'fill-opacity': (blink * (1 - smooth(P(t, outAt, 250)))).toFixed(4) });
+  else A(dotLo, { cx: CLK.lo[0], cy: CLK.lo[1] - 28 * out, r: CLK.rC, 'fill-opacity': (blink * (1 - out)).toFixed(4) });
+}
+// the instruction beat: the headline holds (outside the phone, never covered) until the close; the app's
+// line sits where the game's cue sits and leaves before the swarm can reach it
+function drawInstr(t) {
+  headline($('instr'), W_I, t, 540, HEAD_Y, T.instr, T.hudOut, 70, { ax: 0.5 });
+  rise($('cue'), t, 540, FAM.cue.y, T.instrMono, T.monoOut, { dy: 16, blur: 6, ax: 0.5, max: 0.9 });
+}
+
+// THE WHITE POINT. It exists before the game (the colon dot / the draft cursor); it hides as the game
+// takes over (T.ptHide) and is never on the playfield while a ball is; it re-emerges alone after the
+// last ball has gone and the phone has left (T.ptBack), then falls into the full stop of "regulate.".
+const DRIFT = Reel.cubicBezier(0.25, 0.4, 0.3, 1), FALL = Reel.cubicBezier(0.55, 0, 0.6, 1);
+const pointFall = (t, home) => { const u = P(t, T.fall[0], T.fall[1] - T.fall[0]); return [lerp(home[0], WM.xF, DRIFT(u)), lerp(home[1], WM.yF, FALL(u))]; };
+const pointVis = (t, tIn) => (t < T.ptBack ? smooth(P(t, tIn, 300)) * (1 - E.HOUSE(P(t, T.ptHide, 220))) : E.HOUSE(P(t, T.ptBack, 450)));
+function drawPoint(t, at, o, r) {
+  const p = at(t), sm = []; for (let k = 0; k <= 6; k++) sm.push(at(Math.max(0, t - (k * 8.3) / 6)));
+  A(PT.smear, { d: path(sm), 'stroke-width': (r * 2).toFixed(2), 'stroke-opacity': t > T.fall[0] && t < T.fall[1] ? (0.55 * o).toFixed(3) : 0 });
+  A(PT.glow, { cx: p[0], cy: p[1], r: r * 1.9, 'fill-opacity': (0.32 * o * (1 - E.HOUSE(P(t, T.fall[1], 600)))).toFixed(4) });
+  A(PT.pt, { cx: p[0], cy: p[1], r: r.toFixed(3), 'fill-opacity': o.toFixed(4) });
+}
+// the end card, identical: regulate. / Somewhere to put it. / 4 TOOLS FREE ON THE APP STORE
+function drawClose(t) {
+  WM.draw(t, T.wordmark);
+  headline($('line'), W_LINE, t, 540, WM.yF + 80, T.line, Infinity, 50, { ax: 0.5 });
+  rise($('cta'), t, 540, WM.yF + 200, T.cta, Infinity, { dy: 18, blur: 8, ax: 0.5, max: 0.9 });
+}
+const FAMILY_FONTS = ['500 160px "Playfair Display"', 'italic 500 58px "Playfair Display"', '500 127px "Playfair Display"', '500 20px "JetBrains Mono"'];
+// ==== END FAMILY BLOCK ====
+
+// ---- the story: the unsent reply ----
+const CUR_R = 8;
+const mix = (a, b, u) => { const h = (s) => [1, 3, 5].map((i) => parseInt(s.substr(i, 2), 16)); const A_ = h(a), B_ = h(b); return `rgb(${A_.map((v, i) => Math.round(lerp(v, B_[i], u))).join(',')})`; };
+let W_M, LC = [];
+function init() {
+  initFamily();
+  W_M = splitWords($('moment'));
+  T.lines.forEach((L, i) => {
+    const el = $('l' + i); el.style.fontSize = L.size + 'px'; el.style.color = mix(C.cream, C.ang, L.heat); el.innerHTML = '';
+    LC[i] = [...L.text].map((ch) => { const s = document.createElement('span'); s.className = 'c'; s.textContent = ch; el.appendChild(s); return s; });
+  });
+  window.__measure = () => T.lines.map((L, i) => ({ size: L.size, right: +(T.textX + $('l' + i).offsetWidth).toFixed(1), glyphs: LC[i].map((s) => [s.textContent, +(s.offsetLeft + s.offsetWidth / 2).toFixed(1), +s.offsetWidth.toFixed(1)]) }));
+}
 // the cursor: right after the last typed letter, sitting on the draft's baseline like a full stop
 function cursorAt(t) {
-  const li = T.activeLine(t);
-  if (li < 0) return [T.textX + CUR_R, T.base - CUR_R];
+  const li = T.activeLine(t), home = [T.textX + CUR_R, T.base - CUR_R];
+  if (li < 0) return home;
   const L = T.lines[li], n = t >= T.shatter ? L.n : T.typed(li, t);
-  if (!n) return [T.textX + CUR_R, T.base - CUR_R];
+  if (!n) return home;
   const s = LC[li][n - 1];
   return [T.textX + s.offsetLeft + s.offsetWidth + 0.14 * L.size + CUR_R, T.base - CUR_R];
 }
-const FALL = Reel.cubicBezier(0.55, 0, 0.6, 1), DRIFT = Reel.cubicBezier(0.25, 0.4, 0.3, 1);   // slides off its line, then drops
-function pointAt(t) {
-  const c = shaken(cursorAt(Math.min(t, T.fall[0])), jolt(t));
-  if (t < T.fall[0]) return c;
-  const u = P(t, T.fall[0], T.fall[1] - T.fall[0]);
-  return [lerp(c[0], WM.xF, DRIFT(u)), lerp(c[1], WM.yF, FALL(u))];
-}
+// before the game: the cursor (riding the phone for the frames it takes to hide); after: it comes back
+// on the empty draft line and falls into the full stop
+const pointAt = (t) => (t < T.ptBack ? shaken(cursorAt(t), jolt(t)) : pointFall(t, [T.textX + CUR_R, T.base - CUR_R]));
 
 function render(t) {
   const J = jolt(t);
   $('cam').style.transform = `translate(${J[0].toFixed(2)}px,${J[1].toFixed(2)}px) rotate(${J[2].toFixed(3)}deg)`;
-  const beat = t - lastBeat(t), live = t < T.instr, out = E.HOUSE(P(t, T.hudOut, 520));
+  const beat = t - lastBeat(t);
 
-  // the clock (the hook): pulses and blinks on the heartbeat until the instruction; dead still after
-  const pulse = live ? 1 + 0.012 * Math.exp(-beat / 140) : 1;
-  const c = $('clock'); c.style.visibility = out < 0.999 ? 'visible' : 'hidden'; c.style.opacity = (1 - out).toFixed(3);
-  c.style.filter = out > 0.01 ? `blur(${(8 * out).toFixed(2)}px)` : 'none';
-  c.style.transform = `translate(${clockBox.x}px,${clockBox.y - 24 * out}px) scale(${pulse})`;
-  const blink = live ? 0.4 + 0.6 * Math.exp(-beat / 300) : 1;
-  A(dotUp, { cx: colonUp[0], cy: colonUp[1] - 24 * out, r: rC, 'fill-opacity': blink * (1 - out) });
-  A(dotLo, { cx: colonLo[0], cy: colonLo[1] - 24 * out, r: rC, 'fill-opacity': blink * (1 - out) });
+  // header: the clock stays dead still through the shaking (only the phone moves); the moment line
+  // holds the slot until the draft is done, then the instruction takes it
+  drawClock(t, T.instr, T.hudOut, false);
   headline($('moment'), W_M, t, 540, HEAD_Y, -1e9, T.hookOut, 60, { ax: 0.5 });
-  headline($('instr'), W_I, t, 540, HEAD_Y, T.instr, T.hudOut, 70, { ax: 0.5 });
-
-  // the phone draws itself in (a hairline, from the top), then holds; leaves in the stillness
-  const dr = E.SETTLE(P(t, T.phoneIn, 700));
-  phone.forEach((e) => A(e, { 'stroke-dasharray': `${dr} 1`, 'stroke-dashoffset': 0, 'stroke-opacity': t > T.phoneIn ? 0.5 * (1 - out) : 0 }));
-  A(pill, { 'stroke-opacity': 0.3 * smooth(P(t, T.phoneIn + 350, 400)) * (1 - out) });
+  drawInstr(t);
+  drawPhone(t, T.phoneIn, T.hudOut);
 
   // the draft: one line at a time, typed on the beat, deleted, retyped bigger and hotter
   T.lines.forEach((L, i) => {
@@ -192,52 +268,30 @@ function render(t) {
       const isSp = L.text[j] === ' ';
       if (j >= n && !(last && t >= T.shatter)) { s.style.visibility = 'hidden'; return; }
       s.style.visibility = 'visible';
-      if (last && !isSp && t >= T.shatter) {   // the stroke: each letter flashes and bursts into balls
+      if (last && !isSp && t >= T.shatter) {   // the first stroke: each letter flashes and bursts into balls
         const k = t - T.glyphAt[gi++];
-        if (k >= 0) { const flash = k < 34, v = E.HOUSE(P(k, 34, 150)); s.style.opacity = (flash ? 1 : 1 - v).toFixed(4); s.style.color = flash ? C.white : ''; s.style.transform = `scale(${(flash ? 1.12 : 1.12 + 0.5 * v).toFixed(3)})`; s.style.filter = `blur(${(9 * v).toFixed(2)}px)`; return; }
+        if (k >= 0) { const flash = k < 34, v = E.HOUSE(P(k, 34, 150)); s.style.opacity = (flash ? 1 : 1 - v).toFixed(4); s.style.color = flash ? C.flash : ''; s.style.transform = `scale(${(flash ? 1.12 : 1.12 + 0.5 * v).toFixed(3)})`; s.style.filter = `blur(${(9 * v).toFixed(2)}px)`; return; }
       } else if (!isSp) gi++;
       const k = t - L.keyAt[j], pop = k < 110 ? 1 + (0.1 + 0.12 * L.heat) * (1 - E.HOUSE(k / 110)) : 1;
-      s.style.opacity = 1; s.style.color = ''; s.style.filter = 'none'; s.style.transform = `scale(${pop.toFixed(3)})`;
+      s.style.opacity = Math.min(1, 0.35 + k / 40).toFixed(3); s.style.color = ''; s.style.filter = 'none'; s.style.transform = `scale(${pop.toFixed(3)})`;
     });
   });
 
   // the charge numeral: loads with every keystroke, drains with every stroke
-  const shown = T.shown(t), prev = T.shown(t - 90);
-  $('num').textContent = String(shown);
-  const bump = shown !== prev && t < T.shatter ? 1 : 0, lastKey = T.keys.filter((K) => K.t <= t).pop();
-  const kp = lastKey && t < T.shatter ? Math.exp(-(t - lastKey.t) / 90) * (0.025 + 0.03 * T.lines[lastKey.li].heat) : 0;
-  rise($('num'), t, 540, NUM_Y, T.numIn, T.hudOut, { ax: 0.5, dy: 30 });
-  if ($('num').style.visibility === 'visible') $('num').style.transform += ` scale(${(1 + kp * bump + kp).toFixed(4)})`;
-  rise($('lab'), t, 540, LAB_Y, T.numIn + 120, T.hudOut, { dy: 16, blur: 6, ax: 0.5 });
-  rise($('mono'), t, 540, MONO_Y, T.instrMono, T.instrOut, { dy: 16, blur: 6, ax: 0.5, max: 0.85 });
+  const lastKey = T.keys.filter((K) => K.t <= t).pop();
+  const kp = lastKey && t < T.shatter ? Math.exp(-(t - lastKey.t) / 90) * (0.02 + 0.025 * T.lines[lastKey.li].heat) : 0;
+  drawHUD(t, T.shown(t), T.numIn, T.hudOut, kp);
+  drawBalls(t);
 
-  // the swarm: the game's balls, visible by index against the charge; drawn with a half-frame smear
-  T.balls.forEach((b, i) => {
-    const el = ballEls[i];
-    if (!T.alive(i, t)) { el.style.visibility = 'hidden'; return; }
-    const p = T.posAt(i, t), q = t - 16.67 >= b.tb ? T.posAt(i, t - 16.67) : p, bin = smooth(P(t, b.tb, 60));
-    el.style.visibility = 'visible';
-    A(el, { x1: lerp(p[0], q[0], 0.35), y1: lerp(p[1], q[1], 0.35), x2: p[0], y2: p[1], 'stroke-opacity': 0.85 * bin, 'stroke-width': b.r * 2 * lerp(0.4, 1, bin) });
-  });
-
-  // the point: the cursor. Blinks on the heartbeat while it waits, solid while it types, rides the
-  // shake, then falls into the full stop
-  const p = pointAt(t), pin = smooth(P(t, T.cursorIn, 300));
+  // the cursor: blinks on the heartbeat while it waits, solid while it types, hides as the game takes over
   const typing = T.keys.concat(T.dels).some((K) => t >= K.t && t - K.t < 350);
-  const cb = t < T.shatter && !typing ? 0.35 + 0.65 * Math.exp(-beat / 320) : 1;
-  const sm = []; for (let k = 0; k <= 6; k++) sm.push(pointAt(Math.max(0, t - (k * 8.3) / 6)));
-  A(smear, { d: path(sm), 'stroke-width': R * 2, 'stroke-opacity': t > T.fall[0] && t < T.fall[1] ? 0.55 : 0 });
-  const fallU = E.HOUSE(P(t, T.fall[0], T.fall[1] - T.fall[0]));
-  A(glow, { cx: p[0], cy: p[1], r: lerp(CUR_R, R, fallU) * 1.9, 'fill-opacity': 0.3 * pin * (1 - E.HOUSE(P(t, T.fall[1], 600))) });
-  A(pt, { cx: p[0], cy: p[1], r: lerp(CUR_R, R, fallU), 'fill-opacity': pin * cb });
+  const cb = t < T.ptBack && !typing ? 0.35 + 0.65 * Math.exp(-beat / 320) : 1;
+  drawPoint(t, pointAt, pointVis(t, T.cursorIn) * cb, lerp(CUR_R, R, E.HOUSE(P(t, T.fall[0], T.fall[1] - T.fall[0]))));
 
-  // close
-  WM.draw(t, T.wordmark);
-  headline($('line'), W_LINE, t, 540, WM.yF + 80, T.line, Infinity, 50, { ax: 0.5 });
-  rise($('cta'), t, 540, WM.yF + 200, T.cta, Infinity, { dy: 18, blur: 8, ax: 0.5, max: 0.9 });
+  drawClose(t);
 }
 
-Reel.start({ duration: T.dur, render, init, fonts: ['500 190px "Playfair Display"', 'italic 500 60px "Playfair Display"', '500 20px "JetBrains Mono"', '400 76px Inter'] });
+Reel.start({ duration: T.dur, render, init, fonts: FAMILY_FONTS.concat(['400 72px Inter']) });
 </script>
 </body>
 </html>
