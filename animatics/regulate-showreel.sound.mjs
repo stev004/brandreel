@@ -18,9 +18,11 @@ import { SR, makeBus, add as add0, rng, ar, smooth, lp1, biquad, reverb, mixInto
 // PAUSES - the same time map as the picture (regulate-showreel.html HOLDS). Cues are written in source
 // time; add() places them in output time. Short hits (<=0.5s) only move; longer sounds that span a pause
 // have their envelope time warped (oscillators step per sample, so pitch never changes) and sustain.
-const HOLDS = [[2600, 1100], [3720, 1000], [5420, 800], [7350, 800], [10500, 1100], [13300, 900]], SLOW = 100;
+// rev2 (09-28): +500ms source inside the gauge (from 4880) and +200ms before the pendulum's release (from 5550);
+// every cue after them moved +500 / +700, as in the picture.
+const HOLDS = [[2600, 1100], [3720, 1000], [5920, 800], [8050, 800], [11200, 1100], [14000, 900]], SLOW = 100;
 const srcToOut = (s) => { let o = s; for (const [h, x] of HOLDS) o += s <= h ? 0 : s >= h + SLOW ? x : (x * (s - h)) / SLOW; return o; };
-const outToSrc = (o) => { let lo = 0, hi = 18000; for (let i = 0; i < 40; i++) { const m = (lo + hi) / 2; if (srcToOut(m) < o) lo = m; else hi = m; } return (lo + hi) / 2; };
+const outToSrc = (o) => { let lo = 0, hi = 18700; for (let i = 0; i < 40; i++) { const m = (lo + hi) / 2; if (srcToOut(m) < o) lo = m; else hi = m; } return (lo + hi) / 2; };
 const M = (sec) => srcToOut(sec * 1000) / 1000, Mi = (sec) => outToSrc(sec * 1000) / 1000;
 function add(bus, at, dur, fn, opts = {}) {
   const o0 = M(at);
@@ -32,7 +34,7 @@ function add(bus, at, dur, fn, opts = {}) {
 
 
 const out = process.argv[2] || 'regulate-showreel.wav';
-const DUR = Math.round(srcToOut(18000)) / 1000;
+const DUR = Math.round(srcToOut(18700)) / 1000;
 const dry = makeBus(DUR), wet = makeBus(DUR);
 
 // ---- shared easing (same curves as the picture) ----
@@ -50,8 +52,8 @@ const kf = (t, keys) => { if (t <= keys[0][0]) return keys[0][1]; for (let i = 1
 // ---------------------------------------------------------------------------
 // 1. Heartbeat - lub-dub, felt more than heard. BPM follows the regulation arc.
 // ---------------------------------------------------------------------------
-const bpm = (ms) => kf(ms, [[0, 94], [1000, 100], [1500, 116], [3200, 108], [4900, 100], [5600, 88], [7700, 74], [10950, 62], [12900, 56]]);
-const hbGain = (ms) => kf(ms, [[0, 0.0], [300, 0.9], [4900, 1.0], [7700, 0.8], [11400, 0.6], [12400, 0.38], [13250, 0.0]]);
+const bpm = (ms) => kf(ms, [[0, 94], [1000, 100], [1500, 116], [3200, 108], [5400, 100], [6300, 88], [8400, 74], [11650, 62], [13600, 56]]);
+const hbGain = (ms) => kf(ms, [[0, 0.0], [300, 0.9], [5400, 1.0], [8400, 0.8], [12100, 0.6], [13100, 0.38], [13950, 0.0]]);
 // Phones cannot play 50Hz: the body is saturated for harmonics (150-250Hz) and
 // carries a short knock, so the beat reads on a phone speaker as well as a sub.
 function thump(at, f0, f1, amp, pan = 0) {
@@ -69,7 +71,7 @@ function thump(at, f0, f1, amp, pan = 0) {
 }
 {
   let o = 260; // output ms: the heart keeps beating through the pauses
-  while (outToSrc(o) < 13250) {
+  while (outToSrc(o) < 13950) {
     const ms = outToSrc(o), g = hbGain(ms), per = 60000 / bpm(ms);
     if (g > 0.01) { thump(Mi(o / 1000), 78, 44, 0.55 * g); thump(Mi((o + per * 0.3) / 1000), 70, 50, 0.32 * g); }
     o += per;
@@ -87,9 +89,9 @@ function thump(at, f0, f1, amp, pan = 0) {
 }
 { // unresolved: two close high partials beating, held from the apex until the gauge lets go
   let a = 0, b = 0; const r = rng(23); const hs = biquad('bp', 6500, 2);
-  add(dry, 1.3, 3.66, (i, t) => {
+  add(dry, 1.3, 4.16, (i, t) => {
     const ms = 1300 + t * 1000;
-    const env = smooth(P(ms, 1300, 800)) * lerp(1, 1.9, smooth(P(ms, 4100, 780))) * (1 - smooth(P(ms, 4890, 60)));
+    const env = smooth(P(ms, 1300, 800)) * lerp(1, 1.9, smooth(P(ms, 4100, 1280))) * (1 - smooth(P(ms, 5390, 60)));
     a += (2 * Math.PI * 1760) / SR; b += (2 * Math.PI * 1771) / SR;
     return (Math.sin(a) + Math.sin(b)) * 0.018 * env + hs(r() * 2 - 1) * 0.02 * env;
   }, { gain: 1 });
@@ -110,54 +112,54 @@ function tick(at, f, amp, pan = 0, bus = wet) { let ph = 0; add(bus, at, 0.08, (
 for (let k = 0; k < 11; k++) tick((4150 + k * 30) / 1000, 3400 + k * 40, 0.1, lerp(-0.6, 0.6, k / 10));
 { // jolt rumble while pressure is at the redline
   const r = rng(41); const lp = biquad('lp', 140, 0.9);
-  add(dry, 4.1, 0.9, (i, t) => { const ms = 4100 + t * 1000; return lp(r() * 2 - 1) * smooth(P(ms, 4100, 300)) * (1 - smooth(P(ms, 4860, 60))) * 0.9; }, { gain: 0.8 });
+  add(dry, 4.1, 1.4, (i, t) => { const ms = 4100 + t * 1000; return lp(r() * 2 - 1) * smooth(P(ms, 4100, 300)) * (1 - smooth(P(ms, 5360, 60))) * 0.9; }, { gain: 0.8 });
 }
 { // the fall: needle sweeps right -> left, a long release
   const r = rng(43); const lp = biquad('lp', 3000, 0.8);
-  add(wet, 4.9, 1.0, (i, t) => { const u = SETTLE(clamp(t / 0.65)); lp.set(3200 * Math.pow(1 - u, 1.4) + 160); return lp(r() * 2 - 1) * (1 - u) * smooth(t / 0.02) * 0.55; }, { panFn: (t) => lerp(0.6, -0.7, SETTLE(clamp(t / 0.65))) });
-  thump(4.9, 70, 40, 0.35);
+  add(wet, 5.4, 1.0, (i, t) => { const u = SETTLE(clamp(t / 0.65)); lp.set(3200 * Math.pow(1 - u, 1.4) + 160); return lp(r() * 2 - 1) * (1 - u) * smooth(t / 0.02) * 0.55; }, { panFn: (t) => lerp(0.6, -0.7, SETTLE(clamp(t / 0.65))) });
+  thump(5.4, 70, 40, 0.35);
 }
 
 // ---------------------------------------------------------------------------
 // 5. Pendulum - apex ticks hard-panned (bilateral), air follows the bob
 // ---------------------------------------------------------------------------
-const T_C = 5550, PERIOD = 1200;
-const ampC = (ms) => (15 + 75 * Math.exp(-(ms - T_C) / 420)) * (1 - smooth(P(ms, 7350, 300)));
+const T_C = 6250, PERIOD = 1200;
+const ampC = (ms) => (15 + 75 * Math.exp(-(ms - T_C) / 420)) * (1 - smooth(P(ms, T_C + 1800, 300)));
 const lenC = (ms) => lerp(372, 780, HOUSE(P(ms, T_C, 800)));
 const bobX = (ms) => 540 - lenC(ms) * Math.sin((ampC(ms) * Math.cos((2 * Math.PI * (ms - T_C)) / PERIOD) * Math.PI) / 180);
 function wood(at, pan, amp) { const r = rng(Math.round(at * 997)); const bp = biquad('bp', 1900, 5); let ph = 0; add(dry, at, 0.12, (i, t) => { ph += (2 * Math.PI * 940) / SR; return (bp(r() * 2 - 1) * 2.2 * ar(t, 0.0006, 0.012) + Math.sin(ph) * ar(t, 0.001, 0.03) * 0.5) * amp; }, { pan }); tick(at, 1880, amp * 0.25, pan); }
-wood(5.55, -0.85, 0.35);
-[[6.15, 0.85], [6.75, -0.85], [7.35, 0.85]].forEach(([at, pan], i) => wood(at, pan, [0.7, 0.62, 0.55][i]));
+wood(6.25, -0.85, 0.35);
+[[6.85, 0.85], [7.45, -0.85], [8.05, 0.85]].forEach(([at, pan], i) => wood(at, pan, [0.7, 0.62, 0.55][i]));
 {
   const r = rng(51); const bp = biquad('bp', 700, 0.8); let prev = bobX(T_C);
-  add(wet, 5.55, 2.2, (i, t) => { const ms = T_C + t * 1000; const x = bobX(ms); const v = Math.abs(x - prev) * SR / 1000; prev = x; bp.set(500 + v * 900); return bp(r() * 2 - 1) * clamp(v / 1.6) * 0.5; }, { panFn: (t) => clamp((bobX(T_C + t * 1000) - 540) / 380, -1, 1) });
+  add(wet, 6.25, 2.2, (i, t) => { const ms = T_C + t * 1000; const x = bobX(ms); const v = Math.abs(x - prev) * SR / 1000; prev = x; bp.set(500 + v * 900); return bp(r() * 2 - 1) * clamp(v / 1.6) * 0.5; }, { panFn: (t) => clamp((bobX(T_C + t * 1000) - 540) / 380, -1, 1) });
 }
 
 // ---------------------------------------------------------------------------
 // 6. Regulate Breath - ticks, inhale 1s, exhale 2s
 // ---------------------------------------------------------------------------
-for (let k = 0; k < 12; k++) tick((7700 + k * 30) / 1000, 2600 + (k % 4) * 90, 0.07, k < 4 ? -0.3 : 0.3);
+for (let k = 0; k < 12; k++) tick((8400 + k * 30) / 1000, 2600 + (k % 4) * 90, 0.07, k < 4 ? -0.3 : 0.3);
 function breath(at, dur, f0, f1, env, amp, seed) {
   const r = rng(seed); const bp = biquad('bp', f0, 0.9); const lp = lp1(3500);
   add(dry, at, dur + 0.1, (i, t) => { const u = clamp(t / dur); bp.set(lerp(f0, f1, u)); return lp(bp(r() * 2 - 1)) * env(u) * amp; });
 }
-breath(7.95, 1.0, 700, 1300, (u) => smooth(u / 0.35) * (1 - smooth((u - 0.8) / 0.2)), 0.55, 61);
-breath(8.95, 2.0, 1150, 520, (u) => smooth(u / 0.18) * Math.pow(1 - u, 1.2), 0.62, 62);
+breath(8.65, 1.0, 700, 1300, (u) => smooth(u / 0.35) * (1 - smooth((u - 0.8) / 0.2)), 0.55, 61);
+breath(9.65, 2.0, 1150, 520, (u) => smooth(u / 0.18) * Math.pow(1 - u, 1.2), 0.62, 62);
 
 // ---------------------------------------------------------------------------
 // 7. Release - out of the column; crackle becomes a consonant fifth, then flat
 // ---------------------------------------------------------------------------
-thump(10.95, 64, 42, 0.2);
+thump(11.65, 64, 42, 0.2);
 { // irregular crackle while the trace is dysregulated
   const r = rng(71);
-  let ms = 11000;
-  while (ms < 11900) { const g = 1 - smooth(P(ms, 11450, 450)); tick(ms / 1000, 2200 + r() * 2600, 0.05 + 0.07 * g * r(), (r() * 2 - 1) * 0.5); ms += 22 + r() * 70; }
+  let ms = 11700;
+  while (ms < 12600) { const g = 1 - smooth(P(ms, 12150, 450)); tick(ms / 1000, 2200 + r() * 2600, 0.05 + 0.07 * g * r(), (r() * 2 - 1) * 0.5); ms += 22 + r() * 70; }
 }
 { // coherence: G3 + D4, arriving with the sine, fading as the line goes flat
   let a = 0, b = 0, c = 0;
-  add(wet, 11.4, 2.8, (i, t) => {
-    const ms = 11400 + t * 1000;
-    const env = smooth(P(ms, 11500, 650)) * (1 - smooth(P(ms, 12500, 1150)));
+  add(wet, 12.1, 2.8, (i, t) => {
+    const ms = 12100 + t * 1000;
+    const env = smooth(P(ms, 12200, 650)) * (1 - smooth(P(ms, 13200, 1150)));
     a += (2 * Math.PI * 196) / SR; b += (2 * Math.PI * 293.66) / SR; c += (2 * Math.PI * 392) / SR;
     return (Math.sin(a) * 0.5 + Math.sin(b) * 0.36 + Math.sin(c) * 0.08) * env * 0.08;
   });
@@ -168,7 +170,7 @@ thump(10.95, 64, 42, 0.2);
 // ---------------------------------------------------------------------------
 {
   let a = 0, b = 0, c = 0;
-  add(wet, 13.9, 1.2, (i, t) => { a += (2 * Math.PI * 1318.5) / SR; b += (2 * Math.PI * 2637) / SR; c += (2 * Math.PI * 329.6) / SR; return (Math.sin(a) * ar(t, 0.002, 0.14) * 0.3 + Math.sin(b) * ar(t, 0.001, 0.05) * 0.1 + Math.sin(c) * ar(t, 0.004, 0.22) * 0.18); });
+  add(wet, 14.6, 1.2, (i, t) => { a += (2 * Math.PI * 1318.5) / SR; b += (2 * Math.PI * 2637) / SR; c += (2 * Math.PI * 329.6) / SR; return (Math.sin(a) * ar(t, 0.002, 0.14) * 0.3 + Math.sin(b) * ar(t, 0.001, 0.05) * 0.1 + Math.sin(c) * ar(t, 0.004, 0.22) * 0.18); });
 }
 
 // ---- mix ----

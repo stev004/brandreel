@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Regulate Showreel</title>
 <!--
-  brandreel animatic rev1 - regulate - "Showreel" 18.0s - one unbroken take
+  brandreel animatic rev2 - regulate - "Showreel" 24.4s (18.7s source + pauses) - one unbroken take
   Brief (Steven 2026-09-24): "a dynamic 15-20 second motion graphics video that
   shows what an incredible motion designer you are for this brand. Like a
   showreel for a resume. Go all out. Entirely grounded in the brand."
@@ -33,7 +33,8 @@
   - Emerald #0a1812 is the ground, flat, whole take. No orb, no gradient,
     no cards. Teal #4FD1C5 is a supplement - the kicker, then the tagline.
   - Playfair Display 500 (+ italic 500 for emphasis, as the site's <em>),
-    JetBrains Mono caps kickers/labels .22-.3em, Inter unused on screen.
+    JetBrains Mono caps kickers/labels .22-.3em, Inter only for the
+    pendulum instruction (as the app sets it).
   - Hook first (point at 0.06s, spike 1.0s, headline 1.35s); wordmark only
     at the end; the tagline closes. Plain hyphens only.
   - Motion: house cubic-bezier(.2,.7,.2,1); settle (.22,1,.36,1) for draws
@@ -53,38 +54,70 @@
     (.35), "IN 4"/"OUT 8" cream .3, entrance track -> ticks 30ms apart.
     Deviation (taste seat): the app's coloured dots/bob are the white point.
 
-  SCENE TABLE (ms)                                   words
-  A     0-4000  hook + window: point crawls baseline;  "The response that never finished."
+  REV2 (2026-09-28, Steven: "the games move quick and don't really show a use
+  for them"; Fable refinement proposal, approved): the thesis is unchanged -
+  the stress response gets stuck; Regulate gives your body a tool for
+  whichever way it's stuck. Each instrument used to arrive as bare taxonomy;
+  now the app's home-screen question hinges the take and every instrument
+  answers it with a felt line (serif italic, top, y 372) and then speaks the
+  app's own instruction beneath it (y 1236) as the point acts. STATE · GAME
+  is demoted to a small sub-label (20px, y 1432). Cut: "Stillness is a
+  destination, not a starting point." and the gauge's PRESSURE face label.
+  Hinge copy: the brief proposed "How do you feel right now?" (the app's
+  onboarding check-in); the app's home screen, the one that routes you to a
+  state, asks "How are you, really?" (app/(tabs)/index.tsx) - used here.
+  Instructions verbatim from regulate main: pressure-gauge.tsx release prompt
+  "Let it out slow." (Playfair 500, cream, centred under the gauge);
+  bilateral-rhythm.tsx "Tap each side as the bob arrives" (Inter 400, sage =
+  THEME.textMuted - Inter's only use on screen).
+  Timing: +500ms source inside the gauge (the redline tremble runs 4100-5400,
+  fall at 5400) and +200ms of flat rest before the pendulum's release (T_C
+  5550 -> 6250); everything after moved +500 / +700 and the pauses moved with
+  their scenes. The hook headline now leaves at 2950 (was 3880) so the
+  question lands alone and is settled before the 3720 pause.
+
+  SCENE TABLE (source ms; output = srcToOut, 18.7s source -> 24.4s out)   words
+  A     0-4000  hook + window: point crawls baseline;  "The response that never finished." (1350-2950)
                 spike snaps 1000-1240 (+ one impact ring); ghost "completed" path draws 1150-2050 on
                 settle while the real line stays stuck + jitters; pull back
                 2800-3700 (zoom 1 -> .6) and the window band draws beneath.
                 labels THREAT / STUCK - Where most of us live / HYPER / WINDOW / HYPO
-  B  3950-5550  Pressure Gauge: upper band hairline bends into the arc; the
-                point becomes the needle tip, trembles at the redline, falls
-                on settle to horizontal-left and comes to rest.  ANXIOUS · PRESSURE GAUGE
-  C  5550-7650  Pendulum: the needle is now the arm, released from rest at
-                90deg; pivot rises 1080 -> 360, arm 330 -> 780; period 1200ms
-                constant, amplitude decays 90 -> 33 -> 19 -> 16deg, caught
-                at centre.                                   FREEZE · PENDULUM
-  D  7650-10950 Regulate Breath: the arm is the column; inhale 1000ms, exhale
-                2000ms (the app's 1:2).  "Stillness is a destination, not a starting point."
-                                                             BALANCED · REGULATE BREATH
-  E 10950-13900 Release: the point turns out of the column into a trace -
+                HINGE 3100-3980: "How are you, really?" at the top; leaves as
+                the band bends into the gauge arc.
+  B  3950-6050  Pressure Gauge: upper band hairline bends into the arc; the
+                point becomes the needle tip, trembles at the redline
+                (4100-5400), falls on settle to horizontal-left and rests.
+                "Wound tight." 4350 -> "Let it out slow." 5150 (both off 5950)
+                                                             ANXIOUS · PRESSURE GAUGE
+  C  6050-8350  Pendulum: the needle lies flat to 6250, then is the arm,
+                released from rest at 90deg; pivot rises 1080 -> 360, arm
+                330 -> 780; period 1200ms constant, amplitude decays
+                90 -> 33 -> 19 -> 16deg, caught at centre.
+                "Gone numb." 6100 -> "Tap each side as the bob arrives" 6700
+                (first arrival 6850; both off 8250)          FREEZE · PENDULUM
+  D  8350-11650 Regulate Breath: the arm is the column; inhale 1000ms, exhale
+                2000ms (the app's 1:2).  "Okay today. / Keep it." 8450-11450;
+                the instruction is the IN 4 / OUT 8 ticks.  BALANCED · REGULATE BREATH
+  E 11650-14600 Release: the point turns out of the column into a trace -
                 jagged, then sine, then damped flat onto the dashed
                 "completed" line (the hook's ghost, called back); pen
                 decelerates to a stop.  "Your body already knows."  COMPLETED · ILLUSTRATIVE
-  F 13900-18000 Close: trail retracts into the point (14050-14750); the point never
-                moves; "regulate" rises around it (14850, letters 40ms apart,
-                700ms); tagline 15650; hold to 18000.  "regulate." · NOT MEDITATION. REGULATION.
+  F 14600-18700 Close: trail retracts into the point (14750-15450); the point never
+                moves; "regulate" rises around it (15550, letters 40ms apart,
+                700ms); tagline 16350; hold to 18700.  "regulate." · NOT MEDITATION. REGULATION.
+  PAUSES (HOLDS, shared with the score): 2600 +1100 · 3720 +1000 (the
+  question) · 5920 +800 (Let it out slow.) · 8050 +800 (the catch) · 11200
+  +1100 · 14000 +900.
   Kicker (site grammar "{ 02 } - The problem"): 01 THE PROBLEM · 02 THE WINDOW ·
-  03 THE TOOLKIT · 04 THE DIFFERENCE · 05 THE CYCLE, off at 14100.
+  03 THE TOOLKIT · 04 THE DIFFERENCE · 05 THE CYCLE, off at 14800.
 
   COPY LIST (every on-screen string): { 01 } - THE PROBLEM · { 02 } - THE WINDOW ·
   { 03 } - THE TOOLKIT · { 04 } - THE DIFFERENCE · { 05 } - THE CYCLE · THREAT ·
   STUCK · Where most of us live · HYPERAROUSAL · THE WINDOW · HYPOAROUSAL ·
-  The response that never finished. · PRESSURE · ANXIOUS · PRESSURE GAUGE ·
-  FREEZE · PENDULUM · IN 4 · OUT 8 · Stillness is a destination, not a starting
-  point. · BALANCED · REGULATE BREATH · Your body already knows. · COMPLETED ·
+  The response that never finished. · How are you, really? · Wound tight. ·
+  Let it out slow. · ANXIOUS · PRESSURE GAUGE · Gone numb. · Tap each side as
+  the bob arrives · FREEZE · PENDULUM · Okay today. Keep it. · IN 4 · OUT 8 ·
+  BALANCED · REGULATE BREATH · Your body already knows. · COMPLETED ·
   ILLUSTRATIVE · regulate. · NOT MEDITATION. REGULATION.
 
   The point carries a 180-degree-shutter motion-blur smear (8.3ms of its own
@@ -95,7 +128,7 @@
 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,500;1,500&display=block" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,500;1,500&family=Inter:wght@400&display=block" rel="stylesheet">
 <style>
   :root{
     --ground:#0a1812; --cream:#F2F0E9; --sage:#8F9E8B; --teal:#4FD1C5;
@@ -117,7 +150,13 @@
   .mono .g{display:block;text-transform:none;letter-spacing:.06em;font-size:19px;font-weight:400;opacity:.62;margin-top:10px}
   .kick{font-family:var(--mono);font-weight:500;font-size:24px;letter-spacing:.28em;text-transform:uppercase;color:var(--teal);white-space:nowrap;line-height:1}
   .kick b{font-weight:inherit;opacity:.45}
-  .tool{font-family:var(--mono);font-weight:500;font-size:26px;letter-spacing:.26em;text-transform:uppercase;color:var(--cream);white-space:nowrap;line-height:1;opacity:.9}
+  .felt{font-family:var(--serif);font-style:italic;font-weight:500;font-size:66px;line-height:1.06;letter-spacing:-.01em;color:var(--cream);white-space:nowrap}
+  .ask{font-family:var(--serif);font-weight:500;font-size:76px;line-height:1.06;letter-spacing:-.01em;color:var(--cream);white-space:nowrap}
+  .ask em{font-style:italic}
+  .ask .w{display:inline-block;will-change:transform,opacity,filter}
+  .instr{font-family:var(--serif);font-weight:500;font-size:60px;line-height:1.06;color:var(--cream);white-space:nowrap}
+  .instr.body{font-family:Inter, system-ui, sans-serif;font-weight:400;font-size:38px;line-height:1.2;color:var(--sage)}
+  .tool{font-family:var(--mono);font-weight:500;font-size:20px;letter-spacing:.26em;text-transform:uppercase;color:var(--cream);white-space:nowrap;line-height:1;opacity:.9}
   .tool i{font-style:normal}
   .wm{font-family:var(--serif);font-weight:500;color:var(--cream);white-space:pre;line-height:1}
   .tag{font-family:var(--mono);font-weight:500;font-size:28px;letter-spacing:.3em;text-transform:uppercase;color:var(--teal);white-space:nowrap;line-height:1}
@@ -151,12 +190,16 @@
   <div class="t mono" id="lHypo">&#9660;&ensp;Hypoarousal</div>
   <div class="t head" id="hA">The response that never <em>finished.</em></div>
 
-  <div class="t mono" id="lPress" style="font-size:20px;opacity:.5">Pressure</div>
+  <div class="t ask" id="qH">How are you, <em>really?</em></div>
+  <div class="t felt" id="fA">Wound tight.</div>
+  <div class="t instr" id="iA">Let it out slow.</div>
   <div class="t tool" id="tA"><i style="color:var(--anx)">Anxious</i> &middot; Pressure Gauge</div>
+  <div class="t felt" id="fF">Gone numb.</div>
+  <div class="t instr body" id="iF">Tap each side as the bob arrives</div>
   <div class="t tool" id="tF"><i style="color:var(--frz)">Freeze</i> &middot; Pendulum</div>
+  <div class="t felt" id="fB">Okay today.<br>Keep it.</div>
   <div class="t mono" id="lIn" style="color:var(--cream);opacity:.3">In 4</div>
   <div class="t mono" id="lOut" style="color:var(--cream);opacity:.3">Out 8</div>
-  <div class="t head italic" id="hD" style="font-size:74px">Stillness is a destination,<br>not a starting point.</div>
   <div class="t tool" id="tB"><i style="color:var(--bal)">Balanced</i> &middot; Regulate Breath</div>
 
   <div class="t head" id="hE">Your body <em>already</em> knows.</div>
@@ -166,7 +209,7 @@
   <div id="wm"></div>
   <div class="t tag" id="tag">Not meditation. Regulation.</div>
 </div></div>
-<div id="bar"><button id="play">Play</button><span id="tc">0.00s</span><input id="scrub" type="range" min="0" max="23700" step="1" value="0"><span>regulate &middot; showreel &middot; 1080&times;1920 &middot; 60fps</span></div>
+<div id="bar"><button id="play">Play</button><span id="tc">0.00s</span><input id="scrub" type="range" min="0" max="24400" step="1" value="0"><span>regulate &middot; showreel &middot; 1080&times;1920 &middot; 60fps</span></div>
 
 <script>
 // ---------- deterministic motion kit (no springs, no CSS animation) ----------
@@ -265,10 +308,12 @@ const C = { cream: '#F2F0E9', sage: '#8F9E8B', teal: '#4FD1C5', anx: '#D4A574', 
 // PAUSES (Steven 09-28: "longer pauses so people can actually follow and ingest the frame").
 // At each settled moment the scene slows to 1/12 speed for the listed extra ms: HOLDS = [src ms, extra ms].
 // The score uses the SAME map (regulate-showreel.sound.mjs), so picture and sound stay locked.
-const HOLDS = [[2600, 1100], [3720, 1000], [5420, 800], [7350, 800], [10500, 1100], [13300, 900]], SLOW = 100;
+// rev2 (09-28 refinement): source time +500ms inside the gauge (the redline hold, from 4880) and +200ms
+// before the pendulum's release (the needle lies flat, from 5550), so every anchor after them moved +500 / +700.
+const HOLDS = [[2600, 1100], [3720, 1000], [5920, 800], [8050, 800], [11200, 1100], [14000, 900]], SLOW = 100;
 const srcToOut = (s) => { let o = s; for (const [h, x] of HOLDS) o += s <= h ? 0 : s >= h + SLOW ? x : (x * (s - h)) / SLOW; return o; };
-const outToSrc = (o) => { let lo = 0, hi = 18000; for (let i = 0; i < 40; i++) { const m = (lo + hi) / 2; if (srcToOut(m) < o) lo = m; else hi = m; } return (lo + hi) / 2; };
-const SRC_DUR = 18000, DUR = Math.round(srcToOut(SRC_DUR));
+const outToSrc = (o) => { let lo = 0, hi = 18700; for (let i = 0; i < 40; i++) { const m = (lo + hi) / 2; if (srcToOut(m) < o) lo = m; else hi = m; } return (lo + hi) / 2; };
+const SRC_DUR = 18700, DUR = Math.round(srcToOut(SRC_DUR));
 
 // ---------- SVG layers (back to front) ----------
 const band = {
@@ -294,8 +339,8 @@ const pt = S('circle', { fill: C.white });
 
 // ---------- text ----------
 const T = {};
-for (const id of ['k1', 'k2', 'k3', 'k4', 'k5', 'lThreat', 'lStuck', 'lHyper', 'lWin', 'lHypo', 'hA', 'lPress', 'tA', 'tF', 'lIn', 'lOut', 'hD', 'tB', 'hE', 'lDone', 'lIllus', 'tag']) T[id] = $(id);
-const W_A = splitWords(T.hA), W_D = splitWords(T.hD), W_E = splitWords(T.hE);
+for (const id of ['k1', 'k2', 'k3', 'k4', 'k5', 'lThreat', 'lStuck', 'lHyper', 'lWin', 'lHypo', 'hA', 'qH', 'fA', 'iA', 'tA', 'fF', 'iF', 'tF', 'fB', 'lIn', 'lOut', 'tB', 'hE', 'lDone', 'lIllus', 'tag']) T[id] = $(id);
+const W_A = splitWords(T.hA), W_Q = splitWords(T.qH), W_E = splitWords(T.hE);
 
 // ---------- wordmark: the point IS Playfair's full stop ----------
 let PR = 11, WM = null; // point radius, wordmark geometry
@@ -366,24 +411,24 @@ function pointA(t) { const c = camA(t); return scrA(c, penXA(t), sigA(t)); }
 // SCENE B - Pressure Gauge
 // =====================================================================
 const HUB0 = [540, 1150], R_ARC = 430, NL = 372;
-const jolt = (t) => (t < 4100 || t > 5000 ? 0 : 6 * fbm(t / 22, 31) * smooth(P(t, 4100, 300)) * (1 - smooth(P(t, 4880, 120))));
+const jolt = (t) => (t < 4100 || t > 5500 ? 0 : 6 * fbm(t / 22, 31) * smooth(P(t, 4100, 300)) * (1 - smooth(P(t, 5380, 120))));
 const hubAt = (t) => [HUB0[0] + jolt(t), HUB0[1]];
 let HUB = HUB0;
 const tipAt = (deg, hub = HUB0, len = NL) => [hub[0] + len * Math.sin(deg * D2R), hub[1] - len * Math.cos(deg * D2R)];
 const tremble = (t) => 3.2 * fbm(t / 30, 21) + 1.1 * Math.sin(t / 17);
 function thetaB(t) {
-  if (t < 4900) return 72 + tremble(t) * smooth(P(t, 4100, 400));
-  return lerp(72 + tremble(4900), -90, SETTLE(P(t, 4900, 650)));
+  if (t < 5400) return 72 + tremble(t) * smooth(P(t, 4100, 400));
+  return lerp(72 + tremble(5400), -90, SETTLE(P(t, 5400, 650)));
 }
 function pointB(t) { const b = HOUSE(P(t, 3950, 650)); const a = pointA(t), g = tipAt(thetaB(t), hubAt(t)); return [lerp(a[0], g[0], b), lerp(a[1], g[1], b)]; }
 
 // =====================================================================
 // SCENE C - Pendulum (released from rest at 90deg, period constant)
 // =====================================================================
-const T_C = 5550, PERIOD = 1200;
+const T_C = 6250, PERIOD = 1200, T_D = 8350;                     // release; the arm becomes the column
 const pivotC = (t) => [540, kf(t, [[T_C, HUB0[1]], [T_C + 800, 360, HOUSE]])];
 const lenC = (t) => kf(t, [[T_C, NL], [T_C + 800, 780, HOUSE]]);
-const ampC = (t) => (15 + 75 * Math.exp(-(t - T_C) / 420)) * (1 - smooth(P(t, 7350, 300)));
+const ampC = (t) => (15 + 75 * Math.exp(-(t - T_C) / 420)) * (1 - smooth(P(t, T_C + 1800, 300)));
 const psiC = (t) => ampC(t) * Math.cos((2 * Math.PI * (t - T_C)) / PERIOD);      // + = left
 function bobC(t) { const p = pivotC(t), L = lenC(t), s = psiC(t) * D2R; return [p[0] - L * Math.sin(s), p[1] + L * Math.cos(s)]; }
 
@@ -391,7 +436,7 @@ function bobC(t) { const p = pivotC(t), L = lenC(t), s = psiC(t) * D2R; return [
 // SCENE D - Regulate Breath (column top 360, bottom 1140, x 540)
 // =====================================================================
 const COL = { x: 540, top: 360, bot: 1140 };
-const T_IN = 7950, T_EX = 8950, T_EX_END = 10950;
+const T_IN = 8650, T_EX = 9650, T_EX_END = 11650;
 function pointD(t) {
   if (t < T_IN) return [COL.x, COL.bot];
   if (t < T_EX) return [COL.x, lerp(COL.bot, COL.top, RISE(P(t, T_IN, 1000)))];
@@ -411,7 +456,7 @@ function waveY(X) {
   const amp = 120 * (1 - smooth((X - 430) / 360));
   return amp * smooth(X / 60) * (wj * jag + (1 - wj) * sine);
 }
-const baseYE = (t) => lerp(1140, 960, HOUSE(P(t, 11100, 2500)));
+const baseYE = (t) => lerp(1140, 960, HOUSE(P(t, T_E + 150, 2500)));
 const screenXE = (t) => lerp(540, WM ? WM.xF : 800, eE(t));
 // the corner out of the column: blend the fall's momentum into the trace
 function cornerE(t) { return 0; } // the exhale lands at rest (INOUT): no momentum to carry into the turn
@@ -425,7 +470,7 @@ function pointE(t) { const w = worldE(t), o = offE(t); return [w[0] + o[0], w[1]
 function pointAt(t) {
   if (t < 3950) return pointA(t);
   if (t < T_C) return pointB(t);
-  if (t < 7650) return bobC(t);
+  if (t < T_D) return bobC(t);
   if (t < T_E) return pointD(t);
   if (t < T_E + DUR_E) return pointE(t);
   return [WM.xF, WM.yF];
@@ -435,10 +480,15 @@ function pointAt(t) {
 // RENDER
 // =====================================================================
 function kicker(t) {
-  const ks = [[T.k1, 600, 2900], [T.k2, 3050, 4150], [T.k3, 4300, 7650], [T.k4, 7800, 11050], [T.k5, 11200, 14100]];
+  const ks = [[T.k1, 600, 2900], [T.k2, 3050, 4150], [T.k3, 4300, 8350], [T.k4, 8500, 11750], [T.k5, 11900, 14800]];
   for (const [e, a, b] of ks) rise(e, t, 96, 250, a, b, { dy: 16, blur: 6, dur: 520, outDy: -12, outDur: 420 });
 }
-function toolLabel(e, t, a, b) { rise(e, t, 540, 1462, a, b, { dy: 20, blur: 8, ax: 0.5 }); }
+// rev2: STATE · GAME demoted to a small sub-label; each instrument speaks first as a felt line (top, the
+// answer to the hinge question) and then as the app's own instruction beneath it when the point acts.
+function toolLabel(e, t, a, b) { rise(e, t, 540, 1432, a, b, { dy: 16, blur: 6, ax: 0.5, max: 0.8 }); }
+const FELT_Y = 372, INSTR_Y = 1236;
+function felt(e, t, a, b) { rise(e, t, 96, FELT_Y, a, b, { dy: 36, blur: 10, dur: 700 }); }
+function instr(e, t, a, b) { rise(e, t, 540, INSTR_Y, a, b, { dy: 24, blur: 8, ax: 0.5, dur: 650 }); }
 
 function render(t) {
   t = clamp(t, 0, SRC_DUR);
@@ -474,7 +524,7 @@ function render(t) {
         up.push([lerp(L[0], G[0], m), lerp(L[1], G[1], m)]);
       }
     }
-    const arcExit = 1 - HOUSE(P(t, 5450, 450));
+    const arcExit = 1 - HOUSE(P(t, 5950, 450));
     A(band.u, { d: path(up), 'stroke-opacity': lerp(bandOp, 0.24, m) * arcExit });
     // labels
     const ap = scrA(cA, X_APEX - 26, 548 - 44);
@@ -487,7 +537,9 @@ function render(t) {
     rise(T.lHyper, t, 96, u860 - 40, 3250, 3900, { dy: 16, blur: 8 });
     rise(T.lWin, t, 96, u860 + 16, 3350, 3920, { dy: 16, blur: 8 });
     rise(T.lHypo, t, 96, u1140 + 18, 3450, 3940, { dy: 16, blur: 8 });
-    headline(T.hA, W_A, t, 96, 1210, 1350, 3880);
+    headline(T.hA, W_A, t, 96, 1210, 1350, 2950);            // rev2: leaves before the question (was 3880)
+    // the hinge: the app's home-screen question, over HYPER / WINDOW / HYPO; leaves as the band bends
+    headline(T.qH, W_Q, t, 96, FELT_Y, 3100, 3980, 60);   // settled before the 3720 pause
     // the threat lands: one ring from the apex, snapped
     const k = t - T_APEX, ap2 = scrA(cA, X_APEX, 548);
     A(impact, { cx: ap2[0], cy: ap2[1], r: lerp(PR, 96, SETTLE(clamp(k / 700))), 'stroke-opacity': k < 0 ? 0 : (k < 60 ? k / 60 : 1 - HOUSE(clamp((k - 60) / 640))) * 0.4 });
@@ -496,27 +548,27 @@ function render(t) {
   // ---------------- B : gauge ----------------
   {
     const gIn = (k) => smooth(P(t, 4150 + k * 30, 250));
-    const gOut = 1 - HOUSE(P(t, 5450, 450));
+    const gOut = 1 - HOUSE(P(t, 5950, 450));
     gTicks.forEach((ln, k) => {
       const a = (-90 + 18 * k), p1 = tipAt(a, hubAt(t), R_ARC * 101 / 110), p2 = tipAt(a, hubAt(t), R_ARC * 116 / 110);
       A(ln, { x1: p1[0], y1: p1[1], x2: p2[0], y2: p2[1], 'stroke-opacity': 0.3 * gIn(k) * gOut });
     });
     const rl = []; for (let a = 54; a <= 90.01; a += 2) rl.push(tipAt(a, hubAt(t), R_ARC));
     A(redline, { d: path(rl), 'stroke-opacity': 0.85 * smooth(P(t, 4300, 300)) * gOut });
-    const r = riseV(t, 4450, 5450, { dy: 12, blur: 6 });
-    place(T.lPress, 540 + jolt(t), HUB0[1] + 40, r.o * 0.5, { dy: r.dy, blur: r.blur, ax: 0.5 });
-    toolLabel(T.tA, t, 4450, 5500);
+    felt(T.fA, t, 4350, 5950);
+    instr(T.iA, t, 5150, 5950);                                // the app's release prompt, as the needle lets go
+    toolLabel(T.tA, t, 4500, 6000);
   }
 
   // ---------------- needle -> arm -> track ; hub -> pivot ----------------
   {
     let a1, w, o, hubO, hubR = 7;
     if (t < T_C) { a1 = hubAt(t); w = 3; o = 0.9 * smooth(P(t, 4250, 350)); hubO = smooth(P(t, 4200, 300)); }
-    else if (t < 7650) { a1 = pivotC(t); w = 3; o = lerp(0.9, 0.24, HOUSE(P(t, T_C, 600))); hubO = lerp(1, 0.55, HOUSE(P(t, T_C, 600))); hubR = 6; }
-    else { a1 = [COL.x, COL.top]; w = lerp(3, 12, HOUSE(P(t, 7650, 400))); o = lerp(0.24, 0.1, HOUSE(P(t, 7650, 400))); hubO = 0.55 * (1 - HOUSE(P(t, 7650, 300))); hubR = 6; }
-    const trackOut = 1 - HOUSE(P(t, 10950, 500));
-    const b = t < 7650 ? p : [COL.x, COL.bot];
-    A(arm, { x1: a1[0], y1: a1[1], x2: b[0], y2: b[1], 'stroke-width': w, 'stroke-opacity': o * (t < 7650 ? 1 : trackOut) });
+    else if (t < T_D) { a1 = pivotC(t); w = 3; o = lerp(0.9, 0.24, HOUSE(P(t, T_C, 600))); hubO = lerp(1, 0.55, HOUSE(P(t, T_C, 600))); hubR = 6; }
+    else { a1 = [COL.x, COL.top]; w = lerp(3, 12, HOUSE(P(t, T_D, 400))); o = lerp(0.24, 0.1, HOUSE(P(t, T_D, 400))); hubO = 0.55 * (1 - HOUSE(P(t, T_D, 300))); hubR = 6; }
+    const trackOut = 1 - HOUSE(P(t, T_E, 500));
+    const b = t < T_D ? p : [COL.x, COL.bot];
+    A(arm, { x1: a1[0], y1: a1[1], x2: b[0], y2: b[1], 'stroke-width': w, 'stroke-opacity': o * (t < T_D ? 1 : trackOut) });
     A(hub, { cx: a1[0], cy: a1[1], r: hubR, 'fill-opacity': t < 4200 ? 0 : hubO });
   }
 
@@ -538,34 +590,36 @@ function render(t) {
     let ro = 0, rr = 0;
     for (const e of ext) { if (t >= e && t < e + 520) { const k = t - e; ro = k < 90 ? SNAP(k / 90) : 1 - HOUSE((k - 90) / 430); rr = lerp(PR + 6, PR + 26, SETTLE(P(t, e, 520))); } }
     A(ring, { cx: p[0], cy: p[1], r: Math.max(0.1, rr), 'stroke-opacity': ro * 0.9 });
-    toolLabel(T.tF, t, 5800, 7550);
+    felt(T.fF, t, 6100, 8250);                                 // lands on the needle lying flat
+    instr(T.iF, t, T_C + 450, 8250);                           // the app's instruction, at the first arrival
+    toolLabel(T.tF, t, 6500, 8250);
   }
 
   // ---------------- D : breath ----------------
   {
-    const out = 1 - HOUSE(P(t, 10950, 450));
+    const out = 1 - HOUSE(P(t, T_E, 450));
     const fillTop = t < T_IN ? COL.bot : p[1];
-    const fo = smooth(P(t, 7700, 300)) * (t < T_E ? 1 : out);
+    const fo = smooth(P(t, T_D + 50, 300)) * (t < T_E ? 1 : out);
     A(fill, { x1: COL.x, y1: Math.min(fillTop + PR * 0.2, COL.bot), x2: COL.x, y2: COL.bot, 'stroke-opacity': t < T_E ? fo * 0.9 : 0 });
     const H = COL.bot - COL.top;
     bTicks.forEach((ln, k) => {
       const inh = k < 4, i = inh ? k : k - 4, n = inh ? 4 : 8;
       const y = COL.bot - ((i + 0.5) / n) * H;
       const x1 = inh ? COL.x - 26 - 40 : COL.x + 26, x2 = x1 + 40;
-      const tin = smooth(P(t, 7700 + (inh ? i : 4 + i) * 30, 250));
-      const tout = 1 - smooth(P(t, 10950 + k * 25, 300));
+      const tin = smooth(P(t, T_D + 50 + (inh ? i : 4 + i) * 30, 250));
+      const tout = 1 - smooth(P(t, T_E + k * 25, 300));
       A(ln, { x1, y1: y, x2, y2: y, 'stroke-opacity': (inh ? 0.5 : 0.35) * tin * tout });
     });
-    rise(T.lIn, t, COL.x + 26 + 40 + 26, COL.top - 11, 7900, 10950, { dy: 12, blur: 6, max: 0.3 });
-    rise(T.lOut, t, COL.x + 26 + 40 + 26, COL.bot - 11, 7960, 10950, { dy: 12, blur: 6, max: 0.3 });
-    headline(T.hD, W_D, t, 96, 1262, 8150, 10650, 60);
-    toolLabel(T.tB, t, 7850, 10950);
+    rise(T.lIn, t, COL.x + 26 + 40 + 26, COL.top - 11, 8600, T_E, { dy: 12, blur: 6, max: 0.3 });
+    rise(T.lOut, t, COL.x + 26 + 40 + 26, COL.bot - 11, 8660, T_E, { dy: 12, blur: 6, max: 0.3 });
+    felt(T.fB, t, 8450, 11450);
+    toolLabel(T.tB, t, 8550, T_E);
   }
 
   // ---------------- E : release trace ----------------
   {
     const o = offE(Math.min(t, T_E + DUR_E));
-    const retract = t < 14050 ? 0 : XTOT * HOUSE(P(t, 14050, 700));
+    const retract = t < 14750 ? 0 : XTOT * HOUSE(P(t, 14750, 700));
     const pts = [];
     if (t >= T_E) {
       const tEnd = Math.min(t, T_E + DUR_E);
@@ -573,28 +627,28 @@ function render(t) {
       const w = worldE(tEnd); pts.push([Math.max(w[0], retract) + o[0], w[1] + o[1]]);
     }
     A(trailE, { d: t >= T_E && retract < XTOT - 0.5 ? path(pts) : '', 'stroke-opacity': 0.92 });
-    const gRev = lerp(620, XTOT, SETTLE(P(t, 11650, 600)));
-    const gOp = 0.75 * smooth(P(t, 11650, 200)) * (1 - smooth(P(t, 13800, 300)));
-    A(ghostE, { d: t > 11650 ? path([[620 + o[0], o[1]], [gRev + o[0], o[1]]]) : '', 'stroke-opacity': gOp });
-    const dn = riseV(t, 12100, 13750, { dy: 12, blur: 6 });
+    const gRev = lerp(620, XTOT, SETTLE(P(t, 12350, 600)));
+    const gOp = 0.75 * smooth(P(t, 12350, 200)) * (1 - smooth(P(t, 14500, 300)));
+    A(ghostE, { d: t > 12350 ? path([[620 + o[0], o[1]], [gRev + o[0], o[1]]]) : '', 'stroke-opacity': gOp });
+    const dn = riseV(t, 12800, 14450, { dy: 12, blur: 6 });
     place(T.lDone, XTOT + o[0], o[1] + 34, dn.o, { dy: dn.dy, blur: dn.blur, ax: 1 });
-    rise(T.lIllus, t, 96, baseYE(t) + 190, 11700, 13700, { dy: 12, blur: 6, max: 0.55 });
-    headline(T.hE, W_E, t, 96, 560, 11350, 13650, 70);
+    rise(T.lIllus, t, 96, baseYE(t) + 190, 12400, 14400, { dy: 12, blur: 6, max: 0.55 });
+    headline(T.hE, W_E, t, 96, 560, 12050, 14350, 70);
   }
 
   // ---------------- the point ----------------
   { const sm = []; for (let k = 0; k <= 6; k++) sm.push(pointAt(Math.max(0, t - (k * 8.3) / 6)));
     A(smear, { d: path(sm), 'stroke-width': PR * 2, 'stroke-opacity': t < 80 || t > T_E + DUR_E ? 0 : 0.55 }); }
-  const glowO = 0.34 * smooth(P(t, 60, 260)) * (1 - HOUSE(P(t, 14050, 600)));
+  const glowO = 0.34 * smooth(P(t, 60, 260)) * (1 - HOUSE(P(t, 14750, 600)));
   A(glow, { cx: p[0], cy: p[1], r: PR * 1.9, 'fill-opacity': glowO });
   A(pt, { cx: p[0], cy: p[1], r: PR, 'fill-opacity': smooth(P(t, 60, 200)) });
 
   // ---------------- F : the wordmark arrives around the point ----------------
   WM.els.forEach((el, i) => {
-    const r = riseV(t, 14850 + i * 40, Infinity, { dur: 700, dy: 26, blur: 12 });
+    const r = riseV(t, 15550 + i * 40, Infinity, { dur: 700, dy: 26, blur: 12 });
     place(el, WM.letters[i].x, WM.top, r.o, { dy: r.dy, blur: r.blur });
   });
-  rise(T.tag, t, 540, WM.yF + 118, 15650, Infinity, { dy: 18, blur: 8, ax: 0.5 });
+  rise(T.tag, t, 540, WM.yF + 118, 16350, Infinity, { dy: 18, blur: 8, ax: 0.5 });
 }
 
 // ---------- clock: seekable for capture, rAF for viewing ----------
@@ -617,11 +671,11 @@ function fit() {
   wrap.style.transform = `translateX(-50%) scale(${s})`;
 }
 addEventListener('resize', fit);
-window.__durationMs = DUR;
+window.__durationMs = DUR; scrub.max = DUR;
 window.__seek = (ms) => { if (playing) pause(); if (!WM) measureWordmark(); if (window.__capture && !document.body.classList.contains('capture')) fit(); draw(ms); };
 window.__ready = Promise.all([
   document.fonts.load('500 200px "Playfair Display"'), document.fonts.load('italic 500 88px "Playfair Display"'),
-  document.fonts.load('500 22px "JetBrains Mono"'),
+  document.fonts.load('500 22px "JetBrains Mono"'), document.fonts.load('400 38px Inter'),
 ]).then(() => document.fonts.ready).then(() => { measureWordmark(); fit(); draw(0); if (!window.__capture) play(); return true; });
 </script>
 </body>

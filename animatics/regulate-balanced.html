@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Balanced Reel</title>
+<!--
+  brandreel animatic v2 - regulate - "Nothing's wrong." (Balanced) social reel, ~17s (T.dur), 1080x1920 @ 60
+  Steven 2026-09-28: "interested in the balanced one too. will assess that." The hook inside the
+  Instagram "Balanced" story highlight. The one hook without a crisis: nothing is wrong, and one
+  honest 4/8 cycle keeps it that way.
+  - One unbroken take. The hook's own full stop detaches, becomes the white point, rides one full
+    Regulate Breath cycle and comes to rest as the full stop in "regulate." The full stop travels
+    from one sentence to the other.
+  - The instrument is the app's (app/breathing.tsx, pattern 'vagal'): cream track at .09, Balanced
+    sage fill rising with the point, 4 inhale ticks left (.5) and 8 exhale ticks right (.35) at the
+    app's index/(n-1) positions, IN 4 / OUT 8 rail at .3, phase word + "4s"/"8s" to the left of the
+    column, BALANCED · REGULATE BREATH eyebrow, and the app's entrance (track 450ms, ticks +30ms
+    stagger over 250ms, chrome +650ms).
+  - Honest time: the real 4000ms inhale and 8000ms exhale on the app's turnaround easing
+    (Easing.out(ease) up, Easing.in(ease) down). No compression - that is the point of this one.
+  - Cause and effect: each tick lights as the point passes it; the camera breathes with the fill
+    (1.00 -> 1.03 -> 1.00); the hook's letterspacing opens a hair on the inhale and closes on the
+    exhale; when the point passes the column's middle the line becomes "Keep it that way."
+  - Register (vs 3:04 AM, which rides the same column): no clock, no timestamp, no heartbeat, no
+    thoughts, no swarm. The column is centred in the app's own row layout, the whole cycle is shown
+    (3:04 AM shows a compressed exhale only), type is smaller, the frame is mostly empty ground.
+  Deviations: the point is the brand's white full stop (the app's dot is sage with a sage glow);
+    the column is thinner/taller than the app's proportions at this canvas; tick lighting is ours
+    (the app's ticks are static); "CYCLE 1 OF N" and the progress bar are omitted.
+  Laws: emerald ground; Balanced sage on the fill, ticks and the label word only; the dot white;
+  teal unused; hook on screen at frame 0; wordmark only at the end; no em/en dashes.
+
+  COPY LIST: Nothing's wrong. · BALANCED · REGULATE BREATH · Inhale · 4s · Exhale · 8s · IN 4 ·
+  OUT 8 · Keep it that way. · regulate. · For the days that are fine. · 4 TOOLS FREE ON THE APP STORE
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,500;1,500&display=block" rel="stylesheet">
+<link rel="stylesheet" href="lib/reel.css">
+<style>
+  #cam{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:540px 1020px}
+  .hook{font-size:112px;white-space:nowrap}
+  #stop{display:inline-block}
+  .sec{font-family:var(--mono);font-weight:500;font-size:26px;letter-spacing:.16em;color:var(--sage);white-space:nowrap;line-height:1}
+</style>
+<body>
+<div id="wrap"><div id="stage"><div id="cam">
+  <svg id="g" viewBox="0 0 1080 1920"><defs><filter id="glow" x="-200%" y="-200%" width="500%" height="500%"><feGaussianBlur stdDeviation="9"/></filter></defs></svg>
+  <div class="t head italic hook" id="hook">Nothing's wrong</div>
+  <div class="t head italic hook" id="keep">Keep it that way.</div>
+  <div class="t mono" id="eyebrow" style="font-size:24px"><span style="color:var(--bal)">Balanced</span> &middot; Regulate Breath</div>
+  <div class="t head" id="phIn" style="font-size:80px;white-space:nowrap">Inhale</div>
+  <div class="t head" id="phOut" style="font-size:80px;white-space:nowrap">Exhale</div>
+  <div class="t sec" id="secIn">4s</div>
+  <div class="t sec" id="secOut">8s</div>
+  <div class="t mono" id="lIn" style="font-size:20px;color:var(--cream)">In 4</div>
+  <div class="t mono" id="lOut" style="font-size:20px;color:var(--cream)">Out 8</div>
+</div>
+  <div id="wm"></div>
+  <div class="t head italic" id="line" style="font-size:56px;white-space:nowrap;opacity:.9">For the days that are fine.</div>
+  <div class="t cta" id="cta">4 tools free on the App Store</div>
+</div></div>
+<div id="bar"><button id="play">Play</button><span id="tc">0.00s</span><input id="scrub" type="range" min="0" step="1" value="0"><span>regulate &middot; balanced &middot; 1080&times;1920 &middot; 60fps</span></div>
+<audio id="snd" preload="auto"></audio>
+<script src="lib/timing-kit.js"></script>
+<script src="regulate-balanced.timing.js"></script>
+<script src="lib/reel-kit.js"></script>
+<script>
+const { E, clamp, lerp, P, smooth, kf, $, S, A, place, riseV, rise, splitWords, headline, path, wordmark } = Reel;
+const T = TIMING, C = { cream: '#F2F0E9', bal: '#7FA77F', white: '#FFFFFF' };
+const COL = T.column, H = COL.bot - COL.top;
+const CW = 10, TL = 34, GAP = 22;                 // column width, tick length, gaps (app row: phase | ticks | column | ticks | rail)
+const HOOK_Y = 300;
+
+const track = S('line', { stroke: C.cream, 'stroke-width': CW, 'stroke-linecap': 'round' });
+const fill = S('line', { stroke: C.bal, 'stroke-width': CW, 'stroke-linecap': 'round' });
+const ticks = Array.from({ length: 12 }, () => S('line', { stroke: C.bal, 'stroke-width': 4 }));
+const stopC = S('circle', { fill: C.cream });
+const smear = S('path', { fill: 'none', stroke: C.white, 'stroke-linecap': 'round' });
+const glow = S('circle', { fill: C.white, filter: 'url(#glow)' });
+const pt = S('circle', { fill: C.white });
+
+let WM, R = 11, W_HOOK, W_KEEP, W_LINE, STOP, rS;
+function init() {
+  WM = wordmark($('wm'), { dotPx: 22, yDot: 960 }); R = WM.R;
+  W_HOOK = splitWords($('hook')); W_KEEP = splitWords($('keep')); W_LINE = splitWords($('line'));
+  // the hook's full stop is its own inline-block so it can leave the sentence
+  const st = document.createElement('span'); st.id = 'stop'; st.textContent = '.'; $('hook').appendChild(st);
+  const h = $('hook'); h.style.visibility = 'visible'; h.style.transform = 'translate(0,0)'; h.style.letterSpacing = '-0.01em';
+  const k = $('stage').getBoundingClientRect().width / 1080, hb = h.getBoundingClientRect(), sb = st.getBoundingClientRect();
+  const cv = document.createElement('canvas').getContext('2d'); cv.font = 'italic 500 112px "Playfair Display"';
+  const pm = cv.measureText('.');
+  const hx = 540 - hb.width / k / 2;
+  const lh = sb.height / k, base = HOOK_Y + (sb.top - hb.top) / k + (lh - (pm.fontBoundingBoxAscent + pm.fontBoundingBoxDescent)) / 2 + pm.fontBoundingBoxAscent;
+  rS = (pm.actualBoundingBoxLeft + pm.actualBoundingBoxRight) / 2;
+  STOP = [hx + (sb.left - hb.left) / k + (pm.actualBoundingBoxRight - pm.actualBoundingBoxLeft) / 2, base + (pm.actualBoundingBoxDescent - pm.actualBoundingBoxAscent) / 2];
+}
+
+const LIFT = 18;
+function pointAt(t) {
+  if (t < T.detach) return STOP;
+  if (t < T.glide[0]) return [STOP[0], STOP[1] - LIFT * E.SETTLE(P(t, T.detach, T.glide[0] - T.detach))];
+  if (t < T.glide[1]) {
+    const u = P(t, T.glide[0], T.glide[1] - T.glide[0]);
+    return [lerp(STOP[0], COL.x, E.HOUSE(u)), lerp(STOP[1] - LIFT, COL.bot, E.INOUT(u))];
+  }
+  if (t < T.closeGlide[0]) return [COL.x, T.pointY(t)];
+  const u = E.HOUSE(P(t, T.closeGlide[0], T.closeGlide[1] - T.closeGlide[0]));
+  return [lerp(COL.x, WM.xF, u), lerp(COL.bot, WM.yF, u) - Math.sin(Math.PI * u) * 70];
+}
+
+function render(t) {
+  const f = T.fill(t);
+  // the camera breathes with the column
+  $('cam').style.transform = `scale(${(1 + 0.03 * f).toFixed(5)})`;
+
+  // the hook: on screen at frame 0; its letterspacing opens a hair on the inhale; mid-fall it becomes the effect
+  const ls = (-0.01 + 0.03 * f).toFixed(4) + 'em';
+  const keepOut = T.colOut;
+  $('hook').style.letterSpacing = ls; $('keep').style.letterSpacing = ls;
+  headline($('hook'), W_HOOK, t, 540, HOOK_Y, -1e9, T.change, 60, { ax: 0.5 });
+  headline($('keep'), W_KEEP, t, 540, HOOK_Y, T.change + 280, keepOut, 80, { ax: 0.5 });
+  $('stop').style.opacity = t < T.detach ? 1 : 0;
+
+  // the instrument, entering the way the app's does (track 450ms, ticks +30ms, chrome +650ms)
+  const out = 1 - E.HOUSE(P(t, T.colOut, 450));
+  const tIn = E.HOUSE(P(t, T.colIn, 450));
+  A(track, { x1: COL.x, y1: COL.top, x2: COL.x, y2: COL.bot, 'stroke-opacity': 0.09 * tIn * out });
+  const fy = COL.bot - f * H;
+  A(fill, { x1: COL.x, y1: fy, x2: COL.x, y2: COL.bot, 'stroke-opacity': f > 0.002 ? 0.95 * out : 0 });
+  ticks.forEach((ln, k) => {
+    const inh = k < 4, i = inh ? k : k - 4, pos = inh ? T.inTicks[i] : T.outTicks[i], lit = inh ? T.inLit[i] : T.outLit[i];
+    const y = COL.bot - pos * H, base = inh ? 0.5 : 0.35;
+    const a = E.HOUSE(P(t, T.colIn + k * 30, 250));
+    const flash = t >= lit ? Math.exp(-(t - lit) / 420) : 0, rest = t >= lit ? 0.22 * smooth(P(t, lit, 300)) : 0;
+    const len = TL + 10 * flash;
+    const x1 = inh ? COL.x - CW / 2 - GAP - len : COL.x + CW / 2 + GAP;
+    A(ln, { x1, y1: y, x2: x1 + len, y2: y, 'stroke-opacity': Math.min(1, base + rest + 0.5 * flash) * a * out });
+  });
+  const chrome = T.colIn + 650, xL = COL.x - CW / 2 - GAP - TL - 30, xR = COL.x + CW / 2 + GAP + TL + 28;
+  const mid = (COL.top + COL.bot) / 2;
+  rise($('eyebrow'), t, 540, 520, chrome, T.colOut, { dy: 12, blur: 6, ax: 0.5, max: 0.9 });
+  rise($('lIn'), t, xR, COL.top - 10, chrome, T.colOut, { dy: 12, blur: 6, max: 0.3 });
+  rise($('lOut'), t, xR, COL.bot - 10, chrome, T.colOut, { dy: 12, blur: 6, max: 0.3 });
+  rise($('phIn'), t, xL, mid - 70, chrome, T.exhale[0] - 150, { dy: 20, blur: 8, ax: 1, outDur: 380 });
+  rise($('secIn'), t, xL, mid + 40, chrome + 80, T.exhale[0] - 150, { dy: 14, blur: 6, ax: 1, outDur: 380 });
+  rise($('phOut'), t, xL, mid - 70, T.exhale[0] + 120, T.colOut, { dy: 20, blur: 8, ax: 1 });
+  rise($('secOut'), t, xL, mid + 40, T.exhale[0] + 200, T.colOut, { dy: 14, blur: 6, ax: 1 });
+
+  // the point: the hook's full stop -> one full cycle -> the full stop in "regulate."
+  const p = pointAt(t), on = smooth(P(t, T.detach, 250));
+  A(stopC, { cx: STOP[0], cy: STOP[1], r: rS, 'fill-opacity': t >= T.detach ? 1 - on : 0 });
+  const sm = []; for (let k = 0; k <= 6; k++) sm.push(pointAt(Math.max(0, t - (k * 8.3) / 6)));
+  const r = lerp(rS, R, E.HOUSE(P(t, T.detach, T.glide[1] - T.detach)));
+  A(smear, { d: path(sm), 'stroke-width': r * 2, 'stroke-opacity': t > T.glide[0] && t < T.closeGlide[1] ? 0.5 : 0 });
+  A(glow, { cx: p[0], cy: p[1], r: R * 1.9, 'fill-opacity': 0.3 * on * (1 - E.HOUSE(P(t, T.closeGlide[1], 600))) });
+  A(pt, { cx: p[0], cy: p[1], r, 'fill-opacity': on });
+
+  // close
+  WM.draw(t, T.wordmark);
+  headline($('line'), W_LINE, t, 540, WM.yF + 80, T.line, Infinity, 50, { ax: 0.5 });
+  rise($('cta'), t, 540, WM.yF + 200, T.cta, Infinity, { dy: 18, blur: 8, ax: 0.5, max: 0.9 });
+}
+
+Reel.start({ duration: T.dur, render, init, fonts: ['500 200px "Playfair Display"', 'italic 500 112px "Playfair Display"', '500 24px "JetBrains Mono"'] });
+</script>
+</body>
+</html>

@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>6:12 PM Reel</title>
+<!--
+  brandreel animatic v1 - regulate - "6:12 PM" social reel (Angry -> Chaos Release), ~15s (T.dur), 1080x1920 @ 60
+  Steven 2026-09-28: "i like the angry hook concept. i want to see that one." The hook inside the
+  Instagram "Angry" story highlight, and likely a feed reel. Same series as 3:04 AM v2 and 11:47 AM v2:
+  big serif clock, colon blinking on the heartbeat, a serif italic moment line, one unbroken take.
+  - Story: 6:12 PM, still replaying it. Three lines of the argument arrive on heartbeats at three
+    depths and drift (fine. / you always do this / forget it). The app's Chaos Release HUD draws in
+    around them. The frame itself (the viewer's phone) jolts in bursts at the game's real 110ms shake
+    cooldown; each bout's first jolt shatters one line into its letters, and the letters become the
+    game's red balls. The numeral drains 100 -> 0 and the swarm thins with it. Last ball gone: the
+    frame stops, silence. The colon's lower dot, the only thing that never shook, falls and becomes
+    the full stop of "regulate." Then "Somewhere to put it." and the CTA.
+  - The game is the app's (components/ShakeGame.tsx, app main): balls 10-18pt at .85 in #C06C4D /
+    #B54B32; no gravity, wall bounces (restitution .92-.98 + tangential jitter), equal-mass
+    collisions (.9), damping .999, speed floor bound to the charge; each shake kicks every ball in its
+    own random direction at m x 260pt/s x .6-1.4, capped 1200pt/s; visible balls = round(charge% x 80)
+    by index, exactly as the game; HUD copy ANGER · CHAOS RELEASE / NN% (padStart 2) / progress track
+    filling as the charge drains / serif numeral / PERCENT CHARGED / KEEP SHAKING. The charge drains in
+    steps, one per 60ms sensor update, only while shaking; milestone haptics at 75/50/25 are thumps.
+  - The simulation runs in regulate-612-angry.timing.js at the game's 60Hz step; the score reads the
+    same run, so every rattle is a real collision in the picture.
+  DEVIATIONS (honest):
+  - Time: the drain is ~5.6s of shaking in five bouts; the game takes ~12-20s of real effort
+    (drain 0.22-0.7 per update). Compressed ~2-3x. Early bouts drain less, so the lines can break
+    before the swarm starts to thin.
+  - The swarm is born from the letters, so it peaks at 62 balls (the game's 80-ball binding at 78%
+    charge, when the last line breaks) instead of starting at 80 on a full screen. From then on the
+    binding is the game's, ball for ball.
+  - One shake impulse per 110ms jolt (the haptic cadence), not one per 60ms sensor update; hidden
+    balls leave the collision pass (in the app they keep colliding while invisible).
+  - KEEP SHAKING leaves at zero (in the app it holds until the finish screen, 700ms later); the ANGER
+    word in the HUD eyebrow carries the Angry colour (the app's eyebrow is all muted).
+  - Serif is Playfair Display (Brand Book), not the app's Cormorant; the playfield is inset to the
+    Instagram safe area (x 140-940, y 236-1460) with a faint screen edge so the wall bounces read.
+  Laws: emerald ground; Angry burnt orange (+ the game's deep red on balls) is the only state colour,
+  on the balls, the NN%, the progress fill, KEEP SHAKING, the ANGER label word and the one-frame glyph
+  flash; the dot pure white; teal unused; hook text on screen at frame 0; wordmark only at the end.
+
+  COPY LIST: 6:12 · PM · still replaying it. · fine. · you always do this · forget it ·
+  ANGER · CHAOS RELEASE · 100% · 100 · PERCENT CHARGED · KEEP SHAKING · regulate. ·
+  Somewhere to put it. · 4 TOOLS FREE ON THE APP STORE
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,500;1,500&display=block" rel="stylesheet">
+<link rel="stylesheet" href="lib/reel.css">
+<style>
+  #cam{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:540px 848px}
+  #still{position:absolute;left:0;top:0;width:1080px;height:1920px}
+  #g2{position:absolute;left:0;top:0;width:1080px;height:1920px;overflow:visible}
+  #clock{display:flex;align-items:baseline;font-family:var(--serif);font-weight:500;font-size:300px;line-height:1;color:var(--cream);font-variant-numeric:lining-nums;letter-spacing:-.02em;transform-origin:50% 60%}
+  #clock .colon{display:inline-block}
+  #clock .ampm{font-family:var(--mono);font-size:40px;letter-spacing:.3em;margin-left:22px;color:var(--sage)}
+  .ln{font-family:var(--sans);font-weight:400;color:#dfe5de;white-space:pre;line-height:1}
+  .ln .c{display:inline-block;will-change:transform,opacity,filter}
+  .hud{font-family:var(--mono);font-weight:500;font-size:22px;letter-spacing:.26em;text-transform:uppercase;color:var(--sage);white-space:nowrap;line-height:1}
+  #num{font-family:var(--serif);font-weight:500;font-size:200px;line-height:1;color:var(--cream);font-variant-numeric:lining-nums tabular-nums;white-space:nowrap}
+</style>
+<body>
+<div id="wrap"><div id="stage">
+<div id="cam">
+  <svg id="g" viewBox="0 0 1080 1920"></svg>
+  <div class="t ln" id="l0"></div><div class="t ln" id="l1"></div><div class="t ln" id="l2"></div>
+  <div class="t hud" id="eyebrow"><i style="font-style:normal;color:var(--ang)">Anger</i> &middot; Chaos Release</div>
+  <div class="t hud" id="run" style="color:var(--ang);letter-spacing:.2em">100%</div>
+  <div class="t" id="num">100</div>
+  <div class="t hud" id="lab">Percent charged</div>
+  <div class="t hud" id="cue" style="color:var(--ang);font-size:24px">Keep shaking</div>
+</div>
+<div id="still">
+  <div class="t" id="clock"><span class="d" id="dA">6</span><span class="colon" id="colon"></span><span class="d" id="dB">12</span><span class="ampm" id="ampm">PM</span></div>
+  <div class="t head italic" id="moment" style="font-size:96px;white-space:nowrap">still replaying it.</div>
+  <svg id="g2" viewBox="0 0 1080 1920"><defs><filter id="glow" x="-200%" y="-200%" width="500%" height="500%"><feGaussianBlur stdDeviation="9"/></filter></defs></svg>
+</div>
+  <div id="wm"></div>
+  <div class="t head italic" id="line" style="font-size:56px;white-space:nowrap;opacity:.9">Somewhere to put it.</div>
+  <div class="t cta" id="cta">4 tools free on the App Store</div>
+</div></div>
+<div id="bar"><button id="play">Play</button><span id="tc">0.00s</span><input id="scrub" type="range" min="0" step="1" value="0"><span>regulate &middot; 6:12 pm &middot; 1080&times;1920 &middot; 60fps</span></div>
+<audio id="snd" preload="auto"></audio>
+<script src="lib/timing-kit.js"></script>
+<script src="regulate-612-angry.timing.js"></script>
+<script src="lib/reel-kit.js"></script>
+<script>
+const { E, clamp, lerp, P, smooth, kf, hash, $, S, A, place, riseV, rise, splitWords, headline, path, wordmark } = Reel;
+const T = TIMING, F = T.field, C = { cream: '#F2F0E9', ang: '#C06C4D', deep: '#B54B32', white: '#FFFFFF' };
+const TR = { x0: 180, x1: 900, y: 340 };   // top bar + progress track (the game's lg inset)
+const NUM_Y = 548, LAB_Y = 790, CUE_Y = 1392;
+
+// the frame (the viewer's phone) jolts once per 110ms shake stroke: a snap out, a quick settle
+function jolt(t) {
+  let dx = 0, dy = 0, rot = 0;
+  for (const J of T.jolts) {
+    const k = t - J.t; if (k < 0 || k > 200) continue;
+    const env = k < 22 ? E.SNAP(k / 22) : Math.exp(-(k - 22) / 38);
+    const a = (hash(J.t * 7 + 3) + 1) * Math.PI, amp = J.k === 0 ? 24 : 15;
+    dx += Math.cos(a) * amp * env; dy += Math.sin(a) * amp * env * 0.8; rot += hash(J.t * 13 + 5) * 0.7 * env;
+  }
+  return [dx, dy, rot];
+}
+const lastBeat = (t) => { let b = -1e9; for (const x of T.beats) { if (x <= t) b = x; else break; } return b; };
+
+// in-cam layer: screen edge, track, balls
+const edge = S('rect', { x: F.x0, y: F.y0, width: F.x1 - F.x0, height: F.y1 - F.y0, rx: 54, fill: 'none', stroke: C.cream, 'stroke-width': 2 });
+const ballEls = T.balls.map((b) => S('line', { stroke: b.col ? C.deep : C.ang, 'stroke-width': b.r * 2, 'stroke-linecap': 'round' }));
+const track = S('line', { stroke: C.cream, 'stroke-width': 4, 'stroke-linecap': 'butt' });
+const fillL = S('line', { stroke: C.ang, 'stroke-width': 4, 'stroke-linecap': 'butt' });
+// still layer: the colon and the point
+const g2 = $('g2');
+const dotUp = S('circle', { fill: C.cream }, g2), dotLo = S('circle', { fill: C.cream }, g2);
+const smear = S('path', { fill: 'none', stroke: C.white, 'stroke-linecap': 'round' }, g2);
+const glow = S('circle', { fill: C.white, filter: 'url(#glow)' }, g2);
+const pt = S('circle', { fill: C.white }, g2);
+
+let WM, R = 11, W_M, W_LINE, LC = [], colonUp, colonLo, rC, clockBox;
+function init() {
+  WM = wordmark($('wm'), { dotPx: 22, yDot: 960 }); R = WM.R;
+  W_M = splitWords($('moment')); W_LINE = splitWords($('line'));
+  T.lines.forEach((L, i) => {
+    const el = $('l' + i); el.style.fontSize = L.size + 'px'; el.innerHTML = '';
+    LC[i] = [...L.text].map((ch) => { const s = document.createElement('span'); s.className = 'c'; s.textContent = ch; el.appendChild(s); return s; }).filter((s) => s.textContent !== ' ');
+  });
+  window.__measure = () => T.lines.map((L, i) => LC[i].map((s) => [s.textContent, +(s.offsetLeft + s.offsetWidth / 2).toFixed(1), +(0.6 * L.size).toFixed(1), +s.offsetWidth.toFixed(1)]));
+  const cv = document.createElement('canvas').getContext('2d'); cv.font = '500 300px "Playfair Display"';
+  const cm = cv.measureText(':'), pm = cv.measureText('.'), fm = cv.measureText('1');
+  $('colon').style.width = cm.width + 'px';
+  const c = $('clock'); c.style.transform = 'translate(0,0)';
+  const k = $('stage').getBoundingClientRect().width / 1080, cb = c.getBoundingClientRect(), cr = $('colon').getBoundingClientRect();
+  clockBox = { x: 540 - cb.width / k / 2, y: 236 };
+  const base = clockBox.y + (300 - (fm.fontBoundingBoxAscent + fm.fontBoundingBoxDescent)) / 2 + fm.fontBoundingBoxAscent;
+  rC = (pm.actualBoundingBoxAscent + pm.actualBoundingBoxDescent) / 2;
+  const cx = clockBox.x + (cr.left - cb.left) / k + (cm.actualBoundingBoxRight - cm.actualBoundingBoxLeft) / 2;
+  colonLo = [cx, base + pm.actualBoundingBoxDescent - rC]; colonUp = [cx, base - cm.actualBoundingBoxAscent + rC];
+}
+
+// the point: the colon's lower dot, still through everything, then it falls into the full stop
+function pointAt(t) {
+  if (t < T.fall[0]) return colonLo;
+  const u = P(t, T.fall[0], T.fall[1] - T.fall[0]);
+  return [lerp(colonLo[0], WM.xF, DRIFT(u)), lerp(colonLo[1], WM.yF, FALL(u))];
+}
+const FALL = Reel.cubicBezier(0.55, 0, 0.6, 1), DRIFT = Reel.cubicBezier(0.25, 0.4, 0.3, 1);   // slides off its perch, then drops
+
+function render(t) {
+  const [jx, jy, jr] = jolt(t);
+  $('cam').style.transform = `translate(${jx.toFixed(2)}px,${jy.toFixed(2)}px) rotate(${jr.toFixed(3)}deg)`;
+  const beat = t - lastBeat(t), live = t < T.clockOut;
+
+  // the clock (the hook): pulses and blinks on the heartbeat; digits leave, the lower dot stays
+  const out = E.HOUSE(P(t, T.clockOut, 600)), pulse = live ? 1 + 0.012 * Math.exp(-beat / 140) : 1;
+  const c = $('clock'); c.style.visibility = out < 0.999 ? 'visible' : 'hidden'; c.style.opacity = 1;
+  c.style.transform = `translate(${clockBox.x}px,${clockBox.y}px) scale(${pulse})`;
+  for (const id of ['dA', 'dB', 'ampm']) { const e = $(id); e.style.display = 'inline-block'; e.style.opacity = (1 - out).toFixed(3); e.style.filter = out > 0.01 ? `blur(${(10 * out).toFixed(2)}px)` : 'none'; e.style.transform = `translateY(${-30 * out}px)`; }
+  const blink = live ? 0.4 + 0.6 * Math.exp(-beat / 300) : 1;
+  A(dotUp, { cx: colonUp[0], cy: colonUp[1] - 30 * out, r: rC, 'fill-opacity': blink * (1 - out) });
+  const toPoint = smooth(P(t, T.clockOut, 250));
+  A(dotLo, { cx: colonLo[0], cy: colonLo[1], r: rC, 'fill-opacity': t < T.clockOut + 250 ? blink * (1 - toPoint) : 0 });
+  headline($('moment'), W_M, t, 540, 560, T.italic, T.italicOut, 80, { ax: 0.5 });
+
+  // the replayed lines: arrive on heartbeats at three depths, drift; a bout's first jolt shatters one
+  T.lines.forEach((L, i) => {
+    const el = $('l' + i), pin = E.HOUSE(P(t, T.lineIn[i], 700)), d = T.drift(i, t);
+    const gone = t > T.glyphAt[i].reduce((a, b) => Math.max(a, b), 0) + 200;
+    if (pin <= 0.002 || gone) { el.style.visibility = 'hidden'; return; }
+    el.style.visibility = 'visible'; el.style.opacity = (L.o * pin).toFixed(4);
+    el.style.transform = `translate(${(L.x + d[0]).toFixed(2)}px,${(L.y + d[1] + 22 * (1 - pin)).toFixed(2)}px)`;
+    const b0 = L.blur + 12 * (1 - pin);
+    LC[i].forEach((s, gi) => {
+      const k = t - T.glyphAt[i][gi];
+      if (k < 0) { s.style.opacity = 1; s.style.color = ''; s.style.transform = 'none'; s.style.filter = b0 > 0.05 ? `blur(${b0.toFixed(2)}px)` : 'none'; return; }
+      const flash = k < 34, v = E.HOUSE(P(k, 34, 150));
+      s.style.color = C.ang; s.style.opacity = (flash ? 1 : 1 - v).toFixed(4);
+      s.style.transform = `scale(${(flash ? 1.1 : 1.1 + 0.5 * v).toFixed(3)})`;
+      s.style.filter = `blur(${(b0 + 9 * v).toFixed(2)}px)`;
+    });
+  });
+
+  // the swarm: the game's balls, visible by index against the charge; drawn with a half-frame smear
+  T.balls.forEach((b, i) => {
+    const el = ballEls[i];
+    if (!T.alive(i, t)) { el.style.visibility = 'hidden'; return; }
+    const p = T.posAt(i, t), q = t - 16.67 >= b.tb ? T.posAt(i, t - 16.67) : p, bin = smooth(P(t, b.tb, 60));
+    el.style.visibility = 'visible';
+    A(el, { x1: lerp(p[0], q[0], 0.35), y1: lerp(p[1], q[1], 0.35), x2: p[0], y2: p[1], 'stroke-opacity': 0.85 * bin, 'stroke-width': b.r * 2 * lerp(0.4, 1, bin) });
+  });
+
+  // the HUD (the app's face): draws in around the lines as the clock leaves
+  const hOut = 1 - E.HOUSE(P(t, T.hudOut, 500)), charge = T.charge(t), shown = Math.ceil(charge);
+  A(edge, { 'stroke-opacity': 0.09 * smooth(P(t, T.hud, 600)) * hOut });
+  const trIn = E.SETTLE(P(t, T.hud + 150, 550));
+  A(track, { x1: TR.x0, y1: TR.y, x2: lerp(TR.x0, TR.x1, trIn), y2: TR.y, 'stroke-opacity': t > T.hud + 150 ? 0.12 * hOut : 0 });
+  A(fillL, { x1: TR.x0, y1: TR.y, x2: TR.x0 + (TR.x1 - TR.x0) * (1 - charge / 100), y2: TR.y, 'stroke-opacity': charge < 100 ? hOut : 0 });
+  $('run').textContent = String(shown).padStart(2, '0') + '%';
+  $('num').textContent = String(shown);
+  rise($('eyebrow'), t, TR.x0, TR.y - 44, T.hud + 100, T.hudOut, { dy: 16, blur: 6 });
+  rise($('run'), t, TR.x1, TR.y - 44, T.hud + 160, T.hudOut, { dy: 16, blur: 6, ax: 1 });
+  rise($('num'), t, 540, NUM_Y, T.hud + 200, T.hudOut, { ax: 0.5, dy: 30 });
+  rise($('lab'), t, 540, LAB_Y, T.hud + 320, T.hudOut, { dy: 16, blur: 6, ax: 0.5 });
+  rise($('cue'), t, 540, CUE_Y, T.hud + 450, T.zero + 120, { dy: 16, blur: 6, ax: 0.5 });   // the cue has nothing left to ask
+
+  // the point
+  const p = pointAt(t), on = t >= T.clockOut;
+  const sm = []; for (let k = 0; k <= 6; k++) sm.push(pointAt(Math.max(0, t - (k * 8.3) / 6)));
+  A(smear, { d: path(sm), 'stroke-width': R * 2, 'stroke-opacity': t > T.fall[0] && t < T.fall[1] ? 0.55 : 0 });
+  A(glow, { cx: p[0], cy: p[1], r: R * 1.9, 'fill-opacity': 0.34 * toPoint * (1 - E.HOUSE(P(t, T.fall[1], 600))) });
+  A(pt, { cx: p[0], cy: p[1], r: on ? lerp(rC, R, toPoint) : R, 'fill-opacity': toPoint });
+
+  // close
+  WM.draw(t, T.wordmark);
+  headline($('line'), W_LINE, t, 540, WM.yF + 80, T.line, Infinity, 50, { ax: 0.5 });
+  rise($('cta'), t, 540, WM.yF + 200, T.cta, Infinity, { dy: 18, blur: 8, ax: 0.5, max: 0.9 });
+}
+
+Reel.start({ duration: T.dur, render, init, fonts: ['500 300px "Playfair Display"', 'italic 500 96px "Playfair Display"', '500 24px "JetBrains Mono"', '400 56px Inter'] });
+</script>
+</body>
+</html>
