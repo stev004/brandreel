@@ -68,7 +68,9 @@ const SEG = [[0, 0.68, cubicBezier(0.3, 0.5, 0.4, 1)], [0.68, 1, cubicBezier(0.3
 // Reels caption, buttons and top bar never cover it; eases to identity over the close glide so the
 // point still lands exactly on the wordmark's full stop.
 const SAFE = { s: 0.879, ty: 53.3, oy: 900 }; // top-anchored at y 440 so the DOUBLE INHALE bracket keeps its gap under the headline
-function safeT(t) { const k = 1 - E.HOUSE(P(t, T.closeGlide[0], T.closeGlide[1] - T.closeGlide[0])); const s = 1 - (1 - SAFE.s) * k; return `translate(0px, ${(SAFE.ty * k - SAFE.oy * (1 - s)).toFixed(2)}px) scale(${s.toFixed(4)}) `; }
+// rev (Steven 09-28): as the "That's a physiological sigh." headline arrives, the diagram settles 90px
+// lower so DOUBLE INHALE gets clear air under the headline (the bottom captions are gone by then).
+function safeT(t) { const k = 1 - E.HOUSE(P(t, T.closeGlide[0], T.closeGlide[1] - T.closeGlide[0])); const s = 1 - (1 - SAFE.s) * k; const drop = 90 * E.INOUT(P(t, T.headline - 250, 900)); return `translate(0px, ${((SAFE.ty + drop) * k - SAFE.oy * (1 - s)).toFixed(2)}px) scale(${s.toFixed(4)}) `; }
 function fullness(tau) { let acc = 0; for (let i = 0; i < 4; i++) { const d = T.seg[i]; if (tau <= acc + d) return lerp(SEG[i][0], SEG[i][1], SEG[i][2]((tau - acc) / d)); acc += d; } return 0; }
 const cp = (tau) => [X0 + (X1 - X0) * clamp(tau / T.cycle), lerp(Y_EMPTY, Y_FULL, fullness(clamp(tau, 0, T.cycle)))];
 const segOff = (i) => T.segAt[i] - T.travel;
@@ -140,7 +142,7 @@ function render(t) {
   A(brB, { d: `M${mB - hB} ${yB - 18}L${mB - hB} ${yB}L${mB + hB} ${yB}L${mB + hB} ${yB - 18}`, 'stroke-opacity': bd > 0.01 ? 0.6 * gone : 0 });
   rise($('bA'), t, mA, yA - 50, T.annotate + 350, T.exit, { dy: 14, blur: 6, ax: 0.5, max: 0.85 });
   rise($('bB'), t, mB, yB + 26, T.annotate + 450, T.exit, { dy: 14, blur: 6, ax: 0.5, max: 0.85 });
-  headline($('n1'), W_N1, t, 540, 240, T.headline, T.exit, 70, { ax: 0.5 });
+  headline($('n1'), W_N1, t, 540, 138, T.headline, T.exit, 70, { ax: 0.5 });  // 138 + the 90px settle keeps it on screen where it was (y ~266)
 
   // the point
   const p = pointAt(t), po = smooth(P(t, T.strike[0] - 150, 150));

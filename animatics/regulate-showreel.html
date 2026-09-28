@@ -166,7 +166,7 @@
   <div id="wm"></div>
   <div class="t tag" id="tag">Not meditation. Regulation.</div>
 </div></div>
-<div id="bar"><button id="play">Play</button><span id="tc">0.00s</span><input id="scrub" type="range" min="0" max="18000" step="1" value="0"><span>regulate &middot; showreel &middot; 1080&times;1920 &middot; 60fps</span></div>
+<div id="bar"><button id="play">Play</button><span id="tc">0.00s</span><input id="scrub" type="range" min="0" max="23700" step="1" value="0"><span>regulate &middot; showreel &middot; 1080&times;1920 &middot; 60fps</span></div>
 
 <script>
 // ---------- deterministic motion kit (no springs, no CSS animation) ----------
@@ -262,7 +262,13 @@ function headline(el, words, t, x, y, at, outAt, stagger = 70) {
 const path = (pts) => { if (!pts.length) return ''; let d = `M${pts[0][0].toFixed(2)} ${pts[0][1].toFixed(2)}`; for (let i = 1; i < pts.length; i++) d += `L${pts[i][0].toFixed(2)} ${pts[i][1].toFixed(2)}`; return d; };
 
 const C = { cream: '#F2F0E9', sage: '#8F9E8B', teal: '#4FD1C5', anx: '#D4A574', frz: '#7E9AA6', bal: '#7FA77F', white: '#FFFFFF' };
-const DUR = 18000;
+// PAUSES (Steven 09-28: "longer pauses so people can actually follow and ingest the frame").
+// At each settled moment the scene slows to 1/12 speed for the listed extra ms: HOLDS = [src ms, extra ms].
+// The score uses the SAME map (regulate-showreel.sound.mjs), so picture and sound stay locked.
+const HOLDS = [[2600, 1100], [3720, 1000], [5420, 800], [7350, 800], [10500, 1100], [13300, 900]], SLOW = 100;
+const srcToOut = (s) => { let o = s; for (const [h, x] of HOLDS) o += s <= h ? 0 : s >= h + SLOW ? x : (x * (s - h)) / SLOW; return o; };
+const outToSrc = (o) => { let lo = 0, hi = 18000; for (let i = 0; i < 40; i++) { const m = (lo + hi) / 2; if (srcToOut(m) < o) lo = m; else hi = m; } return (lo + hi) / 2; };
+const SRC_DUR = 18000, DUR = Math.round(srcToOut(SRC_DUR));
 
 // ---------- SVG layers (back to front) ----------
 const band = {
@@ -435,7 +441,7 @@ function kicker(t) {
 function toolLabel(e, t, a, b) { rise(e, t, 540, 1462, a, b, { dy: 20, blur: 8, ax: 0.5 }); }
 
 function render(t) {
-  t = clamp(t, 0, DUR);
+  t = clamp(t, 0, SRC_DUR);
   const p = pointAt(t);
   kicker(t);
 
@@ -594,7 +600,7 @@ function render(t) {
 // ---------- clock: seekable for capture, rAF for viewing ----------
 let playing = false, t0 = 0, cur = 0, raf = 0;
 const scrub = $('scrub'), tc = $('tc'), btn = $('play');
-function draw(ms) { cur = ms; render(ms); scrub.value = ms; tc.textContent = (ms / 1000).toFixed(2) + 's'; }
+function draw(ms) { cur = ms; render(outToSrc(ms)); scrub.value = ms; tc.textContent = (ms / 1000).toFixed(2) + 's'; }
 function loop(now) { if (!playing) return; let ms = now - t0; if (ms >= DUR) { t0 = now; ms = 0; } draw(ms); raf = requestAnimationFrame(loop); }
 function play() { playing = true; btn.textContent = 'Pause'; t0 = performance.now() - cur; raf = requestAnimationFrame(loop); }
 function pause() { playing = false; btn.textContent = 'Play'; cancelAnimationFrame(raf); }

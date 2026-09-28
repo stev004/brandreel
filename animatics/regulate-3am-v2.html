@@ -69,7 +69,9 @@ const { E, clamp, lerp, P, smooth, kf, fbm, $, S, A, place, riseV, rise, splitWo
 const T = TIMING, C = { cream: '#F2F0E9', bal: '#7FA77F', white: '#FFFFFF' };
 const COL = T.column;
 // five thoughts: [left x, depth z] - near = larger, brighter, sharper
-const TH = [[90, 0.9], [200, 0.45], [110, 0.72], [150, 0.35], [130, 0.6]];
+// [x once they've made way, depth, x where they first land]. rev (Steven 09-28): the thoughts land spread
+// across the night, then slide left to make way as the point flies to the column (the breath moves them).
+const TH = [[90, 0.9, 150], [200, 0.45, 520], [110, 0.72, 250], [150, 0.35, 470], [130, 0.6, 330]];
 
 const track = S('line', { stroke: C.cream, 'stroke-width': 12, 'stroke-linecap': 'round' });
 const fill = S('line', { stroke: C.bal, 'stroke-width': 12, 'stroke-linecap': 'butt' });
@@ -133,7 +135,9 @@ function render(t) {
   headline($('moment'), W_M, t, 540, 680 + drift, 380, T.clockOut, 90, { ax: 0.5 });
 
   // thoughts: arrive on beats at their depth, drift, leave as the point passes them
-  TH.forEach(([x, z], i) => {
+  const mw = E.HOUSE(P(t, T.glide[0], 900));
+  TH.forEach(([xL, z, xS], i) => {
+    const x = lerp(xS, xL, mw);
     const e = $('t' + i), a = T.thoughtIn[i], d = T.dissolveAt[i], y = T.thoughtTops[i];
     const pin = E.HOUSE(P(t, a, 700)), pout = E.HOUSE(P(t, d, 1100));
     const o = (0.45 + 0.5 * z) * pin * (1 - pout);

@@ -5,7 +5,7 @@ var TIMING = (function () {
   const T = {
     bpm: [[0, 88], [1500, 96], [4200, 108], [5200, 100], [10200, 60]],
     column: { x: 670, top: 760, bot: 1500 },
-    thoughtTops: [820, 960, 1100, 1240, 1380],
+    thoughtTops: [890, 1012, 1134, 1256, 1378],   // rev (09-28): first thought clear of "awake again."
     hookDrift: [0, 1000],             // clock opens large and low, drifts up as the thoughts come
   };
   T.beats = beats(250, 12500, T.bpm);

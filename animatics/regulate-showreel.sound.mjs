@@ -13,10 +13,26 @@
 // soft tick when the point stops. The last thing you hear is silence.
 //
 // Usage: node animatics/regulate-showreel.sound.mjs <out.wav>
-import { SR, makeBus, add, rng, ar, smooth, lp1, biquad, reverb, mixInto, master, writeWav } from '../bin/lib/dsp.mjs';
+import { SR, makeBus, add as add0, rng, ar, smooth, lp1, biquad, reverb, mixInto, master, writeWav } from '../bin/lib/dsp.mjs';
+
+// PAUSES - the same time map as the picture (regulate-showreel.html HOLDS). Cues are written in source
+// time; add() places them in output time. Short hits (<=0.5s) only move; longer sounds that span a pause
+// have their envelope time warped (oscillators step per sample, so pitch never changes) and sustain.
+const HOLDS = [[2600, 1100], [3720, 1000], [5420, 800], [7350, 800], [10500, 1100], [13300, 900]], SLOW = 100;
+const srcToOut = (s) => { let o = s; for (const [h, x] of HOLDS) o += s <= h ? 0 : s >= h + SLOW ? x : (x * (s - h)) / SLOW; return o; };
+const outToSrc = (o) => { let lo = 0, hi = 18000; for (let i = 0; i < 40; i++) { const m = (lo + hi) / 2; if (srcToOut(m) < o) lo = m; else hi = m; } return (lo + hi) / 2; };
+const M = (sec) => srcToOut(sec * 1000) / 1000, Mi = (sec) => outToSrc(sec * 1000) / 1000;
+function add(bus, at, dur, fn, opts = {}) {
+  const o0 = M(at);
+  if (dur <= 0.5) return add0(bus, o0, dur, fn, opts);
+  const o1 = M(at + dur), w = (t) => Mi(o0 + t) - at, o = { ...opts };
+  if (opts.panFn) o.panFn = (t) => opts.panFn(w(t));
+  return add0(bus, o0, o1 - o0, (i, t) => fn(i, w(t)), o);
+}
+
 
 const out = process.argv[2] || 'regulate-showreel.wav';
-const DUR = 18.0;
+const DUR = Math.round(srcToOut(18000)) / 1000;
 const dry = makeBus(DUR), wet = makeBus(DUR);
 
 // ---- shared easing (same curves as the picture) ----
@@ -52,11 +68,11 @@ function thump(at, f0, f1, amp, pan = 0) {
   }, { pan });
 }
 {
-  let ms = 260;
-  while (ms < 13250) {
-    const g = hbGain(ms); const per = 60000 / bpm(ms);
-    if (g > 0.01) { thump(ms / 1000, 78, 44, 0.55 * g); thump((ms + per * 0.3) / 1000, 70, 50, 0.32 * g); }
-    ms += per;
+  let o = 260; // output ms: the heart keeps beating through the pauses
+  while (outToSrc(o) < 13250) {
+    const ms = outToSrc(o), g = hbGain(ms), per = 60000 / bpm(ms);
+    if (g > 0.01) { thump(Mi(o / 1000), 78, 44, 0.55 * g); thump(Mi((o + per * 0.3) / 1000), 70, 50, 0.32 * g); }
+    o += per;
   }
 }
 
