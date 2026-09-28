@@ -1,10 +1,10 @@
 #!/usr/bin/env node
-// Score for regulate-452-numb.html; every cue is read from regulate-452-numb.timing.js.
-// No music bed, no heartbeat: numb is quiet. A bare click on the cursor, then the Pendulum's own
-// tones exactly as the app synthesizes them (scripts/gen-bilateral-tones.js: apex 396Hz sine,
+// Score for regulate-452-numb.html (v2); every cue is read from regulate-452-numb.timing.js.
+// No music bed, no heartbeat: freeze is quiet. A bare key click as the frozen draft appears (and
+// nothing after it: the cursor is dead), the colon dot's drop onto the apex, then the Pendulum's
+// own tones exactly as the app synthesizes them (scripts/gen-bilateral-tones.js: apex 396Hz sine,
 // 0.22s, 12ms attack, exponential decay to -60dB, peak -24dBFS; hit 528Hz, 0.30s, -18dBFS), hard
-// panned to the side the bob arrives on. After the second pass, a faint clock tick at each centre
-// crossing (the seconds coming back, with the colon). The full-stop tick, then silence.
+// panned to the side the bob arrives on. The lift onto the full stop, the full-stop tick, silence.
 import { SR, makeBus, add, rng, biquad, reverb, mixInto, master, writeWav } from '../bin/lib/dsp.mjs';
 import { P, lerp, tick, air, room, fullStop, loadTiming } from '../bin/lib/sfx.mjs';
 const T = loadTiming('regulate-452-numb'), s = (ms) => ms / 1000;
@@ -20,22 +20,21 @@ function appTone(bus, at, f, dur, peakDb, pan, gain = 1) {
 }
 
 room(dry, 0, T.dur, (ms) => sm(P(ms, 0, 500)) * (1 - sm(P(ms, T.wordmark, 2500))), 0.12);
-// the bare click: a dry key/caret click, where the cursor sits (right of centre)
+// the draft appears: one dry key/caret click, then nothing (the cursor is dead)
 { const r = rng(452), bp = biquad('bp', 3200, 2.2), lo = biquad('bp', 900, 3);
-  add(dry, s(T.click), 0.06, (i, t) => (bp(r() * 2 - 1) * 1.6 * Math.exp(-t / 0.0022) + lo(r() * 2 - 1) * 0.9 * Math.exp(-t / 0.006)) * 0.16, { pan: 0.3 }); }
-// the arm forming: barely-there air rising with it
-air(wet, s(T.grow[0]), s(T.grow[1] - T.grow[0]), (u) => lerp(500, 2400, u), (u) => Math.sin(Math.PI * u), 0.05, 61, (u) => lerp(0.3, 0, u));
-// the four passes: apex tone + hit tone, hard-panned (reverb is per-channel, so the pan holds)
+  add(dry, s(T.draft + 120), 0.06, (i, t) => (bp(r() * 2 - 1) * 1.6 * Math.exp(-t / 0.0022) + lo(r() * 2 - 1) * 0.9 * Math.exp(-t / 0.006)) * 0.16, { pan: 0.25 }); }
+// the colon's dot drops onto the left apex; a soft catch as the arm takes it
+air(wet, s(T.fall[0]), s(T.fall[1] - T.fall[0]), (u) => lerp(2200, 600, u), (u) => Math.sin(Math.PI * u), 0.05, 61, (u) => lerp(-0.1, -0.7, u));
+tick(wet, s(T.fall[1]), 1500, 0.06, -0.7);
+// the three passes: apex tone + hit tone, hard-panned (reverb is per-channel, so the pan holds)
 T.apex.forEach((at, n) => {
   const pan = T.side[n];
   appTone(dry, s(at), 396, 0.22, -24, pan);
   appTone(dry, s(at), 528, 0.30, -18, pan);
   appTone(tail, s(at), 396, 0.22, -24, pan); appTone(tail, s(at), 528, 0.30, -18, pan);   // 100% wet: the room keeps each tone ringing on its own side
 });
-// the seconds come back: a faint centre tick on each colon blink between the apexes
-T.colon.filter((ms) => !T.apex.includes(ms)).forEach((ms) => tick(wet, s(ms), 2400, 0.05, 0));
-// the drop, then the signature
-air(wet, s(T.drop[0]), s(T.drop[1] - T.drop[0]) + 0.1, (u) => lerp(1600, 500, u), (u) => Math.sin(Math.PI * u), 0.06, 62, 0.5);
+// the lift onto the full stop, then the signature
+air(wet, s(T.glide[0]), s(T.glide[1] - T.glide[0]), (u) => lerp(700, 1800, u), (u) => Math.sin(Math.PI * u), 0.06, 62, 0.4);
 { const fs = makeBus(T.dur / 1000); fullStop(fs, s(T.land)); mixInto(wet, fs, 0.42); }   // the signature, sat under the app's tones
 reverb(wet, { mix: 0.42, room: 0.86, damp: 0.4, preDelayMs: 22 }); mixInto(dry, wet, 1);
 reverb(tail, { mix: 1, room: 0.9, damp: 0.45, preDelayMs: 30 }); mixInto(dry, tail, TAIL); master(dry, 1.1);

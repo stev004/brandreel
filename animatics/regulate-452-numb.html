@@ -4,40 +4,48 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>4:52 PM Reel</title>
 <!--
-  brandreel animatic v1 - regulate - "4:52 PM" (Numb -> Pendulum) social reel, ~15s (T.dur), 1080x1920 @ 60
-  Steven 2026-09-28 approved the concept ("keen to see numb hook too"): the hook inside the "Numb"
-  story highlight and the feed reel that debuts the Pendulum (1.2.0). Same series as 3:04 AM v2 and
-  11:47 AM v2 (big serif clock, italic moment line, one white point, one unbroken take).
-  - Hook: 4:52 PM with a colon that does NOT blink (the wrongness), "still on the same line.",
-    and an unfinished sentence whose cursor bar does not blink either.
-  - One unbroken take: the cursor gives one bare click, extends up into the Pendulum's arm and its
-    foot becomes the white point (the bob). The clock, moment line and sentence fall back to ~20%;
-    the sentence sinks a little to make way for the swing.
-  - The app's Pendulum, driven like the game (regulate-452-numb.timing.js ports
-    utils/bilateralRhythm.ts line for line): fixed 2.0s half-swing, the arriving side's guide arc
-    glows in at each centre crossing (600ms in, 300ms out, +-0.09rad at the bob's radius), four
-    taps exactly on the apexes (L R L R) grow the swing as in-game, hit flash + ring, counter
-    "01..04 / 30" over PASSES, "Tap each side as the bob arrives".
-  - Cause and effect: each apex wakes the sentence's next word on that side (grey -> cream, outside
-    in); after the second pass the clock's colon blinks again, in the bob's time (every apex and
-    every centre crossing: once a second).
-  - The arm lets go at the fourth apex (zero velocity), the point drops straight down and is the
-    full stop of "regulate." (the pendulum is sized so the fourth apex sits exactly above it).
+  brandreel animatic v2 - regulate - "4:52 PM" (Freeze -> Pendulum) social reel, ~15.6s (T.dur), 1080x1920 @ 60
+  Steven 2026-09-28 on v1: "4:52pm is an okay idea. i like the idea of signifying a freeze response.
+  but it needs to be clearer and how pendulum helps. lots of overlapping elements". v2 rebuilds it
+  in the 11:47 AM v2 language: one instrument, big, obviously acting on the scenario; one thing at
+  a time (never more than two text elements on screen; nothing ever crosses text).
+  - Hook (frame 0, text before motion): 4:52 PM with a colon that does NOT blink, and
+    "frozen on the same line." (names the freeze in words). The line swaps for the draft it means:
+    "I'll reply properly when" in Freeze slate with a dead, unblinking cursor. Clock + draft hold
+    together (the stuck frame), with the empty middle where the swing will be.
+  - One unbroken take: the clock leaves, but its frozen colon's lower dot stays, turns white and
+    drops onto the Pendulum's left apex; the arm draws up out of it. The dot is the bob.
+  - The app's Pendulum, big (arm 1250px, swing ~660 to ~720px wide), driven like the game
+    (regulate-452-numb.timing.js ports utils/bilateralRhythm.ts line for line): starts at rest on
+    the left apex (elapsed 0, as the app does), fixed 2.0s half-swing, the arriving side's guide arc
+    glows in at each centre crossing (600ms in, 300ms out, +-0.09rad at the bob's radius), three taps
+    exactly on the apexes (R L R) grow the swing as in-game, hit flash + scale + ring, counter
+    "00..03 / 30" over PASSES, "Tap each side as the bob arrives".
+  - Cause and effect, one per pass, each right under the bob: pass 1 (right) wakes the right half of
+    the draft (slate -> cream, one white frame); pass 2 (left) wakes the left half, so the whole line
+    is back and readable from ~9.6s; pass 3 (right, over the cursor) brings the cursor back to life:
+    it blinks in the bob's time (on at each apex and centre crossing, once a second) = unstuck.
+  - The arm lets go at the third apex (zero velocity); the point lifts onto the full stop of
+    "regulate." while the woken line and its blinking cursor hold (~2.5s of payoff before landing, ~3s in all).
   DEVIATIONS (listed per the reel principles):
   - Geometry: the app's angles exactly (MAX 24.04deg, idle 13.95deg, cap 20.44deg on its 393x852pt
-    reference screen); the arm is ~953px (app arm x2.15) and its top fades into the dark above y 600
-    so nothing sits in the Instagram top bar. The HUD sits under the pendulum (app: top of screen).
-  - The reel joins the game at elapsed 2000 (peak 1, the right apex) because the cursor ends the
-    line on the right; the app's run starts at peak 0 (left). Everything after is the app's clock.
-  - The bob is the white point at full-stop size (as the showreel); its glow + hit flash + ring are
-    Freeze slate #7E9AA6. The guide arc is slate #7E9AA6 (the app draws it in freezeAlt #89C2D9;
-    brand law: the Freeze state colour names Freeze).
+    reference screen); the arm is 1250px (app arm x2.82), pivot above the frame; the arm's top fades
+    out under the HUD so it never crosses text (app: a 1pt line at .16 from a visible pivot; here
+    3.5px at .34 so it reads at phone size).
+  - HUD and instruction share the top slot and take turns (instruction first, while the bob makes
+    its first untapped half-swing; then the HUD). App: HUD at the top, instruction at the bottom,
+    both at once. The draft holds the bottom slot.
+  - The bob is the white point (40px, app bob x2 scaled to the reel), shrinking to full-stop size
+    on the glide; its glow + hit flash + ring are Freeze slate #7E9AA6 (app bob: stateFrozen fill).
+    The guide arc is slate #7E9AA6 (app: freezeAlt #89C2D9; brand law: the Freeze colour names Freeze).
+  - Three passes, not thirty; the arm lets go on the third tap (in-game the swing carries on).
   - No haptics (it's video): the apex haptic is carried by the hit ring and the panned tone.
-  Laws: emerald ground; Freeze slate on the guide arcs, bob glow, hit ring and the label word only;
-  the dot white; teal unused; hook on screen at frame 0; wordmark only at the end; plain hyphens.
+  Laws: emerald ground; Freeze slate on the frozen draft, guide arcs, bob glow, ring and the label
+  word only; the dot white; teal unused; hook on screen at frame 0; wordmark only at the end;
+  plain hyphens.
 
-  COPY LIST: 4:52 · PM · still on the same line. · I'll reply properly when · FREEZE · PENDULUM ·
-  00 / 30 .. 04 / 30 · PASSES · Tap each side as the bob arrives · regulate. ·
+  COPY LIST: 4:52 · PM · frozen on the same line. · I'll reply properly when · Tap each side as the
+  bob arrives · FREEZE · PENDULUM · 00 / 30 .. 03 / 30 · PASSES · regulate. ·
   For the days you can't start. · 4 TOOLS FREE ON THE APP STORE
 -->
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -48,31 +56,31 @@
   #clock{display:flex;align-items:baseline;font-family:var(--serif);font-weight:500;font-size:300px;line-height:1;color:var(--cream);font-variant-numeric:lining-nums;letter-spacing:-.02em}
   #clock .colon{display:inline-block}
   #clock .ampm{font-family:var(--mono);font-size:40px;letter-spacing:.3em;margin-left:22px;color:var(--sage)}
-  .snt{font-family:var(--sans);font-size:50px;color:var(--cream);white-space:nowrap;line-height:1}
+  .snt{font-family:var(--sans);font-size:58px;color:var(--frz);white-space:nowrap;line-height:1}
   .snt .w{display:inline-block}
   #count{font-family:var(--mono);font-weight:500;font-size:64px;letter-spacing:.06em;color:var(--cream);white-space:nowrap;line-height:1}
-  .instr{font-family:var(--sans);font-size:36px;color:var(--sage);white-space:nowrap;line-height:1}
+  .instr{font-family:var(--sans);font-size:40px;color:var(--sage);white-space:nowrap;line-height:1}
 </style>
 <body>
 <div id="wrap"><div id="stage"><div id="cam">
   <svg id="g" viewBox="0 0 1080 1920"><defs>
     <filter id="glow" x="-200%" y="-200%" width="500%" height="500%"><feGaussianBlur stdDeviation="9"/></filter>
-    <filter id="soft" x="-200%" y="-200%" width="500%" height="500%"><feGaussianBlur stdDeviation="5"/></filter>
-    <linearGradient id="armG" gradientUnits="userSpaceOnUse" x1="0" y1="250" x2="0" y2="600"><stop offset="0" stop-color="#F2F0E9" stop-opacity="0"/><stop offset="1" stop-color="#F2F0E9" stop-opacity="1"/></linearGradient>
+    <filter id="soft" x="-200%" y="-200%" width="500%" height="500%"><feGaussianBlur stdDeviation="8"/></filter>
+    <linearGradient id="armG" gradientUnits="userSpaceOnUse" x1="0" y1="470" x2="0" y2="700"><stop offset="0" stop-color="#F2F0E9" stop-opacity="0"/><stop offset="1" stop-color="#F2F0E9" stop-opacity="1"/></linearGradient>
   </defs></svg>
   <div class="t" id="clock"><span class="d" id="dA">4</span><span class="colon" id="colon"></span><span class="d" id="dB">52</span><span class="ampm" id="ampm">PM</span></div>
-  <div class="t head italic" id="moment" style="font-size:88px;white-space:nowrap">still on the same line.</div>
+  <div class="t head italic" id="moment" style="font-size:84px;white-space:nowrap">frozen on the same line.</div>
   <div class="t snt" id="snt">I'll reply properly when</div>
+  <div class="t instr" id="instr">Tap each side as the bob arrives</div>
   <div class="t tool" id="tool"><i style="color:var(--frz)">Freeze</i> &middot; Pendulum</div>
   <div class="t" id="count">00 / 30</div>
   <div class="t mono" id="passes" style="font-size:22px">Passes</div>
-  <div class="t instr" id="instr">Tap each side as the bob arrives</div>
 </div>
   <div id="wm"></div>
   <div class="t head italic" id="line" style="font-size:56px;white-space:nowrap;opacity:.9">For the days you can't start.</div>
   <div class="t cta" id="cta">4 tools free on the App Store</div>
 </div></div>
-<div id="bar"><button id="play">Play</button><span id="tc">0.00s</span><input id="scrub" type="range" min="0" step="1" value="0"><span>regulate &middot; 4:52 pm numb &middot; 1080&times;1920 &middot; 60fps</span></div>
+<div id="bar"><button id="play">Play</button><span id="tc">0.00s</span><input id="scrub" type="range" min="0" step="1" value="0"><span>regulate &middot; 4:52 pm freeze v2 &middot; 1080&times;1920 &middot; 60fps</span></div>
 <audio id="snd" preload="auto"></audio>
 <script src="lib/timing-kit.js"></script>
 <script src="regulate-452-numb.timing.js"></script>
@@ -84,167 +92,170 @@ const EASE = Reel.cubicBezier(0.42, 0, 1, 1);                 // Reanimated Easi
 const INOUT_EASE = (x) => (x < 0.5 ? EASE(2 * x) / 2 : 1 - EASE(2 * (1 - x)) / 2);   // Easing.inOut(Easing.ease)
 const QUAD = (x) => (x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2);          // withTiming default
 const GUIDE_HALF = 0.09 / D2R;                                   // the app's +-0.09rad guide span
-const APP_K = () => L / 443;                                     // app pt -> reel px
-const SINK = 160, DROP = 70, FSS = 50, LIFT = 170;   // sentence size; the hook sits LIFT lower and rises as the arm forms
-const hookY = (t) => LIFT * (1 - E.HOUSE(P(t, T.grow[0], T.grow[1] - T.grow[0])));
+const L = 1250, PIV = [540, -120], BR = 20;                      // arm, pivot (above frame), bob radius
+const APP_K = L / 443;                                           // app pt -> reel px
+const CLOCK_Y = 262, MOMENT_Y = 668, DRAFT_Y = 1262, TOP_Y = 262;
+const bobAt = (deg) => [PIV[0] + L * Math.sin(deg * D2R), PIV[1] + L * Math.cos(deg * D2R)];
 
 const guideL = S('path', { fill: 'none', stroke: C.frz, 'stroke-linecap': 'round' });
 const guideR = S('path', { fill: 'none', stroke: C.frz, 'stroke-linecap': 'round' });
-const dotUp = S('circle', { fill: C.cream }), dotLo = S('circle', { fill: C.cream });
-const arm = S('line', { stroke: 'url(#armG)', 'stroke-linecap': 'round' });
-const ring = S('circle', { fill: 'none', stroke: C.frz, 'stroke-width': 4 });
+const dotUp = S('circle', { fill: C.cream });
+const cursor = S('rect', { fill: C.frz });
+const arm = S('line', { stroke: 'url(#armG)', 'stroke-linecap': 'round', 'stroke-width': 3.5 });
+const ring = S('circle', { fill: 'none', stroke: C.frz, 'stroke-width': 5 });
 const halo = S('circle', { fill: C.frz, filter: 'url(#soft)' });
 const smear = S('path', { fill: 'none', stroke: C.white, 'stroke-linecap': 'round' });
 const glow = S('circle', { fill: C.white, filter: 'url(#glow)' });
-const pt = S('circle', { fill: C.white });
+const pt = S('circle', { fill: C.cream });
 
-let WM, R = 11, L = 953, PIV = [540, -18], FOOT = [770, 907], W_M, W_LINE, SW = [], wake = [], colonUp, colonLo, rC, clockBox, snt;
-const bobAt = (deg) => [PIV[0] + L * Math.sin(deg * D2R), PIV[1] + L * Math.cos(deg * D2R)];
+let WM, R = 11, W_M, W_LINE, SW = [], wake = [], colonUp, colonLo, rC, clockBox, snt, CUR;
 function init() {
   WM = wordmark($('wm'), { dotPx: 22, yDot: 960 }); R = WM.R;
-  // the pendulum is sized so the fourth apex (the app's amplitude after three hits) sits DROP px
-  // straight above the wordmark's full stop
-  L = (WM.xF - 540) / Math.sin(T.amp4 * D2R);
-  PIV = [540, WM.yF - DROP - L * Math.cos(T.amp4 * D2R)];
-  FOOT = bobAt(T.idle);                                           // the cursor's foot = the right apex at rest
   W_M = splitWords($('moment')); W_LINE = splitWords($('line'));
-  const cv = document.createElement('canvas').getContext('2d');
-  // the sentence ends at the cursor: right-aligned to it, baseline 9px above the foot
-  const s = $('snt'); SW = splitWords(s);
-  cv.font = `400 ${FSS}px Inter`; const sm = cv.measureText('Hg');
-  const wSnt = cv.measureText(s.textContent).width;
-  snt = { x: FOOT[0] - 13 - wSnt, top: FOOT[1] - 11 - sm.fontBoundingBoxAscent - (FSS - (sm.fontBoundingBoxAscent + sm.fontBoundingBoxDescent)) / 2, w: wSnt };
-  // wake order: each apex wakes the next word on its side, outside in
   const k = $('stage').getBoundingClientRect().width / 1080;
-  s.style.transform = `translate(${snt.x}px,${snt.top}px)`; s.style.visibility = 'visible';
-  const sb = s.getBoundingClientRect();
+  // the draft (text + cursor) is centred as a unit in the bottom slot
+  const s = $('snt'); SW = splitWords(s);
+  s.style.transform = 'translate(0px,0px)'; s.style.visibility = 'visible';
+  const sb = s.getBoundingClientRect(), wS = sb.width / k, GAP = 10, CW = 5;
+  snt = { x: 540 - (wS + GAP + CW) / 2, top: DRAFT_Y, w: wS };
+  const cvs = document.createElement('canvas').getContext('2d'); cvs.font = '400 58px Inter';
+  const m = cvs.measureText('Hl'), asc = m.fontBoundingBoxAscent, desc = m.fontBoundingBoxDescent;
+  const base = DRAFT_Y + (58 - (asc + desc)) / 2 + asc;
+  CUR = { x: snt.x + wS + GAP, y: base - 50, w: CW, h: 64 };
+  // which half each word wakes on (by its centre), outside in
   const cx = SW.map((w) => { const b = w.getBoundingClientRect(); return snt.x + (b.left - sb.left + b.width / 2) / k; });
-  const left = SW.map((w, i) => i).filter((i) => cx[i] < 540).sort((a, b) => cx[a] - cx[b]);
-  const right = SW.map((w, i) => i).filter((i) => cx[i] >= 540).sort((a, b) => cx[b] - cx[a]);
-  wake = SW.map(() => Infinity); let li = 0, ri = 0;
-  T.apex.forEach((at, n) => { const side = T.side[n] < 0 ? left : right; const last = n >= T.apex.length - 2; let j = side === left ? li : ri;
-    const take = last ? side.length - j : 1; for (let q = 0; q < take && j < side.length; q++, j++) wake[side[j]] = at + 60 + q * 90; if (side === left) li = j; else ri = j; });
-  // the colon is drawn as two circles measured from Playfair's own ':' so it can blink
-  cv.font = '500 300px "Playfair Display"';
+  wake = SW.map(() => Infinity);
+  T.apex.slice(0, 2).forEach((at, n) => {
+    const side = SW.map((w, i) => i).filter((i) => (T.side[n] < 0 ? cx[i] < 540 : cx[i] >= 540))
+      .sort((a, b) => (T.side[n] < 0 ? cx[a] - cx[b] : cx[b] - cx[a]));
+    side.forEach((i, q) => { wake[i] = at + 60 + q * 110; });
+  });
+  // the colon is drawn as two circles measured from Playfair's own ':' (it never blinks)
+  const cv = document.createElement('canvas').getContext('2d'); cv.font = '500 300px "Playfair Display"';
   const cm = cv.measureText(':'), pm = cv.measureText('.'), fm = cv.measureText('4');
   $('colon').style.width = cm.width + 'px';
   const c = $('clock'); c.style.transform = 'translate(0,0)';
   const cb = c.getBoundingClientRect(), cr = $('colon').getBoundingClientRect();
-  clockBox = { x: 540 - cb.width / k / 2, y: 250 };
-  const base = clockBox.y + (300 - (fm.fontBoundingBoxAscent + fm.fontBoundingBoxDescent)) / 2 + fm.fontBoundingBoxAscent;
+  clockBox = { x: 540 - cb.width / k / 2, y: CLOCK_Y };
+  const cbase = clockBox.y + (300 - (fm.fontBoundingBoxAscent + fm.fontBoundingBoxDescent)) / 2 + fm.fontBoundingBoxAscent;
   rC = (pm.actualBoundingBoxAscent + pm.actualBoundingBoxDescent) / 2;
   const ccx = clockBox.x + (cr.left - cb.left) / k + (cm.actualBoundingBoxRight - cm.actualBoundingBoxLeft) / 2;
-  colonLo = [ccx, base + pm.actualBoundingBoxDescent - rC]; colonUp = [ccx, base - cm.actualBoundingBoxAscent + rC];
-  window.__geo = { L, PIV, FOOT, xF: WM.xF, snt, base, wake, cx };
+  colonLo = [ccx, cbase + pm.actualBoundingBoxDescent - rC]; colonUp = [ccx, cbase - cm.actualBoundingBoxAscent + rC];
+  window.__geo = { L, PIV, xF: WM.xF, yF: WM.yF, snt, CUR, wake, cx, colonLo, apexL: bobAt(-T.idle), apexLast: bobAt(T.ampLast) };
 }
 
-// the white point: the cursor's foot, then the bob, then the full stop
+// the white point: the colon's lower dot, then the bob, then the full stop
 function pointAt(t) {
-  if (t < T.release) { const b = bobAt(T.idle); return [b[0], b[1] + hookY(t)]; }
+  if (t < T.fall[0]) return colonLo;
+  if (t < T.fall[1]) {
+    const u = P(t, T.fall[0], T.fall[1] - T.fall[0]), a = bobAt(-T.idle);
+    const ux = E.INOUT(u), uy = E.INOUT(u);
+    return [lerp(colonLo[0], a[0], ux), lerp(colonLo[1], a[1], uy)];
+  }
   if (t < T.letGo) return bobAt(T.angle(t));
-  const a = bobAt(T.amp4);
-  return [a[0], lerp(a[1], WM.yF, E.INOUT(P(t, T.drop[0], T.drop[1] - T.drop[0])))];
+  const a = bobAt(T.ampLast), u = E.HOUSE(P(t, T.glide[0], T.glide[1] - T.glide[0]));
+  return [lerp(a[0], WM.xF, u), lerp(a[1], WM.yF, u) - Math.sin(Math.PI * u) * 70];
 }
-// guide glow per side: glows in (600ms, inOut ease) on the arriving side at each centre crossing,
-// the other side fades (300ms); the first right guide is lit as the arm forms (the state at elapsed 2000)
+const radiusAt = (t) => {
+  if (t < T.fall[0]) return rC;
+  if (t < T.fall[1]) return lerp(rC, BR, E.INOUT(P(t, T.fall[0], T.fall[1] - T.fall[0])));
+  return lerp(BR, R, E.HOUSE(P(t, T.glide[0], T.glide[1] - T.glide[0])));
+};
+// guide glow per side: the app's start state lights the left guide; then at each centre crossing
+// the arriving side glows in (600ms, inOut ease) and the other fades (300ms)
 function guides(t) {
-  const ev = [[T.grow[0] + 250, 1]].concat(T.center.map((c, i) => [c, i % 2 === 0 ? -1 : 1]));
+  const ev = [[T.fall[1] - 150, -1]].concat(T.center.map((c, i) => [c, i % 2 === 0 ? 1 : -1]));
   let on = 0, at = -1e9;
   for (const [c, side] of ev) if (t >= c) { on = side; at = c; }
   const g = (side) => { if (on === 0) return 0;
-    const u = on === side ? INOUT_EASE(P(t, at, 600)) : 1 - INOUT_EASE(P(t, at, 300));
-    return on === side || at > T.grow[0] + 250 ? u : 0; };
+    if (on === side) return INOUT_EASE(P(t, at, 600));
+    return at > ev[0][0] ? 1 - INOUT_EASE(P(t, at, 300)) : 0; };
   const fade = 1 - INOUT_EASE(P(t, T.letGo + 80, 300));
-  return { l: g(-1) * fade, r: g(1) * fade, on, at };
+  return { l: g(-1) * fade, r: g(1) * fade };
 }
-const guideAmps = T.center.map((c, i) => T.predict(c, 4000 + i * 2000));
+const guideAmps = T.center.map((c, i) => T.predict(c, 2000 + i * 2000));
 function arcD(sideSign, ampDeg) {
   const c = sideSign * ampDeg, pts = [];
-  for (let a = c - GUIDE_HALF; a <= c + GUIDE_HALF + 0.01; a += 0.4) pts.push(bobAt(a));
+  for (let a = c - GUIDE_HALF; a <= c + GUIDE_HALF + 0.01; a += 0.3) pts.push(bobAt(a));
   return path(pts);
 }
 
 function render(t) {
-  // camera: a slow push while the rhythm comes back, released as the point drops
-  const cam = kf(t, [[T.release, 1], [T.letGo, 1.02, (x) => x], [T.land, 1, E.INOUT]]);
+  // camera: a slight push while the rhythm comes back, released on the glide
+  const cam = kf(t, [[T.release, 1], [T.letGo, 1.015, (x) => x], [T.land, 1, E.INOUT]]);
   $('cam').style.transform = `scale(${cam})`;
-  const dim = E.HOUSE(P(t, T.dim[0], T.dim[1] - T.dim[0]));
-  const exitK = (d = 0) => E.HOUSE(P(t, T.exit + d, 520));
 
-  // the clock (the hook): the colon does not blink until the rhythm is back
-  const cOut = exitK(0), cO = lerp(1, 0.2, dim) * (1 - cOut);
-  const c = $('clock'); c.style.visibility = 'visible'; c.style.opacity = 1;
-  const hy = hookY(t);
-  c.style.transform = `translate(${clockBox.x}px,${clockBox.y + hy - 28 * cOut}px)`;
+  // the clock (the hook): the colon never blinks; the clock leaves but its lower dot stays
+  const cOut = E.HOUSE(P(t, T.clockOut, 560));
+  const c = $('clock'); c.style.visibility = cOut < 0.999 ? 'visible' : 'hidden';
+  c.style.opacity = (1 - cOut).toFixed(4);
+  c.style.transform = `translate(${clockBox.x}px,${clockBox.y - 34 * cOut}px)`;
   c.style.filter = cOut > 0.01 ? `blur(${(8 * cOut).toFixed(2)}px)` : 'none';
-  for (const id of ['dA', 'dB', 'ampm']) $(id).style.opacity = cO.toFixed(4);
-  let blink = 0; for (const ev of T.colon) if (t >= ev) blink = Math.max(blink, Math.exp(-(t - ev) / 320));
-  const colO = (lerp(1, 0.2, dim) + 0.78 * blink) * (1 - cOut);
-  A(dotUp, { cx: colonUp[0], cy: colonUp[1] + hy - 28 * cOut, r: rC, 'fill-opacity': colO });
-  A(dotLo, { cx: colonLo[0], cy: colonLo[1] + hy - 28 * cOut, r: rC, 'fill-opacity': colO });
-  headline($('moment'), W_M, t, 540, 632 + hy, 250, T.exit + 40, 80, { ax: 0.5 });
-  if (t > T.dim[0]) W_M.forEach((w) => { w.style.opacity = (parseFloat(w.style.opacity) * lerp(1, 0.2, dim)).toFixed(4); });
+  A(dotUp, { cx: colonUp[0], cy: colonUp[1] - 34 * cOut, r: rC, 'fill-opacity': 1 - cOut });
+  headline($('moment'), W_M, t, 540, MOMENT_Y, T.moment, T.momentOut, 70, { ax: 0.5 });
 
-  // the sentence: greyed, falls back and sinks to make way, then wakes word by word, outside in
-  const sOut = E.HOUSE(P(t, T.land - 60, 520)), sink = SINK * E.HOUSE(P(t, T.dim[0], T.dim[1] - T.dim[0] + 150));
-  const s = $('snt'); s.style.visibility = sOut < 0.999 ? 'visible' : 'hidden';
-  s.style.transform = `translate(${snt.x}px,${snt.top + hy + sink + 24 * sOut}px)`;
-  s.style.filter = sOut > 0.01 ? `blur(${(8 * sOut).toFixed(2)}px)` : 'none';
+  // the draft: frozen (slate), wakes a half per pass (cream, one white frame), outside in
+  const dOut = E.HOUSE(P(t, T.draftOut, 520));
+  const dr = riseV(t, T.draft, Infinity);
+  const s = $('snt'); s.style.visibility = dr.o * (1 - dOut) > 0.002 ? 'visible' : 'hidden';
+  s.style.opacity = (dr.o * (1 - dOut)).toFixed(4);
+  const dy = dr.dy - 24 * dOut;
+  s.style.transform = `translate(${snt.x}px,${snt.top + dy}px)`;
+  const db = dr.blur + 8 * dOut; s.style.filter = db > 0.05 ? `blur(${db.toFixed(2)}px)` : 'none';
   SW.forEach((w, i) => {
-    const wk = E.HOUSE(P(t, wake[i], 520)), pop = t >= wake[i] && t < wake[i] + 34;
-    const o = lerp(lerp(0.55, 0.2, dim), 1, wk) * (1 - sOut);
-    w.style.opacity = o.toFixed(4); w.style.color = pop ? '#FFFFFF' : '';
-    w.style.transform = `translateY(${(8 * (1 - wk) * (t >= wake[i] ? 1 : 0)).toFixed(2)}px)`;
-    const b = 2 * dim * (1 - wk); w.style.filter = b > 0.05 ? `blur(${b.toFixed(2)}px)` : 'none';
+    const wk = E.HOUSE(P(t, wake[i], 450)), pop = t >= wake[i] && t < wake[i] + 50;
+    w.style.color = pop ? '#FFFFFF' : wk > 0 ? C.cream : '';
+    w.style.opacity = lerp(0.72, 1, wk).toFixed(4);
+    w.style.transform = `translateY(${(-6 * Math.sin(Math.PI * wk)).toFixed(2)}px)`;
   });
+  // the cursor: dead (slate, never blinks) until the third pass; then cream and blinking in the bob's time
+  let curO = 0.72, curFill = C.frz;
+  if (t >= T.cursorOn) { const ph = (t - T.cursorOn) % 1000; curO = ph < 530 ? 1 : 0; curFill = ph < 50 && t < T.cursorOn + 1000 ? C.white : C.cream; }
+  A(cursor, { x: CUR.x, y: CUR.y + dy, width: CUR.w, height: CUR.h, fill: curFill, 'fill-opacity': curO * dr.o * (1 - dOut) });
 
-  // the cursor becomes the arm: one bare click, then the bar extends up to the pivot
-  const g = E.HOUSE(P(t, T.grow[0], T.grow[1] - T.grow[0]));
-  const top0 = [FOOT[0], FOOT[1] + hy - 57];
-  const p = pointAt(t);
-  let a1 = t < T.release ? [lerp(top0[0], PIV[0], g), lerp(top0[1], PIV[1], g)] : PIV;
-  let a2 = t < T.release ? [FOOT[0], FOOT[1] + hy] : p;
-  const letK = E.HOUSE(P(t, T.letGo, 520));
-  if (t >= T.letGo) { const q = 1 - letK; a2 = [lerp(PIV[0], a2[0], q), lerp(PIV[1], a2[1], q)]; }
-  const click = t >= T.click && t < T.click + 50 ? 1 : 0;
-  A(arm, { x1: a1[0], y1: a1[1], x2: a2[0], y2: a2[1] + (g < 0.02 ? 0.01 : 0), 'stroke-width': lerp(4.5, 2.2, g),
-    'stroke-opacity': (click ? 1 : lerp(0.9, 0.16, E.HOUSE(P(t, T.grow[0] + 150, 650)))) * (1 - letK) });
+  // the arm draws up out of the dot as it lands on the left apex, and lets go at the last tap
+  const p = pointAt(t), rad = radiusAt(t);
+  const g = E.HOUSE(P(t, T.fall[1] - 250, 600));
+  const ang = t < T.letGo ? T.angle(t) : T.ampLast;
+  const bob = t < T.letGo ? p : bobAt(T.ampLast);
+  const top = [lerp(bob[0], PIV[0], g), lerp(bob[1], PIV[1], g)];
+  const armO = 0.34 * (g > 0.001 ? 1 : 0) * (1 - E.HOUSE(P(t, T.letGo + 40, 380)));
+  A(arm, { x1: top[0], y1: top[1], x2: bob[0], y2: bob[1] + 0.01, 'stroke-opacity': armO });
 
   // guide arcs (the app's: slate, 3pt, .55, at the bob centre's radius)
   const gd = guides(t);
-  const ampFor = (side) => { let a = T.idle; T.center.forEach((c, i) => { if (t >= c && (i % 2 === 0 ? -1 : 1) === side) a = guideAmps[i]; }); return a; };
-  const gw = 3 * APP_K();
+  const ampFor = (side) => { let a = T.idle; T.center.forEach((cc, i) => { if (t >= cc && (i % 2 === 0 ? 1 : -1) === side) a = guideAmps[i]; }); return a; };
+  const gw = 3 * APP_K;
   A(guideL, { d: arcD(-1, ampFor(-1)), 'stroke-width': gw, 'stroke-opacity': 0.55 * gd.l });
   A(guideR, { d: arcD(1, ampFor(1)), 'stroke-width': gw, 'stroke-opacity': 0.55 * gd.r });
 
   // taps on the apexes: the app's hit flash (glow 90ms up, 400ms back to .32, bob 1.04), plus a ring
-  let hits = 0, flash = 0, scale = 1, ro = 0, rr = R, rp = p;
+  let hits = 0, flash = 0, scale = 1, ro = 0, rr = BR, rp = p;
   T.apex.forEach((e, n) => {
-    if (t < e) return; hits = n + 1; const k = t - e;
-    if (k < 490) flash = k < 90 ? QUAD(k / 90) : 1 - QUAD((k - 90) / 400);
-    if (k < 400) scale = k < 150 ? lerp(1, 1.04, QUAD(k / 150)) : lerp(1.04, 1, QUAD((k - 150) / 250));
-    if (k < 520) { ro = k < 90 ? E.SNAP(k / 90) : 1 - E.HOUSE((k - 90) / 430); rr = lerp(R + 6, R + 30, E.SETTLE(P(t, e, 520))); rp = bobAt(T.side[n] * T.amp(e)); }
+    if (t < e) return; hits = n + 1; const kk = t - e;
+    if (kk < 490) flash = kk < 90 ? QUAD(kk / 90) : 1 - QUAD((kk - 90) / 400);
+    if (kk < 400) scale = kk < 150 ? lerp(1, 1.04, QUAD(kk / 150)) : lerp(1.04, 1, QUAD((kk - 150) / 250));
+    if (kk < 560) { ro = kk < 90 ? E.SNAP(kk / 90) : 1 - E.HOUSE((kk - 90) / 470); rr = lerp(BR + 8, BR + 44, E.SETTLE(P(t, e, 560))); rp = bobAt(T.side[n] * T.amp(e)); }
   });
   A(ring, { cx: rp[0], cy: rp[1], r: Math.max(0.1, rr), 'stroke-opacity': ro * 0.9 });
-  const haloOn = smooth(P(t, T.grow[0] + 300, 500)) * (1 - E.HOUSE(P(t, T.drop[0], 400)));
-  A(halo, { cx: p[0], cy: p[1], r: 2 * R * scale, 'fill-opacity': (0.32 + 0.68 * flash) * haloOn });
+  const haloOn = smooth(P(t, T.fall[1] - 200, 500)) * (1 - E.HOUSE(P(t, T.glide[0], 500)));
+  A(halo, { cx: p[0], cy: p[1], r: 2 * BR * scale, 'fill-opacity': (0.32 + 0.68 * flash) * haloOn });
 
-  // HUD (the app's: eyebrow, counter NN / 30, PASSES; instruction)
-  const hudY = snt.top + SINK + FSS + 90;
-  rise($('tool'), t, 540, hudY, T.hud, T.exit + 120, { dy: 20, blur: 8, ax: 0.5 });
+  // top slot: the instruction, then the HUD (the app's: eyebrow, counter NN / 30, PASSES)
+  rise($('instr'), t, 540, TOP_Y + 60, T.instr, T.instrOut, { dy: 20, blur: 8, ax: 0.5 });
+  rise($('tool'), t, 540, TOP_Y, T.hud, T.hudOut, { dy: 20, blur: 8, ax: 0.5 });
   const cnt = $('count'); cnt.textContent = String(hits).padStart(2, '0') + ' / 30';
-  const tick = hits ? 1 + 0.05 * (1 - E.HOUSE(P(t, T.apex[hits - 1], 260))) : 1;
-  rise(cnt, t, 540, hudY + 52, T.hud + 80, T.exit + 160, { dy: 20, blur: 8, ax: 0.5 });
+  const tick = hits ? 1 + 0.06 * (1 - E.HOUSE(P(t, T.apex[hits - 1], 280))) : 1;
+  rise(cnt, t, 540, TOP_Y + 54, T.hud + 80, T.hudOut + 40, { dy: 20, blur: 8, ax: 0.5 });
   if (cnt.style.visibility === 'visible') cnt.style.transform += ` scale(${tick.toFixed(4)})`;
-  rise($('passes'), t, 540, hudY + 138, T.hud + 160, T.exit + 200, { dy: 16, blur: 6, ax: 0.5, max: 0.9 });
-  rise($('instr'), t, 540, hudY + 232, T.instr, T.exit + 240, { dy: 16, blur: 6, ax: 0.5 });
+  rise($('passes'), t, 540, TOP_Y + 140, T.hud + 160, T.hudOut + 80, { dy: 16, blur: 6, ax: 0.5, max: 0.9 });
 
-  // the point (motion-blur smear, glow)
-  const born = smooth(P(t, T.grow[0] + 100, 350));
-  const sm = []; for (let k = 0; k <= 6; k++) sm.push(pointAt(Math.max(0, t - (k * 8.3) / 6)));
-  A(smear, { d: path(sm), 'stroke-width': R * 2, 'stroke-opacity': t > T.release && t < T.land ? 0.55 : 0 });
-  A(glow, { cx: p[0], cy: p[1], r: R * 1.9, 'fill-opacity': 0.34 * born * (1 - haloOn * 0.8) * (1 - E.HOUSE(P(t, T.land, 600))) });
-  A(pt, { cx: p[0], cy: p[1], r: R * scale * lerp(0.2, 1, born), 'fill-opacity': born });
+  // the point (cream colon dot -> white as it falls; motion-blur smear, glow)
+  const white = smooth(P(t, T.fall[0], 250));
+  A(pt, { cx: p[0], cy: p[1], r: rad * (t < T.letGo ? scale : 1), fill: white > 0.5 ? C.white : C.cream, 'fill-opacity': t < T.clockOut ? 1 - cOut : 1 });
+  const sm = []; for (let kq = 0; kq <= 6; kq++) sm.push(pointAt(Math.max(0, t - (kq * 8.3) / 6)));
+  A(smear, { d: path(sm), 'stroke-width': rad * 2, 'stroke-opacity': t > T.fall[0] && t < T.land ? 0.55 : 0 });
+  A(glow, { cx: p[0], cy: p[1], r: rad * 1.9, 'fill-opacity': 0.34 * white * (1 - haloOn * 0.8) * (1 - E.HOUSE(P(t, T.land, 600))) });
 
   // close
   WM.draw(t, T.wordmark);
@@ -252,7 +263,7 @@ function render(t) {
   rise($('cta'), t, 540, WM.yF + 200, T.cta, Infinity, { dy: 18, blur: 8, ax: 0.5, max: 0.9 });
 }
 
-Reel.start({ duration: T.dur, render, init, fonts: ['500 300px "Playfair Display"', 'italic 500 88px "Playfair Display"', '500 24px "JetBrains Mono"', '400 50px Inter', '400 36px Inter'] });
+Reel.start({ duration: T.dur, render, init, fonts: ['500 300px "Playfair Display"', 'italic 500 84px "Playfair Display"', '500 24px "JetBrains Mono"', '400 58px Inter', '400 40px Inter'] });
 </script>
 </body>
 </html>
