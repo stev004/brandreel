@@ -24,6 +24,7 @@ var TIMING = (function () {
     head: { px: 58, gap: 90 },                                 // headline ink top = clock baseline + 90
     num: { px: 127, cy: 1088 }, lab: { y: 1160 }, cue: { y: 1316 },   // the game's HUD (ShakeGame.tsx)
     drawIn: 900,                                               // the phone's draw-in, same motion everywhere
+    zero: { cx: 539.5, cy: 1094.5, h: 94 },                    // the HUD's "0" ink at rest (measured from a still, zero + 400ms)
   });
   T.S = (FAM.screen.x1 - FAM.screen.x0) / 393;                 // 393pt app screen -> px (0.99 px/pt)
   // the game's playfield is the screen under the top safe inset (SafeContainer edges=['top'], 59pt)
@@ -101,10 +102,14 @@ var TIMING = (function () {
   };
 
   // after zero, identical in all three: the last ball leaves; the 0 holds in stillness and silence;
-  // phone, HUD and header leave; the white point re-emerges alone; it falls into the full stop.
+  // phone, label and header leave around it; the empty 0 closes into the white point (what is left
+  // when the charge is gone) with the full-stop tone; the point then glides right and lays "regulate"
+  // down behind it, coming to rest as its full stop. The point never appears from nowhere (fix 09-28).
   T.close = () => {
-    T.hudOut = T.zero + 700; T.ptBack = T.zero + 1050; T.fall = [T.zero + 1700, T.zero + 2550];
-    T.wordmark = T.fall[1]; T.line = T.wordmark + 650; T.cta = T.wordmark + 1100;
+    T.hudOut = T.zero + 700; T.closeIn = [T.zero + 1000, T.zero + 1800]; T.ptBack = T.closeIn[0];
+    T.stop = T.closeIn[1];                                   // the point is whole: the full-stop tone
+    T.fall = [T.stop + 450, T.stop + 1350];                  // the glide into the full stop
+    T.wordmark = T.fall[0]; T.line = T.fall[1] + 450; T.cta = T.line + 450;
     T.dur = Math.ceil((T.cta + 2100) / 100) * 100;
   };
   // ==== END FAMILY BLOCK ====

@@ -96,7 +96,9 @@
     const R = (dot.actualBoundingBoxLeft + dot.actualBoundingBoxRight) / 2;
     return {
       FS, R, xF: x0 + pre + dotCx, yF: yDot, top,
-      draw(t, at) { letters.forEach((L, i) => { const r = riseV(t, at + i * 40, Infinity, { dur: 700, dy: 26, blur: 12 }); place(L.el, L.x, top, r.o, { dy: r.dy, blur: r.blur }); }); },
+      xs: letters.map((L, i) => [L.x, i + 1 < letters.length ? letters[i + 1].x : x0 + pre]),   // each letter's [left, right]
+      // startOf(i, [left, right]) -> ms overrides the house stagger (e.g. letters laid down by a moving point)
+      draw(t, at, startOf) { letters.forEach((L, i) => { const st = startOf ? startOf(i, [L.x, i + 1 < letters.length ? letters[i + 1].x : x0 + pre]) : at + i * 40; const r = riseV(t, st, Infinity, { dur: 700, dy: 26, blur: 12 }); place(L.el, L.x, top, r.o, { dy: r.dy, blur: r.blur }); }); },
     };
   }
 

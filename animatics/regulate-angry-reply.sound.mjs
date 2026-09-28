@@ -122,8 +122,8 @@ function finish(out) {
   reverb(wet, { mix: 0.4, room: 0.84, damp: 0.45, preDelayMs: 20 }); mixInto(dry, wet, 1);
   const z0 = Math.round(s(T.zero) * SR), z1 = z0 + Math.round(0.06 * SR);   // zero: a 60ms fade to true silence, and it stays silent
   for (const ch of ['L', 'R']) { const hp = biquad('hp', 25, 0.707), lp = biquad('lp', 12000, 0.707); const c = dry[ch]; for (let n = 0; n < dry.n; n++) c[n] = lp(hp(c[n])) * (n < z0 ? 1 : n < z1 ? 1 - sm((n - z0) / (z1 - z0)) : 0); }
-  fullStop(sig, s(T.fall[1])); reverb(sig, { mix: 0.4, room: 0.84, damp: 0.45, preDelayMs: 20 });
-  const f0 = Math.round(s(T.fall[1]) * SR); for (const ch of ['L', 'R']) for (let n = 0; n < f0; n++) sig[ch][n] = 0;
+  fullStop(sig, s(T.stop)); reverb(sig, { mix: 0.4, room: 0.84, damp: 0.45, preDelayMs: 20 });
+  const f0 = Math.round(s(T.stop) * SR); for (const ch of ['L', 'R']) for (let n = 0; n < f0; n++) sig[ch][n] = 0;
   mixInto(dry, sig, 1);
   const I0 = lufs(dry), g0 = Math.pow(10, (-18 - I0) / 20); for (const ch of ['L', 'R']) for (let n = 0; n < dry.n; n++) dry[ch][n] *= g0;
   const lf = makeBus(DUR), hf = makeBus(DUR), db = (x) => Math.pow(10, x / 20);
@@ -147,7 +147,7 @@ function finish(out) {
     if (miss === 0) break;
   }
   writeWav(out, best.m);
-  console.error(`${ID}: master PLR ${best.plr} (${best.r.I} LUFS, ${best.r.TP} dBTP); silence ${(s(T.zero) + 0.06).toFixed(2)}s..${s(T.fall[1]).toFixed(2)}s`);
+  console.error(`${ID}: master PLR ${best.plr} (${best.r.I} LUFS, ${best.r.TP} dBTP); silence ${(s(T.zero) + 0.06).toFixed(2)}s..${s(T.stop).toFixed(2)}s`);
 }
 // ==== END FAMILY SOUND BLOCK ====
 const L = T.lines, last = L[L.length - 1];

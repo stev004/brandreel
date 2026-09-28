@@ -147,11 +147,22 @@ function drawBalls(t) {
     A(el, { x1: lerp(p[0], q[0], 0.35), y1: lerp(p[1], q[1], 0.35), x2: p[0], y2: p[1], 'stroke-opacity': (0.85 * bin * o).toFixed(4), 'stroke-width': (b.r * 2 * lerp(0.4, 1, bin) * k).toFixed(2) });
   });
 }
-// the game's HUD: serif numeral + PERCENT CHARGED, centred where ShakeGame.tsx centres it, above the balls
+// the game's HUD: serif numeral + PERCENT CHARGED, centred where ShakeGame.tsx centres it, above the balls.
+// The numeral never leaves: at the close the empty 0 shrinks onto its own centre, whitening, and closes
+// into the white point (closeU), which forms inside it (pointForm)
+const closeU = (t) => E.INOUT(P(t, T.closeIn[0], T.closeIn[1] - T.closeIn[0]));
+const pointForm = (t) => { const u = closeU(t); return { o: smooth(P(u, 0.3, 0.45)), r: R * lerp(0.25, 1, E.HOUSE(P(u, 0.3, 0.7))) }; };
 function drawHUD(t, value, tIn, tOut, kick = 0) {
   const n = $('num'); n.textContent = String(value);
-  rise(n, t, 540, FAM.num.cy - FAM.num.px / 2, tIn, tOut, { ax: 0.5, dy: 30 });
+  rise(n, t, 540, FAM.num.cy - FAM.num.px / 2, tIn, Infinity, { ax: 0.5, dy: 30 });
   if (kick && n.style.visibility === 'visible') n.style.transform += ` scale(${(1 + kick).toFixed(4)})`;
+  const u = closeU(t);
+  if (u > 0 && n.style.visibility === 'visible') {
+    n.style.transformOrigin = `50% ${(FAM.zero.cy - (FAM.num.cy - FAM.num.px / 2)).toFixed(1)}px`;
+    n.style.transform += ` scale(${lerp(1, (2.3 * R) / FAM.zero.h, u).toFixed(4)})`;   // ring height -> 2.3R: it closes onto the point
+    n.style.color = `rgb(${[242, 240, 233].map((v) => Math.round(lerp(v, 255, u))).join(',')})`;
+    n.style.opacity = (1 - smooth(P(u, 0.72, 0.28))).toFixed(4);
+  } else { n.style.transformOrigin = ''; n.style.color = ''; }
   rise($('lab'), t, 540, FAM.lab.y, tIn + 120, tOut, { dy: 16, blur: 6, ax: 0.5, max: 0.9 });
 }
 
@@ -161,7 +172,7 @@ const G2 = $('g2');
 const dotUp = S('circle', { fill: C.cream }, G2), dotLo = S('circle', { fill: C.cream }, G2);
 const PT = { smear: S('path', { fill: 'none', stroke: C.white, 'stroke-linecap': 'round' }, G2), glow: S('circle', { fill: C.white, filter: 'url(#glow)' }, G2), pt: S('circle', { fill: C.white }, G2) };
 function initFamily() {
-  WM = wordmark($('wm'), { dotPx: 22, yDot: 960 }); R = WM.R;
+  WM = wordmark($('wm'), { dotPx: 22, yDot: FAM.zero.cy }); R = WM.R;   // the full stop sits where the 0 closed
   W_I = splitWords($('instr')); W_LINE = splitWords($('line'));
   $('num').style.fontSize = FAM.num.px + 'px';
   const px = FAM.clock.px, c = $('clock'), cv = document.createElement('canvas').getContext('2d');
@@ -201,11 +212,14 @@ function drawInstr(t) {
 }
 
 // THE WHITE POINT. It exists before the game (the colon dot / the draft cursor); it hides as the game
-// takes over (T.ptHide) and is never on the playfield while a ball is; it re-emerges alone after the
-// last ball has gone and the phone has left (T.ptBack), then falls into the full stop of "regulate.".
-const DRIFT = Reel.cubicBezier(0.25, 0.4, 0.3, 1), FALL = Reel.cubicBezier(0.55, 0, 0.6, 1);
-const pointFall = (t, home) => { const u = P(t, T.fall[0], T.fall[1] - T.fall[0]); return [lerp(home[0], WM.xF, DRIFT(u)), lerp(home[1], WM.yF, FALL(u))]; };
-const pointVis = (t, tIn) => (t < T.ptBack ? smooth(P(t, tIn, 300)) * (1 - E.HOUSE(P(t, T.ptHide, 220))) : E.HOUSE(P(t, T.ptBack, 450)));
+// takes over (T.ptHide) and is never on the playfield while a ball is; after the last ball it forms
+// inside the closing 0 (T.ptBack = T.closeIn[0]), then glides right into the full stop of "regulate.",
+// laying the word down behind it.
+const GLIDE = Reel.cubicBezier(0.45, 0, 0.2, 1);
+const pointClose = (t) => [lerp(FAM.zero.cx, WM.xF, GLIDE(P(t, T.fall[0], T.fall[1] - T.fall[0]))), FAM.zero.cy];
+const pointVis = (t, tIn) => (t < T.ptBack ? smooth(P(t, tIn, 300)) * (1 - E.HOUSE(P(t, T.ptHide, 220))) : pointForm(t).o);
+// when the gliding point clears x (a letter is laid down once the point has passed its right edge)
+const passAt = (x) => { for (let t = T.fall[0]; t <= T.fall[1]; t += 4) if (pointClose(t)[0] - R >= x) return t; return T.fall[1]; };
 function drawPoint(t, at, o, r) {
   const p = at(t), sm = []; for (let k = 0; k <= 6; k++) sm.push(at(Math.max(0, t - (k * 8.3) / 6)));
   A(PT.smear, { d: path(sm), 'stroke-width': (r * 2).toFixed(2), 'stroke-opacity': t > T.fall[0] && t < T.fall[1] ? (0.55 * o).toFixed(3) : 0 });
@@ -214,7 +228,7 @@ function drawPoint(t, at, o, r) {
 }
 // the end card, identical: regulate. / Somewhere to put it. / 4 TOOLS FREE ON THE APP STORE
 function drawClose(t) {
-  WM.draw(t, T.wordmark);
+  WM.draw(t, T.wordmark, (i, [x0, x1]) => T.wordmark + i * 40 + (x1 > FAM.zero.cx ? Math.max(0, passAt(x1) - T.wordmark - i * 40) : 0));
   headline($('line'), W_LINE, t, 540, WM.yF + 80, T.line, Infinity, 50, { ax: 0.5 });
   rise($('cta'), t, 540, WM.yF + 200, T.cta, Infinity, { dy: 18, blur: 8, ax: 0.5, max: 0.9 });
 }
@@ -234,7 +248,7 @@ function init() {
 }
 // the point: the clock's lower colon dot, left behind in the header when the digits go; it waits there
 // (off the playfield), hides as the game takes over, comes back there after stillness and falls
-const pointAt = (t) => (t < T.ptBack ? CLK.lo : pointFall(t, CLK.lo));
+const pointAt = (t) => (t < T.ptBack ? CLK.lo : pointClose(t));
 
 function render(t) {
   const [jx, jy, jr] = jolt(t);
@@ -273,7 +287,7 @@ function render(t) {
 
   // the point carries the heartbeat once the clock has gone, until the shaking starts
   const hb = t >= T.clockOut && t < T.shake ? 1 + 0.22 * Math.exp(-beat / 150) : 1;
-  drawPoint(t, pointAt, pointVis(t, T.clockOut), lerp(CLK.rC, R, smooth(P(t, T.clockOut, 250))) * hb);
+  drawPoint(t, pointAt, pointVis(t, T.clockOut), t < T.ptBack ? lerp(CLK.rC, R, smooth(P(t, T.clockOut, 250))) * hb : pointForm(t).r);
 
   drawClose(t);
 }
