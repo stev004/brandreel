@@ -64,6 +64,11 @@ const { E, cubicBezier, clamp, lerp, P, smooth, kf, $, S, A, place, riseV, rise,
 const T = TIMING, C = { cream: '#F2F0E9', anx: '#D4A574', white: '#FFFFFF' };
 const X0 = 100, X1 = 980, Y_EMPTY = 1250, Y_FULL = 560;
 const SEG = [[0, 0.68, cubicBezier(0.3, 0.5, 0.4, 1)], [0.68, 1, cubicBezier(0.3, 0.6, 0.4, 1)], [1, 1, (x) => x], [1, 0, cubicBezier(0.35, 0, 0.45, 1)]];
+// Instagram safe-area fit (2026-09-28): the scene is scaled/lifted into y 236..1470 so the
+// Reels caption, buttons and top bar never cover it; eases to identity over the close glide so the
+// point still lands exactly on the wordmark's full stop.
+const SAFE = { s: 0.879, ty: 53.3, oy: 900 }; // top-anchored at y 440 so the DOUBLE INHALE bracket keeps its gap under the headline
+function safeT(t) { const k = 1 - E.HOUSE(P(t, T.closeGlide[0], T.closeGlide[1] - T.closeGlide[0])); const s = 1 - (1 - SAFE.s) * k; return `translate(0px, ${(SAFE.ty * k - SAFE.oy * (1 - s)).toFixed(2)}px) scale(${s.toFixed(4)}) `; }
 function fullness(tau) { let acc = 0; for (let i = 0; i < 4; i++) { const d = T.seg[i]; if (tau <= acc + d) return lerp(SEG[i][0], SEG[i][1], SEG[i][2]((tau - acc) / d)); acc += d; } return 0; }
 const cp = (tau) => [X0 + (X1 - X0) * clamp(tau / T.cycle), lerp(Y_EMPTY, Y_FULL, fullness(clamp(tau, 0, T.cycle)))];
 const segOff = (i) => T.segAt[i] - T.travel;
@@ -99,7 +104,7 @@ function pointAt(t) {
 function render(t) {
   // the camera breathes with the lungs
   const f = t > T.travel && t < T.travel + T.cycle ? fullness(t - T.travel) : 0;
-  $('cam').style.transform = `scale(${1 + 0.04 * f})`;
+  $('cam').style.transform = safeT(t) + `scale(${1 + 0.04 * f})`;
 
   // hook: the refusal, drawn
   const hq = E.HOUSE(P(t, T.hookOut, 520));

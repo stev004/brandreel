@@ -75,6 +75,11 @@ const HUB0 = [540, 1470], RA = 380, NL = RA * 95 / 110, SLOT = 96, BOTTOM = 930;
 const FRAG = [[-80, -42, -14], [24, -78, 9], [72, -30, 16], [-36, -90, -8], [90, -60, 12]];
 
 const tip = (deg, hub, len) => [hub[0] + len * Math.sin(deg * D2R), hub[1] - len * Math.cos(deg * D2R)];
+// Instagram safe-area fit (2026-09-28): the scene is scaled/lifted into y 236..1470 so the
+// Reels caption, buttons and top bar never cover it; eases to identity over the close glide so the
+// point still lands exactly on the wordmark's full stop.
+const SAFE = { s: 0.929, ty: -20, oy: 1200 };
+function safeT(t) { const k = 1 - E.HOUSE(P(t, T.closeGlide[0], T.closeGlide[1] - T.closeGlide[0])); const s = 1 - (1 - SAFE.s) * k; return `translate(0px, ${(SAFE.ty * k - SAFE.oy * (1 - s)).toFixed(2)}px) scale(${s.toFixed(4)}) `; }
 function jolt(t) {
   let j = 0; for (const b of T.pingIn) { const k = t - b; if (k >= 0 && k < 135) j += (k < 45 ? 6 : k < 90 ? -6 : 0) * Math.max(0.3, T.pressure(t)); }
   if (t >= T.tremble[0] && t < T.tremble[1]) j += 5 * fbm(t / 22, 31) * (1 - smooth(P(t, T.tremble[1] - 150, 150)));
@@ -121,7 +126,7 @@ function pointAt(t) {
 function render(t) {
   // camera: each ping steps it in; the release pulls it back
   let push = 0; for (const b of T.pingIn) push += 0.01 * E.SNAP(P(t, b, 120));
-  $('cam').style.transform = `scale(${1 + push * (1 - E.INOUT(P(t, T.fall[0], T.fall[1] - T.fall[0])))})`;
+  $('cam').style.transform = safeT(t) + `scale(${1 + push * (1 - E.INOUT(P(t, T.fall[0], T.fall[1] - T.fall[0])))})`;
   const beat = t - lastBeat(t), live = t < T.clockOut, j = jolt(t);
 
   // the clock (the hook): pulses and blinks on the heartbeat, rises out as the inbox fills

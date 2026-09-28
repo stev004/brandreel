@@ -430,9 +430,9 @@ function pointAt(t) {
 // =====================================================================
 function kicker(t) {
   const ks = [[T.k1, 600, 2900], [T.k2, 3050, 4150], [T.k3, 4300, 7650], [T.k4, 7800, 11050], [T.k5, 11200, 14100]];
-  for (const [e, a, b] of ks) rise(e, t, 96, 170, a, b, { dy: 16, blur: 6, dur: 520, outDy: -12, outDur: 420 });
+  for (const [e, a, b] of ks) rise(e, t, 96, 250, a, b, { dy: 16, blur: 6, dur: 520, outDy: -12, outDur: 420 });
 }
-function toolLabel(e, t, a, b) { rise(e, t, 540, 1540, a, b, { dy: 20, blur: 8, ax: 0.5 }); }
+function toolLabel(e, t, a, b) { rise(e, t, 540, 1462, a, b, { dy: 20, blur: 8, ax: 0.5 }); }
 
 function render(t) {
   t = clamp(t, 0, DUR);

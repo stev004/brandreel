@@ -80,6 +80,11 @@ const glow = S('circle', { fill: C.white, filter: 'url(#glow)' });
 const pt = S('circle', { fill: C.white });
 
 let WM, R = 11, W_M, W_LINE, colonUp, colonLo, rC, clockBox;
+// Instagram safe-area fit (2026-09-28): the scene is scaled/lifted into y 236..1470 so the
+// Reels caption, buttons and top bar never cover it; eases to identity over the close glide so the
+// point still lands exactly on the wordmark's full stop.
+const SAFE = { s: 0.964, ty: -80, oy: 960 };
+function safeT(t) { const k = 1 - E.HOUSE(P(t, T.closeGlide[0], T.closeGlide[1] - T.closeGlide[0])); const s = 1 - (1 - SAFE.s) * k; return `translate(0px, ${(SAFE.ty * k - SAFE.oy * (1 - s)).toFixed(2)}px) scale(${s.toFixed(4)}) `; }
 function init() {
   WM = wordmark($('wm'), { dotPx: 22, yDot: 960 }); R = WM.R;
   W_M = splitWords($('moment')); W_LINE = splitWords($('line'));
@@ -111,7 +116,7 @@ function pointAt(t) {
 function render(t) {
   // camera: a slow push while the night builds, released across the exhale
   const cam = kf(t, [[0, 1], [T.clockOut, 1.05, (x) => x], [T.exhale[0], 1.05], [T.exhale[1], 1, E.INOUT]]);
-  $('cam').style.transform = `scale(${cam})`;
+  $('cam').style.transform = safeT(t) + `scale(${cam})`;
   const beat = t - lastBeat(t), live = t < T.clockOut;
 
   // the clock: pulses on the heartbeat, colon blinks with it

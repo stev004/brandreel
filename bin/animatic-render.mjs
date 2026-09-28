@@ -96,6 +96,7 @@ if (audio) ffArgs.push('-ss', String(from / 1000), '-i', audio);
 ffArgs.push('-vf', `scale=${W}:${H}:flags=lanczos,setsar=1`, '-c:v', 'libx264', '-profile:v', 'high', '-preset', 'slow', '-crf', '12', '-pix_fmt', 'yuv420p', '-r', String(fps),
   '-colorspace', 'bt709', '-color_primaries', 'bt709', '-color_trc', 'bt709');
 if (audio) ffArgs.push('-c:a', 'aac', '-b:a', '256k', '-shortest');
+ffArgs.push('-color_primaries', 'bt709', '-color_trc', 'bt709', '-colorspace', 'bt709'); // tag colour so iOS/Instagram don't guess (09-28 audit)
 ffArgs.push('-movflags', '+faststart', out);
 const ff = spawn('ffmpeg', ffArgs, { stdio: ['pipe', 'inherit', 'inherit'] });
 const ffDone = new Promise((r) => ff.on('close', r));
